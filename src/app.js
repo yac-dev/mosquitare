@@ -1,11 +1,11 @@
-const express = require('express');
+import express from 'express';
 const app = express();
-require('./database/mongoose');
+import './database/mongoose';
 
-const usersRouter = require('./routes/users');
+import usersRouter from './routes/users';
 
 app.use(express.json());
 
 app.use('/api/users/', usersRouter);
 
-module.exports = app;
+export default app;

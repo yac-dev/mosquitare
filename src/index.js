@@ -1,9 +1,12 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '../', 'config/dev.env') });
+import path from 'path';
+import dotenv from 'dotenv';
+const __dirname = path.resolve();
+dotenv.config({ path: path.join(__dirname, '../', 'config/dev.env') });
+// require('dotenv').config({ path: path.join(__dirname, '../', 'config/dev.env') });
 // console.log(process.env.PORT);
 // console.log(require('dotenv').config({ path: path.join(__dirname, '../', 'config/dev.env') }));
 
-const app = require('./app');
+import app from './app';
 const port = process.env.PORT;
 
 app.listen(port, () => {

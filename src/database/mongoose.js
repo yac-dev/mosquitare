@@ -1,15 +1,18 @@
-const path = require('path');
-const mongoose = require('mongoose');
-require('dotenv').config({ path: path.join(__dirname, '../', '../', 'config/dev.env') });
+import path from 'path';
+import mongoose from 'mongoose';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+import dotenv from 'dotenv';
 
-// console.log(require('dotenv').config({ path: path.join(__dirname, '../', '../', 'config/dev.env') }));
+dotenv.config({ path: path.join(__dirname, '../', '../', 'config/dev.env') });
+// console.log(dotenv.config({ path: path.join(__dirname, '../', '../', 'config/dev.env') }));
 
 mongoose
   .connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false,
   })
   .then(() => {
     console.log('👍 Database connection succeeded 👍');
