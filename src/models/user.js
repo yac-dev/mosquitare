@@ -10,13 +10,24 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
   },
-  languages: [
-    {
-      type: mongoose.Schema.ObjectId,
-      required: true,
-      ref: 'Language',
-    },
-  ],
+  // languages: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     required: true,
+  //     ref: 'Language',
+  //   },
+  // ],
+  // languages: [
+  //   {
+  //     type: {
+  //       type: mongoose.Schema.ObjectId,
+  //       required: true,
+  //       ref: 'Language',
+  //     },
+  //     of: Number,
+  //   },
+  // ],
+  languages: [mongoose.Schema.Types.Mixed],
   nationalities: [
     {
       type: mongoose.Schema.ObjectId,
@@ -26,14 +37,25 @@ const userSchema = new mongoose.Schema({
   ],
   job: {
     type: String,
+    required: true,
   },
-  histories: [
+  friends: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
   ],
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+    },
+    coordinates: [Number],
+  },
 });
+
+userSchema.index({ location: '2dsphere' });
 
 const User = mongoose.model('User', userSchema);
 
