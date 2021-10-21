@@ -1,11 +1,18 @@
 import React from 'react';
-import {}
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
+// components
+import Signup from './components/Signup';
 
 class App extends React.Component {
   render() {
     return (
       <div className='ui container'>
-        <div>App compopnent</div>
+        <Router>
+          <Route to='/signup'>
+            <Signup />
+          </Route>
+        </Router>
       </div>
     );
   }
