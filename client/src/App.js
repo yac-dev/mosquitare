@@ -2,15 +2,21 @@ import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 // components
+import LandingPage from './components/LandingPage';
 import Signup from './components/Signup';
+import Socket from './components/Socket';
 
 class App extends React.Component {
   render() {
     return (
       <div className='ui container'>
         <Router>
-          <Route to='/signup'>
+          <Route path='/' exact component={LandingPage} />
+          <Route path='/signup' exact>
             <Signup />
+          </Route>
+          <Route path='/socket' exact>
+            <Socket />
           </Route>
         </Router>
       </div>
