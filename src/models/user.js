@@ -45,14 +45,14 @@ const userSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
-  location: {
-    type: {
-      type: String,
-      enum: ['Point'],
-      default: 'Point',
-    },
-    coordinates: [Number],
-  },
+  // location: {
+  //   type: {
+  //     type: String,
+  //     enum: ['Point'],
+  //     default: 'Point',
+  //   },
+  //   coordinates: [Number],
+  // },
 });
 
 userSchema.index({ location: '2dsphere' });
