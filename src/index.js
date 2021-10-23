@@ -27,11 +27,11 @@ io.on('connection', (socket) => {
   socket.emit('ME', socket.id);
 
   socket.on('CALL', (data) => {
-    io.to(data.userToCall).emit('CALL', data.signalData, data.from);
+    io.to(data.userToCall).emit('CALL', { signalData: data.signalData, from: data.me });
   });
 
   socket.on('ANSWER', (data) => {
-    io.to(data.caller).emit('ACCEPTED', data.signalData);
+    io.to(data.caller).emit('ACCEPTED', { signalData: data.signalData });
   });
 });
 

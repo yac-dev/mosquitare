@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { io } from 'socket.io-client';
-import { Peer } from 'simple-peer';
+import Peer from 'simple-peer';
 
 const socket = io('http://localhost:3500');
 
@@ -12,10 +12,13 @@ const Socket = () => {
   // callを受けた場合
   const [isRecievingCall, setIsRecievingCall] = useState(false);
   const [caller, setCaller] = useState(null);
-  const [callerSignal, setCallerSignal] = useState(null);
+  const [callerSignal, setCallerSignal] = useState();
 
   //answer関連。
   const [callAccepted, setCallAccepted] = useState(false);
+
+  // callする。
+  const [oppositeIdToCall, setOppositeIdToCall] = useState('');
 
   // hooks useRef
   const myVideo = useRef();
@@ -26,6 +29,10 @@ const Socket = () => {
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
       setMyStream(stream);
+
+      // 確かに、[]でuseStateを使うのは良くない。
+      // myVideo.current.srcObject = myStream;
+      myVideo.current.srcObject = stream;
     });
 
     // signaling serverからsocketのidがemitされている。
@@ -43,15 +50,18 @@ const Socket = () => {
   }, []);
 
   const call = (userToCall) => {
-    const peer = new Peer({ initiator: true, stream: myStream, tricke: false });
+    const peer = new Peer({ initiator: true, stream: myStream, trickle: false });
 
     // signaling serverへデータを渡す。typeはofferで、media config（video, audio）をsdpとする。送信元は誰で、送信先が誰であるか。
     peer.on('signal', (signalData) => {
+      console.log('Im calling...');
       socket.emit('CALL', { signalData, me, userToCall });
     });
 
+    // clientBがanswerした後、ここがなんかおかしくなる。。。
     socket.on('ACCEPTED', (signalData) => {
       console.log('My call is accepted.');
+      console.log(signalData);
       setCallAccepted(true);
       peer.signal(signalData);
     });
@@ -65,8 +75,9 @@ const Socket = () => {
 
   const answer = () => {
     setCallAccepted(true);
+    console.log('I answered.');
 
-    const peer = new Peer({ initiator: false, stream: myStream, tricke: false });
+    const peer = new Peer({ initiator: false, stream: myStream, trickle: false });
 
     peer.on('stream', (stream) => {
       oppositeVideo.current.srcObject = stream;
@@ -81,11 +92,29 @@ const Socket = () => {
   };
 
   // rendering
+  console.log(caller);
+
   return (
     <div>
       Socket page
-      <video playsInline muted ref={myVideo} autoPlay style={{ width: '300px' }} />
-      <video playsInline muted ref={oppositeVideo} autoPlay style={{ width: '300px' }} />
+      <div className='video-container'>
+        <div className='video'>
+          <video playsInline muted ref={myVideo} autoPlay style={{ width: '300px' }} />
+          <div>{me}</div>
+        </div>
+        <div className='video'>
+          <video playsInline ref={oppositeVideo} autoPlay style={{ width: '300px' }} />
+        </div>
+      </div>
+      <label>Opposite ID to call</label>
+      <input value={oppositeIdToCall} onChange={(e) => setOppositeIdToCall(e.target.value)} />
+      <button onClick={() => call(oppositeIdToCall)}>Call</button>
+      <div>
+        <div className='caller'>
+          {/* <h1>Someone is calling...</h1> */}
+          <button onClick={answer}>Answer</button>
+        </div>
+      </div>
     </div>
   );
 };
