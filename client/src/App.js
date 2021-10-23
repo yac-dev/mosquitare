@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 // components
 import LandingPage from './components/LandingPage';
+import Navbar from './components/Navbar';
 import Signup from './components/Signup';
 import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
@@ -14,6 +15,7 @@ class App extends React.Component {
     return (
       <div>
         <Router>
+          <Navbar />
           <Route path='/' exact component={LandingPage} />
           <Route path='/signup' exact component={Signup} />
           <Route path='/socket' exact component={Socket} />
