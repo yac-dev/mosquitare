@@ -7,10 +7,12 @@ import Signup from './components/Signup';
 import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 
+import './App.css';
+
 class App extends React.Component {
   render() {
     return (
-      <div className='ui container'>
+      <div>
         <Router>
           <Route path='/' exact component={LandingPage} />
           <Route path='/signup' exact component={Signup} />
