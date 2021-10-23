@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import Signup from './components/Signup';
 import Socket from './components/Socket';
+import WorldMap from './components/WorldMap';
 
 class App extends React.Component {
   render() {
@@ -14,6 +15,7 @@ class App extends React.Component {
           <Route path='/' exact component={LandingPage} />
           <Route path='/signup' exact component={Signup} />
           <Route path='/socket' exact component={Socket} />
+          <Route path='/worldmap' exact component={WorldMap} />
         </Router>
       </div>
     );
