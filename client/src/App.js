@@ -20,6 +20,7 @@ class App extends React.Component {
           <Route path='/signup' exact component={Signup} />
           <Route path='/socket' exact component={Socket} />
           <Route path='/worldmap' exact component={WorldMap} />
+          {/* uber っぽくしたいなら、worldMapをself closingするのではなく、childrenを使うといいかもな 多分*/}
         </Router>
       </div>
     );

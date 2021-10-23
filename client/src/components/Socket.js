@@ -42,20 +42,20 @@ const Socket = () => {
 
     // signaling serverからCALLUSER eventが来たら、そのeventをlistenする。
     // これは基本、callを受けたclientのmemoryに保存される。
-    socket.on('CALL', (callingDataFromServer) => {
+    socket.on('CALL', (data) => {
       setIsRecievingCall(true);
-      setCaller(callingDataFromServer.from);
-      setCallerSignal(callingDataFromServer.signalData);
+      setCaller(data.caller);
+      setCallerSignal(data.signalData);
     });
   }, []);
 
-  const call = (userToCall) => {
+  const call = (oppositeId) => {
     const peer = new Peer({ initiator: true, stream: myStream, trickle: false });
 
     // signaling serverへデータを渡す。typeはofferで、media config（video, audio）をsdpとする。送信元は誰で、送信先が誰であるか。
     peer.on('signal', (signalData) => {
       console.log('Im calling...');
-      socket.emit('CALL', { signalData, me, userToCall });
+      socket.emit('CALL', { signalData, me, oppositeId });
     });
 
     // clientBがanswerした後、ここがなんかおかしくなる。。。
