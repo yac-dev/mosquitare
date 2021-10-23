@@ -2,27 +2,39 @@ import path from 'path';
 import dotenv from 'dotenv';
 const __dirname = path.resolve();
 dotenv.config({ path: path.join(__dirname, '../', 'config/dev.env') });
-// require('dotenv').config({ path: path.join(__dirname, '../', 'config/dev.env') });
-// console.log(process.env.PORT);
-// console.log(require('dotenv').config({ path: path.join(__dirname, '../', 'config/dev.env') }));
 
 import http from 'http';
+import app from './app';
+const port = process.env.PORT;
 const server = http.createServer(app);
 import { Server } from 'socket.io';
 
 const io = new Server(server, {
   cors: {
-    origin: ['http://localhost:3000'],
+    origin: '*',
+    methods: ['GET', 'POST'],
   },
 });
 
-import app from './app';
-const port = process.env.PORT;
+// const io = socketio(server, {
+//   cors: {
+//     origin: '*',
+//     methods: ['GET', 'POST'],
+//   },
+// });
 
 io.on('connection', (socket) => {
-  console.log(socket.id);
+  socket.emit('ME', socket.id);
+
+  socket.on('CALL', (data) => {
+    io.to(data.userToCall).emit('CALL', data.signalData, data.from);
+  });
+
+  socket.on('ANSWER', (data) => {
+    io.to(data.caller).emit('ACCEPTED', data.signalData);
+  });
 });
 
 server.listen(port, () => {
-  console.log('Server listenning on port 3500');
+  console.log(`Server listenning on port ${port}`);
 });

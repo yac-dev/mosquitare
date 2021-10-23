@@ -12,12 +12,8 @@ class App extends React.Component {
       <div className='ui container'>
         <Router>
           <Route path='/' exact component={LandingPage} />
-          <Route path='/signup' exact>
-            <Signup />
-          </Route>
-          <Route path='/socket' exact>
-            <Socket />
-          </Route>
+          <Route path='/signup' exact component={Signup} />
+          <Route path='/socket' exact component={Socket} />
         </Router>
       </div>
     );
