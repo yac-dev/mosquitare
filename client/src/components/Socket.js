@@ -94,6 +94,9 @@ const Socket = () => {
   // rendering
   console.log(caller);
 
+  // 一番必要になるのは、'What language you wanna speak'だな。これが一番重要。まずこれを出す。
+  // あと、ユーザーに関して、reviewとaverage time、そんでcurrently online、これどうやって実装すんだろ。。。？ redux使えばいいな。login usersみたいな感じで。かつ、電話中かフリーか、みたいなstatusに関するredux stateも必要だな。
+  // queryって、あれどうしようか。。。countryとlanguage両方ともになんだよな。関わってくるの。
   return (
     <div>
       Socket page

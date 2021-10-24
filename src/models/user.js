@@ -27,7 +27,27 @@ const userSchema = new mongoose.Schema({
   //     of: Number,
   //   },
   // ],
-  languages: [mongoose.Schema.Types.Mixed],
+  nativeLangs: [
+    {
+      type: mongoose.Schema.ObjectId,
+      required: true,
+      ref: 'Language',
+    },
+  ],
+  // learningLangs: [mongoose.Schema.Types.Mixed],
+  learningLangs: [
+    {
+      type: mongoose.Schema.ObjectId,
+      required: true,
+      ref: 'Language',
+    },
+  ],
+  level: [
+    {
+      type: Number,
+      required: true,
+    },
+  ],
   nationalities: [
     {
       type: mongoose.Schema.ObjectId,
@@ -39,12 +59,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    default: 'No description.',
+  },
   friends: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
   ],
+  durations: [Number],
+  averageDuration: Number,
+  // friends: [mongoose.Schema.Types.Mixed],
   // location: {
   //   type: {
   //     type: String,
