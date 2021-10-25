@@ -25,11 +25,40 @@ export const signup = async (request, response, next) => {
       job,
     });
 
-    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    console.log(jwtToken);
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY);
 
-    response.json(user);
+    response.json({
+      user,
+      jwtToken,
+    });
   } catch (error) {
     console.log(error);
   }
 };
+
+export const login = async (request, response) => {
+  try {
+    const { email, password } = request.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error('Nooooo.');
+    }
+
+    const isEnteredPasswordCorrect = await user.isPasswordCorrect(password, user.password);
+    if (!isEnteredPasswordCorrect) {
+      throw new Error('Nooooooo.');
+    }
+
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY);
+
+    response.json({
+      user,
+      jwtToken,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// authorization...
