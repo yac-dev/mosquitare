@@ -41,11 +41,12 @@ const SignupDetails = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const [name, email, password] = props.location.state;
+    const [name, email, password, passwordConfirmation] = props.location.state;
     const formData = {
       name,
       email,
       password,
+      passwordConfirmation,
       nativeLangs,
       learningLangs,
       nationalities,

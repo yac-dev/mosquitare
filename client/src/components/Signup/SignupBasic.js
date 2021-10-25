@@ -18,6 +18,7 @@ const SignupBasic = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
   return (
     <div className='ui container'>
@@ -45,7 +46,16 @@ const SignupBasic = () => {
             placeholder='Please enter password.'
           />
         </Form.Field>
-        <Link to={{ pathname: '/signup/details', state: [name, email, password] }}>Next</Link>
+
+        <Form.Field>
+          <label>Password Confirmation</label>
+          <input
+            value={passwordConfirmation}
+            onChange={(event) => setPasswordConfirmation(event.target.value)}
+            placeholder='Please reenter your password.'
+          />
+        </Form.Field>
+        <Link to={{ pathname: '/signup/details', state: [name, email, password, passwordConfirmation] }}>Next</Link>
       </Form>
     </div>
   );
