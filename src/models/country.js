@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const countrySchema = new mongoose.Schema({
   name: {
@@ -22,4 +22,4 @@ const countrySchema = new mongoose.Schema({
 countrySchema.index({ location: '2dsphere' });
 
 const Country = mongoose.model('Country', countrySchema);
-module.exports = Country;
+export default Country;

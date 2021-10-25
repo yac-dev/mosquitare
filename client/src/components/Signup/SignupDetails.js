@@ -7,57 +7,208 @@ require('dotenv').config({ path: path.join(__dirname, '../', '../', '../', '.env
 
 const SignupDetails = () => {
   // useState
-  const [languages, setLanguages] = useState([]);
+  // fetched datas
+  const [fetchedLanguages, setFetchedLanguages] = useState([]);
+  const [fetchedCountries, setFetchedCountries] = useState([]);
+
+  const [nativeLangs, setNativeLangs] = useState(['']);
+  const [learningLangs, setLearningLangs] = useState(['']);
+  const [nationalities, setNationalities] = useState(['']);
+  const [job, setJob] = useState();
+
+  const fetchData = async (uri, setState) => {
+    const result = await axios.get(uri, {
+      baseURL: process.env.REACT_APP_BASE_API_URL,
+    });
+    setState(result.data);
+  };
+
+  const handleChange = (index, event, state, setState) => {
+    let newState = [...state];
+    newState[index] = event.target.value;
+    setState(newState);
+  };
+
+  const addFormFields = (state, setState) => {
+    setState([...state, '']);
+  };
+
+  const onJobChange = (event) => {
+    setJob(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(nativeLangs);
+    console.log(learningLangs);
+    console.log(nationalities);
+    console.log(job);
+  };
 
   useEffect(() => {
-    const getLanguages = async () => {
-      const result = await axios.get('/languages', {
-        baseURL: process.env.REACT_APP_BASE_API_URL,
-      });
-      setLanguages(result.data);
-    };
-    getLanguages();
+    fetchData('/languages', setFetchedLanguages);
+    fetchData('/countries', setFetchedCountries);
   }, []);
 
-  console.log(languages);
+  const renderForm = (fetchedData, stateData, setStateData, tagPhrase, buttonPhrase) => {
+    return (
+      <>
+        {stateData.map((element, index) => {
+          // まず、languageのlist展開。
+          const option = fetchedData.map((dataElement) => {
+            return (
+              <option key={dataElement._id} value={dataElement._id}>
+                {dataElement.name}
+              </option>
+            );
+          });
+
+          return (
+            <>
+              <select className='ui dropdown' onChange={(event) => handleChange(index, event, stateData, setStateData)}>
+                <option value=''>{tagPhrase}</option>
+                {option}
+              </select>
+            </>
+          );
+        })}
+        <Button
+          onClick={(event) => {
+            addFormFields(stateData, setStateData);
+          }}
+        >
+          {buttonPhrase}
+        </Button>
+      </>
+    );
+  };
+
   return (
     <div className='ui container'>
-      <Form>
-        <label>Your Native Languages</label>
-        <Dropdown languagesOption={languages} />
+      <Form onSubmit={(event) => handleSubmit(event)}>
+        {/* {renderForm(fetchedLanguages, nativeLangs, setNativeLangs, 'Select language')}
+        <Button
+          onClick={(event) => {
+            addFormFields(nativeLangs, setNativeLangs);
+          }}
+        >
+          Add more language
+        </Button>
 
-        <Form.Group widths='equal'>
-          <Form.Input
-            onChange={(event) => {
-              this.setState({ lang1: event.target.value });
-            }}
-            fluid
-            label='Learning Language1'
-          />
-          <Form.Input
-            onChange={(event) => {
-              this.setState({ lang2: event.target.value });
-            }}
-            fluid
-            label='Learning Language2'
-          />
-          <Form.Input
-            onChange={(event) => {
-              this.setState({ lang2: event.target.value });
-            }}
-            fluid
-            label='Learning Language3'
-          />
-        </Form.Group>
+        {renderForm(fetchedLanguages, nativeLangs, setNativeLangs, 'Select leaninge')}
+        <Button
+          onClick={(event) => {
+            addFormFields(nativeLangs, setNativeLangs);
+          }}
+        >
+          Add more leaning language
+        </Button>
 
-        <Form.Field>
-          <label>Nationalities</label>
-          <input placeholder='Last Name' />
-        </Form.Field>
+        {renderForm(fetchedLanguages, nativeLangs, setNativeLangs, 'Select nationality')}
+        <Button
+          onClick={(event) => {
+            addFormFields(nationalities, setNationalities);
+          }}
+        >
+          Add more nationality
+        </Button> */}
+
+        {nativeLangs.map((element, index) => {
+          // まず、languageのlist展開。
+          const languagesOption = fetchedLanguages.map((language) => {
+            return (
+              <option key={language._id} value={language._id}>
+                {language.name}
+              </option>
+            );
+          });
+
+          return (
+            <>
+              <select
+                className='ui dropdown'
+                onChange={(event) => handleChange(index, event, nativeLangs, setNativeLangs)}
+              >
+                <option value=''>Select language</option>
+                {languagesOption}
+              </select>
+            </>
+          );
+        })}
+        <Button
+          onClick={(event) => {
+            addFormFields(nativeLangs, setNativeLangs);
+          }}
+        >
+          Add more native language
+        </Button>
+
+        {learningLangs.map((element, index) => {
+          // まず、languageのlist展開。
+          const languagesOption = fetchedLanguages.map((language) => {
+            return (
+              <option key={language._id} value={language._id}>
+                {language.name}
+              </option>
+            );
+          });
+
+          return (
+            <>
+              <select
+                className='ui dropdown'
+                onChange={(event) => handleChange(index, event, learningLangs, setLearningLangs)}
+              >
+                <option value=''>Select language</option>
+                {languagesOption}
+              </select>
+            </>
+          );
+        })}
+        <Button
+          onClick={(event) => {
+            addFormFields(learningLangs, setLearningLangs);
+          }}
+        >
+          Add more leaning language
+        </Button>
+
+        {nationalities.map((element, index) => {
+          // まず、languageのlist展開。
+          const countriesOption = fetchedCountries.map((country) => {
+            return (
+              <option key={country._id} value={country._id}>
+                {country.name}
+              </option>
+            );
+          });
+
+          return (
+            <>
+              <select
+                className='ui dropdown'
+                onChange={(event) => handleChange(index, event, nationalities, setNationalities)}
+              >
+                <option value=''>What is your nationality?</option>
+                {countriesOption}
+              </select>
+            </>
+          );
+        })}
+
+        <Button
+          onClick={(event) => {
+            addFormFields(nationalities, setNationalities);
+          }}
+        >
+          Add more nationalities
+        </Button>
+
         <Form.Field>
           <label>Job</label>
-          <input placeholder='Please enter your job.' />
+          <input value={job} onChange={(event) => onJobChange(event)} placeholder='Please enter your job.' />
         </Form.Field>
+
         <Button>Submit</Button>
       </Form>
     </div>
