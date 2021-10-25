@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+
 import { signupActionCreator } from '../../actionCreators/authActionCreators';
 
 // componentDidMount() {
@@ -14,84 +16,98 @@ import { signupActionCreator } from '../../actionCreators/authActionCreators';
 //   );
 // }
 
-class Signup extends React.Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
-    nativeLanguage: [],
-    lang1: [],
-    lang2: [],
-    lang3: [],
-    languages: [],
-    nationalities: [],
-    // nationalitiesArray: [],
-  };
+const SignupBasic = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  onFormSubmit = async () => {
-    console.log(this.state);
-    const nativeLangInfo = {},
-      lang1Info = {},
-      lang2Info = {},
-      lang3Info = {};
-    nativeLangInfo[this.state.nativeLanguage[0]] = this.state.nativeLanguage[1];
-    lang1Info[this.state.lang1[0]] = this.state.lang1[1];
-    lang2Info[this.state.lang2[0]] = this.state.lang2[1];
-    lang3Info[this.state.lang3[0]] = this.state.lang3[1];
+  return (
+    <div className='ui container'>
+      <div>Basic User Info</div>
+      <Form>
+        <Form.Field>
+          <label>Name</label>
+          <input value={name} onChange={(event) => setName(event.target.value)} placeholder='Please enter your name.' />
+        </Form.Field>
 
-    this.state.languages.push(nativeLangInfo, lang1Info, lang2Info, lang3Info);
-    this.nationalities.push();
+        <Form.Field>
+          <label>Email</label>
+          <input
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder='Please enter your email.'
+          />
+        </Form.Field>
 
-    const formValue = {
-      name: this.state.name,
-      email: this.state.name,
-      password: this.state.password,
-      languages: this.state.languages,
-    };
-  };
+        <Form.Field>
+          <label>Password</label>
+          <input
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder='Please enter password.'
+          />
+        </Form.Field>
+        <Link to={{ pathname: '/signup/details', state: [name, email, password] }}>Next</Link>
+      </Form>
+    </div>
+  );
+};
 
-  render() {
-    return (
-      <div className='ui container'>
-        <div>Basic User Info</div>
-        <Form onSubmit={this.onFormSubmit}>
-          <Form.Field>
-            <label>Name</label>
-            <input
-              value={this.state.name}
-              onChange={(event) => {
-                this.setState({ name: event.target.value });
-              }}
-              placeholder='Please enter your name.'
-            />
-          </Form.Field>
+export default SignupBasic;
 
-          <Form.Field>
-            <label>Email</label>
-            <input
-              value={this.state.email}
-              onChange={(event) => {
-                this.setState({ email: event.target.value });
-              }}
-              placeholder='Please enter your email.'
-            />
-          </Form.Field>
+// class Signup extends React.Component {
+//   state = {
+//     name: '',
+//     email: '',
+//     password: '',
+//   };
 
-          <Form.Field>
-            <label>Password</label>
-            <input
-              value={this.state.password}
-              onChange={(event) => {
-                this.setState({ password: event.target.value });
-              }}
-              placeholder='Please enter password.'
-            />
-          </Form.Field>
-          <Button type='submit'>Next</Button>
-        </Form>
-      </div>
-    );
-  }
-}
+//   onFormSubmit = async () => {
+//     console.log(this.state);
+//   };
 
-export default Signup;
+//   render() {
+//     return (
+//     <div className='ui container'>
+//       <div>Basic User Info</div>
+//       <Form onSubmit={this.onFormSubmit}>
+//         <Form.Field>
+//           <label>Name</label>
+//           <input
+//             value={this.state.name}
+//             onChange={(event) => {
+//               this.setState({ name: event.target.value });
+//             }}
+//             placeholder='Please enter your name.'
+//           />
+//         </Form.Field>
+
+//         <Form.Field>
+//           <label>Email</label>
+//           <input
+//             value={this.state.email}
+//             onChange={(event) => {
+//               this.setState({ email: event.target.value });
+//             }}
+//             placeholder='Please enter your email.'
+//           />
+//         </Form.Field>
+
+//         <Form.Field>
+//           <label>Password</label>
+//           <input
+//             value={this.state.password}
+//             onChange={(event) => {
+//               this.setState({ password: event.target.value });
+//             }}
+//             placeholder='Please enter password.'
+//           />
+//         </Form.Field>
+//         <Button type='submit'>Next</Button>
+//       </Form>
+//     </div>
+//   );
+// }
+// }
+
+// export default Signup;

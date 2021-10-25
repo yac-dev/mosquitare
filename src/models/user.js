@@ -42,12 +42,12 @@ const userSchema = new mongoose.Schema({
       ref: 'Language',
     },
   ],
-  level: [
-    {
-      type: Number,
-      required: true,
-    },
-  ],
+  // level: [
+  //   {
+  //     type: Number,
+  //     required: true,
+  //   },
+  // ],
   nationalities: [
     {
       type: mongoose.Schema.ObjectId,

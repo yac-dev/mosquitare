@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'semantic-ui-react';
 import path from 'path';
 import axios from 'axios';
-import Dropdown from '../Dropdown';
 require('dotenv').config({ path: path.join(__dirname, '../', '../', '../', '.env') });
 
-const SignupDetails = () => {
+const SignupDetails = (props) => {
   // useState
   // fetched datas
   const [fetchedLanguages, setFetchedLanguages] = useState([]);
@@ -14,7 +13,7 @@ const SignupDetails = () => {
   const [nativeLangs, setNativeLangs] = useState(['']);
   const [learningLangs, setLearningLangs] = useState(['']);
   const [nationalities, setNationalities] = useState(['']);
-  const [job, setJob] = useState();
+  const [job, setJob] = useState('');
 
   const fetchData = async (uri, setState) => {
     const result = await axios.get(uri, {
@@ -39,49 +38,57 @@ const SignupDetails = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(nativeLangs);
-    console.log(learningLangs);
-    console.log(nationalities);
-    console.log(job);
+    const [name, email, password] = props.location.state;
+    const formData = {
+      name,
+      email,
+      password,
+      nativeLangs,
+      learningLangs,
+      nationalities,
+      job,
+    };
+    console.log(formData);
   };
+  // ここまで来て、api側にpostしていこう。
 
   useEffect(() => {
     fetchData('/languages', setFetchedLanguages);
     fetchData('/countries', setFetchedCountries);
   }, []);
 
-  const renderForm = (fetchedData, stateData, setStateData, tagPhrase, buttonPhrase) => {
-    return (
-      <>
-        {stateData.map((element, index) => {
-          // まず、languageのlist展開。
-          const option = fetchedData.map((dataElement) => {
-            return (
-              <option key={dataElement._id} value={dataElement._id}>
-                {dataElement.name}
-              </option>
-            );
-          });
+  // const renderForm = (fetchedData, stateData, setStateData, tagPhrase, buttonPhrase) => {
+  //   return (
+  //     <>
+  //       {stateData.map((element, index) => {
+  //         // まず、languageのlist展開。
+  //         const option = fetchedData.map((dataElement) => {
+  //           return (
+  //             <option key={dataElement._id} value={dataElement._id}>
+  //               {dataElement.name}
+  //             </option>
+  //           );
+  //         });
 
-          return (
-            <>
-              <select className='ui dropdown' onChange={(event) => handleChange(index, event, stateData, setStateData)}>
-                <option value=''>{tagPhrase}</option>
-                {option}
-              </select>
-            </>
-          );
-        })}
-        <Button
-          onClick={(event) => {
-            addFormFields(stateData, setStateData);
-          }}
-        >
-          {buttonPhrase}
-        </Button>
-      </>
-    );
-  };
+  //         return (
+  //           <>
+  //             <select className='ui dropdown' onChange={(event) => handleChange(index, event, stateData, setStateData)}>
+  //               <option value=''>{tagPhrase}</option>
+  //               {option}
+  //             </select>
+  //           </>
+  //         );
+  //       })}
+  //       <Button
+  //         onClick={(event) => {
+  //           addFormFields(stateData, setStateData);
+  //         }}
+  //       >
+  //         {buttonPhrase}
+  //       </Button>
+  //     </>
+  //   );
+  // };
 
   return (
     <div className='ui container'>
