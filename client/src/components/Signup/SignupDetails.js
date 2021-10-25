@@ -56,6 +56,7 @@ const SignupDetails = (props) => {
     const result = await axios.post('/users/signup', formData, {
       baseURL: process.env.REACT_APP_BASE_API_URL,
     });
+    localStorage.setItem('mosquitare token', result.data.jwtToken);
     console.log(result);
   };
 

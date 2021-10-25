@@ -20,11 +20,10 @@ require('dotenv').config({ path: path.join(__dirname, '../', '../', '.env') });
 
 const WorldMap = () => {
   // hooks states
-  const [viewport, setViewport] = useState({
-    latitude: 47.040182,
-    longitude: 17.071727,
-    zoom: 4,
-  });
+  const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 4 });
+  const [user, setUser] = useState({});
+
+  useEffect(() => {}, []);
 
   return (
     <div style={{ height: '100vh', width: '100%' }}>

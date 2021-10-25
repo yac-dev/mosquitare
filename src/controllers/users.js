@@ -25,7 +25,7 @@ export const signup = async (request, response, next) => {
       job,
     });
 
-    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY);
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10h' });
 
     response.json({
       user,
@@ -50,7 +50,7 @@ export const login = async (request, response) => {
       throw new Error('Nooooooo.');
     }
 
-    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY);
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10h' });
 
     response.json({
       user,
