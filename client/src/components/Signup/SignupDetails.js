@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'semantic-ui-react';
 import path from 'path';
 import axios from 'axios';
+
+// redux....
+import { signupActionCreator } from '../../actionCreators/authActionCreators';
 require('dotenv').config({ path: path.join(__dirname, '../', '../', '../', '.env') });
 
 const SignupDetails = (props) => {
@@ -36,7 +39,7 @@ const SignupDetails = (props) => {
     setJob(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const [name, email, password] = props.location.state;
     const formData = {
@@ -48,9 +51,12 @@ const SignupDetails = (props) => {
       nationalities,
       job,
     };
-    console.log(formData);
+
+    const result = await axios.post('/users/signup', formData, {
+      baseURL: process.env.REACT_APP_BASE_API_URL,
+    });
+    console.log(result);
   };
-  // ここまで来て、api側にpostしていこう。
 
   useEffect(() => {
     fetchData('/languages', setFetchedLanguages);
@@ -132,6 +138,7 @@ const SignupDetails = (props) => {
 
           return (
             <>
+              <p>Select your native languages</p>
               <select
                 className='ui dropdown'
                 onChange={(event) => handleChange(index, event, nativeLangs, setNativeLangs)}
@@ -143,11 +150,12 @@ const SignupDetails = (props) => {
           );
         })}
         <Button
+          className='button-add'
           onClick={(event) => {
             addFormFields(nativeLangs, setNativeLangs);
           }}
         >
-          Add more native language
+          +
         </Button>
 
         {learningLangs.map((element, index) => {
@@ -162,6 +170,7 @@ const SignupDetails = (props) => {
 
           return (
             <>
+              <p>Select your leaning language</p>
               <select
                 className='ui dropdown'
                 onChange={(event) => handleChange(index, event, learningLangs, setLearningLangs)}
@@ -173,11 +182,12 @@ const SignupDetails = (props) => {
           );
         })}
         <Button
+          className='button-add'
           onClick={(event) => {
             addFormFields(learningLangs, setLearningLangs);
           }}
         >
-          Add more leaning language
+          +
         </Button>
 
         {nationalities.map((element, index) => {
@@ -192,6 +202,7 @@ const SignupDetails = (props) => {
 
           return (
             <>
+              <p>Select your nationalities</p>
               <select
                 className='ui dropdown'
                 onChange={(event) => handleChange(index, event, nationalities, setNationalities)}
@@ -204,11 +215,12 @@ const SignupDetails = (props) => {
         })}
 
         <Button
+          className='button-add'
           onClick={(event) => {
             addFormFields(nationalities, setNationalities);
           }}
         >
-          Add more nationalities
+          +
         </Button>
 
         <Form.Field>

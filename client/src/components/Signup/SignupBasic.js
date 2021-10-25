@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
-import { signupActionCreator } from '../../actionCreators/authActionCreators';
-
 // componentDidMount() {
 //   window.navigator.geolocation.getCurrentPosition(
 //     (position) => {
