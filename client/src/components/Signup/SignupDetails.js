@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 import path from 'path';
 import axios from 'axios';
 
@@ -53,11 +54,12 @@ const SignupDetails = (props) => {
       job,
     };
 
-    const result = await axios.post('/users/signup', formData, {
-      baseURL: process.env.REACT_APP_BASE_API_URL,
-    });
-    localStorage.setItem('mosquitare token', result.data.jwtToken);
-    console.log(result);
+    // const result = await axios.post('/users/signup', formData, {
+    //   baseURL: process.env.REACT_APP_BASE_API_URL,
+    // });
+    props.signupActionCreator(formData);
+    // localStorage.setItem('mosquitare token', result.data.jwtToken);
+    // console.log(result);
   };
 
   useEffect(() => {
@@ -236,4 +238,4 @@ const SignupDetails = (props) => {
   );
 };
 
-export default SignupDetails;
+export default connect(null, { signupActionCreator })(SignupDetails);

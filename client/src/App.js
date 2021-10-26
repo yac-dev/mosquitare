@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
+import history from './history';
 
 // components
 import LandingPage from './components/LandingPage';
@@ -20,7 +21,7 @@ const App = () => {
 
   return (
     <div>
-      <Router>
+      <Router history={history}>
         <Navbar />
         <Route path='/' exact component={LandingPage} />
         <Route path='/signup/basic' exact component={SignupBasic} />

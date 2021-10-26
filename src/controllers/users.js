@@ -61,4 +61,10 @@ export const login = async (request, response) => {
   }
 };
 
+export const loadMe = async (request, response) => {
+  try {
+    // まずは、post前提で作ろう。
+    const { jwtToken } = request.body;
+  } catch (error) {}
+};
 // authorization...

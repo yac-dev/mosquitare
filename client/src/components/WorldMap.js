@@ -1,48 +1,30 @@
 import React, { useRef, useEffect, useState } from 'react';
-// import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import ReactMapGL, { Marker, Popup } from 'react-map-gl';
-import path from 'path';
+import { Icon } from 'semantic-ui-react';
 
-require('dotenv').config({ path: path.join(__dirname, '../', '../', '.env') });
-// mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
+// redux
+import { connect } from 'react-redux';
+import { loadPositionActionCreator } from '../actionCreators/authActionCreators';
 
-const WorldMap = () => {
+const WorldMap = (props) => {
   // hooks states
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
-  const [userPosition, setUserPosition] = useState({ lng: '', lat: '' });
-  const [user, setUser] = useState({});
 
   useEffect(() => {
-    // まずuserの情報を取ってきた後に、このlng, latのpropertyを加える。
-    const getLngLat = () => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserPosition({
-            ...userPosition,
-            lng: Number(position.coords.longitude.toFixed(1)),
-            lat: Number(position.coords.latitude.toFixed(1)),
-          });
-        },
-        (rejected) => {
-          console.log(rejected);
-        }
-      );
-    };
-    getLngLat();
+    props.loadPositionActionCreator();
   }, []);
 
   const markerRender = () => {
-    console.log(userPosition.lng, userPosition.lat);
-    if (userPosition.lng && userPosition.lat) {
+    if (props.authState.currentUserPosition) {
       return (
         // ただ数値を入力するだけでは表示されないみたいだな。
         <Marker
-          longitude={userPosition.lng}
-          latitude={userPosition.lat}
+          longitude={props.authState.currentUserPosition.lng}
+          latitude={props.authState.currentUserPosition.lat}
           offsetLeft={-3.5 * viewport.zoom}
           offsetTop={-7 * viewport.zoom}
         >
-          You are here!!!!!!!!!!!!!!!!!!!!!
+          <Icon className='green user icon' size='large' />
         </Marker>
       );
     } else {
@@ -67,4 +49,8 @@ const WorldMap = () => {
   );
 };
 
-export default WorldMap;
+const mapStateToProps = (state) => {
+  return { authState: state.authState };
+};
+
+export default connect(mapStateToProps, { loadPositionActionCreator })(WorldMap);
