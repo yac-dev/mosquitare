@@ -27,6 +27,7 @@ const Socket = () => {
 
   // hooks useEffect
   useEffect(() => {
+    console.log(socket);
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
       setMyStream(stream);
 
@@ -36,13 +37,14 @@ const Socket = () => {
     });
 
     // signaling serverからsocketのidがemitされている。
-    socket.on('ME', (socketIDfromServer) => {
+    socket.on('I GOT A SOCKET ID FROM MR.SIGNALING SERVER.', (socketIDfromServer) => {
+      console.log(socketIDfromServer);
       setMe(socketIDfromServer);
     });
 
     // signaling serverからCALLUSER eventが来たら、そのeventをlistenする。
     // これは基本、callを受けたclientのmemoryに保存される。
-    socket.on('CALL', (data) => {
+    socket.on('SOMEBODY CALLS ME FROM MR.SIGNALING SERVER.', (data) => {
       setIsRecievingCall(true);
       setCaller(data.caller);
       setCallerSignal(data.signalData);
@@ -55,11 +57,11 @@ const Socket = () => {
     // signaling serverへデータを渡す。typeはofferで、media config（video, audio）をsdpとする。送信元は誰で、送信先が誰であるか。
     peer.on('signal', (signalData) => {
       console.log('Im calling...');
-      socket.emit('CALL', { signalData, me, oppositeId });
+      socket.emit('I CALL SOMEBODY.', { signalData, me, oppositeId });
     });
 
     // clientBがanswerした後、ここがなんかおかしくなる。。。
-    socket.on('ACCEPTED', (signalData) => {
+    socket.on('MY CALL IS ACCEPTED FROM MR.SIGNALING SERVER.', (signalData) => {
       console.log('My call is accepted.');
       console.log(signalData);
       setCallAccepted(true);
@@ -75,7 +77,6 @@ const Socket = () => {
 
   const answer = () => {
     setCallAccepted(true);
-    console.log('I answered.');
 
     const peer = new Peer({ initiator: false, stream: myStream, trickle: false });
 
@@ -84,8 +85,9 @@ const Socket = () => {
     });
 
     peer.on('signal', (signalData) => {
-      socket.emit('ANSWER', { signalData, caller });
+      socket.emit('I ANSWER THE CALL.', { signalData, caller });
     });
+    console.log('I answered.');
 
     peer.signal(callerSignal);
     connectionRef.current = peer;

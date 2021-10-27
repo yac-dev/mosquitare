@@ -1,15 +1,16 @@
-import { SIGNUP, LOGIN, LOAD_POSITION } from '../actionCreators/type';
+import { SIGNUP, LOGIN, LOAD_POSITION, GET_SOCKET_ID } from '../actionCreators/type';
 
-const INITIALSTATE = {
+const INITIAL_STATE = {
   currentUser: null,
   currentUserPosition: null,
-  isCurrentUserOnline: null,
   isCurrentUserBusy: false,
   isCurrentUserLoggedIn: false,
+  currentUserSocketId: '',
+  isCurrentUserOnline: null,
   token: localStorage.getItem('mosquitare token'),
 };
 
-const authReducer = (state = INITIALSTATE, action) => {
+const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case SIGNUP:
     case LOGIN:
@@ -19,6 +20,12 @@ const authReducer = (state = INITIALSTATE, action) => {
         isCurrentUserOnline: true, // browserを開いているか調べればいいのかね。
         isCurrentUserLoggedIn: true,
         token: action.payload.jwtToken,
+      };
+    case GET_SOCKET_ID:
+      return {
+        ...state,
+        isCurrentUserOnline: true,
+        currentUserSocketId: action.payload,
       };
 
     case LOAD_POSITION:

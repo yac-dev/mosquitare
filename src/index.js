@@ -9,6 +9,14 @@ const port = process.env.PORT;
 const server = http.createServer(app);
 import { Server } from 'socket.io';
 
+import {
+  I_GOT_SOCKET_ID,
+  I_CALL_SOMEBODY,
+  SOMEBODY_CALLS_ME,
+  I_ANSWER_THE_CALL,
+  MY_CALL_IS_ACCEPTED,
+} from './socketEvents';
+
 const io = new Server(server, {
   cors: {
     origin: '*',
@@ -24,14 +32,18 @@ const io = new Server(server, {
 // });
 
 io.on('connection', (socket) => {
-  socket.emit('ME', socket.id);
+  socket.emit(I_GOT_SOCKET_ID, socket.id);
 
-  socket.on('CALL', (data) => {
-    io.to(data.oppositeId).emit('CALL', { signalData: data.signalData, caller: data.me });
+  socket.on(I_CALL_SOMEBODY, (dataFromCaller) => {
+    io.to(dataFromCaller.oppositeSocketId).emit(SOMEBODY_CALLS_ME, {
+      signalData: dataFromCaller.signalData,
+      whoIsCalling: dataFromCaller.mySocketId,
+    });
   });
 
-  socket.on('ANSWER', (data) => {
-    io.to(data.caller).emit('ACCEPTED', data.signalData);
+  socket.on(I_ANSWER_THE_CALL, (dataFromAnswerer) => {
+    console.log(dataFromAnswerer);
+    io.to(dataFromAnswerer.whoIsCalling).emit(MY_CALL_IS_ACCEPTED, dataFromAnswerer.signalData);
   });
 });
 

@@ -60,6 +60,8 @@ const SignupDetails = (props) => {
     props.signupActionCreator(formData);
     // localStorage.setItem('mosquitare token', result.data.jwtToken);
     // console.log(result);
+
+    // ここのapi, languageとcountryのdata populateしないといけないな。
   };
 
   useEffect(() => {

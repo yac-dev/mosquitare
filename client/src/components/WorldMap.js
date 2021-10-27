@@ -2,17 +2,41 @@ import React, { useRef, useEffect, useState } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import { Icon, Popup } from 'semantic-ui-react';
 
+// socketio
+import { io } from 'socket.io-client';
+import Peer from 'simple-peer';
+
 // redux
 import { connect } from 'react-redux';
+
+// action creators
 import { loadPositionActionCreator } from '../actionCreators/authActionCreators';
+import { getMediaActionCreator } from '../actionCreators/mediaActionCreator';
+import { getSokcetIdActionCreator } from '../actionCreators/mediaActionCreator';
+import { callActionCreator } from '../actionCreators/mediaActionCreator';
+import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
+import { answerCallActionCreator } from '../actionCreators/mediaActionCreator';
+
+const socket = io(process.env.REACT_APP_WEBRTC);
 
 const WorldMap = (props) => {
-  // hooks states
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
-  const [toggle, setToggle] = useState(false);
+  // const [myVideoStreamObject, setMyVideoStreamObject] = useState(''); // これやっぱいらない。一応、stream objectはstoreの中に入ってくれているみたい。
+  const [oppositeSocketId, setOppositeSocketId] = useState(''); // とりあえず、入力欄を設けておこう。今のうちは。
+  const myVideo = useRef();
+  const oppositeVideo = useRef();
+  const connectionRef = useRef();
 
+  // position
   useEffect(() => {
     props.loadPositionActionCreator();
+  }, []);
+
+  // media stream用
+  useEffect(() => {
+    props.getMediaActionCreator(myVideo);
+    props.getSokcetIdActionCreator(socket);
+    props.listenCallActionCreator(socket);
   }, []);
 
   const userMarkerRender = () => {
@@ -20,7 +44,6 @@ const WorldMap = (props) => {
       const position = props.authState.currentUserPosition;
       const user = props.authState.currentUser;
       return (
-        // ただ数値を入力するだけでは表示されないみたいだな。
         <>
           <Marker
             longitude={position.lng}
@@ -28,11 +51,6 @@ const WorldMap = (props) => {
             offsetLeft={-3.5 * viewport.zoom}
             offsetTop={-7 * viewport.zoom}
           >
-            {/* <Icon
-              className='green user icon'
-              size='large'
-              // onMouseEnter={setToggle(true)}
-            /> */}
             <Popup
               header={user.name}
               content={userInfoRender}
@@ -53,7 +71,6 @@ const WorldMap = (props) => {
     }
   };
 
-  // hoverしたら、user infoを出す。
   const userInfoRender = () => {
     if (props.authState.currentUser && props.authState.currentUserPosition) {
       const user = props.authState.currentUser;
@@ -90,24 +107,59 @@ const WorldMap = (props) => {
   };
 
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
-      <ReactMapGL
-        {...viewport}
-        mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-        width='100%'
-        height='100%'
-        mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
-        onViewportChange={(viewport) => setViewport(viewport)}
-        // onDblClick={currentUsername && handleAddClick}
-      >
-        {userMarkerRender()}
-      </ReactMapGL>
-    </div>
+    <>
+      {/* <div style={{ height: '100vh', width: '100%' }}>
+        <ReactMapGL
+          {...viewport}
+          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+          width='100%'
+          height='100%'
+          mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+          onViewportChange={(viewport) => setViewport(viewport)}
+          // onDblClick={currentUsername && handleAddClick}
+        >
+          {userMarkerRender()}
+        </ReactMapGL>
+      </div> */}
+
+      <div>
+        Sockets
+        <div className='video-container'>
+          <div className='video'>
+            <video playsInline muted ref={myVideo} autoPlay style={{ width: '300px' }} />
+            <div>{props.mediaState.mySocketId}</div>
+          </div>
+          <div className='video'>
+            <video playsInline ref={oppositeVideo} autoPlay style={{ width: '300px' }} />
+          </div>
+        </div>
+        <label>Opposite ID to call</label>
+        <input value={oppositeSocketId} onChange={(e) => setOppositeSocketId(e.target.value)} />
+        <button onClick={() => props.callActionCreator(socket, Peer, oppositeSocketId, oppositeVideo, connectionRef)}>
+          Call
+        </button>
+        <div>
+          <div className='caller'>
+            {/* <h1>Someone is calling...</h1> */}
+            <button onClick={() => props.answerCallActionCreator(socket, Peer, oppositeVideo, connectionRef)}>
+              Answer
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState };
+  return { authState: state.authState, mediaState: state.mediaState };
 };
 
-export default connect(mapStateToProps, { loadPositionActionCreator })(WorldMap);
+export default connect(mapStateToProps, {
+  loadPositionActionCreator,
+  getMediaActionCreator,
+  getSokcetIdActionCreator,
+  listenCallActionCreator,
+  callActionCreator,
+  answerCallActionCreator,
+})(WorldMap);
