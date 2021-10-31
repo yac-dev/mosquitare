@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
-import { Icon, Popup } from 'semantic-ui-react';
+import Modal from 'react-modal';
+import { Icon, Popup, Header, Button } from 'semantic-ui-react';
 
 // socketio
 import { io } from 'socket.io-client';
@@ -16,6 +17,17 @@ import { getSokcetIdActionCreator } from '../actionCreators/mediaActionCreator';
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { answerCallActionCreator } from '../actionCreators/mediaActionCreator';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
 
 const socket = io(process.env.REACT_APP_WEBRTC);
 
@@ -39,10 +51,34 @@ const WorldMap = (props) => {
     props.listenCallActionCreator(socket);
   }, []);
 
+  // let subtitle;
+  // const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  // function openModal() {
+  //   setIsOpen(true);
+  // }
+
+  // function afterOpenModal() {
+  //   // references are now sync'd and can be accessed.
+  //   subtitle.style.color = '#f00';
+  // }
+
+  // function closeModal() {
+  //   setIsOpen(false);
+  // }
+
+  const onCallClick = (event) => {
+    event.preventDefault();
+    console.log('Im calling');
+    props.callActionCreator(socket, Peer, props.authState.currentUserSocketId, oppositeVideo, connectionRef);
+  };
+
   const userMarkerRender = () => {
     if (props.authState.currentUserPosition && props.authState.currentUser) {
       const position = props.authState.currentUserPosition;
       const user = props.authState.currentUser;
+      console.log(position);
+      console.log(user);
       return (
         <>
           <Marker
@@ -51,7 +87,7 @@ const WorldMap = (props) => {
             offsetLeft={-3.5 * viewport.zoom}
             offsetTop={-7 * viewport.zoom}
           >
-            <Popup
+            {/* <Popup
               header={user.name}
               content={userInfoRender}
               key='hola'
@@ -62,7 +98,10 @@ const WorldMap = (props) => {
                   // onMouseEnter={setToggle(true)}
                 />
               }
-            />
+            /> */}
+            <Popup trigger={<Icon className='green user icon' size='large' />} flowing hoverable>
+              {userInfoRender()}
+            </Popup>
           </Marker>
         </>
       );
@@ -89,15 +128,16 @@ const WorldMap = (props) => {
         // >
         <div className='card'>
           <div className='content'>
-            <div className='header'>{user.name}</div>
+            <h4>{user.name}</h4>
             <div className='description'>{user.nativeLangs.map((nativeLang) => nativeLang)}</div>
             <div className='description'>{user.learningLangs.map((learningLang) => learningLang)}</div>
             <div className='description'>{user.job}</div>
           </div>
-          <div className='ui bottom attached button'>
-            <i className='add icon'></i>
+
+          <Button positive onClick={(event) => onCallClick(event)}>
+            <i class='video icon'></i>
             Call
-          </div>
+          </Button>
         </div>
       );
       // </Popup>
@@ -106,9 +146,13 @@ const WorldMap = (props) => {
     }
   };
 
+  // if (props.authState.isCurrentUserInConversation) {
+  //   setIsOpen(true);
+  // }
+
   return (
     <>
-      {/* <div style={{ height: '100vh', width: '100%' }}>
+      <div style={{ height: '100vh', width: '100%' }}>
         <ReactMapGL
           {...viewport}
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -120,7 +164,15 @@ const WorldMap = (props) => {
         >
           {userMarkerRender()}
         </ReactMapGL>
-      </div> */}
+      </div>
+
+      {/* <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel='Example Modal'
+      > */}
 
       <div>
         Sockets
@@ -140,19 +192,21 @@ const WorldMap = (props) => {
         </button>
         <div>
           <div className='caller'>
-            {/* <h1>Someone is calling...</h1> */}
+            <h1>Someone is calling...</h1>
             <button onClick={() => props.answerCallActionCreator(socket, Peer, oppositeVideo, connectionRef)}>
               Answer
             </button>
           </div>
         </div>
       </div>
+
+      {/* </Modal> */}
     </>
   );
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState, mediaState: state.mediaState };
+  return { authState: state.authState, mediaState: state.mediaState, globalUsersState: state.globalUsersState };
 };
 
 export default connect(mapStateToProps, {

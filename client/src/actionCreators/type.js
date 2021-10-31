@@ -2,6 +2,7 @@
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
 export const LOAD_POSITION = 'LOAD_POSITION';
+export const ADD_USER_GLOBALLY = 'ADD_USER_GLOBALLY';
 
 // media
 export const GET_SOCKET_ID = 'GET_SOCKET_ID';

@@ -1,9 +1,9 @@
-import { SIGNUP, LOGIN, LOAD_POSITION, GET_SOCKET_ID } from '../actionCreators/type';
+import { SIGNUP, LOGIN, LOAD_POSITION, GET_SOCKET_ID, CALL_ACCEPTED } from '../actionCreators/type';
 
 const INITIAL_STATE = {
   currentUser: null,
   currentUserPosition: null,
-  isCurrentUserBusy: false,
+  isCurrentUserInConversation: false,
   isCurrentUserLoggedIn: false,
   currentUserSocketId: '',
   isCurrentUserOnline: null,
@@ -17,9 +17,14 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentUser: action.payload.user,
-        isCurrentUserOnline: true, // browserを開いているか調べればいいのかね。
+        isCurrentUserOnline: true,
         isCurrentUserLoggedIn: true,
         token: action.payload.jwtToken,
+      };
+    case LOAD_POSITION:
+      return {
+        ...state,
+        currentUserPosition: action.payload,
       };
     case GET_SOCKET_ID:
       return {
@@ -27,11 +32,10 @@ const authReducer = (state = INITIAL_STATE, action) => {
         isCurrentUserOnline: true,
         currentUserSocketId: action.payload,
       };
-
-    case LOAD_POSITION:
+    case CALL_ACCEPTED:
       return {
         ...state,
-        currentUserPosition: action.payload,
+        isCurrentUserInConversation: true,
       };
     default:
       return state;
