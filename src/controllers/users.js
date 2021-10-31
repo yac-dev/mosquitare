@@ -69,3 +69,14 @@ export const loadMe = async (request, response) => {
     console.log(error);
   }
 };
+
+export const getUsers = async (request, response) => {
+  try {
+    const users = await User.find();
+    response.json({
+      users,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

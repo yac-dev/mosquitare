@@ -1,4 +1,12 @@
-import { SIGNUP, LOGIN, LOAD_ME, LOAD_POSITION, GET_SOCKET_ID, CALL_ACCEPTED } from '../actionCreators/type';
+import {
+  SIGNUP,
+  LOGIN,
+  LOAD_ME,
+  LOAD_POSITION,
+  GET_SOCKET_ID,
+  CALL_ACCEPTED,
+  ADD_USER_GLOBALLY,
+} from '../actionCreators/type';
 
 const INITIAL_STATE = {
   currentUser: null,
@@ -15,7 +23,6 @@ const authReducer = (state = INITIAL_STATE, action) => {
     case SIGNUP:
     case LOGIN:
     case LOAD_ME:
-      console.log(action.payload);
       return {
         ...state,
         currentUser: action.payload.user,
@@ -39,6 +46,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isCurrentUserInConversation: true,
       };
+
     default:
       return state;
   }

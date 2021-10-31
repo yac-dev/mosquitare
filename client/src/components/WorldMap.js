@@ -1,11 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react';
 import ReactMapGL, { Marker } from 'react-map-gl';
-import Modal from 'react-modal';
-import { Icon, Popup, Header, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+
+// semantic
+// import Modal from 'react-modal';
+import { Icon, Popup, Header, Button, Modal } from 'semantic-ui-react';
 
 // socketio
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
+
+// component
 
 // redux
 import { connect } from 'react-redux';
@@ -18,16 +23,7 @@ import { callActionCreator } from '../actionCreators/mediaActionCreator';
 import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { answerCallActionCreator } from '../actionCreators/mediaActionCreator';
 
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
+import { getUsersActionCreator } from '../actionCreators/usersActionCreator';
 
 export const socket = io(process.env.REACT_APP_WEBRTC); // おそらく、socketっていう別のファイルを作ってそっからexportした方がいいだろな。conventionの部分を考えると。
 
@@ -49,23 +45,8 @@ const WorldMap = (props) => {
     props.getMediaActionCreator(myVideo);
     props.getSocketIdActionCreator(socket);
     props.listenCallActionCreator(socket);
+    props.getUsersActionCreator();
   }, []);
-
-  // let subtitle;
-  // const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  // function openModal() {
-  //   setIsOpen(true);
-  // }
-
-  // function afterOpenModal() {
-  //   // references are now sync'd and can be accessed.
-  //   subtitle.style.color = '#f00';
-  // }
-
-  // function closeModal() {
-  //   setIsOpen(false);
-  // }
 
   const onCallClick = (event) => {
     event.preventDefault();
@@ -73,12 +54,47 @@ const WorldMap = (props) => {
     props.callActionCreator(socket, Peer, props.authState.currentUserSocketId, oppositeVideo, connectionRef);
   };
 
+  const usersMarkerRender = () => {
+    if (props.authState.currentUser && props.globalUsersState) {
+      const usersHashTable = props.globalUsersState;
+      // 最初に自分のだけ見つけて消すのがいいかもな。
+      delete usersHashTable[props.authState.currentUser._id];
+      const usersRender = Object.keys(usersHashTable).map((user) => {
+        return (
+          <>
+            <Marker
+              longitude={user.currentUserPosition.lng}
+              latitude={user.currentUserPosition.lat}
+              offsetLeft={-3.5 * viewport.zoom}
+              offsetTop={-7 * viewport.zoom}
+            >
+              {/* <Popup
+                header={user.name}
+                content={userInfoRender}
+                key='hola'
+                trigger={
+                  <Icon
+                    className='green user icon'
+                    size='large'
+                    // onMouseEnter={setToggle(true)}
+                  />
+                }
+              /> */}
+              <Popup trigger={<Icon className='red user icon' size='large' />} flowing hoverable>
+                {/* {userInfoRender()} */}
+              </Popup>
+            </Marker>
+          </>
+        );
+      });
+    }
+  };
+
   const userMarkerRender = () => {
     if (props.authState.currentUserPosition && props.authState.currentUser) {
       const position = props.authState.currentUserPosition;
       const user = props.authState.currentUser;
-      console.log(position);
-      console.log(user);
+
       return (
         <>
           <Marker
@@ -114,8 +130,6 @@ const WorldMap = (props) => {
     if (props.authState.currentUser && props.authState.currentUserPosition) {
       const user = props.authState.currentUser;
       const position = props.authState.currentUserPosition;
-      console.log(user);
-      console.log(position);
       return (
         // <Popup
         //   key={position.lng}
@@ -133,10 +147,12 @@ const WorldMap = (props) => {
             <div className='description'>{user.learningLangs.map((learningLang) => learningLang)}</div>
             <div className='description'>{user.job}</div>
           </div>
+          {/* <Link to={{ pathname: '/chatscreen', state: [myVideo, oppositeVideo] }}> */}
 
+          {/* これ、多分いらねーよ。なんで俺こんなことやっているんだ？？？*/}
           <Button positive onClick={(event) => onCallClick(event)}>
-            <i class='video icon'></i>
-            Call
+            <i className='video icon'></i>
+            <Link to='/chatscreen'>Call</Link>
           </Button>
         </div>
       );
@@ -145,10 +161,6 @@ const WorldMap = (props) => {
       return null;
     }
   };
-
-  // if (props.authState.isCurrentUserInConversation) {
-  //   setIsOpen(true);
-  // }
 
   return (
     <>
@@ -166,15 +178,9 @@ const WorldMap = (props) => {
         </ReactMapGL>
       </div>
 
-      {/* <Modal
-        isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
-        onRequestClose={closeModal}
-        style={customStyles}
-        contentLabel='Example Modal'
-      > */}
+      {/* <CallModal myVideo={myVideo} oppositeVideo={oppositeVideo} /> */}
 
-      <div>
+      {/* <div>
         Sockets
         <div className='video-container'>
           <div className='video'>
@@ -198,7 +204,7 @@ const WorldMap = (props) => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* </Modal> */}
     </>
@@ -216,4 +222,5 @@ export default connect(mapStateToProps, {
   listenCallActionCreator,
   callActionCreator,
   answerCallActionCreator,
+  getUsersActionCreator,
 })(WorldMap);

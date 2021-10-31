@@ -10,6 +10,7 @@ import SignupBasic from './components/Signup/SignupBasic';
 import SignupDetails from './components/Signup/SignupDetails';
 import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
+import ChatScreen from './components/ChatScreen';
 
 import store from './store';
 import { socket } from './components/WorldMap';
@@ -32,6 +33,7 @@ const App = () => {
         <Route path='/signup/details' exact component={SignupDetails} />
         <Route path='/socket' exact component={Socket} />
         <Route path='/worldmap' exact component={WorldMap} />
+        <Route path='/chatscreen' exact component={ChatScreen} />
         {/* uber っぽくしたいなら、worldMapをself closingするのではなく、childrenを使うといいかもな 多分*/}
       </Router>
     </div>

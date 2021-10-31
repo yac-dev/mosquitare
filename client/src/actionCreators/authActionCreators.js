@@ -9,8 +9,6 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
   try {
     const result = await mosquitareAPI.post('/users/signup', formData);
     localStorage.setItem('mosquitare token', result.data.jwtToken);
-    console.log(result);
-    console.log(result.data.jwtToken);
 
     dispatch({
       type: SIGNUP,
@@ -31,29 +29,43 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
   }
 };
 
-export const loadPositionActionCreator = () => (dispatch) => {
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const { longitude } = position.coords;
-      const { latitude } = position.coords;
+export const loadPositionActionCreator = () => async (dispatch) => {
+  let position = await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+  const { longitude } = position.coords;
+  const { latitude } = position.coords;
+  const userPosition = {
+    lng: Number(longitude.toFixed(1)),
+    lat: Number(latitude.toFixed(1)),
+  };
+  dispatch({
+    type: LOAD_POSITION,
+    payload: userPosition,
+  });
 
-      const userPosition = {
-        lng: Number(longitude.toFixed(1)),
-        lat: Number(latitude.toFixed(1)),
-      };
+  // navigator.geolocation.getCurrentPosition(
+  //   (position) => {
+  //     const { longitude } = position.coords;
+  //     const { latitude } = position.coords;
 
-      dispatch({
-        type: LOAD_POSITION,
-        payload: userPosition,
-      });
+  //     const userPosition = {
+  //       lng: Number(longitude.toFixed(1)),
+  //       lat: Number(latitude.toFixed(1)),
+  //     };
 
-      // lng: Number(position.coords.longitude.toFixed(1)),
-      // lat: Number(position.coords.latitude.toFixed(1)),
-    },
-    (rejected) => {
-      console.log(rejected);
-    }
-  );
+  //     dispatch({
+  //       type: LOAD_POSITION,
+  //       payload: userPosition,
+  //     });
+
+  //     // lng: Number(position.coords.longitude.toFixed(1)),
+  //     // lat: Number(position.coords.latitude.toFixed(1)),
+  //   },
+  //   (rejected) => {
+  //     console.log(rejected);
+  //   }
+  // );
 };
 
 export const loadMeActionCreator = (jwtToken, socket) => async (dispatch, getState) => {
@@ -70,11 +82,11 @@ export const loadMeActionCreator = (jwtToken, socket) => async (dispatch, getSta
       payload: { user, jwtToken },
     });
 
-    // ここで、loadPositionのaction creatorも実行させる。
-    dispatch(loadPositionActionCreator());
+    // console.log(getState().authState.currentUserPosition);
     dispatch(getSocketIdActionCreator(socket));
+    dispatch(loadPositionActionCreator()); // 多分、このタイミングだと時間がかかってるんだろな。
     const { authState } = getState();
-    console.log(authState);
+    console.log(authState); // currentPositionがnullになるときならない時色々だな。。。
     dispatch({
       type: ADD_USER_GLOBALLY,
       payload: authState,

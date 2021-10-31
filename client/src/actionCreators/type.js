@@ -12,3 +12,6 @@ export const LISTEN_CALL = 'LISTEN_CALL';
 export const CALL = 'CALL';
 export const ANSWER_CALL = 'ANSWER_CALL';
 export const CALL_ACCEPTED = 'CALL_ACCEPTED';
+
+// users
+export const GET_USERS = 'GET_USERS';

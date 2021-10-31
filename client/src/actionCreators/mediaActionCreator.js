@@ -14,7 +14,7 @@ export const getMediaActionCreator = (myVideoRef) => (dispatch) => {
       payload: stream,
     });
     // setMyVideoStreamObject(stream);
-    myVideoRef.current.srcObject = stream;
+    // myVideoRef.current.srcObject = stream; ここなーーー。どうだろう。
   });
 };
 
