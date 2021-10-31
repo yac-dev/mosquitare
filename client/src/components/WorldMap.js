@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 // action creators
 import { loadPositionActionCreator } from '../actionCreators/authActionCreators';
 import { getMediaActionCreator } from '../actionCreators/mediaActionCreator';
-import { getSokcetIdActionCreator } from '../actionCreators/mediaActionCreator';
+import { getSocketIdActionCreator } from '../actionCreators/mediaActionCreator';
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { answerCallActionCreator } from '../actionCreators/mediaActionCreator';
@@ -29,7 +29,7 @@ const customStyles = {
   },
 };
 
-const socket = io(process.env.REACT_APP_WEBRTC);
+export const socket = io(process.env.REACT_APP_WEBRTC); // おそらく、socketっていう別のファイルを作ってそっからexportした方がいいだろな。conventionの部分を考えると。
 
 const WorldMap = (props) => {
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
@@ -47,7 +47,7 @@ const WorldMap = (props) => {
   // media stream用
   useEffect(() => {
     props.getMediaActionCreator(myVideo);
-    props.getSokcetIdActionCreator(socket);
+    props.getSocketIdActionCreator(socket);
     props.listenCallActionCreator(socket);
   }, []);
 
@@ -212,7 +212,7 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   loadPositionActionCreator,
   getMediaActionCreator,
-  getSokcetIdActionCreator,
+  getSocketIdActionCreator,
   listenCallActionCreator,
   callActionCreator,
   answerCallActionCreator,

@@ -2,6 +2,7 @@
 export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
 export const LOAD_POSITION = 'LOAD_POSITION';
+export const LOAD_ME = 'LOAD_ME';
 export const ADD_USER_GLOBALLY = 'ADD_USER_GLOBALLY';
 
 // media

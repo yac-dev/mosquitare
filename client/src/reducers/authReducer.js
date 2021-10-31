@@ -1,4 +1,4 @@
-import { SIGNUP, LOGIN, LOAD_POSITION, GET_SOCKET_ID, CALL_ACCEPTED } from '../actionCreators/type';
+import { SIGNUP, LOGIN, LOAD_ME, LOAD_POSITION, GET_SOCKET_ID, CALL_ACCEPTED } from '../actionCreators/type';
 
 const INITIAL_STATE = {
   currentUser: null,
@@ -14,6 +14,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case SIGNUP:
     case LOGIN:
+    case LOAD_ME:
+      console.log(action.payload);
       return {
         ...state,
         currentUser: action.payload.user,

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Router, Route } from 'react-router-dom';
 import history from './history';
+import './App.css';
 
 // components
 import LandingPage from './components/LandingPage';
@@ -10,14 +11,17 @@ import SignupDetails from './components/Signup/SignupDetails';
 import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 
-import './App.css';
+import store from './store';
+import { socket } from './components/WorldMap';
+import { loadMeActionCreator } from './actionCreators/authActionCreators';
 
 const App = () => {
-  // useEffect(() => {
-  //   const jwt = localStorage.getItem('mosquitare token');
-  //   if (jwt) {
-  //   }
-  // }, []);
+  useEffect(() => {
+    const jwtToken = localStorage.getItem('mosquitare token');
+    if (jwtToken) {
+      store.dispatch(loadMeActionCreator(jwtToken, socket));
+    }
+  }, []);
 
   return (
     <div>

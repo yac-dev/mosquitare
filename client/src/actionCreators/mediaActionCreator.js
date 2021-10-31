@@ -18,7 +18,7 @@ export const getMediaActionCreator = (myVideoRef) => (dispatch) => {
   });
 };
 
-export const getSokcetIdActionCreator = (socket) => (dispatch) => {
+export const getSocketIdActionCreator = (socket) => (dispatch) => {
   socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
     dispatch({
       type: GET_SOCKET_ID,

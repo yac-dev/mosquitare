@@ -1,6 +1,9 @@
 import { mosquitareAPI } from '../apis/mosquitare';
 import history from '../history';
-import { SIGNUP, LOAD_POSITION, ADD_USER_GLOBALLY } from './type';
+import { SIGNUP, LOAD_POSITION, ADD_USER_GLOBALLY, LOAD_ME } from './type';
+
+// loadmeで使うaction creator. loadPositionはすでにここにあるね。
+import { getSocketIdActionCreator } from './mediaActionCreator';
 
 export const signupActionCreator = (formData) => async (dispatch, getState) => {
   try {
@@ -51,4 +54,32 @@ export const loadPositionActionCreator = () => (dispatch) => {
       console.log(rejected);
     }
   );
+};
+
+export const loadMeActionCreator = (jwtToken, socket) => async (dispatch, getState) => {
+  try {
+    const result = await mosquitareAPI.get('/users/loadme', {
+      headers: {
+        authorization: `Bearer ${jwtToken}`,
+      },
+    });
+    const { user } = result.data;
+
+    dispatch({
+      type: LOAD_ME,
+      payload: { user, jwtToken },
+    });
+
+    // ここで、loadPositionのaction creatorも実行させる。
+    dispatch(loadPositionActionCreator());
+    dispatch(getSocketIdActionCreator(socket));
+    const { authState } = getState();
+    console.log(authState);
+    dispatch({
+      type: ADD_USER_GLOBALLY,
+      payload: authState,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

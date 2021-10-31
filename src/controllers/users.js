@@ -64,7 +64,7 @@ export const login = async (request, response) => {
 export const loadMe = async (request, response) => {
   try {
     const { user } = request;
-    response.json(user);
+    response.json({ user });
   } catch (error) {
     console.log(error);
   }
