@@ -1,9 +1,19 @@
 import { mosquitareAPI } from '../apis/mosquitare';
 import history from '../history';
-import { SIGNUP, LOAD_POSITION, ADD_USER_GLOBALLY, LOAD_ME } from './type';
+import {
+  SIGNUP,
+  LOAD_POSITION,
+  ADD_USER_GLOBALLY,
+  LOAD_ME,
+  GET_SOCKET_ID,
+  UPDATE_USER_POSITION_IN_GLOBAL,
+  UPDATE_USER_SOCKETID_IN_GLOBAL,
+} from './type';
 
 // loadmeで使うaction creator. loadPositionはすでにここにあるね。
 import { getSocketIdActionCreator } from './mediaActionCreator';
+// import { socket } from '../components/WorldMap';
+import { I_GOT_SOCKET_ID } from './socketEvents';
 
 export const signupActionCreator = (formData) => async (dispatch, getState) => {
   try {
@@ -29,44 +39,126 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
   }
 };
 
-export const loadPositionActionCreator = () => async (dispatch) => {
-  let position = await new Promise((resolve, reject) => {
+export const loadPositionActionCreator = (dispatch) => {
+  return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
-  const { longitude } = position.coords;
-  const { latitude } = position.coords;
-  const userPosition = {
-    lng: Number(longitude.toFixed(1)),
-    lat: Number(latitude.toFixed(1)),
-  };
-  dispatch({
-    type: LOAD_POSITION,
-    payload: userPosition,
-  });
+  // const { longitude } = position.coords;
+  // const { latitude } = position.coords;
 
-  // navigator.geolocation.getCurrentPosition(
-  //   (position) => {
-  //     const { longitude } = position.coords;
-  //     const { latitude } = position.coords;
+  // const userPosition = {
+  //   lng: Number(longitude.toFixed(1)),
+  //   lat: Number(latitude.toFixed(1)),
+  // };
 
-  //     const userPosition = {
-  //       lng: Number(longitude.toFixed(1)),
-  //       lat: Number(latitude.toFixed(1)),
-  //     };
-
-  //     dispatch({
-  //       type: LOAD_POSITION,
-  //       payload: userPosition,
-  //     });
-
-  //     // lng: Number(position.coords.longitude.toFixed(1)),
-  //     // lat: Number(position.coords.latitude.toFixed(1)),
-  //   },
-  //   (rejected) => {
-  //     console.log(rejected);
-  //   }
-  // );
+  // dispatch({
+  //   type: LOAD_POSITION,
+  //   payload: userPosition,
+  // });
 };
+
+//   );
+// });
+
+// let position = await new Promise((resolve, reject) => {
+//   navigator.geolocation.getCurrentPosition(resolve, reject);
+// });
+// const { longitude } = position.coords;
+// console.log(longitude);
+// const { latitude } = position.coords;
+// console.log(latitude);
+// const userPosition = {
+//   lng: Number(longitude.toFixed(1)),
+//   lat: Number(latitude.toFixed(1)),
+// };
+// dispatch({
+//   type: LOAD_POSITION,
+//   payload: userPosition,
+// });
+
+// // navigator.geolocation.getCurrentPosition(
+// //   (position) => {
+// //     const { longitude } = position.coords;
+// //     const { latitude } = position.coords;
+
+// //     const userPosition = {
+// //       lng: Number(longitude.toFixed(1)),
+// //       lat: Number(latitude.toFixed(1)),
+// //     };
+
+// //     dispatch({
+// //       type: LOAD_POSITION,
+// //       payload: userPosition,
+// //     });
+
+// //     // lng: Number(position.coords.longitude.toFixed(1)),
+// //     // lat: Number(position.coords.latitude.toFixed(1)),
+// //   },
+// //   (rejected) => {
+// //     console.log(rejected);
+// //   }
+// // );
+
+// export const loadPositionActionCreator = () => (dispatch) => {
+//   navigator.geolocation.getCurrentPosition(
+//     (position) => {
+//       const { longitude } = position.coords;
+//       const { latitude } = position.coords;
+
+//       const userPosition = {
+//         lng: Number(longitude.toFixed(1)),
+//         lat: Number(latitude.toFixed(1)),
+//       };
+
+//       dispatch({
+//         type: LOAD_POSITION,
+//         payload: userPosition,
+//       });
+//     },
+//     (rejected) => {
+//       console.log(rejected);
+//     }
+//   );
+
+//   // let position = await new Promise((resolve, reject) => {
+//   //   navigator.geolocation.getCurrentPosition(resolve, reject);
+//   // });
+//   // const { longitude } = position.coords;
+//   // console.log(longitude);
+//   // const { latitude } = position.coords;
+//   // console.log(latitude);
+//   // const userPosition = {
+//   //   lng: Number(longitude.toFixed(1)),
+//   //   lat: Number(latitude.toFixed(1)),
+//   // };
+//   // dispatch({
+//   //   type: LOAD_POSITION,
+//   //   payload: userPosition,
+//   // });
+
+//   // // navigator.geolocation.getCurrentPosition(
+//   // //   (position) => {
+//   // //     const { longitude } = position.coords;
+//   // //     const { latitude } = position.coords;
+
+//   // //     const userPosition = {
+//   // //       lng: Number(longitude.toFixed(1)),
+//   // //       lat: Number(latitude.toFixed(1)),
+//   // //     };
+
+//   // //     dispatch({
+//   // //       type: LOAD_POSITION,
+//   // //       payload: userPosition,
+//   // //     });
+
+//   // //     // lng: Number(position.coords.longitude.toFixed(1)),
+//   // //     // lat: Number(position.coords.latitude.toFixed(1)),
+//   // //   },
+//   // //   (rejected) => {
+//   // //     console.log(rejected);
+//   // //   }
+//   // // );
+// };
 
 export const loadMeActionCreator = (jwtToken, socket) => async (dispatch, getState) => {
   try {
@@ -82,15 +174,50 @@ export const loadMeActionCreator = (jwtToken, socket) => async (dispatch, getSta
       payload: { user, jwtToken },
     });
 
-    // console.log(getState().authState.currentUserPosition);
-    dispatch(getSocketIdActionCreator(socket));
-    dispatch(loadPositionActionCreator()); // 多分、このタイミングだと時間がかかってるんだろな。
-    const { authState } = getState();
-    console.log(authState); // currentPositionがnullになるときならない時色々だな。。。
-    dispatch({
-      type: ADD_USER_GLOBALLY,
-      payload: authState,
+    loadPositionActionCreator().then((result) => {
+      const { longitude } = result.coords;
+      const { latitude } = result.coords;
+
+      // const userPosition = {
+      //   lng: Number(longitude.toFixed(1)),
+      //   lat: Number(latitude.toFixed(1)),
+      // };
+      const userPosition = {
+        lng: longitude,
+        lat: latitude,
+      };
+
+      dispatch({
+        type: LOAD_POSITION,
+        payload: userPosition,
+      });
+
+      let { authState } = getState();
+      // globalな方のstateにおける自分の情報を変える。
+      dispatch({
+        type: UPDATE_USER_POSITION_IN_GLOBAL,
+        payload: { authState, userPosition },
+      });
+
+      // authState = getState().authState;
+
+      // socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
+      //   console.log(socketIdFromServer);
+      //   dispatch({
+      //     type: UPDATE_USER_SOCKETID_IN_GLOBAL,
+      //     payload: { authState, socketIdFromServer },
+      //   });
+      // });
+
+      // const { authState } = getState(); // うん。一気にやる必要ないかな。。。多分。。。
+
+      // dispatch({
+      //   type: ADD_USER_GLOBALLY,
+      //   payload: authState,
+      // });
     });
+
+    // console.log(authState); // currentPositionがnullになるときならない時色々だな。。。
   } catch (error) {
     console.log(error);
   }

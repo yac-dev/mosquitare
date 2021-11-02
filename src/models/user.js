@@ -80,14 +80,23 @@ const userSchema = new mongoose.Schema({
   durations: [Number],
   averageDuration: Number,
   // friends: [mongoose.Schema.Types.Mixed],
-  // location: {
-  //   type: {
-  //     type: String,
-  //     enum: ['Point'],
-  //     default: 'Point',
-  //   },
-  //   coordinates: [Number],
-  // },
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+    },
+    coordinates: [Number],
+  },
+  socketId: {
+    type: String,
+    required: true,
+  },
+  loggedIn: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 userSchema.index({ location: '2dsphere' });

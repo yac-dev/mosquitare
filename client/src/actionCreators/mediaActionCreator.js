@@ -7,6 +7,10 @@ import {
   MY_CALL_IS_ACCEPTED,
 } from './socketEvents';
 
+import Peer from 'simple-peer';
+import store from '../store';
+import history from '../history';
+
 export const getMediaActionCreator = (myVideoRef) => (dispatch) => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
     dispatch({
@@ -14,7 +18,7 @@ export const getMediaActionCreator = (myVideoRef) => (dispatch) => {
       payload: stream,
     });
     // setMyVideoStreamObject(stream);
-    // myVideoRef.current.srcObject = stream; ここなーーー。どうだろう。
+    // myVideoRef.current.srcObject = stream; // ここなーーー。どうだろう。// chatscreenの方でuseEffectすればいいのかね。。。ここだけ。
   });
 };
 
@@ -27,6 +31,33 @@ export const getSocketIdActionCreator = (socket) => (dispatch) => {
   });
 };
 
+// これだめ。。。
+// export const getSocketIdActionCreator = async (socket, dispatch) => {
+//   return new Promise((resolve, reject) => {
+//     socket.on(I_GOT_SOCKET_ID, (info) => {
+//       resolve(info);
+//     });
+//   });
+// };
+
+// dispatch({
+//   type: GET_SOCKET_ID,
+//   payload: socketIdFromServer,
+// });
+
+//   dispatch({
+//     type: GET_SOCKET_ID,
+//     payload: socketIdFromServer,
+//   });
+// });
+// resolve();
+
+let peerInitiator = new Peer({
+  initiator: true,
+  stream: store.getState().mediaState.myVideoStreamObject,
+  trickle: false,
+});
+
 export const callActionCreator =
   (socket, Peer, oppositeSocketId, oppositeVideoRef, connectionRef) => (dispatch, getState) => {
     const { myVideoStreamObject } = getState().mediaState;
@@ -34,35 +65,34 @@ export const callActionCreator =
     console.log('Im calling...');
     console.log(myVideoStreamObject, mySocketId);
 
-    const peer = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
+    // const peer = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
 
-    peer.on('signal', (signalData) => {
+    peerInitiator.on('signal', (signalData) => {
       socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId });
     });
 
-    socket.on(MY_CALL_IS_ACCEPTED, (signalData) => {
-      console.log('My call is accepted.');
-      console.log(signalData);
+    // socket.on(MY_CALL_IS_ACCEPTED, (signalData) => {
+    //   console.log('My call is accepted.');
+    //   console.log(signalData);
 
-      dispatch({
-        type: CALL_ACCEPTED,
-        payload: '',
-      });
-      peer.signal(signalData);
-      console.log('not sure...');
-    });
+    //   dispatch({
+    //     type: CALL_ACCEPTED,
+    //     payload: '',
+    //   });
+    //   peer.signal(signalData);
+    //   console.log('not sure...');
+    // });
 
-    peer.on('stream', (stream) => {
-      oppositeVideoRef.current.srcObject = stream;
-    });
+    // peer.on('stream', (stream) => {
+    //   oppositeVideoRef.current.srcObject = stream;
+    // });
 
-    connectionRef.current = peer;
+    // connectionRef.current = peer;
   };
-
-export const callAcceptedActionCreator = () => () => {};
 
 export const listenCallActionCreator = (socket) => (dispatch) => {
   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
+    console.log('somebody calls me!!!');
     const { signalData, whoIsCalling } = dataFromServer;
     dispatch({
       type: LISTEN_CALL,
@@ -77,13 +107,16 @@ export const answerCallActionCreator = (socket, Peer, oppositeVideoRef, connecti
     payload: '',
   });
   console.log('Im answering.');
+  history.push('/worldmap');
 
   const { myVideoStreamObject } = getState().mediaState;
   const { whoIsCalling } = getState().mediaState;
   const { callerSignal } = getState().mediaState;
   const peer = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
 
+  // そもそもここが動いていない。
   peer.on('stream', (stream) => {
+    console.log(stream);
     oppositeVideoRef.current.srcObject = stream;
   });
 
@@ -95,3 +128,24 @@ export const answerCallActionCreator = (socket, Peer, oppositeVideoRef, connecti
   connectionRef.current = peer;
   console.log('I answered');
 };
+
+export const callAcceptedActionCreator =
+  (socket, Peer, oppositeSocketId, oppositeVideoRef, connectionRef) => (dispatch) => {
+    socket.on(MY_CALL_IS_ACCEPTED, (signalData) => {
+      console.log('My call is accepted.');
+      console.log(signalData);
+
+      dispatch({
+        type: CALL_ACCEPTED,
+        payload: '',
+      });
+      peerInitiator.signal(signalData);
+      console.log('not sure...');
+    });
+
+    peerInitiator.on('stream', (stream) => {
+      oppositeVideoRef.current.srcObject = stream;
+    });
+
+    connectionRef.current = peerInitiator;
+  };
