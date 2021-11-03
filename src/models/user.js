@@ -90,11 +90,14 @@ const userSchema = new mongoose.Schema({
   },
   socketId: {
     type: String,
-    required: true,
+    default: '',
   },
-  loggedIn: {
+  isOnline: {
     type: Boolean,
-    required: true,
+    default: true,
+  },
+  isInConversation: {
+    type: Boolean,
     default: false,
   },
 });
@@ -108,6 +111,9 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.methods.isPasswordCorrect = async (enteredPassword, actualPassword) => {
+  // const x = await bcrypt.hash(enteredPassword, 12);
+  // console.log(x);
+  // console.log(actualPassword);
   return await bcrypt.compare(enteredPassword, actualPassword);
 };
 

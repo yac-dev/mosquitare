@@ -9,6 +9,7 @@ import { signupActionCreator } from '../../actionCreators/authActionCreators';
 require('dotenv').config({ path: path.join(__dirname, '../', '../', '../', '.env') });
 
 const SignupDetails = (props) => {
+  console.log(props.location.state);
   // useState
   // fetched datas
   const [fetchedLanguages, setFetchedLanguages] = useState([]);
@@ -42,7 +43,14 @@ const SignupDetails = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const [name, email, password, passwordConfirmation] = props.location.state;
+
+    const [name, email, password, passwordConfirmation, lng, lat, socketId] = props.location.state;
+    const location = {
+      type: 'Point',
+      coordinates: [lng.current, lat.current],
+    };
+
+    console.log(location, socketId.current);
     const formData = {
       name,
       email,
@@ -52,6 +60,8 @@ const SignupDetails = (props) => {
       learningLangs,
       nationalities,
       job,
+      location,
+      socketId: socketId.current,
     };
 
     // const result = await axios.post('/users/signup', formData, {

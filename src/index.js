@@ -35,6 +35,10 @@ io.on('connection', (socket) => {
   socket.emit(I_GOT_SOCKET_ID, socket.id);
 
   socket.on(I_CALL_SOMEBODY, (dataFromCaller) => {
+    // console.log(dataFromCaller);
+    console.log('server?????');
+    console.log(dataFromCaller.oppositeSocketId);
+    console.log(dataFromCaller);
     io.to(dataFromCaller.oppositeSocketId).emit(SOMEBODY_CALLS_ME, {
       signalData: dataFromCaller.signalData,
       whoIsCalling: dataFromCaller.mySocketId,

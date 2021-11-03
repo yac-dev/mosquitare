@@ -8,12 +8,15 @@ import {
   GET_SOCKET_ID,
   UPDATE_USER_POSITION_IN_GLOBAL,
   UPDATE_USER_SOCKETID_IN_GLOBAL,
+  LOGIN,
 } from './type';
 
 // loadmeで使うaction creator. loadPositionはすでにここにあるね。
 import { getSocketIdActionCreator } from './mediaActionCreator';
 // import { socket } from '../components/WorldMap';
 import { I_GOT_SOCKET_ID } from './socketEvents';
+import store from '../store';
+import { getUsersActionCreator } from './usersActionCreator';
 
 export const signupActionCreator = (formData) => async (dispatch, getState) => {
   try {
@@ -26,16 +29,32 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
     });
 
     // ここから、globalなusersのstateへの登録が始まる。
-    const { authState } = getState();
+    // const { authState } = getState(); // 結局、ここも必要ないな。
     // ここで、tokenとかのpropertyを消すように整形しよう。後でね。
-    dispatch({
-      type: ADD_USER_GLOBALLY,
-      payload: authState,
-    });
+
+    // dispatch({
+    //   type: ADD_USER_GLOBALLY,
+    //   payload: authState,
+    // }); // 結局ここも必要ないや。
 
     history.push('/worldmap');
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const loginActionCreator = (formData) => async (dispatch) => {
+  try {
+    const result = await mosquitareAPI.post('/users/login', formData);
+    localStorage.setItem('mosquitare token', result.data.jwtToken);
+    console.log(result);
+    dispatch({
+      type: LOGIN,
+      payload: result.data,
+    });
+    history.push('/worldmap');
+  } catch (error) {
+    console.log(error.message);
   }
 };
 
@@ -160,62 +179,71 @@ export const loadPositionActionCreator = (dispatch) => {
 //   // // );
 // };
 
-export const loadMeActionCreator = (jwtToken, socket) => async (dispatch, getState) => {
+// and Updateだな。これは。
+export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispatch, getState) => {
   try {
-    const result = await mosquitareAPI.get('/users/loadme', {
-      headers: {
-        authorization: `Bearer ${jwtToken}`,
-      },
-    });
+    // const socketId = getState().authState.socketId;
+    // console.log(socketId);
+    const result = await mosquitareAPI.patch(
+      '/users/loadmeandupdate',
+      { socketId },
+      {
+        headers: {
+          authorization: `Bearer ${jwtToken}`,
+        },
+      }
+    );
     const { user } = result.data;
 
     dispatch({
       type: LOAD_ME,
       payload: { user, jwtToken },
     });
+    // この中でgetsocketとかをやらないといけないんだな。
+    // store.dispatch(getSocketIdActionCreator());
+    store.dispatch(getUsersActionCreator());
+    // loadPositionActionCreator().then((result) => {
+    //   const { longitude } = result.coords;
+    //   const { latitude } = result.coords;
 
-    loadPositionActionCreator().then((result) => {
-      const { longitude } = result.coords;
-      const { latitude } = result.coords;
+    //   // const userPosition = {
+    //   //   lng: Number(longitude.toFixed(1)),
+    //   //   lat: Number(latitude.toFixed(1)),
+    //   // };
+    //   const userPosition = {
+    //     lng: longitude,
+    //     lat: latitude,
+    //   };
 
-      // const userPosition = {
-      //   lng: Number(longitude.toFixed(1)),
-      //   lat: Number(latitude.toFixed(1)),
-      // };
-      const userPosition = {
-        lng: longitude,
-        lat: latitude,
-      };
+    //   dispatch({
+    //     type: LOAD_POSITION,
+    //     payload: userPosition,
+    //   });
 
-      dispatch({
-        type: LOAD_POSITION,
-        payload: userPosition,
-      });
+    //   let { authState } = getState();
+    //   // globalな方のstateにおける自分の情報を変える。
+    //   dispatch({
+    //     type: UPDATE_USER_POSITION_IN_GLOBAL,
+    //     payload: { authState, userPosition },
+    //   });
 
-      let { authState } = getState();
-      // globalな方のstateにおける自分の情報を変える。
-      dispatch({
-        type: UPDATE_USER_POSITION_IN_GLOBAL,
-        payload: { authState, userPosition },
-      });
+    //   // authState = getState().authState;
 
-      // authState = getState().authState;
+    //   // socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
+    //   //   console.log(socketIdFromServer);
+    //   //   dispatch({
+    //   //     type: UPDATE_USER_SOCKETID_IN_GLOBAL,
+    //   //     payload: { authState, socketIdFromServer },
+    //   //   });
+    //   // });
 
-      // socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
-      //   console.log(socketIdFromServer);
-      //   dispatch({
-      //     type: UPDATE_USER_SOCKETID_IN_GLOBAL,
-      //     payload: { authState, socketIdFromServer },
-      //   });
-      // });
+    //   // const { authState } = getState(); // うん。一気にやる必要ないかな。。。多分。。。
 
-      // const { authState } = getState(); // うん。一気にやる必要ないかな。。。多分。。。
-
-      // dispatch({
-      //   type: ADD_USER_GLOBALLY,
-      //   payload: authState,
-      // });
-    });
+    //   // dispatch({
+    //   //   type: ADD_USER_GLOBALLY,
+    //   //   payload: authState,
+    //   // });
+    // });
 
     // console.log(authState); // currentPositionがnullになるときならない時色々だな。。。
   } catch (error) {

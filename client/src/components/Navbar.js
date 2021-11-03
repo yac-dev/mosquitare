@@ -19,6 +19,9 @@ const Navbar = () => {
             <i className='search link icon'></i>
           </div>
         </div>
+        <Link className='ui item' to='/login'>
+          Login
+        </Link>
         <Link className='ui item' to='/signup/basic'>
           Signup
         </Link>

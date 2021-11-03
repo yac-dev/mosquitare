@@ -6,17 +6,17 @@ import {
   UPDATE_USER_SOCKETID_IN_GLOBAL,
 } from '../actionCreators/type';
 
-const globalUsersReducer = (state = {}, action) => {
+const usersReducer = (state = {}, action) => {
   switch (action.type) {
-    case UPDATE_USER_POSITION_IN_GLOBAL:
-      console.log(action.payload);
-      let user = state[action.payload.authState.currentUser._id];
-      console.log(user);
-      // user.currentUserPosition = action.payload.userPosition;
-      // console.log(user);
-      user = action.payload.authState;
-      user.currentUserPosition = action.payload.userPosition;
-      return { ...state, [action.payload.authState.currentUser._id]: user };
+    // case UPDATE_USER_POSITION_IN_GLOBAL:
+    //   console.log(action.payload);
+    //   let user = state[action.payload.authState.currentUser._id];
+    //   console.log(user);
+    //   // user.currentUserPosition = action.payload.userPosition;
+    //   // console.log(user);
+    //   user = action.payload.authState;
+    //   user.currentUserPosition = action.payload.userPosition;
+    //   return { ...state, [action.payload.authState.currentUser._id]: user };
 
     // case UPDATE_USER_SOCKETID_IN_GLOBAL:
     //   let usr = state[action.payload.authState.currentUser._id];
@@ -35,4 +35,4 @@ const globalUsersReducer = (state = {}, action) => {
   }
 };
 
-export default globalUsersReducer;
+export default usersReducer;

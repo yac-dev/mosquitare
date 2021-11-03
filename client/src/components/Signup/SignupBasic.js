@@ -1,24 +1,60 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
-// componentDidMount() {
-//   window.navigator.geolocation.getCurrentPosition(
-//     (position) => {
-//       this.setState({ lat: Number(position.coords.latitude.toFixed(1)) });
-//       this.setState({ lng: Number(position.coords.longitude.toFixed(1)) });
-//     },
-//     (error) => {
-//       console.log(error);
-//     }
-//   );
-// }
+import { io } from 'socket.io-client';
+import { I_GOT_SOCKET_ID } from '../../actionCreators/socketEvents';
 
 const SignupBasic = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const location = [];
+  const lng = useRef(null);
+  const lat = useRef(null);
+  const socketId = useRef(null);
+
+  const socket = io(process.env.REACT_APP_WEBRTC);
+  // const [location, setLocation] = useState([]);
+
+  // const [position, setPosition] = useState({ lng: null, lat: null });
+
+  // useEffect(() => {
+  //   // get geo
+  //   navigator.geolocation.getCurrentPosition((position) => {
+  //     const { longitude, latitude } = position.coords;
+  //     location.push(longitude, latitude);
+  //     console.log(location);
+  //     // console.log(longitude, latitude);
+  //     // console.log(longitude, latitude);
+  //     // setPosition({ ...position, lng: longitude, lat: latitude });
+  //     // console.log(position);
+  //     // setLocation([...location, longitude, latitude]);
+  //     // console.log(location);
+  //   });
+  // }, []);
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      console.log('Available');
+    } else {
+      console.log('Not Available');
+    }
+    navigator.geolocation.getCurrentPosition(function (position) {
+      lng.current = position.coords.longitude;
+      lat.current = position.coords.latitude;
+      console.log(lng);
+      console.log(lat);
+    });
+  }, []);
+  // useEffect まじでやだ。。。訳わからねーわ。。。。。。。。。。
+
+  useEffect(() => {
+    socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
+      socketId.current = socketIdFromServer;
+    });
+  }, [socket]);
 
   return (
     <div className='ui container'>
@@ -55,7 +91,11 @@ const SignupBasic = () => {
             placeholder='Please reenter your password.'
           />
         </Form.Field>
-        <Link to={{ pathname: '/signup/details', state: [name, email, password, passwordConfirmation] }}>Next</Link>
+        <Link
+          to={{ pathname: '/signup/details', state: [name, email, password, passwordConfirmation, lng, lat, socketId] }}
+        >
+          Next
+        </Link>
       </Form>
     </div>
   );
