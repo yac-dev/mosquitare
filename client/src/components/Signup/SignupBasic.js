@@ -48,7 +48,6 @@ const SignupBasic = () => {
       console.log(lat);
     });
   }, []);
-  // useEffect まじでやだ。。。訳わからねーわ。。。。。。。。。。
 
   useEffect(() => {
     socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {

@@ -7,6 +7,10 @@ import { Link } from 'react-router-dom';
 import { Icon, Popup, Header, Button } from 'semantic-ui-react';
 import { Modal } from 'react-bootstrap';
 
+// components
+import Dimer from './Dimer';
+import ConfirmationCard from './ConfirmationCard';
+
 // socketio
 import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
@@ -61,6 +65,9 @@ const WorldMap = (props) => {
   // }
   const [modalOpen, setModalOpen] = useState(false);
 
+  const [amICalling, setAmICalling] = useState(false);
+  const [amIRecieving, setAmIRecieving] = useState(false);
+
   // // position
   // useEffect(() => {
   //   props.loadPositionActionCreator();
@@ -100,22 +107,22 @@ const WorldMap = (props) => {
       // myVideoRef.current.srcObject = stream; // ここなーーー。どうだろう。// chatscreenの方でuseEffectすればいいのかね。。。ここだけ。
     });
 
-    const { myVideoStreamObject } = props.mediaState;
-    console.log(myVideoStreamObject);
-    console.log('it works????');
+    // const { myVideoStreamObject } = props.mediaState;
+    // // console.log(myVideoStreamObject);
+    // console.log('it works????');
     socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
       console.log('somebody calls me!!!');
       console.log(dataFromServer);
-      const { signalData, whoIsCalling } = dataFromServer;
+      const { signalData, whoIsCalling, callerUserInfo } = dataFromServer;
       console.log(signalData, whoIsCalling);
       setFullscreen(true);
       setShow(true);
-      myVideo.current.srcObject = myVideoStreamObject;
-      console.log('srcObject set up??');
+      // myVideo.current.srcObject = myVideoStreamObject;
+      // console.log('srcObject set up??');
 
       store.dispatch({
         type: LISTEN_CALL,
-        payload: { signalData, whoIsCalling },
+        payload: { signalData, whoIsCalling, callerUserInfo },
       });
     });
   }, []);
@@ -209,6 +216,16 @@ const WorldMap = (props) => {
     // myVideo.current.srcObject = props.mediaState.myVideoStreamObject; // ここだとエラーになるんだ。
     props.callActionCreator(socket, mySocketId, myVideo, oppositeSocketId, oppositeVideo, connectionRef); // これがいわゆる、oppositeのsocketIdね。
     // setShow(true);
+  };
+
+  const switchRender = () => {
+    if (props.mediaState.amICalling) {
+      return <Dimer />;
+    } else if (props.mediaState.amIRecieving) {
+      return <ConfirmationCard />;
+    } else {
+      return null;
+    }
   };
 
   // const chatModal = () => {
@@ -407,38 +424,36 @@ const WorldMap = (props) => {
 
       {/* {chatModal()} */}
 
-      <Modal show={show} fullscreen={fullscreen} onHide={() => setShow(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            Sockets
-            <div className='video-container'>
-              <div className='video'>
-                <video playsInline muted ref={myVideo} autoPlay style={{ width: '300px' }} />
-                <div>{props.mediaState.mySocketId}</div>
-              </div>
-              <div className='video'>
-                <video playsInline ref={oppositeVideo} autoPlay style={{ width: '300px' }} />
-              </div>
+      <Modal
+        className='chat-modal'
+        show={show}
+        fullscreen={fullscreen}
+        onHide={() => setShow(false)}
+        style={{ backgroundColor: 'blue' }}
+      >
+        {/* <Modal.Header closeButton style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
+          <Modal.Title className='modal-title'>Chatting Room</Modal.Title>
+        </Modal.Header> */}
+
+        <Modal.Body style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
+          {switchRender()} {/* こいつの表示有無をstateで管理しよう。*/}
+          <div className='video-container'>
+            <div className='video'>
+              <video playsInline muted ref={myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
+              <video playsInline ref={oppositeVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
+              {/* <div>{props.mediaState.mySocketId}</div> */}
             </div>
-            <label>Opposite ID to call</label>
-            {/* <input value={oppositeSocketId} onChange={(e) => setOppositeSocketId(e.target.value)} /> */}
-            {/* <button
+            {/* <div className='video'></div> */}
+          </div>
+          {/* <input value={oppositeSocketId} onChange={(e) => setOppositeSocketId(e.target.value)} /> */}
+          {/* <button
               onClick={() => props.callActionCreator(socket, Peer, oppositeSocketId, oppositeVideo, connectionRef)}
             >
               Call
             </button> */}
-            <div>
-              <div className='caller'>
-                <h1>Someone is calling...</h1>
-                <button onClick={() => props.answerCallActionCreator(socket, myVideo, oppositeVideo, connectionRef)}>
-                  Answer
-                </button>
-              </div>
-            </div>
-          </div>
+          <button onClick={() => props.answerCallActionCreator(socket, myVideo, oppositeVideo, connectionRef)}>
+            Answer
+          </button>
         </Modal.Body>
       </Modal>
 
@@ -447,7 +462,7 @@ const WorldMap = (props) => {
           {...viewport}
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
           width='100%'
-          height='60%'
+          height='100vh'
           mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
           onViewportChange={(viewport) => setViewport(viewport)}
           // onDblClick={currentUsername && handleAddClick}

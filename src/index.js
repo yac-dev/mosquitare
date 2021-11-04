@@ -37,17 +37,21 @@ io.on('connection', (socket) => {
   socket.on(I_CALL_SOMEBODY, (dataFromCaller) => {
     // console.log(dataFromCaller);
     console.log('server?????');
-    console.log(dataFromCaller.oppositeSocketId);
-    console.log(dataFromCaller);
+    // console.log(dataFromCaller.oppositeSocketId);
+    // console.log(dataFromCaller);
     io.to(dataFromCaller.oppositeSocketId).emit(SOMEBODY_CALLS_ME, {
       signalData: dataFromCaller.signalData,
       whoIsCalling: dataFromCaller.mySocketId,
+      callerUserInfo: dataFromCaller.callerUserInfo,
     });
   });
 
   socket.on(I_ANSWER_THE_CALL, (dataFromAnswerer) => {
     console.log(dataFromAnswerer);
-    io.to(dataFromAnswerer.whoIsCalling).emit(MY_CALL_IS_ACCEPTED, dataFromAnswerer.signalData);
+    io.to(dataFromAnswerer.whoIsCalling).emit(MY_CALL_IS_ACCEPTED, {
+      signalData: dataFromAnswerer.signalData,
+      recieverUserInfo: dataFromAnswerer.recieverUserInfo,
+    });
   });
 });
 

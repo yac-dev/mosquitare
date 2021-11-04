@@ -4,7 +4,9 @@ import { GET_MEDIA, GET_SOCKET_ID, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED } fro
 const INITIAL_STATE = {
   mySocketId: null,
   myVideoStreamObject: null, // 多分、stream object storeに保存できないや。
-  amIRecievingCall: false,
+  amICalling: false,
+  amIRecieving: false,
+  callingWith: null,
   whoIsCalling: null,
   callerSignal: null,
   oppositeIdToCall: null,
@@ -16,14 +18,17 @@ const mediaReducer = (state = {}, action) => {
     case GET_MEDIA:
       return { ...state, myVideoStreamObject: action.payload };
     // なぜ、inspectorのmyVideoStreamObjectは空のobjectになっているけど、storeには一応入ってくれている。
+    case 'CALL':
+      return { ...state, amICalling: true };
     case GET_SOCKET_ID:
       return { ...state, mySocketId: action.payload };
     case LISTEN_CALL:
       return {
         ...state,
-        amIRecievingCall: true,
+        amIRecieving: true,
         whoIsCalling: action.payload.whoIsCalling,
         callerSignal: action.payload.signalData,
+        callingWith: action.payload.callerUserInfo,
       };
     case ANSWER_CALL:
       return {
@@ -34,6 +39,7 @@ const mediaReducer = (state = {}, action) => {
       return {
         ...state,
         callAccepted: true,
+        callingWith: action.payload,
       };
     default:
       return state;

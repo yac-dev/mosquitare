@@ -82,24 +82,29 @@ export const callActionCreator =
     // const { mySocketId } = getState().mediaState;
     // const mySocketId = getState().authState.currentUser.socketId; // ここはcomponentのstateを使う。
     console.log('Im calling...');
+    const callerUserInfo = getState().authState.currentUser;
 
     const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
     peerInitiator.on('signal', (signalData) => {
-      socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId });
+      socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo }); // ここに、callerのdataを加えよう。
+      dispatch({
+        type: 'CALL',
+        payload: '',
+      });
     });
 
     // history.push('/chatscreen'); // まず移動してから、の方がいいかもね。
     console.log('Im calling your friend!! Wait here till your call ACCEPTED!!');
 
-    socket.on(MY_CALL_IS_ACCEPTED, (signalData) => {
+    socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
       console.log('My call is accepted.');
-      console.log(signalData);
+      // console.log(signalData);
 
       dispatch({
         type: CALL_ACCEPTED,
-        payload: '',
+        payload: dataFromServer.recieverUserInfo,
       });
-      peerInitiator.signal(signalData);
+      peerInitiator.signal(dataFromServer.signalData);
       console.log('not sure...');
     });
 
@@ -135,6 +140,8 @@ export const answerCallActionCreator =
     const { myVideoStreamObject } = getState().mediaState;
     const { whoIsCalling } = getState().mediaState;
     const { callerSignal } = getState().mediaState;
+
+    const { recieverUserInfo } = getState().authState.currentUser;
     console.log(callerSignal);
     const peerReciever = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
     myVideoRef.current.srcObject = myVideoStreamObject;
@@ -147,7 +154,7 @@ export const answerCallActionCreator =
     });
 
     peerReciever.on('signal', (signalData) => {
-      socket.emit(I_ANSWER_THE_CALL, { signalData, whoIsCalling });
+      socket.emit(I_ANSWER_THE_CALL, { signalData, whoIsCalling, recieverUserInfo });
     });
 
     peerReciever.signal(callerSignal);

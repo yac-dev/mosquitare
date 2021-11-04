@@ -40,7 +40,7 @@ export const signup = async (request, response, next) => {
     });
     // location, socketに関してはbrowserから取得してpostするようにしよう。
 
-    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10h' });
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
 
     response.json({
       user,
