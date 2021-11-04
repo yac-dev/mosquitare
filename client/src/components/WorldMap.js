@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 // import Modal from 'react-modal';
 import { Icon, Popup, Header, Button } from 'semantic-ui-react';
 import { Modal } from 'react-bootstrap';
-import English from '../../node_modules/language-icons/icons/en.svg';
 
 // components
 import Dimer from './Dimer';
@@ -175,7 +174,11 @@ const WorldMap = (props) => {
                   />
                 }
               /> */}
-              <Popup trigger={<Icon className='green user icon' size='large' />} flowing hoverable>
+              <Popup
+                trigger={<Icon className='green user icon' size='large' style={{ cursor: 'pointer' }} />}
+                flowing
+                hoverable
+              >
                 {/* <div className='card'>
                   <div className='content'>
                     <h4>{user.name}</h4>

@@ -8,21 +8,25 @@ const ConfirmationCard = (props) => {
     if (props.mediaState.amIRecieving) {
       return (
         <>
-          <p>You got a language exchange. Say yes or no.</p>
-          <div className='ui two buttons'>
-            <Button
-              positive
-              onClick={() => props.callback(props.socket, props.myVideo, props.oppositeVideo, props.connectionRef)}
-            >
-              {' '}
-              {/* ここ、argument沢山よ。 */}
-              <i className='handshake icon'>Yes</i>
-            </Button>
-            <Button negative>
-              {' '}
-              <i className='x icon'>No</i>
-            </Button>
-          </div>
+          <p>
+            <i className='green bullhorn icon'></i>You got language exchange. Do you accept?
+          </p>
+
+          <Button
+            positive
+            onClick={() => props.callback(props.socket, props.myVideo, props.oppositeVideo, props.connectionRef)}
+            style={{ width: '100%' }}
+          >
+            {' '}
+            {/* ここ、argument沢山よ。 */}
+            <i className='handshake icon' />
+            Yes
+          </Button>
+          <Button negative style={{ width: '100%' }}>
+            {' '}
+            <i className='x icon' />
+            No
+          </Button>
         </>
       );
     } else {
@@ -37,7 +41,7 @@ const ConfirmationCard = (props) => {
 
   return (
     <div>
-      <Card>
+      <Card className='confirmation-card'>
         <Card.Content>
           <Card.Header className='card-header'>{props.user.name}</Card.Header>
           <div className='metas'>

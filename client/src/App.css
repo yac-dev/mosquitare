@@ -85,7 +85,7 @@ video {
 
 .country-img {
   height: 20px;
-  width: 25px;
+  width: 30px;
 }
 .language-img {
   height: 20px;
@@ -99,3 +99,7 @@ video {
 .languages {
   display: flex;
 }
+
+/* .ui.card.confirmation-card {
+  border: none; こうできることを知っておこう。
+} */
