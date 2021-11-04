@@ -224,7 +224,16 @@ const WorldMap = (props) => {
       if (props.mediaState.amICalling) {
         return <Dimer />;
       } else if (props.mediaState.amIRecieving) {
-        return <ConfirmationCard user={props.mediaState.callingWith} />;
+        return (
+          <ConfirmationCard
+            user={props.mediaState.callingWith}
+            callback={props.answerCallActionCreator}
+            socket={socket}
+            myVideo={myVideo}
+            oppositeVideo={oppositeVideo}
+            connectionRef={connectionRef}
+          />
+        );
       } else {
         return null;
       }
@@ -441,22 +450,29 @@ const WorldMap = (props) => {
         <Modal.Body style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
           {switchRender()} {/* こいつの表示有無をstateで管理しよう。*/}
           <div className='video-container'>
-            <div className='video'>
+            <div className='video' style={{ marginTop: '100px' }}>
               <video playsInline muted ref={myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
               <video playsInline ref={oppositeVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
               {/* <div>{props.mediaState.mySocketId}</div> */}
             </div>
             {/* <div className='video'></div> */}
           </div>
+          {props.mediaState.callAccepted ? (
+            <div className='button-wrapper'>
+              <Button negative className='hang-up-button'>
+                Hang up
+              </Button>
+            </div>
+          ) : null}
           {/* <input value={oppositeSocketId} onChange={(e) => setOppositeSocketId(e.target.value)} /> */}
           {/* <button
               onClick={() => props.callActionCreator(socket, Peer, oppositeSocketId, oppositeVideo, connectionRef)}
             >
               Call
             </button> */}
-          <button onClick={() => props.answerCallActionCreator(socket, myVideo, oppositeVideo, connectionRef)}>
-            Answer
-          </button>
+          {/* <button onClick={() => props.answerCallActionCreator(socket, myVideo, oppositeVideo, connectionRef)}>
+            Answer これはもういらない。
+          </button> */}
         </Modal.Body>
       </Modal>
 

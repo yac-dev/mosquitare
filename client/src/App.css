@@ -77,3 +77,8 @@ video {
 .card-header {
   text-align: center;
 }
+
+.button-wrapper {
+  text-align: center;
+  margin-top: 50px;
+}

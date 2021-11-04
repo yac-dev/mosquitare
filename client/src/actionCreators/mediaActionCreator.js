@@ -181,3 +181,10 @@ export const answerCallActionCreator =
 
 //   connectionRef.current = peerInitiator;
 // };
+
+export const hangUpCall = () => (dispatch) => {
+  dispatch({
+    type: 'HANG_UP',
+    payload: '',
+  });
+};

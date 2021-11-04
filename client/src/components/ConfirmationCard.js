@@ -6,15 +6,23 @@ const ConfirmationCard = (props) => {
   const ButtonRender = () => {
     if (props.mediaState.amIRecieving) {
       return (
-        <div className='ui two buttons'>
-          <Button positive>
-            <i className='handshake icon'></i>
-          </Button>
-          <Button negative>
-            {' '}
-            <i className='x icon'></i>
-          </Button>
-        </div>
+        <>
+          <p>You got a language exchange. Say yes or no.</p>
+          <div className='ui two buttons'>
+            <Button
+              positive
+              onClick={() => props.callback(props.socket, props.myVideo, props.oppositeVideo, props.connectionRef)}
+            >
+              {' '}
+              {/* ここ、argument沢山よ。 */}
+              <i className='handshake icon'>Yes</i>
+            </Button>
+            <Button negative>
+              {' '}
+              <i className='x icon'>No</i>
+            </Button>
+          </div>
+        </>
       );
     } else {
       return (
