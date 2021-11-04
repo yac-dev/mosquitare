@@ -175,21 +175,20 @@ const WorldMap = (props) => {
                 }
               /> */}
               <Popup trigger={<Icon className='green user icon' size='large' />} flowing hoverable>
-                <div className='card'>
+                {/* <div className='card'>
                   <div className='content'>
                     <h4>{user.name}</h4>
-                    <div className='description'>{user.nativeLangs.map((nativeLang) => nativeLang)}</div>
-                    <div className='description'>{user.learningLangs.map((learningLang) => learningLang)}</div>
+                    <div className='description'>{user.nativeLangs.map((nativeLang) => nativeLang.name)}</div>
+                    <div className='description'>{user.learningLangs.map((learningLang) => learningLang.name)}</div>
                     <div className='description'>{user.job}</div>
                   </div>
-                  {/* <Link to={{ pathname: '/chatscreen', state: [myVideo, oppositeVideo] }}> */}
 
-                  {/* これ、多分いらねーよ。なんで俺こんなことやっているんだ？？？*/}
                   <Button positive onClick={(event) => onCallClick(event, user.socketId)}>
                     <i className='video icon'>call</i>
-                    {/* <Link to='/chatscreen'>Call</Link> */}
+                    callback={onCallClick} socketId={user.socketId} っていう具合かな。。。
                   </Button>
-                </div>
+                </div> */}
+                <ConfirmationCard callback={onCallClick} socketId={user.socketId} user={user} />
               </Popup>
               {/* <Popup trigger={<Icon className='red user icon' size='large' />} flowing hoverable>
                   {otherUserInfoRender(user.currentUser, user.currentUserSocketId)}
@@ -219,12 +218,16 @@ const WorldMap = (props) => {
   };
 
   const switchRender = () => {
-    if (props.mediaState.amICalling) {
-      return <Dimer />;
-    } else if (props.mediaState.amIRecieving) {
-      return <ConfirmationCard />;
-    } else {
+    if (props.mediaState.callAccepted) {
       return null;
+    } else {
+      if (props.mediaState.amICalling) {
+        return <Dimer />;
+      } else if (props.mediaState.amIRecieving) {
+        return <ConfirmationCard user={props.mediaState.callingWith} />;
+      } else {
+        return null;
+      }
     }
   };
 

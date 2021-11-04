@@ -110,6 +110,24 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+userSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'nativeLangs',
+    select: 'name',
+  });
+
+  this.populate({
+    path: 'learningLangs',
+    select: 'name',
+  });
+
+  this.populate({
+    path: 'nationalities',
+    select: 'name flagPic',
+  });
+  next();
+});
+
 userSchema.methods.isPasswordCorrect = async (enteredPassword, actualPassword) => {
   // const x = await bcrypt.hash(enteredPassword, 12);
   // console.log(x);
