@@ -3,6 +3,7 @@ import { Form, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import path from 'path';
 import axios from 'axios';
+import English from '../../../node_modules/language-icons/icons/en.svg';
 
 // redux....
 import { signupActionCreator } from '../../actionCreators/authActionCreators';
@@ -20,11 +21,38 @@ const SignupDetails = (props) => {
   const [nationalities, setNationalities] = useState(['']);
   const [job, setJob] = useState('');
 
+  const swap = (index1, index2, array) => {
+    let temp = array[index1];
+    array[index1] = array[index2];
+    array[index2] = temp;
+  };
+
+  const bubbleSort = (data) => {
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < data.length - 1; j++) {
+        if (data[j] > data[j + 1]) {
+          swap(j, j + 1, data);
+        }
+      }
+    }
+    return data;
+  };
+
   const fetchData = async (uri, setState) => {
     const result = await axios.get(uri, {
       baseURL: process.env.REACT_APP_BASE_API_URL,
     });
-    setState(result.data);
+    const copiedData = [...result.data];
+    copiedData.sort(function (a, b) {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+      return 0;
+    });
+    setState(copiedData);
   };
 
   const handleChange = (index, event, state, setState) => {

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button, Card } from 'semantic-ui-react';
+import { Button, Card, Image } from 'semantic-ui-react';
 import { connect } from 'react-redux';
+// import '../../node_modules/language-icons/icons';
 
 const ConfirmationCard = (props) => {
   const ButtonRender = () => {
@@ -42,15 +43,24 @@ const ConfirmationCard = (props) => {
           <div className='metas'>
             <Card.Meta>Speaks </Card.Meta>
             {props.user.nativeLangs.map((lang) => (
-              <div>{lang.name}</div>
+              <div className='languages'>
+                {lang.name} &nbsp;
+                <img className='language-img' src={`https://unpkg.com/language-icons/icons/${lang.code}.svg`} />
+              </div>
             ))}
             <Card.Meta>Learns </Card.Meta>
             {props.user.learningLangs.map((lang) => (
-              <div>{lang.name}</div>
+              <div className='languages'>
+                {lang.name} &nbsp;
+                <img className='language-img' src={`https://unpkg.com/language-icons/icons/${lang.code}.svg`} />
+              </div>
             ))}
             <Card.Meta>Nationalities </Card.Meta>
             {props.user.nationalities.map((nationality) => (
-              <div>{nationality.name}</div>
+              <div className='countries'>
+                {nationality.name} &nbsp;
+                <img className='country-img' src={nationality.flagPic} />
+              </div>
             ))}
           </div>
           <Card.Description>{props.user.description}</Card.Description>

@@ -7,8 +7,9 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.23.0",
-    "bootstrap": "5.1.3",
+    "bootstrap": "^5.1.3",
     "dotenv": "^10.0.0",
+    "language-icons": "^0.3.0",
     "mapbox-gl": "^2.5.1",
     "mongoose": "^6.0.12",
     "react": "^17.0.2",
@@ -52,5 +53,8 @@
       "last 1 safari version"
     ]
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "flag-icon-css": "^4.1.5"
+  }
 }

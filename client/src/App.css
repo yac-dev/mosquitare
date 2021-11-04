@@ -82,3 +82,20 @@ video {
   text-align: center;
   margin-top: 50px;
 }
+
+.country-img {
+  height: 20px;
+  width: 25px;
+}
+.language-img {
+  height: 20px;
+  width: 20px;
+}
+
+.countries {
+  display: flex;
+}
+
+.languages {
+  display: flex;
+}

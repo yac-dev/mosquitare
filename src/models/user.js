@@ -113,12 +113,12 @@ userSchema.pre('save', async function (next) {
 userSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'nativeLangs',
-    select: 'name',
+    select: 'name code',
   });
 
   this.populate({
     path: 'learningLangs',
-    select: 'name',
+    select: 'name code',
   });
 
   this.populate({

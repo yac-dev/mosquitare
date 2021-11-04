@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 // import Modal from 'react-modal';
 import { Icon, Popup, Header, Button } from 'semantic-ui-react';
 import { Modal } from 'react-bootstrap';
+import English from '../../node_modules/language-icons/icons/en.svg';
 
 // components
 import Dimer from './Dimer';
@@ -448,7 +449,7 @@ const WorldMap = (props) => {
         </Modal.Header> */}
 
         <Modal.Body style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
-          {switchRender()} {/* こいつの表示有無をstateで管理しよう。*/}
+          {switchRender()}
           <div className='video-container'>
             <div className='video' style={{ marginTop: '100px' }}>
               <video playsInline muted ref={myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
