@@ -28,6 +28,7 @@ import { getMediaActionCreator } from '../actionCreators/mediaActionCreator';
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { answerCallActionCreator } from '../actionCreators/mediaActionCreator';
+import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
 
 import { getUsersActionCreator } from '../actionCreators/usersActionCreator';
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
@@ -93,7 +94,7 @@ const WorldMap = (props) => {
     const jwtToken = localStorage.getItem('mosquitare token');
     // if (jwtToken) {
     socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
-      socketId.current = socketIdFromServer;
+      socketId.current = socketIdFromServer; // これ、いらないわ。
       props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer);
     });
     // }
@@ -242,6 +243,11 @@ const WorldMap = (props) => {
         return null;
       }
     }
+  };
+
+  const onHangUpClick = () => {
+    props.hangUpCallActionCreator(connectionRef);
+    setShow(false);
   };
 
   // const chatModal = () => {
@@ -463,7 +469,7 @@ const WorldMap = (props) => {
           </div>
           {props.mediaState.callAccepted ? (
             <div className='button-wrapper'>
-              <Button negative className='hang-up-button'>
+              <Button negative className='hang-up-button' onClick={() => onHangUpClick()}>
                 Hang up
               </Button>
             </div>
@@ -552,4 +558,5 @@ export default connect(mapStateToProps, {
   answerCallActionCreator,
   getUsersActionCreator,
   loadMeAndUpdateActionCreator,
+  hangUpCallActionCreator,
 })(WorldMap);

@@ -49,9 +49,19 @@ const mediaReducer = (state = {}, action) => {
         callingWith: action.payload,
       };
     case HANG_UP_CALL:
-      const initialState = {
-        mySocketId: null,
-        myVideoStreamObject: null,
+      // const initialState = {
+      //   mySocketId: null,
+      //   myVideoStreamObject: null,
+      //   amICalling: false,
+      //   amIRecieving: false,
+      //   callingWith: null,
+      //   whoIsCalling: null,
+      //   callerSignal: null,
+      //   oppositeIdToCall: null,
+      //   callAccepted: false,
+      // };
+      return {
+        ...state,
         amICalling: false,
         amIRecieving: false,
         callingWith: null,
@@ -59,10 +69,6 @@ const mediaReducer = (state = {}, action) => {
         callerSignal: null,
         oppositeIdToCall: null,
         callAccepted: false,
-      };
-      return {
-        ...state,
-        initialState,
       };
     default:
       return state;

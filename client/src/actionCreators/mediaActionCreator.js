@@ -1,11 +1,10 @@
-import { GET_MEDIA, GET_SOCKET_ID, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED } from './type';
+import { GET_MEDIA, GET_SOCKET_ID, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED, HANG_UP_CALL } from './type';
 import {
   I_GOT_SOCKET_ID,
   SOMEBODY_CALLS_ME,
   I_CALL_SOMEBODY,
   I_ANSWER_THE_CALL,
   MY_CALL_IS_ACCEPTED,
-  HANG_UP_CALL,
 } from './socketEvents';
 
 import { io } from 'socket.io-client';
@@ -183,11 +182,12 @@ export const answerCallActionCreator =
 //   connectionRef.current = peerInitiator;
 // };
 
-export const hangUpCall = (connectionRef) => (dispatch) => {
+export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
+  console.log('should be working!!');
   connectionRef.current.destroy();
   dispatch({
     type: HANG_UP_CALL,
     payload: '',
   });
-  history.push('/worldmap');
+  // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
 };
