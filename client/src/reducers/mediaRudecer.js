@@ -1,4 +1,11 @@
-import { GET_MEDIA, GET_SOCKET_ID, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED } from '../actionCreators/type';
+import {
+  GET_MEDIA,
+  GET_SOCKET_ID,
+  LISTEN_CALL,
+  ANSWER_CALL,
+  CALL_ACCEPTED,
+  HANG_UP_CALL,
+} from '../actionCreators/type';
 
 // initialを決めてから考えよう。来たsokcetidをどう保存するかを。
 const INITIAL_STATE = {
@@ -7,7 +14,7 @@ const INITIAL_STATE = {
   amICalling: false,
   amIRecieving: false,
   callingWith: null,
-  whoIsCalling: null,
+  whoIsCalling: null, // ここ名前紛らわしいな。
   callerSignal: null,
   oppositeIdToCall: null,
   callAccepted: false,
@@ -40,6 +47,22 @@ const mediaReducer = (state = {}, action) => {
         ...state,
         callAccepted: true,
         callingWith: action.payload,
+      };
+    case HANG_UP_CALL:
+      const initialState = {
+        mySocketId: null,
+        myVideoStreamObject: null,
+        amICalling: false,
+        amIRecieving: false,
+        callingWith: null,
+        whoIsCalling: null,
+        callerSignal: null,
+        oppositeIdToCall: null,
+        callAccepted: false,
+      };
+      return {
+        ...state,
+        initialState,
       };
     default:
       return state;

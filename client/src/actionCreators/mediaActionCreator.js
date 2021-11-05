@@ -5,6 +5,7 @@ import {
   I_CALL_SOMEBODY,
   I_ANSWER_THE_CALL,
   MY_CALL_IS_ACCEPTED,
+  HANG_UP_CALL,
 } from './socketEvents';
 
 import { io } from 'socket.io-client';
@@ -182,9 +183,11 @@ export const answerCallActionCreator =
 //   connectionRef.current = peerInitiator;
 // };
 
-export const hangUpCall = () => (dispatch) => {
+export const hangUpCall = (connectionRef) => (dispatch) => {
+  connectionRef.current.destroy();
   dispatch({
-    type: 'HANG_UP',
+    type: HANG_UP_CALL,
     payload: '',
   });
+  history.push('/worldmap');
 };
