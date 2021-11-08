@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import path from 'path';
 import axios from 'axios';
 import English from '../../../node_modules/language-icons/icons/en.svg';
+import './signup.css';
 
 // redux....
 import { signupActionCreator } from '../../actionCreators/authActionCreators';
@@ -15,28 +16,43 @@ const SignupDetails = (props) => {
   // fetched datas
   const [fetchedLanguages, setFetchedLanguages] = useState([]);
   const [fetchedCountries, setFetchedCountries] = useState([]);
+  const [mainLanguages, setMainLanguages] = useState([]);
 
   const [nativeLangs, setNativeLangs] = useState(['']);
   const [learningLangs, setLearningLangs] = useState(['']);
   const [nationalities, setNationalities] = useState(['']);
   const [job, setJob] = useState('');
 
-  const swap = (index1, index2, array) => {
-    let temp = array[index1];
-    array[index1] = array[index2];
-    array[index2] = temp;
+  const mainLangs = {
+    '61711a02dc33a75226a7f363': 'English',
+    '61711a02dc33a75226a7f358': 'Chinese',
+    '61711a02dc33a75226a7f383': 'Japanese',
+    '61711a02dc33a75226a7f36a': 'French',
+    '61711a02dc33a75226a7f341': 'Arabic',
+    '61711a02dc33a75226a7f3c0': 'Russian',
+    '61711a02dc33a75226a7f3bb': 'Portuguese',
+    '61711a02dc33a75226a7f36e': 'German',
+    '61711a02dc33a75226a7f381': 'Italian',
+    '61711a02dc33a75226a7f3cf': 'Spanish; Castilian',
+    '61711a02dc33a75226a7f376': 'Hindu',
   };
 
-  const bubbleSort = (data) => {
-    for (let i = 0; i < data.length; i++) {
-      for (let j = 0; j < data.length - 1; j++) {
-        if (data[j] > data[j + 1]) {
-          swap(j, j + 1, data);
-        }
-      }
-    }
-    return data;
-  };
+  // const swap = (index1, index2, array) => {
+  //   let temp = array[index1];
+  //   array[index1] = array[index2];
+  //   array[index2] = temp;
+  // };
+
+  // const bubbleSort = (data) => {
+  //   for (let i = 0; i < data.length; i++) {
+  //     for (let j = 0; j < data.length - 1; j++) {
+  //       if (data[j] > data[j + 1]) {
+  //         swap(j, j + 1, data);
+  //       }
+  //     }
+  //   }
+  //   return data;
+  // };
 
   const fetchData = async (uri, setState) => {
     const result = await axios.get(uri, {
@@ -100,6 +116,41 @@ const SignupDetails = (props) => {
     // console.log(result);
 
     // ここのapi, languageとcountryのdata populateしないといけないな。
+  };
+
+  const pickLanguages = () => {
+    if (fetchedLanguages) {
+      const hashed = {};
+      for (let i = 0; i < fetchedLanguages.length; i++) {
+        hashed[fetchedLanguages[i]._id] = fetchedLanguages[i];
+      }
+      const pickedLangsArr = [];
+      for (const property in mainLangs) {
+        console.log(property);
+        pickedLangsArr.push(hashed[property]);
+      }
+
+      let pickedLangsRender;
+
+      nativeLangs.map((element, index) => {
+        pickedLangsRender = pickedLangsArr.map((lang) => {
+          return (
+            <button
+              value={lang._id}
+              onClick={(event) => {
+                handleChange(event, index, nativeLangs, setNativeLangs);
+              }}
+            >
+              {lang.name}{' '}
+              <img className='language-img' src={`https://unpkg.com/language-icons/icons/${lang.code}.svg`} />
+            </button>
+          );
+        });
+      });
+      return <div className='picked-languages'>{pickedLangsRender}</div>;
+    } else {
+      return null;
+    }
   };
 
   useEffect(() => {
@@ -193,6 +244,7 @@ const SignupDetails = (props) => {
             </>
           );
         })}
+        {pickLanguages()}
         <Button
           className='button-add'
           onClick={(event) => {
@@ -225,6 +277,7 @@ const SignupDetails = (props) => {
             </>
           );
         })}
+        {pickLanguages()}
         <Button
           className='button-add'
           onClick={(event) => {

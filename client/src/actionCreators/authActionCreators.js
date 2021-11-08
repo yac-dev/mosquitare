@@ -269,6 +269,7 @@ export const logoutActionCreator = () => async (dispatch, getState) => {
       type: LOGOUT,
       payload: '',
     });
+    history.push('/');
   } catch (error) {
     console.log(error);
   }
