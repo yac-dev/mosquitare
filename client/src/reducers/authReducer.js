@@ -6,6 +6,7 @@ import {
   GET_SOCKET_ID,
   CALL_ACCEPTED,
   ADD_USER_GLOBALLY,
+  LOGOUT,
 } from '../actionCreators/type';
 
 const INITIAL_STATE = {
@@ -16,7 +17,6 @@ const INITIAL_STATE = {
   // currentUserSocketId: '',
   // isCurrentUserOnline: null,
   token: localStorage.getItem('mosquitare token'),
-  socketId: null,
 };
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -46,7 +46,12 @@ const authReducer = (state = INITIAL_STATE, action) => {
         ...state,
         isCurrentUserInConversation: true,
       };
-
+    case LOGOUT:
+      return {
+        ...state,
+        currentUser: null,
+        token: null,
+      };
     default:
       return state;
   }

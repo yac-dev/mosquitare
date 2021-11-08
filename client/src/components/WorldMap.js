@@ -38,6 +38,7 @@ import { LISTEN_CALL } from '../actionCreators/type';
 import { GET_MEDIA } from '../actionCreators/type';
 import store from '../store';
 
+console.log('out of component');
 export const socket = io(process.env.REACT_APP_WEBRTC); // おそらく、socketっていう別のファイルを作ってそっからexportした方がいいだろな。conventionの部分を考えると。
 
 const WorldMap = (props) => {
@@ -89,17 +90,24 @@ const WorldMap = (props) => {
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
 
   const socketId = useRef(null);
+  // signupのasyncronousの処理が終わる前に、こっちに来ちゃっているんだ。
   useEffect(() => {
     // const socket = io(process.env.REACT_APP_WEBRTC);
     const jwtToken = localStorage.getItem('mosquitare token');
+    if (!jwtToken) {
+      console.log('no jwtttttttt');
+    }
     // if (jwtToken) {
+    console.log('worldmap side');
     socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
+      console.log('check if it works after signup');
       socketId.current = socketIdFromServer; // これ、いらないわ。
       props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer);
-    });
+    }); // この
     // }
     // props.getMediaActionCreator();
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+      console.log('media side');
       store.dispatch({
         type: GET_MEDIA,
         payload: stream,
@@ -127,6 +135,12 @@ const WorldMap = (props) => {
       });
     });
   }, []);
+
+  // useEffect(() => {
+  //   const updateUsersStatecontinuously = setTimeout(() => {
+  //     props.getUsersActionCreator()
+  //   }, 7000)
+  // }, []); // ここにusersのstateが入ることになるだろね。
 
   // useEffect(() => {
   //   // props.listenCallActionCreator(socket);

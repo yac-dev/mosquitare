@@ -23,6 +23,7 @@ const INITIAL_STATE = {
 const mediaReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_MEDIA:
+      console.log('get media at reducer');
       return { ...state, myVideoStreamObject: action.payload };
     // なぜ、inspectorのmyVideoStreamObjectは空のobjectになっているけど、storeには一応入ってくれている。
     case 'CALL':

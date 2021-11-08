@@ -126,3 +126,27 @@ export const updateUsersSocketId = async (request, response) => {
     console.log(error);
   }
 };
+
+// こっちは、isInConversation用のhandler、でもrefactoringできるな,最終的に。
+export const updateUserConversationState = async (request, response) => {
+  try {
+    const user = await User.findByIdAndUpdate(request.params.id, request.body, {
+      new: true,
+      runValidators: true,
+    });
+    response.json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const logout = async (request, response) => {
+  try {
+    await User.findByIdAndUpdate(request.params.id, { isOnline: false }, { new: true, runValidators: true }); // これできたっけ？？
+    // あとは、client側でやる感じだな。
+  } catch (error) {
+    console.log(error);
+  }
+};

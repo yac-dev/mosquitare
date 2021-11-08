@@ -9,6 +9,7 @@ import {
   UPDATE_USER_POSITION_IN_GLOBAL,
   UPDATE_USER_SOCKETID_IN_GLOBAL,
   LOGIN,
+  LOGOUT,
 } from './type';
 
 // loadmeで使うaction creator. loadPositionはすでにここにあるね。
@@ -21,6 +22,7 @@ import { getUsersActionCreator } from './usersActionCreator';
 export const signupActionCreator = (formData) => async (dispatch, getState) => {
   try {
     const result = await mosquitareAPI.post('/users/signup', formData);
+    console.log('signup side', result);
     localStorage.setItem('mosquitare token', result.data.jwtToken);
 
     dispatch({
@@ -184,6 +186,7 @@ export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispa
   try {
     // const socketId = getState().authState.socketId;
     // console.log(socketId);
+    console.log('load me side before finish');
     const result = await mosquitareAPI.patch(
       '/users/loadmeandupdate',
       { socketId },
@@ -199,6 +202,8 @@ export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispa
       type: LOAD_ME,
       payload: { user, jwtToken },
     });
+
+    console.log('load me side after dispatching');
     // この中でgetsocketとかをやらないといけないんだな。
     // store.dispatch(getSocketIdActionCreator());
     store.dispatch(getUsersActionCreator());
@@ -246,6 +251,20 @@ export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispa
     // });
 
     // console.log(authState); // currentPositionがnullになるときならない時色々だな。。。
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const logoutActionCreator = () => async (dispatch, getState) => {
+  try {
+    const userId = getState().authState.currentUser._id;
+    await mosquitareAPI.patch(`/users/${userId}/logout`); // ここではbodyはいらない
+    localStorage.removeItem('token');
+    dispatch({
+      type: LOGOUT,
+      payload: '',
+    });
   } catch (error) {
     console.log(error);
   }

@@ -14,3 +14,13 @@ export const getUsersActionCreator = () => async (dispatch, getState) => {
     console.log(error);
   }
 };
+
+export const updateConversationStateActionCreator = () => async (dispatch, getState) => {
+  try {
+    const userId = getState().authState.currentUser._id; //postのbodyはいらないな。ただ、booleanをtrueにするだけだ。
+    const result = await mosquitareAPI.patch(`/users/${userId}/conversation`);
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
+};

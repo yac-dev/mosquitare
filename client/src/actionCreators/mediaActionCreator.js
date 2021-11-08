@@ -113,6 +113,7 @@ export const callActionCreator =
       oppositeVideoRef.current.srcObject = stream;
       connectionRef.current = peerInitiator;
       console.log('call accepted??????');
+      // ここで、isInConversationを更新するhttp requestを送んなきゃだな。
     });
   };
 
