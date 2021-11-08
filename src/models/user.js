@@ -128,9 +128,9 @@ userSchema.pre(/^find/, function (next) {
   next();
 });
 
-// userSchema.methods.isPasswordCorrect = async (enteredPassword, actualPassword) => {
-//   return await bcrypt.compare(enteredPassword, actualPassword);
-// }; // 多分、bcryptjsのmodule自体がぶっ壊れてるな。。。
+userSchema.methods.isPasswordCorrect = async (enteredPassword, actualPassword) => {
+  return await bcrypt.compare(enteredPassword, actualPassword);
+}; // 多分、bcryptjsのmodule自体がぶっ壊れてるな。。。
 
 const User = mongoose.model('User', userSchema);
 

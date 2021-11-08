@@ -7,6 +7,7 @@ import {
   CALL_ACCEPTED,
   ADD_USER_GLOBALLY,
   LOGOUT,
+  UPDATE_CONVERSATION_STATE,
 } from '../actionCreators/type';
 
 const INITIAL_STATE = {
@@ -52,6 +53,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
         currentUser: null,
         token: null,
       };
+    // case UPDATE_CONVERSATION_STATE:
+    //   return state // これいらないや。
     default:
       return state;
   }

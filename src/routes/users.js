@@ -7,11 +7,13 @@ import {
   getUsers,
   updateUsersSocketId,
   updateUserConversationState,
+  updateUserConversationToFalse,
   logout,
 } from '../controllers/users';
 import { authorization } from '../middlewares/authorization';
 
 router.patch('/:id/conversation', updateUserConversationState);
+router.patch('/:id/conversationtofalse', updateUserConversationToFalse);
 
 router.post('/signup', signup);
 router.post('/login', login);

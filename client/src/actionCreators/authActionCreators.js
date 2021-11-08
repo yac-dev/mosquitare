@@ -10,6 +10,8 @@ import {
   UPDATE_USER_SOCKETID_IN_GLOBAL,
   LOGIN,
   LOGOUT,
+  UPDATE_CONVERSATION_STATE,
+  UPDATE_CONVERSATION_TO_FALSE,
 } from './type';
 
 // loadmeで使うaction creator. loadPositionはすでにここにあるね。
@@ -29,6 +31,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
       type: SIGNUP,
       payload: result.data, // → user prop
     });
+    // この後どうするかだね。
 
     // ここから、globalなusersのstateへの登録が始まる。
     // const { authState } = getState(); // 結局、ここも必要ないな。
@@ -39,7 +42,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
     //   payload: authState,
     // }); // 結局ここも必要ないや。
 
-    history.push('/');
+    history.push('/worldmap');
   } catch (error) {
     console.log(error);
   }
@@ -55,7 +58,7 @@ export const loginActionCreator = (formData) => async (dispatch) => {
       type: LOGIN,
       payload: result.data,
     });
-    history.push('/');
+    history.push('/worldmap');
   } catch (error) {
     console.log(error.message);
   }
@@ -260,10 +263,36 @@ export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispa
 export const logoutActionCreator = () => async (dispatch, getState) => {
   try {
     const userId = getState().authState.currentUser._id;
-    await mosquitareAPI.patch(`/users/${userId}/logout`); // ここではbodyはいらない
-    localStorage.removeItem('token');
+    const result = await mosquitareAPI.patch(`/users/${userId}/logout`); // ここではbodyはいらない
+    localStorage.removeItem('mosquitare token');
     dispatch({
       type: LOGOUT,
+      payload: '',
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserConversationStateActionCreator = () => async (dispatch, getState) => {
+  try {
+    const userId = getState().authState.currentUser._id;
+    const result = await mosquitareAPI.patch(`/users/${userId}/conversation`);
+    dispatch({
+      type: UPDATE_CONVERSATION_STATE,
+      payload: '',
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const updateUserConversationToFalseActionCreator = () => async (dispatch, getState) => {
+  try {
+    console.log('to false working???y');
+    const userId = getState().authState.currentUser._id;
+    const result = await mosquitareAPI.patch(`/users/${userId}/conversationtofalse`);
+    dispatch({
+      type: UPDATE_CONVERSATION_TO_FALSE,
       payload: '',
     });
   } catch (error) {

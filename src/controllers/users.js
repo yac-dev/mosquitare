@@ -134,10 +134,11 @@ export const updateUsersSocketId = async (request, response) => {
 // こっちは、isInConversation用のhandler、でもrefactoringできるな,最終的に。
 export const updateUserConversationState = async (request, response) => {
   try {
-    const user = await User.findByIdAndUpdate(request.params.id, request.body, {
-      new: true,
-      runValidators: true,
-    });
+    const user = await User.findByIdAndUpdate(
+      request.params.id,
+      { isInConversation: true },
+      { new: true, runValidators: true }
+    );
     response.json({
       user,
     });
@@ -148,8 +149,31 @@ export const updateUserConversationState = async (request, response) => {
 
 export const logout = async (request, response) => {
   try {
-    await User.findByIdAndUpdate(request.params.id, { isOnline: false }, { new: true, runValidators: true }); // これできたっけ？？
+    const user = await User.findByIdAndUpdate(
+      request.params.id,
+      { isOnline: false },
+      { new: true, runValidators: true }
+    ); // これできたっけ？？
     // あとは、client側でやる感じだな。
+    response.json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserConversationToFalse = async (request, response) => {
+  try {
+    console.log('api side false working???');
+    const user = await User.findByIdAndUpdate(
+      request.params.id,
+      { isInConversation: false },
+      { new: true, runValidators: true }
+    );
+    response.json({
+      user,
+    });
   } catch (error) {
     console.log(error);
   }

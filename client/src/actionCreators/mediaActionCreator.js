@@ -14,6 +14,8 @@ import history from '../history';
 import { mosquitareAPI } from '../apis/mosquitare';
 
 import { getUsersActionCreator } from './usersActionCreator';
+import { updateUserConversationStateActionCreator } from './authActionCreators';
+import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 
 export const getMediaActionCreator = (myVideoRef) => (dispatch) => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
@@ -111,6 +113,7 @@ export const callActionCreator =
     peerInitiator.on('stream', (stream) => {
       myVideoRef.current.srcObject = myVideoStreamObject;
       oppositeVideoRef.current.srcObject = stream;
+      store.dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
       connectionRef.current = peerInitiator;
       console.log('call accepted??????');
       // ここで、isInConversationを更新するhttp requestを送んなきゃだな。
@@ -142,7 +145,7 @@ export const answerCallActionCreator =
     const { whoIsCalling } = getState().mediaState;
     const { callerSignal } = getState().mediaState;
 
-    const { recieverUserInfo } = getState().authState.currentUser;
+    const recieverUserInfo = getState().authState.currentUser;
     console.log(callerSignal);
     const peerReciever = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
     myVideoRef.current.srcObject = myVideoStreamObject;
@@ -156,6 +159,7 @@ export const answerCallActionCreator =
 
     peerReciever.on('signal', (signalData) => {
       socket.emit(I_ANSWER_THE_CALL, { signalData, whoIsCalling, recieverUserInfo });
+      store.dispatch(updateUserConversationStateActionCreator(recieverUserInfo._id));
     });
 
     peerReciever.signal(callerSignal);
@@ -185,6 +189,7 @@ export const answerCallActionCreator =
 
 export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   console.log('should be working!!');
+  store.dispatch(updateUserConversationToFalseActionCreator());
   connectionRef.current.destroy();
   dispatch({
     type: HANG_UP_CALL,

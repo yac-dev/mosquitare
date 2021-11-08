@@ -29,6 +29,7 @@ import { callActionCreator } from '../actionCreators/mediaActionCreator';
 import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { answerCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
+import { updateUserConversationStateActionCreator } from '../actionCreators/authActionCreators';
 
 import { getUsersActionCreator } from '../actionCreators/usersActionCreator';
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
@@ -169,53 +170,55 @@ const WorldMap = (props) => {
     if (props.usersState) {
       // const users = Object.values(props.usersState);
       const usersRender = props.usersState.map((user) => {
-        return (
-          <>
-            <Marker
-              longitude={user.location.coordinates[0]}
-              latitude={user.location.coordinates[1]}
-              offsetLeft={-3.5 * viewport.zoom}
-              offsetTop={-7 * viewport.zoom}
-            >
-              {/* <Popup
-                header={user.name}
-                content={userInfoRender}
-                key='hola'
-                trigger={
-                  <Icon
-                    className='green user icon'
-                    size='large'
-                    // onMouseEnter={setToggle(true)}
-                  />
-                }
-              /> */}
-              <Popup
-                trigger={<Icon className='green user icon' size='large' style={{ cursor: 'pointer' }} />}
-                flowing
-                hoverable
+        if (user.isOnline && !user.isInConversation) {
+          return (
+            <>
+              <Marker
+                longitude={user.location.coordinates[0]}
+                latitude={user.location.coordinates[1]}
+                offsetLeft={-3.5 * viewport.zoom}
+                offsetTop={-7 * viewport.zoom}
               >
-                {/* <div className='card'>
-                  <div className='content'>
-                    <h4>{user.name}</h4>
-                    <div className='description'>{user.nativeLangs.map((nativeLang) => nativeLang.name)}</div>
-                    <div className='description'>{user.learningLangs.map((learningLang) => learningLang.name)}</div>
-                    <div className='description'>{user.job}</div>
-                  </div>
+                {/* <Popup
+                  header={user.name}
+                  content={userInfoRender}
+                  key='hola'
+                  trigger={
+                    <Icon
+                      className='green user icon'
+                      size='large'
+                      // onMouseEnter={setToggle(true)}
+                    />
+                  }
+                /> */}
+                <Popup
+                  trigger={<Icon className='green user icon' size='large' style={{ cursor: 'pointer' }} />}
+                  flowing
+                  hoverable
+                >
+                  {/* <div className='card'>
+                    <div className='content'>
+                      <h4>{user.name}</h4>
+                      <div className='description'>{user.nativeLangs.map((nativeLang) => nativeLang.name)}</div>
+                      <div className='description'>{user.learningLangs.map((learningLang) => learningLang.name)}</div>
+                      <div className='description'>{user.job}</div>
+                    </div>
 
-                  <Button positive onClick={(event) => onCallClick(event, user.socketId)}>
-                    <i className='video icon'>call</i>
-                    callback={onCallClick} socketId={user.socketId} っていう具合かな。。。
-                  </Button>
-                </div> */}
-                <ConfirmationCard callback={onCallClick} socketId={user.socketId} user={user} />
-              </Popup>
-              {/* <Popup trigger={<Icon className='red user icon' size='large' />} flowing hoverable>
-                  {otherUserInfoRender(user.currentUser, user.currentUserSocketId)}
-                </Popup> */}
-              {/* <Icon className='red user icon' size='large' /> */}
-            </Marker>
-          </>
-        );
+                    <Button positive onClick={(event) => onCallClick(event, user.socketId)}>
+                      <i className='video icon'>call</i>
+                      callback={onCallClick} socketId={user.socketId} っていう具合かな。。。
+                    </Button>
+                  </div> */}
+                  <ConfirmationCard callback={onCallClick} socketId={user.socketId} user={user} />
+                </Popup>
+                {/* <Popup trigger={<Icon className='red user icon' size='large' />} flowing hoverable>
+                    {otherUserInfoRender(user.currentUser, user.currentUserSocketId)}
+                  </Popup> */}
+                {/* <Icon className='red user icon' size='large' /> */}
+              </Marker>
+            </>
+          );
+        }
       });
       return <>{usersRender}</>;
     } else {
@@ -573,4 +576,5 @@ export default connect(mapStateToProps, {
   getUsersActionCreator,
   loadMeAndUpdateActionCreator,
   hangUpCallActionCreator,
+  // updateUserConversationStateActionCreator // ここでやるのはよそう。actionの順番がごちゃごちゃになる。
 })(WorldMap);
