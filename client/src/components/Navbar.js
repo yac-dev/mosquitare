@@ -29,7 +29,7 @@ const Navbar = (props) => {
         <Link className='ui item' to='/signup/basic'>
           Signup
         </Link>
-        <button onClick={(event) => props.logoutActionCreator(event)}></button>
+        <button onClick={(event) => props.logoutActionCreator(event)}>Logout</button>
       </div>
     </div>
   );

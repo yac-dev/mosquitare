@@ -39,7 +39,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
     //   payload: authState,
     // }); // 結局ここも必要ないや。
 
-    history.push('/worldmap');
+    history.push('/');
   } catch (error) {
     console.log(error);
   }
@@ -47,6 +47,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
 
 export const loginActionCreator = (formData) => async (dispatch) => {
   try {
+    console.log('working???');
     const result = await mosquitareAPI.post('/users/login', formData);
     localStorage.setItem('mosquitare token', result.data.jwtToken);
     console.log(result);
@@ -54,7 +55,7 @@ export const loginActionCreator = (formData) => async (dispatch) => {
       type: LOGIN,
       payload: result.data,
     });
-    history.push('/worldmap');
+    history.push('/');
   } catch (error) {
     console.log(error.message);
   }

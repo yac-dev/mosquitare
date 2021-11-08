@@ -7,7 +7,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 import dotenv from 'dotenv';
-import bcrypt from 'bcryptjs';
+// import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 dotenv.config({ path: path.join(__dirname, '../', '../', 'config/dev.env') });
 
@@ -26,7 +27,7 @@ export const signup = async (request, response, next) => {
       socketId,
     } = request.body;
 
-    const user = await User.create({
+    const user = await new User({
       name,
       email,
       password,
@@ -39,6 +40,9 @@ export const signup = async (request, response, next) => {
       socketId,
     });
     // location, socketに関してはbrowserから取得してpostするようにしよう。
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
+    user.save();
 
     const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
 
@@ -67,7 +71,7 @@ export const login = async (request, response) => {
     const isEnteredPasswordCorrect = await user.isPasswordCorrect(password, user.password);
     if (!isEnteredPasswordCorrect) {
       // つまりfalseということ。
-      throw new Error(isEnteredPasswordCorrect);
+      return new Error(isEnteredPasswordCorrect);
     }
 
     const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });

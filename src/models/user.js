@@ -104,11 +104,11 @@ const userSchema = new mongoose.Schema({
 
 userSchema.index({ location: '2dsphere' });
 
-userSchema.pre('save', async function (next) {
-  this.password = await bcrypt.hash(this.password, 12);
-  this.passwordConfirmation = undefined;
-  next();
-});
+// userSchema.pre('save', async function (next) {
+//   this.password = await bcrypt.hash(this.password, 12);
+//   this.passwordConfirmation = undefined;
+//   next();
+// });
 
 userSchema.pre(/^find/, function (next) {
   this.populate({
@@ -128,12 +128,9 @@ userSchema.pre(/^find/, function (next) {
   next();
 });
 
-userSchema.methods.isPasswordCorrect = async (enteredPassword, actualPassword) => {
-  // const x = await bcrypt.hash(enteredPassword, 12);
-  // console.log(x);
-  // console.log(actualPassword);
-  return await bcrypt.compare(enteredPassword, actualPassword);
-};
+// userSchema.methods.isPasswordCorrect = async (enteredPassword, actualPassword) => {
+//   return await bcrypt.compare(enteredPassword, actualPassword);
+// }; // 多分、bcryptjsのmodule自体がぶっ壊れてるな。。。
 
 const User = mongoose.model('User', userSchema);
 
