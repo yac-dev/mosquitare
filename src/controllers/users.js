@@ -1,18 +1,8 @@
 import User from '../models/user';
 import jwt from 'jsonwebtoken';
-
-import path from 'path';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-import dotenv from 'dotenv';
 // import bcrypt from 'bcryptjs';
 import bcrypt from 'bcrypt';
-
 import { JWT_PRIVATE_KEY } from '../../config';
-
-dotenv.config({ path: path.join(__dirname, '../', '../', 'config/dev.env') });
 
 export const signup = async (request, response, next) => {
   try {
@@ -63,8 +53,6 @@ export const login = async (request, response) => {
     console.log(email, password);
 
     const user = await User.findOne({ email });
-    // const hashed = await bcrypt.hash(password, 12);
-    // console.log(hashed, user.password);
     if (!user) {
       throw new Error('Nooooo.mail');
     }
@@ -72,7 +60,6 @@ export const login = async (request, response) => {
 
     const isEnteredPasswordCorrect = await user.isPasswordCorrect(password, user.password);
     if (!isEnteredPasswordCorrect) {
-      // つまりfalseということ。
       return new Error(isEnteredPasswordCorrect);
     }
 
@@ -117,6 +104,21 @@ export const getUsers = async (request, response) => {
   }
 };
 
+// const updateFunc = async (request, response, field) => {
+//   try {
+//     const user = await User.findByIdAndUpdate(
+//       request.params.id,
+//       { isInConversation: true },
+//       { new: true, runValidators: true }
+//     );
+//     response.json({
+//       user,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
 export const updateUsersSocketId = async (request, response) => {
   try {
     // socketだけにしてーな。
@@ -155,8 +157,7 @@ export const logout = async (request, response) => {
       request.params.id,
       { isOnline: false },
       { new: true, runValidators: true }
-    ); // これできたっけ？？
-    // あとは、client側でやる感じだな。
+    );
     response.json({
       user,
     });
@@ -167,7 +168,6 @@ export const logout = async (request, response) => {
 
 export const updateUserConversationToFalse = async (request, response) => {
   try {
-    console.log('api side false working???');
     const user = await User.findByIdAndUpdate(
       request.params.id,
       { isInConversation: false },

@@ -103,3 +103,23 @@ video {
 /* .ui.card.confirmation-card {
   border: none; こうできることを知っておこう。
 } */
+
+.welcome {
+  /* display: grid; */
+  /* grid-template-columns: repeat(3, 1fr); */
+  /* grid-template-rows: repeat(3, 1fr); */
+}
+
+.messages-wrapper {
+  /* grid-column: 2/3; */
+  /* grid-row: 2/3; */
+  margin: 0 auto;
+}
+
+.message {
+  text-align: center;
+  font-size: 30px;
+}
+
+.signup-login {
+}
