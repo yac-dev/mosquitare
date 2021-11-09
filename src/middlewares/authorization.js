@@ -1,16 +1,6 @@
 import User from '../models/user';
 import jwt from 'jsonwebtoken';
-
-import path from 'path';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-import dotenv from 'dotenv';
-
 import { JWT_PRIVATE_KEY } from '../../config';
-
-dotenv.config({ path: path.join(__dirname, '../', '../', 'config/dev.env') });
 
 export const authorization = async (request, response, next) => {
   try {

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
+// import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,23 +18,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // languages: [
-  //   {
-  //     type: mongoose.Schema.ObjectId,
-  //     required: true,
-  //     ref: 'Language',
-  //   },
-  // ],
-  // languages: [
-  //   {
-  //     type: {
-  //       type: mongoose.Schema.ObjectId,
-  //       required: true,
-  //       ref: 'Language',
-  //     },
-  //     of: Number,
-  //   },
-  // ],
   nativeLangs: [
     {
       type: mongoose.Schema.ObjectId,
@@ -50,12 +33,6 @@ const userSchema = new mongoose.Schema({
       ref: 'Language',
     },
   ],
-  // level: [
-  //   {
-  //     type: Number,
-  //     required: true,
-  //   },
-  // ],
   nationalities: [
     {
       type: mongoose.Schema.ObjectId,
@@ -77,9 +54,10 @@ const userSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
-  durations: [Number],
-  averageDuration: Number,
-  // friends: [mongoose.Schema.Types.Mixed],
+  averageDuration: {
+    type: Number,
+    default: 0,
+  },
   location: {
     type: {
       type: String,
