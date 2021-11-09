@@ -10,6 +10,8 @@ import dotenv from 'dotenv';
 // import bcrypt from 'bcryptjs';
 import bcrypt from 'bcrypt';
 
+import { JWT_PRIVATE_KEY } from '../../config';
+
 dotenv.config({ path: path.join(__dirname, '../', '../', 'config/dev.env') });
 
 export const signup = async (request, response, next) => {
@@ -44,7 +46,7 @@ export const signup = async (request, response, next) => {
     user.password = await bcrypt.hash(user.password, salt);
     user.save();
 
-    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
+    const jwtToken = jwt.sign({ id: user._id }, JWT_PRIVATE_KEY, { expiresIn: '10d' });
 
     response.json({
       user,
@@ -74,7 +76,7 @@ export const login = async (request, response) => {
       return new Error(isEnteredPasswordCorrect);
     }
 
-    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
+    const jwtToken = jwt.sign({ id: user._id }, JWT_PRIVATE_KEY, { expiresIn: '10d' });
     // ここで、このuserのlocation, socket、isOnlineを全て更新しよう。
     // 基本、logoutとpage closeしたらlocation、socket、isOnlineを全部消すようにupdateするからね。
 

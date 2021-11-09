@@ -1,11 +1,13 @@
 import path from 'path';
 import dotenv from 'dotenv';
 const __dirname = path.resolve();
-dotenv.config({ path: path.join(__dirname, '../', 'config/dev.env') });
+// dotenv.config({ path: path.join(__dirname, '../', 'config/dev.env') });
 
 import http from 'http';
 import app from './app';
-const port = process.env.PORT;
+// const port = process.env.PORT;
+
+import { PORT } from '../config';
 const server = http.createServer(app);
 import { Server } from 'socket.io';
 
@@ -55,6 +57,6 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(port, () => {
-  console.log(`Server listenning on port ${port}`);
+server.listen(PORT, () => {
+  console.log(`Server listenning on port ${PORT}`);
 });
