@@ -1,22 +1,7 @@
-import {
-  SIGNUP,
-  LOGIN,
-  LOAD_ME,
-  LOAD_POSITION,
-  GET_SOCKET_ID,
-  CALL_ACCEPTED,
-  ADD_USER_GLOBALLY,
-  LOGOUT,
-  UPDATE_CONVERSATION_STATE,
-} from '../actionCreators/type';
+import { SIGNUP, LOGIN, LOAD_ME, LOGOUT } from '../actionCreators/type';
 
 const INITIAL_STATE = {
   currentUser: null,
-  // currentUserPosition: null,
-  // isCurrentUserInConversation: false,
-  // isCurrentUserLoggedIn: false,
-  // currentUserSocketId: '',
-  // isCurrentUserOnline: null,
   token: localStorage.getItem('mosquitare token'),
 };
 
@@ -28,24 +13,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentUser: action.payload.user,
-        // isCurrentUserLoggedIn: true,
         token: action.payload.jwtToken,
-      };
-    // case LOAD_POSITION:
-    //   return {
-    //     ...state,
-    //     currentUserPosition: action.payload,
-    //   };
-    case GET_SOCKET_ID:
-      return {
-        ...state,
-        isCurrentUserOnline: true,
-        socketId: action.payload,
-      };
-    case CALL_ACCEPTED:
-      return {
-        ...state,
-        isCurrentUserInConversation: true,
       };
     case LOGOUT:
       return {

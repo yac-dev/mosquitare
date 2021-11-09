@@ -1,11 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-
 import './signup.css';
-
-import { io } from 'socket.io-client';
-import { I_GOT_SOCKET_ID } from '../../actionCreators/socketEvents';
 
 const SignupBasic = () => {
   const [name, setName] = useState('');
@@ -45,12 +41,6 @@ const SignupBasic = () => {
       console.log(lat);
     });
   }, []);
-
-  // useEffect(() => {
-  //   socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
-  //     socketId.current = socketIdFromServer;
-  //   });
-  // }, [socket]);
 
   const onNextClick = (event) => {
     console.log(password, passwordConfirmation);
@@ -120,44 +110,3 @@ const SignupBasic = () => {
 };
 
 export default SignupBasic;
-
-{
-  /* <div className='ui container'>
-<Form>
-  <Form.Field>
-    <label>Name</label>
-    <input value={name} onChange={(event) => setName(event.target.value)} placeholder='Please enter your name.' />
-  </Form.Field>
-
-  <Form.Field>
-    <label>Email</label>
-    <input
-      value={email}
-      onChange={(event) => setEmail(event.target.value)}
-      placeholder='Please enter your email.'
-    />
-  </Form.Field>
-
-  <Form.Field>
-    <label>Password</label>
-    <input
-      value={password}
-      onChange={(event) => setPassword(event.target.value)}
-      placeholder='Please enter password.'
-    />
-  </Form.Field>
-
-  <Form.Field>
-    <label>Password Confirmation</label>
-    <input
-      value={passwordConfirmation}
-      onChange={(event) => setPasswordConfirmation(event.target.value)}
-      placeholder='Please reenter your password.'
-    />
-  </Form.Field>
-  <Link to={{ pathname: '/signup/details', state: [name, email, password, passwordConfirmation, lng, lat] }}>
-    Next
-  </Link>
-</Form>
-</div> */
-}

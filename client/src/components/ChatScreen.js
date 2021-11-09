@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-// import Modal from 'react-modal';
 import { Button, Header, Image, Modal } from 'semantic-ui-react';
 
 import { connect } from 'react-redux';
@@ -46,11 +45,7 @@ const ChatScreen = (props) => {
       <div>
         <div className='caller'>
           <h1>Someone is calling...</h1>
-          <button
-          // onClick={() => props.answerCallActionCreator(socket, Peer, oppositeVideo, connectionRef)}
-          >
-            Answer
-          </button>
+          <button>Answer</button>
         </div>
       </div>
     </>

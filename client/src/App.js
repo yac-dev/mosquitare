@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Router, Route } from 'react-router-dom';
 import history from './history';
 import './App.css';
@@ -13,15 +13,6 @@ import SignupDetails from './components/Signup/SignupDetails';
 import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 import ChatScreen from './components/ChatScreen';
-
-import store from './store';
-import { socket } from './components/WorldMap';
-import { loadMeAndUpdateActionCreator } from './actionCreators/authActionCreators';
-import { loadPositionActionCreator } from './actionCreators/authActionCreators';
-import { getMediaActionCreator, getSocketIdActionCreator } from './actionCreators/mediaActionCreator';
-import { getUsersActionCreator } from './actionCreators/usersActionCreator';
-
-import { ADD_USER_GLOBALLY } from './actionCreators/type';
 
 const App = () => {
   // useEffect(() => {
@@ -76,7 +67,6 @@ const App = () => {
         <Route path='/socket' exact component={Socket} />
         <Route path='/worldmap' exact component={WorldMap} />
         <Route path='/chatscreen' exact component={ChatScreen} />
-        {/* uber っぽくしたいなら、worldMapをself closingするのではなく、childrenを使うといいかもな 多分*/}
       </Router>
     </div>
   );

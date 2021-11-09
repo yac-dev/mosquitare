@@ -4,22 +4,14 @@ import { connect } from 'react-redux';
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
 
 const Navbar = (props) => {
-  const onLogoutClick = (event) => {
-    event.preventDefault();
-    props.logoutActionCreator();
-  };
-
   return (
     <div className='ui secondary  menu'>
       <Link className='item' to='/'>
         Home
       </Link>
-      {/* <Link className='item'>Messages</Link> */}
-      {/* <Link className='item active'>Friends</Link> */}
       <div className='right menu'>
         <div className='item'>
           <div className='ui icon input'>
-            {/* <input type="text" placeholder="Search..."> */}
             <i className='search link icon'></i>
           </div>
         </div>
@@ -29,7 +21,7 @@ const Navbar = (props) => {
         <Link className='ui item' to='/signup/basic'>
           Signup
         </Link>
-        <button onClick={(event) => props.logoutActionCreator(event)}>Logout</button>
+        <button onClick={() => props.logoutActionCreator()}>Logout</button>
       </div>
     </div>
   );

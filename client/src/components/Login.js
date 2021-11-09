@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { loginActionCreator } from '../actionCreators/authActionCreators';
 
 const Login = (props) => {
-  // hooks system
   const [loginFormState, setLoginFormState] = useState({
     email: '',
     password: '',

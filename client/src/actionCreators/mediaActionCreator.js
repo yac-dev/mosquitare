@@ -1,19 +1,9 @@
-import { GET_MEDIA, GET_SOCKET_ID, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED, HANG_UP_CALL } from './type';
-import {
-  I_GOT_SOCKET_ID,
-  SOMEBODY_CALLS_ME,
-  I_CALL_SOMEBODY,
-  I_ANSWER_THE_CALL,
-  MY_CALL_IS_ACCEPTED,
-} from './socketEvents';
+import { GET_MEDIA, CALL, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED, HANG_UP_CALL } from './type';
+import { SOMEBODY_CALLS_ME, I_CALL_SOMEBODY, I_ANSWER_THE_CALL, MY_CALL_IS_ACCEPTED } from './socketEvents';
 
-import { io } from 'socket.io-client';
 import Peer from 'simple-peer';
 import store from '../store';
-import history from '../history';
-import { mosquitareAPI } from '../apis/mosquitare';
 
-import { getUsersActionCreator } from './usersActionCreator';
 import { updateUserConversationStateActionCreator } from './authActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 
@@ -78,7 +68,6 @@ export const getMediaActionCreator = (myVideoRef) => (dispatch) => {
 
 export const callActionCreator =
   (socket, mySocketId, myVideoRef, oppositeSocketId, oppositeVideoRef, connectionRef) => (dispatch, getState) => {
-    // history.push('/chatscreen');
     // ここで、serverとのconnectionを確保してから、socketIdのupdateをするっていう方法なのかね。。。
     const { myVideoStreamObject } = getState().mediaState;
     // const { mySocketId } = getState().mediaState;
@@ -90,24 +79,17 @@ export const callActionCreator =
     peerInitiator.on('signal', (signalData) => {
       socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo }); // ここに、callerのdataを加えよう。
       dispatch({
-        type: 'CALL',
+        type: CALL,
         payload: '',
       });
     });
-
-    // history.push('/chatscreen'); // まず移動してから、の方がいいかもね。
-    console.log('Im calling your friend!! Wait here till your call ACCEPTED!!');
-
     socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
       console.log('My call is accepted.');
-      // console.log(signalData);
-
       dispatch({
         type: CALL_ACCEPTED,
         payload: dataFromServer.recieverUserInfo,
       });
       peerInitiator.signal(dataFromServer.signalData);
-      console.log('not sure...');
     });
 
     peerInitiator.on('stream', (stream) => {
@@ -116,7 +98,6 @@ export const callActionCreator =
       store.dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
       connectionRef.current = peerInitiator;
       console.log('call accepted??????');
-      // ここで、isInConversationを更新するhttp requestを送んなきゃだな。
     });
   };
 
@@ -150,7 +131,6 @@ export const answerCallActionCreator =
     const peerReciever = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
     myVideoRef.current.srcObject = myVideoStreamObject;
 
-    // そもそもここが動いていない。
     peerReciever.on('stream', (stream) => {
       console.log('working??');
       console.log(stream);

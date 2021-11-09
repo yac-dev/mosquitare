@@ -1,16 +1,16 @@
 import {
   GET_MEDIA,
   GET_SOCKET_ID,
+  CALL,
   LISTEN_CALL,
   ANSWER_CALL,
   CALL_ACCEPTED,
   HANG_UP_CALL,
 } from '../actionCreators/type';
 
-// initialを決めてから考えよう。来たsokcetidをどう保存するかを。
 const INITIAL_STATE = {
   mySocketId: null,
-  myVideoStreamObject: null, // 多分、stream object storeに保存できないや。
+  myVideoStreamObject: null,
   amICalling: false,
   amIRecieving: false,
   callingWith: null,
@@ -20,13 +20,11 @@ const INITIAL_STATE = {
   callAccepted: false,
 };
 
-const mediaReducer = (state = {}, action) => {
+const mediaReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case GET_MEDIA:
-      console.log('get media at reducer');
       return { ...state, myVideoStreamObject: action.payload };
-    // なぜ、inspectorのmyVideoStreamObjectは空のobjectになっているけど、storeには一応入ってくれている。
-    case 'CALL':
+    case CALL:
       return { ...state, amICalling: true };
     case GET_SOCKET_ID:
       return { ...state, mySocketId: action.payload };
@@ -50,17 +48,6 @@ const mediaReducer = (state = {}, action) => {
         callingWith: action.payload,
       };
     case HANG_UP_CALL:
-      // const initialState = {
-      //   mySocketId: null,
-      //   myVideoStreamObject: null,
-      //   amICalling: false,
-      //   amIRecieving: false,
-      //   callingWith: null,
-      //   whoIsCalling: null,
-      //   callerSignal: null,
-      //   oppositeIdToCall: null,
-      //   callAccepted: false,
-      // };
       return {
         ...state,
         amICalling: false,
