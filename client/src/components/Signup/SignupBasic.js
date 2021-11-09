@@ -54,9 +54,14 @@ const SignupBasic = () => {
 
   const onNextClick = (event) => {
     console.log(password, passwordConfirmation);
-    if (password !== passwordConfirmation) {
+    if (password !== passwordConfirmation || !(lng && lat)) {
       event.preventDefault();
-      setErrorMessagea('Please reenter your password correctlly.');
+      if (!(lng && lat)) {
+        setErrorMessagea('Require geo data.');
+      }
+      if (password !== passwordConfirmation) {
+        setErrorMessagea('Please reenter your password correctlly.');
+      }
       setTimeout(() => {
         setErrorMessagea('');
       }, 2000);
@@ -75,19 +80,31 @@ const SignupBasic = () => {
       <Form className='signup-basic-form'>
         <Form.Field>
           <label>Name</label>
-          <input placeholder='First Name' />
+          <input value={name} onChange={(event) => setName(event.target.value)} placeholder='Please enter your name.' />
         </Form.Field>
         <Form.Field>
           <label>Email</label>
-          <input placeholder='Last Name' />
+          <input
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder='Please enter your email.'
+          />
         </Form.Field>
         <Form.Field>
           <label>Password</label>
-          <input placeholder='Last Name' />
+          <input
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder='Please enter password.'
+          />
         </Form.Field>
         <Form.Field>
           <label>Password Confirmation</label>
-          <input placeholder='Last Name' />
+          <input
+            value={passwordConfirmation}
+            onChange={(event) => setPasswordConfirmation(event.target.value)}
+            placeholder='Please reenter your password.'
+          />
         </Form.Field>
         <Button type='submit'>
           <Link

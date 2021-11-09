@@ -32,7 +32,10 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
       payload: result.data, // → user prop
     });
     // この後どうするかだね。
-
+    // const jwtToken = localStorage.getItem('mosquitare token');
+    // store.dispatch(loadMeAndUpdateActionCreator(jwtToken, ''));
+    // ↑これはダメな方法だった。history pushではなく、worldmapをpage reloadして読み込むようにする、ただそれだけでいいんだ。
+    window.location = '/worldmap';
     // ここから、globalなusersのstateへの登録が始まる。
     // const { authState } = getState(); // 結局、ここも必要ないな。
     // ここで、tokenとかのpropertyを消すように整形しよう。後でね。
@@ -42,7 +45,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
     //   payload: authState,
     // }); // 結局ここも必要ないや。
 
-    history.push('/worldmap');
+    // history.push('/worldmap');
   } catch (error) {
     console.log(error);
   }
@@ -58,7 +61,8 @@ export const loginActionCreator = (formData) => async (dispatch) => {
       type: LOGIN,
       payload: result.data,
     });
-    history.push('/worldmap');
+    // history.push('/worldmap');
+    window.location = '/worldmap';
   } catch (error) {
     console.log(error.message);
   }

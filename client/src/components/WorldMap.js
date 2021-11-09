@@ -39,7 +39,7 @@ import { LISTEN_CALL } from '../actionCreators/type';
 import { GET_MEDIA } from '../actionCreators/type';
 import store from '../store';
 
-console.log('out of component');
+console.log('out of component...working??');
 export const socket = io(process.env.REACT_APP_WEBRTC); // おそらく、socketっていう別のファイルを作ってそっからexportした方がいいだろな。conventionの部分を考えると。
 
 const WorldMap = (props) => {

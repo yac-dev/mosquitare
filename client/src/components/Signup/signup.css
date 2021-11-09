@@ -6,7 +6,16 @@
 }
 
 .picked-languages {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  column-gap: 10px;
+  row-gap: 10px;
+  margin-bottom: 20px;
+}
+
+.main-language {
+  border-radius: 5px;
 }
 
 .signup-basic-form {
