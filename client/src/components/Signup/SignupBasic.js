@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
+import './signup.css';
+
 import { io } from 'socket.io-client';
 import { I_GOT_SOCKET_ID } from '../../actionCreators/socketEvents';
 
@@ -10,12 +12,12 @@ const SignupBasic = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const location = [];
+  const [errorMessage, setErrorMessagea] = useState('');
   const lng = useRef(null);
   const lat = useRef(null);
-  const socketId = useRef(null);
+  // const socketId = useRef(null);
 
-  const socket = io(process.env.REACT_APP_WEBRTC);
+  // const socket = io(process.env.REACT_APP_WEBRTC);
   // const [location, setLocation] = useState([]);
 
   // const [position, setPosition] = useState({ lng: null, lat: null });
@@ -36,11 +38,6 @@ const SignupBasic = () => {
   // }, []);
 
   useEffect(() => {
-    if ('geolocation' in navigator) {
-      console.log('Available');
-    } else {
-      console.log('Not Available');
-    }
     navigator.geolocation.getCurrentPosition(function (position) {
       lng.current = position.coords.longitude;
       lat.current = position.coords.latitude;
@@ -49,52 +46,57 @@ const SignupBasic = () => {
     });
   }, []);
 
-  useEffect(() => {
-    socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
-      socketId.current = socketIdFromServer;
-    });
-  }, [socket]);
+  // useEffect(() => {
+  //   socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
+  //     socketId.current = socketIdFromServer;
+  //   });
+  // }, [socket]);
+
+  const onNextClick = (event) => {
+    console.log(password, passwordConfirmation);
+    if (password !== passwordConfirmation) {
+      event.preventDefault();
+      setErrorMessagea('Please reenter your password correctlly.');
+      setTimeout(() => {
+        setErrorMessagea('');
+      }, 2000);
+    }
+  }; // ????
+
+  const doesNotMatchRender = () => {
+    if (errorMessage) {
+      return <p style={{ color: 'red' }}>{errorMessage}</p>;
+    }
+  };
 
   return (
-    <div className='ui container'>
-      <div>Basic User Info</div>
-      <Form>
+    <div className='signup-basic-wrapper'>
+      {doesNotMatchRender()}
+      <Form className='signup-basic-form'>
         <Form.Field>
           <label>Name</label>
-          <input value={name} onChange={(event) => setName(event.target.value)} placeholder='Please enter your name.' />
+          <input placeholder='First Name' />
         </Form.Field>
-
         <Form.Field>
           <label>Email</label>
-          <input
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder='Please enter your email.'
-          />
+          <input placeholder='Last Name' />
         </Form.Field>
-
         <Form.Field>
           <label>Password</label>
-          <input
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder='Please enter password.'
-          />
+          <input placeholder='Last Name' />
         </Form.Field>
-
         <Form.Field>
           <label>Password Confirmation</label>
-          <input
-            value={passwordConfirmation}
-            onChange={(event) => setPasswordConfirmation(event.target.value)}
-            placeholder='Please reenter your password.'
-          />
+          <input placeholder='Last Name' />
         </Form.Field>
-        <Link
-          to={{ pathname: '/signup/details', state: [name, email, password, passwordConfirmation, lng, lat, socketId] }}
-        >
-          Next
-        </Link>
+        <Button type='submit'>
+          <Link
+            to={{ pathname: '/signup/details', state: [name, email, password, passwordConfirmation, lng, lat] }}
+            onClick={(event) => onNextClick(event)}
+          >
+            Next
+          </Link>
+        </Button>
       </Form>
     </div>
   );
@@ -102,59 +104,43 @@ const SignupBasic = () => {
 
 export default SignupBasic;
 
-// class Signup extends React.Component {
-//   state = {
-//     name: '',
-//     email: '',
-//     password: '',
-//   };
+{
+  /* <div className='ui container'>
+<Form>
+  <Form.Field>
+    <label>Name</label>
+    <input value={name} onChange={(event) => setName(event.target.value)} placeholder='Please enter your name.' />
+  </Form.Field>
 
-//   onFormSubmit = async () => {
-//     console.log(this.state);
-//   };
+  <Form.Field>
+    <label>Email</label>
+    <input
+      value={email}
+      onChange={(event) => setEmail(event.target.value)}
+      placeholder='Please enter your email.'
+    />
+  </Form.Field>
 
-//   render() {
-//     return (
-//     <div className='ui container'>
-//       <div>Basic User Info</div>
-//       <Form onSubmit={this.onFormSubmit}>
-//         <Form.Field>
-//           <label>Name</label>
-//           <input
-//             value={this.state.name}
-//             onChange={(event) => {
-//               this.setState({ name: event.target.value });
-//             }}
-//             placeholder='Please enter your name.'
-//           />
-//         </Form.Field>
+  <Form.Field>
+    <label>Password</label>
+    <input
+      value={password}
+      onChange={(event) => setPassword(event.target.value)}
+      placeholder='Please enter password.'
+    />
+  </Form.Field>
 
-//         <Form.Field>
-//           <label>Email</label>
-//           <input
-//             value={this.state.email}
-//             onChange={(event) => {
-//               this.setState({ email: event.target.value });
-//             }}
-//             placeholder='Please enter your email.'
-//           />
-//         </Form.Field>
-
-//         <Form.Field>
-//           <label>Password</label>
-//           <input
-//             value={this.state.password}
-//             onChange={(event) => {
-//               this.setState({ password: event.target.value });
-//             }}
-//             placeholder='Please enter password.'
-//           />
-//         </Form.Field>
-//         <Button type='submit'>Next</Button>
-//       </Form>
-//     </div>
-//   );
-// }
-// }
-
-// export default Signup;
+  <Form.Field>
+    <label>Password Confirmation</label>
+    <input
+      value={passwordConfirmation}
+      onChange={(event) => setPasswordConfirmation(event.target.value)}
+      placeholder='Please reenter your password.'
+    />
+  </Form.Field>
+  <Link to={{ pathname: '/signup/details', state: [name, email, password, passwordConfirmation, lng, lat] }}>
+    Next
+  </Link>
+</Form>
+</div> */
+}

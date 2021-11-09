@@ -1,3 +1,14 @@
+.signup-basic-wrapper {
+  margin: auto;
+  width: 50%;
+  border-radius: 5px;
+  padding: 10px;
+}
+
 .picked-languages {
   display: flex;
+}
+
+.signup-basic-form {
+  margin-top: 40px;
 }
