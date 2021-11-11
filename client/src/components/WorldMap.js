@@ -9,6 +9,7 @@ import '../styles/meeting.css';
 import Dimer from './Dimer';
 import ConfirmationCard from './ConfirmationCard';
 import CreateMeetingForm from './Meeting/CreateMeetingForm';
+import MeetingsList from './Meeting/MeetingsList';
 
 // socketio
 import { io } from 'socket.io-client';
@@ -22,6 +23,7 @@ import { answerCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { updateUserConversationStateActionCreator } from '../actionCreators/authActionCreators';
 import { getUsersActionCreator } from '../actionCreators/usersActionCreator';
+import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreator';
 
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
@@ -93,6 +95,8 @@ const WorldMap = (props) => {
         payload: { signalData, whoIsCalling, callerUserInfo },
       });
     });
+
+    props.getMeetingsActionCreator();
   }, []);
 
   // useEffect(() => {
@@ -187,9 +191,16 @@ const WorldMap = (props) => {
     }
   };
 
-  const renderMeetingList = () => {
-    // まずreducerを作ろうか。
-  };
+  // const renderMeetingList = () => {
+  //   // まずreducerを作ろうか。
+  //   if (props.meetingsState) {
+  //     const meetingsList = props.meetingsState.map((meeting) => {
+  //       return <div>{meeting.title}</div>;
+  //     });
+
+  //     return <>{meetingsList}</>;
+  //   }
+  // };
 
   return (
     <>
@@ -230,6 +241,7 @@ const WorldMap = (props) => {
           {usersMarkerRender()}
           {CreateMeetingButton()}
           {renderCreateRoomForm()}
+          <MeetingsList />
         </ReactMapGL>
       </div>
     </>
@@ -237,7 +249,12 @@ const WorldMap = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState, mediaState: state.mediaState, usersState: Object.values(state.usersState) };
+  return {
+    authState: state.authState,
+    mediaState: state.mediaState,
+    usersState: Object.values(state.usersState),
+    // meetingsState: state.meetingsState,
+  };
 };
 
 export default connect(mapStateToProps, {
@@ -251,4 +268,5 @@ export default connect(mapStateToProps, {
   loadMeAndUpdateActionCreator,
   hangUpCallActionCreator,
   // updateUserConversationStateActionCreator // ここでやるのはよそう。actionの順番がごちゃごちゃになる。
+  getMeetingsActionCreator,
 })(WorldMap);
