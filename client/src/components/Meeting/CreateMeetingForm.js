@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button, Form } from 'semantic-ui-react';
+import '../../styles/meeting.css';
 
 const CreateMeetingForm = () => {
   return (

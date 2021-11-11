@@ -19,3 +19,6 @@ export const HANG_UP_CALL = 'HANG_UP_CALL';
 
 // users
 export const GET_USERS = 'GET_USERS';
+
+// meetings
+export const GET_MEETINGS = 'GET_MEETINGS';

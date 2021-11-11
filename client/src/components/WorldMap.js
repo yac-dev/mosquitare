@@ -5,6 +5,7 @@ import { Icon, Popup, Button } from 'semantic-ui-react';
 import { Modal } from 'react-bootstrap';
 // components
 import '../styles/worldmap.css';
+import '../styles/meeting.css';
 import Dimer from './Dimer';
 import ConfirmationCard from './ConfirmationCard';
 import CreateMeetingForm from './Meeting/CreateMeetingForm';
@@ -98,7 +99,7 @@ const WorldMap = (props) => {
   //   const updateUsersStatecontinuously = setTimeout(() => {
   //     props.getUsersActionCreator()
   //   }, 7000)
-  // }, []); // ここにusersのstateが入ることになるだろね。
+  // }, []); // ここにusersのstateが入ることになるだろね。setIntervalを使うかな。ここは。
 
   const usersMarkerRender = () => {
     if (props.usersState) {
@@ -168,14 +169,10 @@ const WorldMap = (props) => {
     setShow(false);
   };
 
-  // const onCreateMeetingClick = () => {
-  //   setRoomForm(true);
-  // }
-
   const CreateMeetingButton = () => {
     return (
       <div>
-        <Button className='create-room-button' onClick={() => setMeetingForm(true)}>
+        <Button className='create-meeting-button' onClick={() => setMeetingForm(true)}>
           Create meeting?
         </Button>
       </div>
@@ -188,6 +185,10 @@ const WorldMap = (props) => {
     } else {
       return null;
     }
+  };
+
+  const renderMeetingList = () => {
+    // まずreducerを作ろうか。
   };
 
   return (

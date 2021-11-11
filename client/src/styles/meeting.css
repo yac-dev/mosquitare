@@ -1,0 +1,15 @@
+.meeting-form-wrapper {
+  position: absolute;
+  background-color: #ccc;
+  padding: 20px;
+  right: 50px;
+  top: 30px;
+}
+
+.create-meeting-button {
+  position: absolute;
+  background-color: #ccc;
+  padding: 20px;
+  right: 50px;
+  top: 30px;
+}
