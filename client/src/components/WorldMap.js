@@ -7,7 +7,7 @@ import { Modal } from 'react-bootstrap';
 import '../styles/worldmap.css';
 import Dimer from './Dimer';
 import ConfirmationCard from './ConfirmationCard';
-import CreateRoomForm from './Room/CreateRoomForm';
+import CreateMeetingForm from './Meeting/CreateMeetingForm';
 
 // socketio
 import { io } from 'socket.io-client';
@@ -49,7 +49,7 @@ const WorldMap = (props) => {
   const [show, setShow] = useState(false);
   const [fullscreen, setFullscreen] = useState(true);
 
-  const [roomForm, setRoomForm] = useState(false);
+  const [meetingForm, setMeetingForm] = useState(false);
 
   const [isSpeechMicrophoneListenning, setIsSpeechMicrophoneListenning] = useState(false);
   const [subtitles, setSubtitles] = useState(null);
@@ -172,10 +172,10 @@ const WorldMap = (props) => {
   //   setRoomForm(true);
   // }
 
-  const CreateRoomButton = () => {
+  const CreateMeetingButton = () => {
     return (
       <div>
-        <Button className='create-room-button' onClick={() => setRoomForm(true)}>
+        <Button className='create-room-button' onClick={() => setMeetingForm(true)}>
           Create meeting?
         </Button>
       </div>
@@ -183,9 +183,8 @@ const WorldMap = (props) => {
   };
 
   const renderCreateRoomForm = () => {
-    console.log(roomForm);
-    if (roomForm) {
-      return <CreateRoomForm />;
+    if (meetingForm) {
+      return <CreateMeetingForm />;
     } else {
       return null;
     }
@@ -228,7 +227,7 @@ const WorldMap = (props) => {
           onViewportChange={(viewport) => setViewport(viewport)}
         >
           {usersMarkerRender()}
-          {CreateRoomButton()}
+          {CreateMeetingButton()}
           {renderCreateRoomForm()}
         </ReactMapGL>
       </div>

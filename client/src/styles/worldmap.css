@@ -4,7 +4,7 @@
   /* grid-template-rows: repeat(10, 1fr); */
 }
 
-.room-form-wrapper {
+.meeting-form-wrapper {
   position: absolute;
   background-color: #ccc;
   padding: 20px;

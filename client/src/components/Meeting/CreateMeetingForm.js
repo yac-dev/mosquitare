@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, Form } from 'semantic-ui-react';
 
-const CreateRoomForm = () => {
+const CreateMeetingForm = () => {
   return (
-    <div className='room-form-wrapper'>
+    <div className='meeting-form-wrapper'>
       <Form>
         <Form.Field>
           <label>What languages you wanna exchange?</label>
@@ -24,4 +24,4 @@ const CreateRoomForm = () => {
   );
 };
 
-export default CreateRoomForm;
+export default CreateMeetingForm;
