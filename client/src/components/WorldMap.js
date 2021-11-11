@@ -4,8 +4,10 @@ import ReactMapGL, { Marker } from 'react-map-gl';
 import { Icon, Popup, Button } from 'semantic-ui-react';
 import { Modal } from 'react-bootstrap';
 // components
+import '../styles/worldmap.css';
 import Dimer from './Dimer';
 import ConfirmationCard from './ConfirmationCard';
+import CreateRoomForm from './Room/CreateRoomForm';
 
 // socketio
 import { io } from 'socket.io-client';
@@ -28,8 +30,15 @@ import { LISTEN_CALL } from '../actionCreators/type';
 import { GET_MEDIA } from '../actionCreators/type';
 import store from '../store';
 
-// component外側
+// socket 設定
 const socket = io(process.env.REACT_APP_WEBRTC);
+
+// speech recognition 設定
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const microphone = new SpeechRecognition();
+microphone.continuous = true;
+microphone.interimResults = true;
+microphone.lang = 'en-US';
 
 const WorldMap = (props) => {
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
@@ -39,6 +48,11 @@ const WorldMap = (props) => {
 
   const [show, setShow] = useState(false);
   const [fullscreen, setFullscreen] = useState(true);
+
+  const [roomForm, setRoomForm] = useState(false);
+
+  const [isSpeechMicrophoneListenning, setIsSpeechMicrophoneListenning] = useState(false);
+  const [subtitles, setSubtitles] = useState(null);
 
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
@@ -154,6 +168,29 @@ const WorldMap = (props) => {
     setShow(false);
   };
 
+  // const onCreateMeetingClick = () => {
+  //   setRoomForm(true);
+  // }
+
+  const CreateRoomButton = () => {
+    return (
+      <div>
+        <Button className='create-room-button' onClick={() => setRoomForm(true)}>
+          Create meeting?
+        </Button>
+      </div>
+    );
+  };
+
+  const renderCreateRoomForm = () => {
+    console.log(roomForm);
+    if (roomForm) {
+      return <CreateRoomForm />;
+    } else {
+      return null;
+    }
+  };
+
   return (
     <>
       <Modal
@@ -191,6 +228,8 @@ const WorldMap = (props) => {
           onViewportChange={(viewport) => setViewport(viewport)}
         >
           {usersMarkerRender()}
+          {CreateRoomButton()}
+          {renderCreateRoomForm()}
         </ReactMapGL>
       </div>
     </>

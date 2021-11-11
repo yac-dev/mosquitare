@@ -1,0 +1,21 @@
+.worldmap {
+  /* display: grid; */
+  /* grid-template-columns: repeat(10, 1fr); */
+  /* grid-template-rows: repeat(10, 1fr); */
+}
+
+.room-form-wrapper {
+  position: absolute;
+  background-color: #ccc;
+  padding: 20px;
+  right: 50px;
+  top: 30px;
+}
+
+.create-room-button {
+  position: absolute;
+  background-color: #ccc;
+  padding: 20px;
+  right: 50px;
+  top: 30px;
+}
