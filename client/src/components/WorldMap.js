@@ -8,8 +8,8 @@ import '../styles/worldmap.css';
 import '../styles/meeting.css';
 import Dimer from './Dimer';
 import ConfirmationCard from './ConfirmationCard';
-import CreateMeetingForm from './Meeting/CreateMeetingForm';
 import MeetingsList from './Meeting/MeetingsList';
+import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 
 // socketio
 import { io } from 'socket.io-client';
@@ -49,8 +49,11 @@ const WorldMap = (props) => {
   const oppositeVideo = useRef();
   const connectionRef = useRef();
 
+  // full screen modal用
   const [show, setShow] = useState(false);
   const [fullscreen, setFullscreen] = useState(true);
+  // vertically centered modal用
+  const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
 
   const [meetingForm, setMeetingForm] = useState(false);
 
@@ -173,23 +176,13 @@ const WorldMap = (props) => {
     setShow(false);
   };
 
-  const CreateMeetingButton = () => {
-    return (
-      <div>
-        <Button className='create-meeting-button' onClick={() => setMeetingForm(true)}>
-          Create meeting?
-        </Button>
-      </div>
-    );
-  };
-
-  const renderCreateRoomForm = () => {
-    if (meetingForm) {
-      return <CreateMeetingForm />;
-    } else {
-      return null;
-    }
-  };
+  // const renderCreateRoomForm = () => {
+  //   if (meetingForm) {
+  //     return <CreateMeetingForm />;
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
   // const renderMeetingList = () => {
   //   // まずreducerを作ろうか。
@@ -229,6 +222,12 @@ const WorldMap = (props) => {
         </Modal.Body>
       </Modal>
 
+      <VerticallyCenteredModal
+        show={verticallyCenteredModal}
+        onHide={() => setVerticallyCenteredModal(false)}
+        socket={socket}
+      />
+
       <div style={{ height: '100vh', width: '100%' }}>
         <ReactMapGL
           {...viewport}
@@ -239,9 +238,12 @@ const WorldMap = (props) => {
           onViewportChange={(viewport) => setViewport(viewport)}
         >
           {usersMarkerRender()}
-          {CreateMeetingButton()}
-          {renderCreateRoomForm()}
-          <MeetingsList />
+          {/* {CreateMeetingButton()} */}
+          {/* {renderCreateRoomForm()} */}
+          <MeetingsList setMeetingForm={setMeetingForm} />
+          <Button className='create-meeting-button' onClick={() => setVerticallyCenteredModal(true)}>
+            Create new meeting??
+          </Button>
         </ReactMapGL>
       </div>
     </>

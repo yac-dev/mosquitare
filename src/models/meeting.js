@@ -6,19 +6,28 @@ const meetingSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  // language1: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'Language',
+  //   required: true,
+  // },
+  // language2: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'Language',
+  //   required: true,
+  // },
   language1: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Language',
+    type: String,
     required: true,
   },
   language2: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Language',
+    type: String,
     required: true,
   },
   title: {
     type: String,
     required: true,
+    // このtitleをそのまま、joinするmeeting roomの名前にしようか。
   },
   description: {
     type: String,
