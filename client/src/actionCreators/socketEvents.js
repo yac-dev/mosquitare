@@ -3,3 +3,4 @@ export const I_CALL_SOMEBODY = 'I CALL SOMEBODY.';
 export const SOMEBODY_CALLS_ME = 'SOMEBODY CALLS ME.';
 export const I_ANSWER_THE_CALL = 'I ANSWER THE CALL.';
 export const MY_CALL_IS_ACCEPTED = 'MY CALL IS ACCEPTED.';
+export const JOIN_MEETING = 'JOIN_MEETING';

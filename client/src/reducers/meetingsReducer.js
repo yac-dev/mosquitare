@@ -1,4 +1,4 @@
-import { GET_MEETINGS } from '../actionCreators/type';
+import { GET_MEETINGS, CREATE_MEETING } from '../actionCreators/type';
 
 const meetingsReducer = (state = {}, action) => {
   switch (action.type) {
@@ -11,6 +11,8 @@ const meetingsReducer = (state = {}, action) => {
         ...state,
         ...meetings,
       };
+    case CREATE_MEETING:
+      return { ...state, [action.payload._id]: action.payload }; // かなー。postした後のデータもしっかりとってきているからね。
     default:
       return state;
   }

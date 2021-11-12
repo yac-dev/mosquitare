@@ -1,5 +1,5 @@
 import { mosquitareAPI } from '../apis/mosquitare';
-import { GET_MEETINGS } from './type';
+import { GET_MEETINGS, CREATE_MEETING } from './type';
 
 export const getMeetingsActionCreator = () => async (dispatch) => {
   try {
@@ -16,12 +16,14 @@ export const getMeetingsActionCreator = () => async (dispatch) => {
   }
 };
 
-export const createMeetingRoomActionCreator = (formData) => async (dispatch, getState) => {
+export const createMeetingActionCreator = (formData) => async (dispatch, getState) => {
   try {
-    const result = await mosquitareAPI.post('/meetings');
+    const result = await mosquitareAPI.post('/meetings', formData);
+    console.log(result);
     const { meeting } = result.data;
+
     dispatch({
-      type: 'CREATE_MEETING_ROOM',
+      type: CREATE_MEETING,
       payload: meeting,
     });
   } catch (error) {

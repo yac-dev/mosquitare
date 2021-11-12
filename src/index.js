@@ -17,6 +17,7 @@ import {
   SOMEBODY_CALLS_ME,
   I_ANSWER_THE_CALL,
   MY_CALL_IS_ACCEPTED,
+  JOIN_MEETING,
 } from './socketEvents';
 
 const io = new Server(server, {
@@ -54,6 +55,11 @@ io.on('connection', (socket) => {
       signalData: dataFromAnswerer.signalData,
       recieverUserInfo: dataFromAnswerer.recieverUserInfo,
     });
+  });
+
+  socket.on(JOIN_MEETING, (joinData) => {
+    // (joinData)に、joinに関するroomとcallbackが入っている。
+    socket.join(joinData.roomName);
   });
 });
 

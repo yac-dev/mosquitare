@@ -240,7 +240,7 @@ const WorldMap = (props) => {
           {usersMarkerRender()}
           {/* {CreateMeetingButton()} */}
           {/* {renderCreateRoomForm()} */}
-          <MeetingsList setMeetingForm={setMeetingForm} />
+          <MeetingsList socket={socket} />
           <Button className='create-meeting-button' onClick={() => setVerticallyCenteredModal(true)}>
             Create new meeting??
           </Button>

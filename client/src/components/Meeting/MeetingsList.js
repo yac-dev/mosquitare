@@ -1,9 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Table, Button } from 'semantic-ui-react';
+
+// socket event
+import { JOIN_MEETING } from '../../actionCreators/socketEvents';
 import '../../styles/meeting.css';
 
 const MeetingsList = (props) => {
+  const onButtonClick = (socket, roomName) => {
+    socket.emit(JOIN_MEETING, roomName);
+  };
+
   const meetingsList = props.meetingsState.map((meeting) => {
     return (
       <Table celled key={meeting._id}>
@@ -21,7 +28,8 @@ const MeetingsList = (props) => {
               {meeting.language1} and {meeting.language2}
             </Table.Cell>
             <Table.Cell style={{ color: 'green' }}>
-              {meeting.members.length}/8 <Button>Join!</Button>
+              {meeting.members.length}/8{' '}
+              <Button onClick={() => onButtonClick(props.socket, meeting.title)}>Join!</Button>
             </Table.Cell>
           </Table.Row>
         </Table.Body>
