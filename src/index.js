@@ -20,6 +20,8 @@ import {
   JOIN_MEETING,
 } from './socketEvents';
 
+import { TO_ALL_OTHER_USERS } from '../client/src/actionCreators/socketEvents';
+
 const io = new Server(server, {
   cors: {
     origin: '*',
@@ -33,6 +35,9 @@ const io = new Server(server, {
 //     methods: ['GET', 'POST'],
 //   },
 // });
+
+const mapMeetingIdToUsers = {};
+const mapUserToMeetingId = {};
 
 io.on('connection', (socket) => {
   socket.emit(I_GOT_SOCKET_ID, socket.id);
@@ -56,10 +61,22 @@ io.on('connection', (socket) => {
       recieverUserInfo: dataFromAnswerer.recieverUserInfo,
     });
   });
+  // 以下、meetingに関するsocket events
 
   socket.on(JOIN_MEETING, (joinData) => {
     // (joinData)に、joinに関するroomとcallbackが入っている。
-    socket.join(joinData.roomName);
+    const { meetingId, userInfo } = joinData;
+    if (mapMeetingIdToUsers[meetingId]) {
+      mapMeetingIdToUsers[meetingId].push(userInfo);
+    } else {
+      mapMeetingIdToUsers[meetingId] = [userInfo];
+    }
+
+    mapUserToMeetingId[userInfo._id] = meetingId;
+    const usersInThisMeetingExceptMe = mapMeetingIdToUsers[meetingId].filter((user) => {
+      user._id !== userInfo._id;
+    });
+    socket.emit(TO_ALL_OTHER_USERS, usersInThisMeetingExceptMe); // かなー。。。
   });
 });
 

@@ -10,6 +10,7 @@ import Dimer from './Dimer';
 import ConfirmationCard from './ConfirmationCard';
 import MeetingsList from './Meeting/MeetingsList';
 import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
+import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
 
 // socketio
 import { io } from 'socket.io-client';
@@ -48,7 +49,7 @@ const WorldMap = (props) => {
   const myVideo = useRef();
   const oppositeVideo = useRef();
   const connectionRef = useRef();
-  // full screen modal用
+  // full screen modal用 propsで、stateを渡そうかな。。。
   const [show, setShow] = useState(false);
   const [fullscreen, setFullscreen] = useState(true);
   // vertically centered modal用
@@ -193,12 +194,13 @@ const WorldMap = (props) => {
           ) : null}
         </Modal.Body>
       </Modal>{' '}
-      {/*ここをrefactoringするしかないかね。*/}
+      {/*ここをrefactoringするしかないかね。⇨いや。考えたら、child componentのstateをparent componentで変えようとしているな。それ、めんどくさいわ。まあ、refactoringは後でいいや。やっぱ。*/}
       <VerticallyCenteredModal
         show={verticallyCenteredModal}
         onHide={() => setVerticallyCenteredModal(false)}
         socket={socket}
       />
+      <FullScreenMeetingModal socket={socket} />
       <div style={{ height: '100vh', width: '100%' }}>
         <ReactMapGL
           {...viewport}
