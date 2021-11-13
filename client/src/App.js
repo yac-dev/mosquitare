@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 // components
 import LandingPage from './components/LandingPage';
+import About from './components/About';
 import Navbar from './components/Navbar';
 import Login from './components/Login';
 import SignupBasic from './components/Signup/SignupBasic';
@@ -67,6 +68,7 @@ const App = () => {
         <Route path='/socket' exact component={Socket} />
         <Route path='/worldmap' exact component={WorldMap} />
         <Route path='/chatscreen' exact component={ChatScreen} />
+        <Route path='/about' exact component={About} />
       </Router>
     </div>
   );

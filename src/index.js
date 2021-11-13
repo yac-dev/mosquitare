@@ -20,7 +20,11 @@ import {
   JOIN_MEETING,
 } from './socketEvents';
 
-import { TO_ALL_OTHER_USERS } from '../client/src/actionCreators/socketEvents';
+import {
+  I_GOT_OTHER_USERS_INFO,
+  PARTICIPANT_IS_SENDING_SIGNAL_TO_OTHER_USERS,
+  NEW_USER_JOINED,
+} from '../client/src/actionCreators/socketEvents';
 
 const io = new Server(server, {
   cors: {
@@ -61,8 +65,8 @@ io.on('connection', (socket) => {
       recieverUserInfo: dataFromAnswerer.recieverUserInfo,
     });
   });
-  // 以下、meetingに関するsocket events
 
+  // 以下、meetingに関するsocket events
   socket.on(JOIN_MEETING, (joinData) => {
     // (joinData)に、joinに関するroomとcallbackが入っている。
     const { meetingId, userInfo } = joinData;
@@ -76,7 +80,15 @@ io.on('connection', (socket) => {
     const usersInThisMeetingExceptMe = mapMeetingIdToUsers[meetingId].filter((user) => {
       user._id !== userInfo._id;
     });
-    socket.emit(TO_ALL_OTHER_USERS, usersInThisMeetingExceptMe); // かなー。。。
+    socket.emit(I_GOT_OTHER_USERS_INFO, usersInThisMeetingExceptMe);
+  });
+
+  socket.on(PARTICIPANT_IS_SENDING_SIGNAL_TO_OTHER_USERS, (dataFromParticipant) => {
+    io.to(dataFromParticipant.oppositeSocketId).emit(NEW_USER_JOINED, {
+      signalData: dataFromParticipant.signalData,
+      whoIsCalling: dataFromParticipant.mySocketId,
+      callerUserInfo: dataFromParticipant.callerUserInfo,
+    });
   });
 });
 
