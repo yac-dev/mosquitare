@@ -37,28 +37,25 @@ import store from '../store';
 const socket = io(process.env.REACT_APP_WEBRTC);
 
 // speech recognition 設定
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const microphone = new SpeechRecognition();
-microphone.continuous = true;
-microphone.interimResults = true;
-microphone.lang = 'en-US';
+// const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+// const microphone = new SpeechRecognition();
+// microphone.continuous = true;
+// microphone.interimResults = true;
+// microphone.lang = 'en-US';
 
 const WorldMap = (props) => {
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
   const myVideo = useRef();
   const oppositeVideo = useRef();
   const connectionRef = useRef();
-
   // full screen modal用
   const [show, setShow] = useState(false);
   const [fullscreen, setFullscreen] = useState(true);
   // vertically centered modal用
   const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
 
-  const [meetingForm, setMeetingForm] = useState(false);
-
-  const [isSpeechMicrophoneListenning, setIsSpeechMicrophoneListenning] = useState(false);
-  const [subtitles, setSubtitles] = useState(null);
+  // const [isSpeechMicrophoneListenning, setIsSpeechMicrophoneListenning] = useState(false);
+  // const [subtitles, setSubtitles] = useState(null); sppeche recognition機能は後にしよう。今は無理。
 
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
@@ -101,12 +98,6 @@ const WorldMap = (props) => {
 
     props.getMeetingsActionCreator();
   }, []);
-
-  // useEffect(() => {
-  //   const updateUsersStatecontinuously = setTimeout(() => {
-  //     props.getUsersActionCreator()
-  //   }, 7000)
-  // }, []); // ここにusersのstateが入ることになるだろね。setIntervalを使うかな。ここは。
 
   const usersMarkerRender = () => {
     if (props.usersState) {
@@ -176,25 +167,6 @@ const WorldMap = (props) => {
     setShow(false);
   };
 
-  // const renderCreateRoomForm = () => {
-  //   if (meetingForm) {
-  //     return <CreateMeetingForm />;
-  //   } else {
-  //     return null;
-  //   }
-  // };
-
-  // const renderMeetingList = () => {
-  //   // まずreducerを作ろうか。
-  //   if (props.meetingsState) {
-  //     const meetingsList = props.meetingsState.map((meeting) => {
-  //       return <div>{meeting.title}</div>;
-  //     });
-
-  //     return <>{meetingsList}</>;
-  //   }
-  // };
-
   return (
     <>
       <Modal
@@ -220,14 +192,13 @@ const WorldMap = (props) => {
             </div>
           ) : null}
         </Modal.Body>
-      </Modal>
-
+      </Modal>{' '}
+      {/*ここをrefactoringするしかないかね。*/}
       <VerticallyCenteredModal
         show={verticallyCenteredModal}
         onHide={() => setVerticallyCenteredModal(false)}
         socket={socket}
       />
-
       <div style={{ height: '100vh', width: '100%' }}>
         <ReactMapGL
           {...viewport}
@@ -238,8 +209,6 @@ const WorldMap = (props) => {
           onViewportChange={(viewport) => setViewport(viewport)}
         >
           {usersMarkerRender()}
-          {/* {CreateMeetingButton()} */}
-          {/* {renderCreateRoomForm()} */}
           <MeetingsList socket={socket} />
           <Button className='create-meeting-button' onClick={() => setVerticallyCenteredModal(true)}>
             Create new meeting??
