@@ -24,6 +24,8 @@ import {
   I_GOT_OTHER_USERS_INFO,
   PARTICIPANT_IS_SENDING_SIGNAL_TO_OTHER_USERS,
   NEW_USER_JOINED,
+  I_ACCEPT_A_PARTICIPANT_AND_SEND_A_SIGNAL,
+  I_GOT_A_RETURN_SIGNAL_FROM_PEER,
 } from '../client/src/actionCreators/socketEvents';
 
 const io = new Server(server, {
@@ -69,25 +71,39 @@ io.on('connection', (socket) => {
   // 以下、meetingに関するsocket events
   socket.on(JOIN_MEETING, (joinData) => {
     // (joinData)に、joinに関するroomとcallbackが入っている。
-    const { meetingId, userInfo } = joinData;
+    const { meeting, userInfo } = joinData;
+    const meetingId = meeting._id;
     if (mapMeetingIdToUsers[meetingId]) {
       mapMeetingIdToUsers[meetingId].push(userInfo);
     } else {
       mapMeetingIdToUsers[meetingId] = [userInfo];
     }
 
+    // 多分だけど、こっちserver側でのhash tableの管理の仕方はほぼどうでもいい。だから、property名がなんであろうと、どうでもいい。
     mapUserToMeetingId[userInfo._id] = meetingId;
-    const usersInThisMeetingExceptMe = mapMeetingIdToUsers[meetingId].filter((user) => {
-      user._id !== userInfo._id;
-    });
-    socket.emit(I_GOT_OTHER_USERS_INFO, usersInThisMeetingExceptMe);
+    const usersInThisMeetingExceptParticipant = mapMeetingIdToUsers[meetingId].filter(
+      (user) => user._id !== userInfo._id
+    ); // 結局やっていることとしては、joinしたuserがserverからroom内の他の人たちの情報をただもらっているだけなんですよ。全員に対してpeer objectを作るためにね。
+    // console.log(mapMeetingIdToUsers);
+    // console.log(usersInThisMeetingExceptParticipant);
+    // console.log(mapUserToMeetingId);
+    socket.emit(I_GOT_OTHER_USERS_INFO, usersInThisMeetingExceptParticipant);
   });
 
   socket.on(PARTICIPANT_IS_SENDING_SIGNAL_TO_OTHER_USERS, (dataFromParticipant) => {
-    io.to(dataFromParticipant.oppositeSocketId).emit(NEW_USER_JOINED, {
+    // console.log(dataFromParticipant.oppositeUserInfo);
+    // console.log(dataFromParticipant.callerUserInfo);
+    io.to(dataFromParticipant.oppositeUserInfo.socketId).emit(NEW_USER_JOINED, {
       signalData: dataFromParticipant.signalData,
-      whoIsCalling: dataFromParticipant.mySocketId,
       callerUserInfo: dataFromParticipant.callerUserInfo,
+    });
+  });
+
+  socket.on(I_ACCEPT_A_PARTICIPANT_AND_SEND_A_SIGNAL, (dataFromPeers) => {
+    io.to(dataFromPeers.callerUserInfo.socketId).emit(I_GOT_A_RETURN_SIGNAL_FROM_PEER, {
+      // ここのio toのところがおかしい。callerUserInfoがnullだってよ。何だろね。これ。
+      signalData: dataFromPeers.signalData,
+      peerInfo: dataFromPeers.peerInfo,
     });
   });
 });

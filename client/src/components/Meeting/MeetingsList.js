@@ -6,9 +6,15 @@ import { Table, Button } from 'semantic-ui-react';
 import { JOIN_MEETING } from '../../actionCreators/socketEvents';
 import '../../styles/meeting.css';
 
+// action creators
+import { joinMeetingActionCreator } from '../../actionCreators/meetingActionCreator';
+
 const MeetingsList = (props) => {
-  const onButtonClick = (socket, roomName) => {
-    socket.emit(JOIN_MEETING, roomName);
+  const onButtonClick = (meeting) => {
+    // socket.emit(JOIN_MEETING, roomName);
+    console.log(meeting);
+    props.joinMeetingActionCreator(meeting); // ここでは特に、actionの順番を気にする必要はない。この後に、modalを開かない解けないね。
+    props.onJoinClick(meeting); //ここでmeetingをargumentで入れればいい訳ですよ。
   };
 
   const meetingsList = props.meetingsState.map((meeting) => {
@@ -28,8 +34,7 @@ const MeetingsList = (props) => {
               {meeting.language1} and {meeting.language2}
             </Table.Cell>
             <Table.Cell style={{ color: 'green' }}>
-              {meeting.members.length}/8{' '}
-              <Button onClick={() => onButtonClick(props.socket, meeting.title)}>Join!</Button>
+              {meeting.members.length}/8 <Button onClick={() => onButtonClick(meeting)}>Join!</Button>
             </Table.Cell>
           </Table.Row>
         </Table.Body>
@@ -44,4 +49,4 @@ const mapStateToProps = (state) => {
   return { meetingsState: Object.values(state.meetingsState) };
 };
 
-export default connect(mapStateToProps)(MeetingsList);
+export default connect(mapStateToProps, { joinMeetingActionCreator })(MeetingsList);

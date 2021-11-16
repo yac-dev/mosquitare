@@ -43,6 +43,10 @@ const meetingSchema = new mongoose.Schema({
     type: Number,
     default: 8,
   },
+  done: {
+    type: Boolean,
+    default: false,
+  },
   // date: {
   //   type: Date,
   // }

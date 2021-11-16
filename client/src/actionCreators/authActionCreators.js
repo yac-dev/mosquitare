@@ -40,6 +40,7 @@ export const loginActionCreator = (formData) => async (dispatch) => {
   }
 };
 
+// このLOAD_MEが複数回起こる原因は何なの？そもそもuseEffectで設定をしているのに。。。
 export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispatch, getState) => {
   try {
     // const socketId = getState().authState.socketId;

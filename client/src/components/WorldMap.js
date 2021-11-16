@@ -29,6 +29,7 @@ import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreato
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
 import { SOMEBODY_CALLS_ME } from '../actionCreators/socketEvents';
+import { JOIN_MEETING } from '../actionCreators/socketEvents';
 // actions
 import { LISTEN_CALL } from '../actionCreators/type';
 import { GET_MEDIA } from '../actionCreators/type';
@@ -55,26 +56,38 @@ const WorldMap = (props) => {
   // vertically centered modal用
   const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
 
+  // meeting modal用のstate これをlistに持たせるしかない。
+  const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
+  const [showMeeting, setShowMeeting] = useState(false);
+
   // const [isSpeechMicrophoneListenning, setIsSpeechMicrophoneListenning] = useState(false);
   // const [subtitles, setSubtitles] = useState(null); sppeche recognition機能は後にしよう。今は無理。
 
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
 
+  // ここで始めて、meeting用のfull screen modalがrenderされる。
+  const onJoinClick = (meeting) => {
+    // これらの前に、meetingListで、joinMeetingActionCreator(meeting)が行われているからね。だから↓、大丈夫。→それが違うんだわ。meetingのstate自体はすぐに変わってくれないんだわ。
+    setFullScreenMeetingModal(true);
+    setShowMeeting(true);
+    socket.emit(JOIN_MEETING, {
+      meeting: meeting,
+      userInfo: props.authState.currentUser,
+    });
+  };
+
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
-
+    // useEffectを使っているから、っていう理由はそんなだよね。純粋に、signaling serverからのsocket onを複数回聴いちゃっているんだよな。。。なんでだろ。。。
     if (jwtToken) {
-      console.log('worldmap side');
       socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
-        console.log('check if it works after signup');
         // socketId.current = socketIdFromServer;
         props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer);
       });
     }
 
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-      console.log('media side');
       store.dispatch({
         type: GET_MEDIA,
         payload: stream,
@@ -194,13 +207,19 @@ const WorldMap = (props) => {
           ) : null}
         </Modal.Body>
       </Modal>{' '}
-      {/*ここをrefactoringするしかないかね。⇨いや。考えたら、child componentのstateをparent componentで変えようとしているな。それ、めんどくさいわ。まあ、refactoringは後でいいや。やっぱ。*/}
+      <FullScreenMeetingModal
+        socket={socket}
+        showMeeting={showMeeting}
+        currentUser={props.authState.currentUser}
+        mediaVideoStreamObject={props.mediaState.myVideoStreamObject}
+        setShowMeeting={setShowMeeting}
+        fullScreenMeetingModal={fullScreenMeetingModal}
+      />
       <VerticallyCenteredModal
         show={verticallyCenteredModal}
         onHide={() => setVerticallyCenteredModal(false)}
         socket={socket}
       />
-      <FullScreenMeetingModal socket={socket} />
       <div style={{ height: '100vh', width: '100%' }}>
         <ReactMapGL
           {...viewport}
@@ -211,7 +230,7 @@ const WorldMap = (props) => {
           onViewportChange={(viewport) => setViewport(viewport)}
         >
           {usersMarkerRender()}
-          <MeetingsList socket={socket} />
+          <MeetingsList socket={socket} onJoinClick={onJoinClick} />
           <Button className='create-meeting-button' onClick={() => setVerticallyCenteredModal(true)}>
             Create new meeting??
           </Button>
@@ -227,6 +246,7 @@ const mapStateToProps = (state) => {
     mediaState: state.mediaState,
     usersState: Object.values(state.usersState),
     // meetingsState: state.meetingsState,
+    meetingState: state.meetingState,
   };
 };
 
