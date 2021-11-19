@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import { Button } from 'semantic-ui-react';
+
+import Dimer from '../Dimer';
+import ConfirmationCard from '../ConfirmationCard';
+
+import '../../styles/worldmap.css';
+
+// action creators
+import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const microphone = new SpeechRecognition();
@@ -50,7 +59,6 @@ const FullScreen1on1Modal = (props) => {
   useEffect(() => {
     handleListen();
   }, [isInConversation]);
-
   // ここでもsocketだな。こっちでまず、request your voice textみたいなeventを送って、それに対してvoiceの方が答えて、こっちのvoice textを送る、みたいな実装になるだろね。
 
   useEffect(() => {
@@ -70,16 +78,45 @@ const FullScreen1on1Modal = (props) => {
     props.socket.emit('I_REQUEST_YOUR_VOICE_TEXT'); // ただsignaling serverにeventをemitするだけで、特にこっちから出す情報はいらない。
   };
 
+  const switchRender = () => {
+    if (props.mediaState.callAccepted) {
+      return null;
+    } else {
+      if (props.mediaState.amICalling) {
+        return <Dimer />;
+      } else if (props.mediaState.amIRecieving) {
+        return (
+          <ConfirmationCard
+            user={props.mediaState.callingWith}
+            callback={props.answerCallActionCreator} // これいらんわ。confirmationでconnectを使えばいい、もしくはstore使えばいい。
+            socket={props.socket}
+            myVideo={props.myVideo}
+            oppositeVideo={props.oppositeVideo}
+            connectionRef={props.connectionRef}
+          />
+        );
+      } else {
+        return null;
+      }
+    }
+  };
+
+  // const onHangUpClick = () => {
+  //   props.hangUpCallActionCreator(props.connectionRef);
+  //   props.setShow1on1(false); // このhangUpCallに関しては、world mapに必要かもな。show1on1のstateを変えたいから。
+  // };
+
+  // ここはおそらく、showとfullscreen共にworldmap側で持ってないといかんな。
   return (
     <Modal
       className='chat-modal'
-      show={show}
-      fullscreen={fullscreen}
-      onHide={() => setShow(false)}
-      style={{ backgroundColor: 'blue' }}
+      show={props.show1on1}
+      fullscreen={props.fullscreen1on1Modal}
+      onHide={() => props.setShow1on1(false)}
+      style={{ backgroundColor: 'rgb(8, 18, 23)' }}
     >
       <Modal.Body style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
-        {props.switchRender()}
+        {switchRender()}
         <div className='video-container'>
           <div className='video' style={{ marginTop: '100px' }}>
             <video playsInline muted ref={props.myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
@@ -98,4 +135,8 @@ const FullScreen1on1Modal = (props) => {
   );
 };
 
-export default FullScreen1on1Modal;
+const mapStateToProps = (state) => {
+  return { mediaState: state.mediaState };
+};
+
+export default connect(mapStateToProps, { answerCallActionCreator })(FullScreen1on1Modal);

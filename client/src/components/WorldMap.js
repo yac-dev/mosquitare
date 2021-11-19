@@ -6,9 +6,10 @@ import { Modal } from 'react-bootstrap';
 // components
 import '../styles/worldmap.css';
 import '../styles/meeting.css';
-import Dimer from './Dimer';
-import ConfirmationCard from './ConfirmationCard';
+import Dimer from './Dimer'; //ここ必要ないかな。
+import ConfirmationCard from './ConfirmationCard'; // ここも必要なくなるかな。
 import MeetingsList from './Meeting/MeetingsList';
+import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
 import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
 
@@ -53,6 +54,9 @@ const WorldMap = (props) => {
   // full screen modal用 propsで、stateを渡そうかな。。。
   const [show, setShow] = useState(false);
   const [fullscreen, setFullscreen] = useState(true);
+  // まずこれで実験しよう。
+  const [show1on1, setShow1on1] = useState(false);
+  const [fullscreen1on1Modal, setFullscreen1on1Modal] = useState(true);
   // vertically centered modal用
   const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
 
@@ -100,8 +104,10 @@ const WorldMap = (props) => {
       console.log(dataFromServer);
       const { signalData, whoIsCalling, callerUserInfo } = dataFromServer;
       console.log(signalData, whoIsCalling);
-      setFullscreen(true);
-      setShow(true);
+      // setFullscreen(true);
+      // setShow(true);
+      setFullscreen1on1Modal(true);
+      setShow1on1(true);
       // myVideo.current.srcObject = myVideoStreamObject;
       store.dispatch({
         type: LISTEN_CALL,
@@ -146,8 +152,11 @@ const WorldMap = (props) => {
     event.preventDefault();
     console.log(oppositeSocketId);
     const mySocketId = props.authState.currentUser.socketId;
-    setFullscreen(true);
-    setShow(true);
+    setFullscreen1on1Modal(true);
+    setShow1on1(true); // ここでtriggerすることで、1on1のchild componentにそれを伝えると。
+
+    // setFullscreen(true); // ここと
+    // setShow(true); // ここを変えるべきであろう。
     // myVideo.current.srcObject = props.mediaState.myVideoStreamObject; // ここだとエラーになるんだ。
     props.callActionCreator(socket, mySocketId, myVideo, oppositeSocketId, oppositeVideo, connectionRef);
   };
@@ -177,12 +186,13 @@ const WorldMap = (props) => {
 
   const onHangUpClick = () => {
     props.hangUpCallActionCreator(connectionRef);
-    setShow(false);
+    // setShow(false);
+    setShow1on1(false); // これをfull1on1でやってもらおう。propsで渡して。
   };
 
   return (
     <>
-      <Modal
+      {/* <Modal
         className='chat-modal'
         show={show}
         fullscreen={fullscreen}
@@ -205,7 +215,17 @@ const WorldMap = (props) => {
             </div>
           ) : null}
         </Modal.Body>
-      </Modal>{' '}
+      </Modal>{' '} */}
+      <FullScreen1on1Modal
+        socket={socket}
+        show1on1={show1on1}
+        setShow1on1={setShow1on1} // これいらないかもな。
+        fullscreen1on1Modal={fullscreen1on1Modal}
+        onHangUpClick={onHangUpClick}
+        myVideo={myVideo}
+        oppositeVideo={oppositeVideo}
+        connectionRef={connectionRef}
+      />
       <FullScreenMeetingModal
         socket={socket}
         showMeeting={showMeeting}
