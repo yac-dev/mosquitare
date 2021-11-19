@@ -39,11 +39,11 @@ import store from '../store';
 const socket = io(process.env.REACT_APP_WEBRTC);
 
 // speech recognition 設定
-// const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-// const microphone = new SpeechRecognition();
-// microphone.continuous = true;
-// microphone.interimResults = true;
-// microphone.lang = 'en-US';
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const microphone = new SpeechRecognition();
+microphone.continuous = true;
+microphone.interimResults = true;
+microphone.lang = 'en-US';
 
 const WorldMap = (props) => {
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
@@ -59,7 +59,6 @@ const WorldMap = (props) => {
   // meeting modal用のstate これをlistに持たせるしかない。
   const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
   const [showMeeting, setShowMeeting] = useState(false);
-
   // const [isSpeechMicrophoneListenning, setIsSpeechMicrophoneListenning] = useState(false);
   // const [subtitles, setSubtitles] = useState(null); sppeche recognition機能は後にしよう。今は無理。
 
