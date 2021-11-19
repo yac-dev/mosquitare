@@ -8,6 +8,7 @@ import '../styles/worldmap.css';
 import '../styles/meeting.css';
 import Dimer from './Dimer'; //ここ必要ないかな。
 import ConfirmationCard from './ConfirmationCard'; // ここも必要なくなるかな。
+import UserInfoCard from './UserInfoCard';
 import MeetingsList from './Meeting/MeetingsList';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
 import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
@@ -51,25 +52,20 @@ const WorldMap = (props) => {
   const myVideo = useRef();
   const oppositeVideo = useRef();
   const connectionRef = useRef();
-  // full screen modal用 propsで、stateを渡そうかな。。。
-  const [show, setShow] = useState(false);
-  const [fullscreen, setFullscreen] = useState(true);
-  // まずこれで実験しよう。
+
+  // 1on1 modal用
   const [show1on1, setShow1on1] = useState(false);
   const [fullscreen1on1Modal, setFullscreen1on1Modal] = useState(true);
-  // vertically centered modal用
-  const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
-
-  // meeting modal用のstate これをlistに持たせるしかない。
+  // meeting modal用
   const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
   const [showMeeting, setShowMeeting] = useState(false);
-  // const [isSpeechMicrophoneListenning, setIsSpeechMicrophoneListenning] = useState(false);
-  // const [subtitles, setSubtitles] = useState(null); sppeche recognition機能は後にしよう。今は無理。
+  // vertically centered modal用
+  const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
 
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
 
-  // ここで始めて、meeting用のfull screen modalがrenderされる。
+  // meeting用のfull screen modalのtrigger
   const onJoinClick = (meeting) => {
     // これらの前に、meetingListで、joinMeetingActionCreator(meeting)が行われているからね。だから↓、大丈夫。→それが違うんだわ。meetingのstate自体はすぐに変わってくれないんだわ。
     setFullScreenMeetingModal(true);
@@ -82,7 +78,6 @@ const WorldMap = (props) => {
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
-    // useEffectを使っているから、っていう理由はそんなだよね。純粋に、signaling serverからのsocket onを複数回聴いちゃっているんだよな。。。なんでだろ。。。
     if (jwtToken) {
       socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
         // socketId.current = socketIdFromServer;
@@ -104,8 +99,6 @@ const WorldMap = (props) => {
       console.log(dataFromServer);
       const { signalData, whoIsCalling, callerUserInfo } = dataFromServer;
       console.log(signalData, whoIsCalling);
-      // setFullscreen(true);
-      // setShow(true);
       setFullscreen1on1Modal(true);
       setShow1on1(true);
       // myVideo.current.srcObject = myVideoStreamObject;
@@ -135,7 +128,11 @@ const WorldMap = (props) => {
                   flowing
                   hoverable
                 >
-                  <ConfirmationCard callback={onCallClick} socketId={user.socketId} user={user} />
+                  {/* <ConfirmationCard callback={onCallClick} socketId={user.socketId} user={user} /> */}
+                  <UserInfoCard user={user} />
+                  <Button positive onClick={(event) => onCallClick(event, user.socketId)} style={{ width: '100%' }}>
+                    <i className='video icon'>call</i>
+                  </Button>
                 </Popup>
               </Marker>
             </>
@@ -148,46 +145,21 @@ const WorldMap = (props) => {
     }
   };
 
+  // 1on1 modalのtrigger
   const onCallClick = (event, oppositeSocketId) => {
     event.preventDefault();
     console.log(oppositeSocketId);
     const mySocketId = props.authState.currentUser.socketId;
     setFullscreen1on1Modal(true);
-    setShow1on1(true); // ここでtriggerすることで、1on1のchild componentにそれを伝えると。
-
-    // setFullscreen(true); // ここと
-    // setShow(true); // ここを変えるべきであろう。
+    setShow1on1(true);
     // myVideo.current.srcObject = props.mediaState.myVideoStreamObject; // ここだとエラーになるんだ。
     props.callActionCreator(socket, mySocketId, myVideo, oppositeSocketId, oppositeVideo, connectionRef);
   };
 
-  const switchRender = () => {
-    if (props.mediaState.callAccepted) {
-      return null;
-    } else {
-      if (props.mediaState.amICalling) {
-        return <Dimer />;
-      } else if (props.mediaState.amIRecieving) {
-        return (
-          <ConfirmationCard
-            user={props.mediaState.callingWith}
-            callback={props.answerCallActionCreator}
-            socket={socket}
-            myVideo={myVideo}
-            oppositeVideo={oppositeVideo}
-            connectionRef={connectionRef}
-          />
-        );
-      } else {
-        return null;
-      }
-    }
-  };
-
+  // 1on1 modalで実行してもらうcallback
   const onHangUpClick = () => {
     props.hangUpCallActionCreator(connectionRef);
-    // setShow(false);
-    setShow1on1(false); // これをfull1on1でやってもらおう。propsで渡して。
+    setShow1on1(false);
   };
 
   return (

@@ -1,15 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import store from '../../store';
 import { Modal } from 'react-bootstrap';
 import { Button } from 'semantic-ui-react';
 
 import Dimer from '../Dimer';
 import ConfirmationCard from '../ConfirmationCard';
+import UserInfoCard from '../UserInfoCard';
 
 import '../../styles/worldmap.css';
+import {
+  I_REQUEST_PARTNERS_VOICE_TEXT,
+  MY_PARTENER_REQUESTS_MY_VOICE_TEXT,
+  I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
+  MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
+} from '../../actionCreators/socketEvents';
 
 // action creators
 import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator';
+import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
+import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const microphone = new SpeechRecognition();
@@ -18,14 +28,13 @@ microphone.interimResults = true;
 microphone.lang = 'en-US';
 
 const FullScreen1on1Modal = (props) => {
-  const [show, setShow] = useState(false);
-  const [fullscreen, setFullscreen] = useState(true);
   const [isInConversation, setIsInConversation] = useState(false);
+  const [requestedSubtitle, setRequestedSubtitle] = useState(false);
   const [voiceText, setVoiceText] = useState('');
 
   // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
   const handleListen = () => {
-    if (isInConversation) {
+    if (requestedSubtitle) {
       microphone.start();
       microphone.onend = () => {
         console.log('continue..');
@@ -50,6 +59,7 @@ const FullScreen1on1Modal = (props) => {
         .join('');
       console.log(transcript);
       setVoiceText(transcript);
+      // props.sendVoiceTextActionCreator(props.socket, voiceText, setRequestedSubtitle);
       microphone.onerror = (event) => {
         console.log(event.error);
       };
@@ -58,24 +68,45 @@ const FullScreen1on1Modal = (props) => {
 
   useEffect(() => {
     handleListen();
-  }, [isInConversation]);
+  }, [requestedSubtitle]);
   // ここでもsocketだな。こっちでまず、request your voice textみたいなeventを送って、それに対してvoiceの方が答えて、こっちのvoice textを送る、みたいな実装になるだろね。
 
   useEffect(() => {
-    props.socket.on('YOUR_PARTENER_REQUESTS_YOUR_VOICE_TEXT', () => {
-      props.socket.emit('I_SEN_YOU_MY_VOICE_TEXT', { from: 'me', to: 'partner', voiceText: voiceText });
-    });
+    console.log('subtitle request coming...');
+    // props.socket.on(MY_PARTENER_REQUESTS_MY_VOICE_TEXT, () => {
+    //   props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+    //     to: 0,
+    //     voiceText: voiceText,
+    //   });
+    // });
 
-    props.socket.on('PARTENER_SEND_ME_VOICE_TEXT', (voiceTetx) => {
-      // ここにrenderするfunctionを作る感じかな。
-      // display(voiceText)
-    });
+    props.sendVoiceTextActionCreator(props.socket, voiceText, microphone);
+
+    // props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (voiceTetx) => {
+    //   // ここにrenderするfunctionを作る感じかな。
+    //   // display(voiceText)
+    //   setVoiceText(voiceTetx);
+    // });
+    props.getVoiceTextActionCreator(props.socket, setVoiceText);
   }, []);
-  // おおよその設計はこんな感じだろうな。
-  // 正直、まずはrefactoringが必要。それが面倒臭いんだよ。
 
   const onActivateSubtitleClick = () => {
-    props.socket.emit('I_REQUEST_YOUR_VOICE_TEXT'); // ただsignaling serverにeventをemitするだけで、特にこっちから出す情報はいらない。
+    console.log('activate subtitle');
+    props.socket.emit(I_REQUEST_PARTNERS_VOICE_TEXT, {
+      to: props.mediaState.callingWith.socketId,
+    });
+  };
+
+  const displaySubtitle = () => {
+    if (voiceText) {
+      return (
+        <div className='voice-text' style={{ color: 'white' }}>
+          {voiceText}
+        </div>
+      );
+    } else {
+      return null;
+    }
   };
 
   const switchRender = () => {
@@ -86,14 +117,34 @@ const FullScreen1on1Modal = (props) => {
         return <Dimer />;
       } else if (props.mediaState.amIRecieving) {
         return (
-          <ConfirmationCard
-            user={props.mediaState.callingWith}
-            callback={props.answerCallActionCreator} // これいらんわ。confirmationでconnectを使えばいい、もしくはstore使えばいい。
-            socket={props.socket}
-            myVideo={props.myVideo}
-            oppositeVideo={props.oppositeVideo}
-            connectionRef={props.connectionRef}
-          />
+          <>
+            {/* <ConfirmationCard
+              user={props.mediaState.callingWith}
+              callback={props.answerCallActionCreator} // これいらんわ。confirmationでconnectを使えばいい、もしくはstore使えばいい。
+              socket={props.socket}
+              myVideo={props.myVideo}
+              oppositeVideo={props.oppositeVideo}
+              connectionRef={props.connectionRef}
+            /> */}
+            <div className='confirmation'>
+              <UserInfoCard user={props.mediaState.callingWith} />
+              <Button
+                positive
+                onClick={() =>
+                  props.answerCallActionCreator(props.socket, props.myVideo, props.oppositeVideo, props.connectionRef)
+                }
+                style={{ width: '100%' }}
+              >
+                <i className='handshake icon' />
+                Yes
+              </Button>
+              <Button negative style={{ width: '100%' }}>
+                <i className='x icon' />
+                No
+              </Button>
+              {displaySubtitle()}
+            </div>
+          </>
         );
       } else {
         return null;
@@ -101,12 +152,6 @@ const FullScreen1on1Modal = (props) => {
     }
   };
 
-  // const onHangUpClick = () => {
-  //   props.hangUpCallActionCreator(props.connectionRef);
-  //   props.setShow1on1(false); // このhangUpCallに関しては、world mapに必要かもな。show1on1のstateを変えたいから。
-  // };
-
-  // ここはおそらく、showとfullscreen共にworldmap側で持ってないといかんな。
   return (
     <Modal
       className='chat-modal'
@@ -128,15 +173,21 @@ const FullScreen1on1Modal = (props) => {
             <Button negative className='hang-up-button' onClick={() => props.onHangUpClick()}>
               Hang up
             </Button>
+            <Button onClick={() => onActivateSubtitleClick()}>activate partners subtitle</Button>
           </div>
         ) : null}
+        {displaySubtitle()}
       </Modal.Body>
     </Modal>
   );
 };
 
 const mapStateToProps = (state) => {
-  return { mediaState: state.mediaState };
+  return { mediaState: state.mediaState, authState: state.authState };
 };
 
-export default connect(mapStateToProps, { answerCallActionCreator })(FullScreen1on1Modal);
+export default connect(mapStateToProps, {
+  answerCallActionCreator,
+  sendVoiceTextActionCreator,
+  getVoiceTextActionCreator,
+})(FullScreen1on1Modal);

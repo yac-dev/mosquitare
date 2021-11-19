@@ -1,5 +1,13 @@
 import { GET_MEDIA, CALL, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED, HANG_UP_CALL } from './type';
-import { SOMEBODY_CALLS_ME, I_CALL_SOMEBODY, I_ANSWER_THE_CALL, MY_CALL_IS_ACCEPTED } from './socketEvents';
+import {
+  SOMEBODY_CALLS_ME,
+  I_CALL_SOMEBODY,
+  I_ANSWER_THE_CALL,
+  MY_CALL_IS_ACCEPTED,
+  MY_PARTENER_REQUESTS_MY_VOICE_TEXT,
+  I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
+  MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
+} from './socketEvents';
 
 import Peer from 'simple-peer';
 import store from '../store';
@@ -176,4 +184,42 @@ export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
     payload: '',
   });
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
+};
+
+export const sendVoiceTextActionCreator = (socket, voiceText, microphone) => (dispatch, getState) => {
+  socket.on(MY_PARTENER_REQUESTS_MY_VOICE_TEXT, () => {
+    console.log('gonna send voice text');
+    // setRequestedSubtitle(true);
+    const to = getState().mediaState.callingWith.socketId;
+    // ここに何かいるのか。もしかしたら、ここでmicrophoneのresultのcallbackとして入れるのがいいかもしれん。setRequestedはいらないかも。
+    microphone.start();
+    microphone.onresult = (event) => {
+      // console.log(event);
+      const transcript = Array.from(event.results)
+        .map((result) => result[0])
+        .map((result) => result.transcript)
+        .join('');
+      // console.log(transcript);
+      // setVoiceText(transcript);
+      // props.sendVoiceTextActionCreator(props.socket, voiceText, setRequestedSubtitle);
+      socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+        to: to,
+        voiceText: transcript,
+      });
+    };
+    // socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+    //   to: to,
+    //   voiceText: voiceText,
+    // });
+  });
+};
+
+export const getVoiceTextActionCreator = (socket, setVoiceText) => () => {
+  socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
+    // ここにrenderするfunctionを作る感じかな。
+    console.log('partner sent to me...');
+    console.log(dataFromServer.voiceText);
+    // display(voiceText)
+    setVoiceText(dataFromServer.voiceText);
+  });
 };

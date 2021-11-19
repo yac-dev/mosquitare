@@ -26,6 +26,10 @@ import {
   NEW_USER_JOINED,
   I_ACCEPT_A_PARTICIPANT_AND_SEND_A_SIGNAL,
   I_GOT_A_RETURN_SIGNAL_FROM_PEER,
+  I_REQUEST_PARTNERS_VOICE_TEXT,
+  MY_PARTENER_REQUESTS_MY_VOICE_TEXT,
+  I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
+  MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
 } from '../client/src/actionCreators/socketEvents';
 
 const io = new Server(server, {
@@ -105,6 +109,14 @@ io.on('connection', (socket) => {
       signalData: dataFromPeers.signalData,
       peerInfo: dataFromPeers.peerInfo,
     });
+  });
+
+  socket.on(I_REQUEST_PARTNERS_VOICE_TEXT, (dataFromRequester) => {
+    io.to(dataFromRequester.to).emit(MY_PARTENER_REQUESTS_MY_VOICE_TEXT);
+  });
+
+  socket.on(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, (dataFromAnswerer) => {
+    io.to(dataFromAnswerer.to).emit(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, { voiceText: dataFromAnswerer.voiceText });
   });
 });
 
