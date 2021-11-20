@@ -50,26 +50,26 @@ body {
   margin: 0;
 }
 
-.video-container {
+/* .video-container {
   display: flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .video {
-  display: flex;
+  /* display: flex; */
   /* grid-template-columns: repeat(2, 1fr); */
   /* position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%); */
 }
-
+/*
 video {
   display: block;
   margin-right: 10px;
   padding: 0 !important;
-}
+} */
 
 /* .metas {
   display: flex;

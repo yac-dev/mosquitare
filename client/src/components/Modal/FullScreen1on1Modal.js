@@ -8,7 +8,7 @@ import Dimer from '../Dimer';
 import ConfirmationCard from '../ConfirmationCard';
 import UserInfoCard from '../UserInfoCard';
 
-import '../../styles/worldmap.css';
+import '../../styles/1on1.css';
 import {
   I_REQUEST_PARTNERS_VOICE_TEXT,
   MY_PARTENER_REQUESTS_MY_VOICE_TEXT,
@@ -142,7 +142,6 @@ const FullScreen1on1Modal = (props) => {
                 <i className='x icon' />
                 No
               </Button>
-              {displaySubtitle()}
             </div>
           </>
         );
