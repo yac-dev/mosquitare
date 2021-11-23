@@ -90,6 +90,35 @@ const FullScreen1on1Modal = (props) => {
     props.getVoiceTextActionCreator(props.socket, setVoiceText);
   }, []);
 
+  useEffect(() => {
+    const screenConstraint = {
+      video: {
+        mediaSource: 'screen',
+        // cursor: 'always'
+      },
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        // sampleRate: 44100
+      },
+    };
+    navigator.mediaDevices.getDisplayMedia(screenConstraint).then((screenStream) => {
+      let mediaRecorder = new MediaRecorder(); // 引数としてmediastreamを入れなきゃいけない。
+      // いや。違うわ。webcamを保存しても意味がない。必要なのは、screen の保存だよ。html fileの保存とでもいうべきか。それもmedia audio付きの。
+      const chunks = [];
+      mediaRecorder.start();
+      mediaRecorder.ondataavailable = function (event) {
+        chunks.push(event.data);
+      };
+      mediaRecorder.onstop = (event) => {
+        let blob = new Blob(chunks, { type: 'video/mp4;' });
+        // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
+        chunks = [];
+        // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+      };
+    });
+  }, []);
+
   const onActivateSubtitleClick = () => {
     console.log('activate subtitle');
     props.socket.emit(I_REQUEST_PARTNERS_VOICE_TEXT, {
