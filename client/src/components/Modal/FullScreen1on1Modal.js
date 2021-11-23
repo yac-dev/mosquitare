@@ -100,9 +100,9 @@ const FullScreen1on1Modal = (props) => {
   const displaySubtitle = () => {
     if (voiceText) {
       return (
-        <div className='voice-text' style={{ color: 'white' }}>
-          {voiceText}
-        </div>
+        <>
+          <p className='voice-text'>{voiceText}</p>
+        </>
       );
     } else {
       return null;
@@ -161,12 +161,21 @@ const FullScreen1on1Modal = (props) => {
     >
       <Modal.Body style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
         {switchRender()}
-        <div className='video-container'>
-          <div className='video' style={{ marginTop: '100px' }}>
-            <video playsInline muted ref={props.myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
-            <video playsInline ref={props.oppositeVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
+        <div className='videos-container' style={{ marginTop: '80px' }}>
+          <div className='myvideo-container'>
+            <div className='myvideo'>
+              <video playsInline muted ref={props.myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
+            </div>
+            <div></div>
+          </div>
+          <div className='partner-video-container'>
+            <div className='partner-video'>
+              <video playsInline ref={props.oppositeVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
+            </div>
+            {displaySubtitle()}
           </div>
         </div>
+
         {props.mediaState.callAccepted ? (
           <div className='button-wrapper'>
             <Button negative className='hang-up-button' onClick={() => props.onHangUpClick()}>
@@ -175,7 +184,6 @@ const FullScreen1on1Modal = (props) => {
             <Button onClick={() => onActivateSubtitleClick()}>activate partners subtitle</Button>
           </div>
         ) : null}
-        {displaySubtitle()}
       </Modal.Body>
     </Modal>
   );

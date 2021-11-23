@@ -184,6 +184,7 @@ export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
     payload: '',
   });
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
+  window.location = '/worldmap'; // まあこれでいいのかね。
 };
 
 export const sendVoiceTextActionCreator = (socket, voiceText, microphone) => (dispatch, getState) => {

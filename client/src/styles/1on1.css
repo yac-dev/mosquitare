@@ -1,21 +1,35 @@
-.videos-container {
+/* .videos-container {
   position: absolute;
   top: 50%;
   left: 50%;
   -moz-transform: translateX(-50%) translateY(-50%);
   -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
-  /* 位置真ん中 */
-  display: grid;
+  transform: translateX(-50%) translateY(-50%); */
+/* 位置真ん中 */
+/* display: grid;
   grid-template-columns: repeat(2, 1fr);
   column-gap: 10px;
   height: 500px;
+} */
+
+.videos-container {
+  /* display: grid; */
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+  /* grid-template-columns: repeat(2, 1fr); */
+  column-gap: 10px;
+  /* height: 500px; */
 }
 
 .myvideo-container {
   grid-column: 1/2;
   height: 100%;
   /* display: grid; */
+}
+
+.myvideo {
+  height: 80%;
 }
 
 .partner-video-container {
@@ -28,3 +42,8 @@
 }
 
 /* .partner-subtitle{} */
+.voice-text {
+  max-width: 600px;
+  color: red;
+  word-wrap: break-word;
+}

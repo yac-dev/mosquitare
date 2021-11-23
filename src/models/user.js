@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  gender: {
+    type: String,
+    enum: ['male', 'female'],
+  },
   nativeLangs: [
     {
       type: mongoose.Schema.ObjectId,
@@ -41,6 +45,25 @@ const userSchema = new mongoose.Schema({
       ref: 'Country',
     },
   ],
+  penaltyReviews: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'PenaltyReview',
+    },
+  ],
+  personalityReviews: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'PersonalityReview',
+    },
+  ],
+  pendingPenalty: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'PenaltyReview',
+    },
+  ], // こっちは月毎にupdate。
+  degrees: [String],
   job: {
     type: String,
     required: true,
@@ -49,16 +72,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'No description.',
   },
-  friends: [
+  talkedWith: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
   ],
-  averageDuration: {
-    type: Number,
-    default: 0,
-  },
   location: {
     type: {
       type: String,
@@ -78,6 +97,22 @@ const userSchema = new mongoose.Schema({
   isInConversation: {
     type: Boolean,
     default: false,
+  },
+  voiceTexts: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'VoiceText',
+    },
+  ],
+  videos: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Video',
+    },
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
 });
 

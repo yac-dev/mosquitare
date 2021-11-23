@@ -2,7 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import { Icon, Popup, Button } from 'semantic-ui-react';
-import { Modal } from 'react-bootstrap';
+// import { Modal } from 'react-bootstrap';
+import Tooltip from '@mui/material/Tooltip';
 // components
 import '../styles/worldmap.css';
 import '../styles/meeting.css';
@@ -53,6 +54,8 @@ const WorldMap = (props) => {
   const oppositeVideo = useRef();
   const connectionRef = useRef();
 
+  // popup用
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   // 1on1 modal用
   const [show1on1, setShow1on1] = useState(false);
   const [fullscreen1on1Modal, setFullscreen1on1Modal] = useState(true);
@@ -124,9 +127,20 @@ const WorldMap = (props) => {
                 offsetTop={-7 * viewport.zoom}
               >
                 <Popup
-                  trigger={<Icon className='green user icon' size='large' style={{ cursor: 'pointer' }} />}
-                  flowing
+                  trigger={
+                    <Icon
+                      className='green user icon'
+                      size='large'
+                      style={{ cursor: 'pointer' }}
+                      // onMouseOver={() => setIsPopupOpen(true)}
+                      // onMouseLeave={() => setIsPopupOpen(false)}
+                    />
+                  }
+                  // flowing
                   hoverable
+                  // on='click'
+                  // open={isPopupOpen}
+                  // onOpen={() => setIsPopupOpen(true)} ここまじで分かんね。。。。。
                 >
                   {/* <ConfirmationCard callback={onCallClick} socketId={user.socketId} user={user} /> */}
                   <UserInfoCard user={user} />
@@ -152,6 +166,7 @@ const WorldMap = (props) => {
     const mySocketId = props.authState.currentUser.socketId;
     setFullscreen1on1Modal(true);
     setShow1on1(true);
+    // setIsPopupOpen(false); // 消えねー。
     // myVideo.current.srcObject = props.mediaState.myVideoStreamObject; // ここだとエラーになるんだ。
     props.callActionCreator(socket, mySocketId, myVideo, oppositeSocketId, oppositeVideo, connectionRef);
   };
