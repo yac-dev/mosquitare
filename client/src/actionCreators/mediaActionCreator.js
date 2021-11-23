@@ -15,7 +15,7 @@ import store from '../store';
 import { updateUserConversationStateActionCreator } from './authActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 
-export const getMediaActionCreator = (myVideoRef) => (dispatch) => {
+export const getMediaActionCreator = () => (dispatch) => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
     dispatch({
       type: GET_MEDIA,
@@ -103,24 +103,40 @@ export const callActionCreator =
     peerInitiator.on('stream', (stream) => {
       myVideoRef.current.srcObject = myVideoStreamObject;
       oppositeVideoRef.current.srcObject = stream;
+      // ここから録画開始みたいにできないかね。二つの動画を自分と相手のstreamを録画して、二つを組み合わせて新しいmp4 fileを作る感じにできないかね。少なくとも、getDisplayだとpopup windowが出て使いづらいんだわ。
       store.dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
       connectionRef.current = peerInitiator;
       console.log('call accepted??????');
     });
   };
 
-export const listenCallActionCreator = (socket) => (dispatch) => {
-  console.log('it works????');
+// export const listenCallActionCreator = (socket) => (dispatch) => {
+//   console.log('it works????');
+//   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
+//     console.log('somebody calls me!!!');
+//     console.log(dataFromServer);
+//     const { signalData, whoIsCalling } = dataFromServer;
+//     dispatch({
+//       type: LISTEN_CALL,
+//       payload: { signalData, whoIsCalling },
+//     });
+//   });
+// }; // 結局使わないかな。。。
+
+export const listenCallActionCreator = (socket, setFullscreen1on1Modal, setShow1on1) => (dispatch) => {
   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
     console.log('somebody calls me!!!');
-    console.log(dataFromServer);
-    const { signalData, whoIsCalling } = dataFromServer;
+    const { signalData, whoIsCalling, callerUserInfo } = dataFromServer;
+    console.log(signalData, whoIsCalling);
+    setFullscreen1on1Modal(true);
+    setShow1on1(true);
+    // myVideo.current.srcObject = myVideoStreamObject;
     dispatch({
       type: LISTEN_CALL,
-      payload: { signalData, whoIsCalling },
+      payload: { signalData, whoIsCalling, callerUserInfo },
     });
-  });
-}; // 結局使わないかな。。。
+  }); // acに移そう。
+};
 
 export const answerCallActionCreator =
   (socket, myVideoRef, oppositeVideoRef, connectionRef) => (dispatch, getState) => {
@@ -200,7 +216,7 @@ export const sendVoiceTextActionCreator = (socket, voiceText, microphone) => (di
         .map((result) => result[0])
         .map((result) => result.transcript)
         .join('');
-      // console.log(transcript);
+      console.log(transcript);
       // setVoiceText(transcript);
       // props.sendVoiceTextActionCreator(props.socket, voiceText, setRequestedSubtitle);
       socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
@@ -208,10 +224,6 @@ export const sendVoiceTextActionCreator = (socket, voiceText, microphone) => (di
         voiceText: transcript,
       });
     };
-    // socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
-    //   to: to,
-    //   voiceText: voiceText,
-    // });
   });
 };
 

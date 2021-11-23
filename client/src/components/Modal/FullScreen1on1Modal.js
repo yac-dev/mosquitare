@@ -31,6 +31,7 @@ const FullScreen1on1Modal = (props) => {
   const [isInConversation, setIsInConversation] = useState(false);
   const [requestedSubtitle, setRequestedSubtitle] = useState(false);
   const [voiceText, setVoiceText] = useState('');
+  const [isMinimumTimePassed, setIsMinimumTimePassed] = useState(false);
 
   // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
   const handleListen = () => {
@@ -39,7 +40,7 @@ const FullScreen1on1Modal = (props) => {
       microphone.onend = () => {
         console.log('continue..');
         microphone.start();
-      }; // ここの必要はあるんだろか？？いらない気がするんだよな。
+      };
     } else {
       microphone.stop();
       microphone.onend = () => {
@@ -52,7 +53,6 @@ const FullScreen1on1Modal = (props) => {
     };
 
     microphone.onresult = (event) => {
-      // console.log(event);
       const transcript = Array.from(event.results)
         .map((result) => result[0])
         .map((result) => result.transcript)
@@ -66,9 +66,9 @@ const FullScreen1on1Modal = (props) => {
     };
   };
 
-  useEffect(() => {
-    handleListen();
-  }, [requestedSubtitle]);
+  // useEffect(() => {
+  //   handleListen();
+  // }, [requestedSubtitle]);
   // ここでもsocketだな。こっちでまず、request your voice textみたいなeventを送って、それに対してvoiceの方が答えて、こっちのvoice textを送る、みたいな実装になるだろね。
 
   useEffect(() => {
@@ -91,11 +91,13 @@ const FullScreen1on1Modal = (props) => {
   }, []);
 
   useEffect(() => {
+    // これはここでいいと思う。chatが始まって二人のchatが始まったらこれを実行する。ここはmodul化した方がいいな。というか、action creatorかどっかに入れてmodule化する方がいい。
     const screenConstraint = {
-      video: {
-        mediaSource: 'screen',
-        // cursor: 'always'
-      },
+      video: true,
+      // {
+      //   mediaSource: 'screen',
+      //   // cursor: 'always'
+      // },
       audio: {
         echoCancellation: true,
         noiseSuppression: true,
@@ -103,7 +105,7 @@ const FullScreen1on1Modal = (props) => {
       },
     };
     navigator.mediaDevices.getDisplayMedia(screenConstraint).then((screenStream) => {
-      let mediaRecorder = new MediaRecorder(); // 引数としてmediastreamを入れなきゃいけない。
+      let mediaRecorder = new MediaRecorder(screenStream);
       // いや。違うわ。webcamを保存しても意味がない。必要なのは、screen の保存だよ。html fileの保存とでもいうべきか。それもmedia audio付きの。
       const chunks = [];
       mediaRecorder.start();
@@ -117,6 +119,12 @@ const FullScreen1on1Modal = (props) => {
         // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
       };
     });
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsMinimumTimePassed(true);
+    }, 10 * 60 * 1000);
   }, []);
 
   const onActivateSubtitleClick = () => {
@@ -147,14 +155,6 @@ const FullScreen1on1Modal = (props) => {
       } else if (props.mediaState.amIRecieving) {
         return (
           <>
-            {/* <ConfirmationCard
-              user={props.mediaState.callingWith}
-              callback={props.answerCallActionCreator} // これいらんわ。confirmationでconnectを使えばいい、もしくはstore使えばいい。
-              socket={props.socket}
-              myVideo={props.myVideo}
-              oppositeVideo={props.oppositeVideo}
-              connectionRef={props.connectionRef}
-            /> */}
             <div className='confirmation'>
               <UserInfoCard user={props.mediaState.callingWith} />
               <Button
@@ -207,7 +207,12 @@ const FullScreen1on1Modal = (props) => {
 
         {props.mediaState.callAccepted ? (
           <div className='button-wrapper'>
-            <Button negative className='hang-up-button' onClick={() => props.onHangUpClick()}>
+            <Button
+              negative
+              disabled={!isMinimumTimePassed}
+              className='hang-up-button'
+              onClick={() => props.onHangUpClick()}
+            >
               Hang up
             </Button>
             <Button onClick={() => onActivateSubtitleClick()}>activate partners subtitle</Button>

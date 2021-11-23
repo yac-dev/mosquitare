@@ -9,6 +9,7 @@ import '../styles/worldmap.css';
 import '../styles/meeting.css';
 import Dimer from './Dimer'; //ここ必要ないかな。
 import ConfirmationCard from './ConfirmationCard'; // ここも必要なくなるかな。
+import UsersMarker from './UsersMarker';
 import UserInfoCard from './UserInfoCard';
 import MeetingsList from './Meeting/MeetingsList';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
@@ -68,17 +69,6 @@ const WorldMap = (props) => {
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
 
-  // meeting用のfull screen modalのtrigger
-  const onJoinClick = (meeting) => {
-    // これらの前に、meetingListで、joinMeetingActionCreator(meeting)が行われているからね。だから↓、大丈夫。→それが違うんだわ。meetingのstate自体はすぐに変わってくれないんだわ。
-    setFullScreenMeetingModal(true);
-    setShowMeeting(true);
-    socket.emit(JOIN_MEETING, {
-      meeting: meeting,
-      userInfo: props.authState.currentUser,
-    });
-  };
-
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
     if (jwtToken) {
@@ -88,76 +78,10 @@ const WorldMap = (props) => {
       });
     }
 
-    navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-      store.dispatch({
-        type: GET_MEDIA,
-        payload: stream,
-      });
-      // setMyVideoStreamObject(stream);
-      // myVideoRef.current.srcObject = stream; // ここなーーー。どうだろう。// chatscreenの方でuseEffectすればいいのかね。。。ここだけ。
-    });
-
-    socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
-      console.log('somebody calls me!!!');
-      console.log(dataFromServer);
-      const { signalData, whoIsCalling, callerUserInfo } = dataFromServer;
-      console.log(signalData, whoIsCalling);
-      setFullscreen1on1Modal(true);
-      setShow1on1(true);
-      // myVideo.current.srcObject = myVideoStreamObject;
-      store.dispatch({
-        type: LISTEN_CALL,
-        payload: { signalData, whoIsCalling, callerUserInfo },
-      });
-    });
-
+    props.getMediaActionCreator();
+    props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
     props.getMeetingsActionCreator();
   }, []);
-
-  const usersMarkerRender = () => {
-    if (props.usersState) {
-      const usersRender = props.usersState.map((user) => {
-        if (user.isOnline && !user.isInConversation) {
-          return (
-            <>
-              <Marker
-                longitude={user.location.coordinates[0]}
-                latitude={user.location.coordinates[1]}
-                offsetLeft={-3.5 * viewport.zoom}
-                offsetTop={-7 * viewport.zoom}
-              >
-                <Popup
-                  trigger={
-                    <Icon
-                      className='green user icon'
-                      size='large'
-                      style={{ cursor: 'pointer' }}
-                      // onMouseOver={() => setIsPopupOpen(true)}
-                      // onMouseLeave={() => setIsPopupOpen(false)}
-                    />
-                  }
-                  // flowing
-                  hoverable
-                  // on='click'
-                  // open={isPopupOpen}
-                  // onOpen={() => setIsPopupOpen(true)} ここまじで分かんね。。。。。
-                >
-                  {/* <ConfirmationCard callback={onCallClick} socketId={user.socketId} user={user} /> */}
-                  <UserInfoCard user={user} />
-                  <Button positive onClick={(event) => onCallClick(event, user.socketId)} style={{ width: '100%' }}>
-                    <i className='video icon'>call</i>
-                  </Button>
-                </Popup>
-              </Marker>
-            </>
-          );
-        }
-      });
-      return <>{usersRender}</>;
-    } else {
-      return null;
-    }
-  };
 
   // 1on1 modalのtrigger
   const onCallClick = (event, oppositeSocketId) => {
@@ -171,42 +95,30 @@ const WorldMap = (props) => {
     props.callActionCreator(socket, mySocketId, myVideo, oppositeSocketId, oppositeVideo, connectionRef);
   };
 
-  // 1on1 modalで実行してもらうcallback
+  // 1on1 modalで実行してもらうcallback.modalのstate変えるからここに書いている。
   const onHangUpClick = () => {
     props.hangUpCallActionCreator(connectionRef);
     setShow1on1(false);
   };
 
+  // meeting用のfull screen modalのtrigger
+  const onJoinClick = (meeting) => {
+    // これらの前に、meetingListで、joinMeetingActionCreator(meeting)が行われているからね。だから↓、大丈夫。→それが違うんだわ。meetingのstate自体はすぐに変わってくれないんだわ。
+    setFullScreenMeetingModal(true);
+    setShowMeeting(true);
+    socket.emit(JOIN_MEETING, {
+      meeting: meeting,
+      userInfo: props.authState.currentUser,
+    });
+  };
+
   return (
     <>
-      {/* <Modal
-        className='chat-modal'
-        show={show}
-        fullscreen={fullscreen}
-        onHide={() => setShow(false)}
-        style={{ backgroundColor: 'blue' }}
-      >
-        <Modal.Body style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
-          {switchRender()}
-          <div className='video-container'>
-            <div className='video' style={{ marginTop: '100px' }}>
-              <video playsInline muted ref={myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
-              <video playsInline ref={oppositeVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
-            </div>
-          </div>
-          {props.mediaState.callAccepted ? (
-            <div className='button-wrapper'>
-              <Button negative className='hang-up-button' onClick={() => onHangUpClick()}>
-                Hang up
-              </Button>
-            </div>
-          ) : null}
-        </Modal.Body>
-      </Modal>{' '} */}
+      {/* modals */}
       <FullScreen1on1Modal
         socket={socket}
         show1on1={show1on1}
-        setShow1on1={setShow1on1} // これいらないかもな。
+        setShow1on1={setShow1on1}
         fullscreen1on1Modal={fullscreen1on1Modal}
         onHangUpClick={onHangUpClick}
         myVideo={myVideo}
@@ -226,6 +138,8 @@ const WorldMap = (props) => {
         onHide={() => setVerticallyCenteredModal(false)}
         socket={socket}
       />
+      {/* modals */}
+
       <div style={{ height: '100vh', width: '100%' }}>
         <ReactMapGL
           {...viewport}
@@ -235,7 +149,8 @@ const WorldMap = (props) => {
           mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
           onViewportChange={(viewport) => setViewport(viewport)}
         >
-          {usersMarkerRender()}
+          {/* {usersMarkerRender()} */}
+          <UsersMarker onCallClick={onCallClick} />
           <MeetingsList socket={socket} onJoinClick={onJoinClick} />
           <Button className='create-meeting-button' onClick={() => setVerticallyCenteredModal(true)}>
             Create new meeting??
@@ -259,7 +174,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   // loadPositionActionCreator,
   getMediaActionCreator,
-  // getSocketIdActionCreator,
   listenCallActionCreator,
   callActionCreator,
   answerCallActionCreator,
