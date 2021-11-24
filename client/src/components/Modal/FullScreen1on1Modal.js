@@ -5,7 +5,6 @@ import { Modal } from 'react-bootstrap';
 import { Button } from 'semantic-ui-react';
 
 import Dimer from '../Dimer';
-import ConfirmationCard from '../ConfirmationCard';
 import UserInfoCard from '../UserInfoCard';
 
 import '../../styles/1on1.css';
@@ -20,6 +19,7 @@ import {
 import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator';
 import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
+import { getVideoChatIdFromCallerActionCreator } from '../../actionCreators/videoChatActionCreators';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const microphone = new SpeechRecognition();
@@ -88,44 +88,45 @@ const FullScreen1on1Modal = (props) => {
     //   setVoiceText(voiceTetx);
     // });
     props.getVoiceTextActionCreator(props.socket, setVoiceText);
+    props.getVideoChatIdFromCallerActionCreator(props.socket);
   }, []);
 
-  useEffect(() => {
-    // これはここでいいと思う。chatが始まって二人のchatが始まったらこれを実行する。ここはmodul化した方がいいな。というか、action creatorかどっかに入れてmodule化する方がいい。
-    const screenConstraint = {
-      video: true,
-      // {
-      //   mediaSource: 'screen',
-      //   // cursor: 'always'
-      // },
-      audio: {
-        echoCancellation: true,
-        noiseSuppression: true,
-        // sampleRate: 44100
-      },
-    };
-    navigator.mediaDevices.getDisplayMedia(screenConstraint).then((screenStream) => {
-      let mediaRecorder = new MediaRecorder(screenStream);
-      // いや。違うわ。webcamを保存しても意味がない。必要なのは、screen の保存だよ。html fileの保存とでもいうべきか。それもmedia audio付きの。
-      const chunks = [];
-      mediaRecorder.start();
-      mediaRecorder.ondataavailable = function (event) {
-        chunks.push(event.data);
-      };
-      mediaRecorder.onstop = (event) => {
-        let blob = new Blob(chunks, { type: 'video/mp4;' });
-        // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
-        chunks = [];
-        // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-      };
-    });
-  }, []);
+  // useEffect(() => {
+  //   // これはここでいいと思う。chatが始まって二人のchatが始まったらこれを実行する。ここはmodul化した方がいいな。というか、action creatorかどっかに入れてmodule化する方がいい。
+  //   const screenConstraint = {
+  //     video: true,
+  //     // {
+  //     //   mediaSource: 'screen',
+  //     //   // cursor: 'always'
+  //     // },
+  //     audio: {
+  //       echoCancellation: true,
+  //       noiseSuppression: true,
+  //       // sampleRate: 44100
+  //     },
+  //   };
+  //   navigator.mediaDevices.getDisplayMedia(screenConstraint).then((screenStream) => {
+  //     let mediaRecorder = new MediaRecorder(screenStream);
+  //     // いや。違うわ。webcamを保存しても意味がない。必要なのは、screen の保存だよ。html fileの保存とでもいうべきか。それもmedia audio付きの。
+  //     const chunks = [];
+  //     mediaRecorder.start();
+  //     mediaRecorder.ondataavailable = function (event) {
+  //       chunks.push(event.data);
+  //     };
+  //     mediaRecorder.onstop = (event) => {
+  //       let blob = new Blob(chunks, { type: 'video/mp4;' });
+  //       // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
+  //       chunks = [];
+  //       // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+  //     };
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setIsMinimumTimePassed(true);
-    }, 10 * 60 * 1000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsMinimumTimePassed(true);
+  //   }, 10 * 60 * 1000);
+  // }, []);
 
   const onActivateSubtitleClick = () => {
     console.log('activate subtitle');
@@ -209,7 +210,7 @@ const FullScreen1on1Modal = (props) => {
           <div className='button-wrapper'>
             <Button
               negative
-              disabled={!isMinimumTimePassed}
+              // disabled={!isMinimumTimePassed}
               className='hang-up-button'
               onClick={() => props.onHangUpClick()}
             >
@@ -231,4 +232,5 @@ export default connect(mapStateToProps, {
   answerCallActionCreator,
   sendVoiceTextActionCreator,
   getVoiceTextActionCreator,
+  getVideoChatIdFromCallerActionCreator,
 })(FullScreen1on1Modal);

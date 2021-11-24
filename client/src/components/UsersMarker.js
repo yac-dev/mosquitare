@@ -50,6 +50,8 @@ const UsersMarker = (props) => {
             </Marker>
           </>
         );
+      } else {
+        return null;
       }
     });
     return <>{usersRender}</>;
