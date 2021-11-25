@@ -20,6 +20,7 @@ import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator
 import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVideoChatIdFromCallerActionCreator } from '../../actionCreators/videoChatActionCreators';
+import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const microphone = new SpeechRecognition();
@@ -32,6 +33,8 @@ const FullScreen1on1Modal = (props) => {
   const [requestedSubtitle, setRequestedSubtitle] = useState(false);
   const [voiceText, setVoiceText] = useState('');
   const [isMinimumTimePassed, setIsMinimumTimePassed] = useState(false);
+  const [chunks, setChunks] = useState([]);
+  let mediaRecorder;
 
   // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
   const handleListen = () => {
@@ -72,13 +75,14 @@ const FullScreen1on1Modal = (props) => {
   // ここでもsocketだな。こっちでまず、request your voice textみたいなeventを送って、それに対してvoiceの方が答えて、こっちのvoice textを送る、みたいな実装になるだろね。
 
   useEffect(() => {
-    console.log('subtitle request coming...');
     // props.socket.on(MY_PARTENER_REQUESTS_MY_VOICE_TEXT, () => {
     //   props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
     //     to: 0,
     //     voiceText: voiceText,
     //   });
     // });
+    const { myVideoStreamObject } = store.getState().mediaState;
+    const mediaRecorder = new MediaRecorder(myVideoStreamObject);
 
     props.sendVoiceTextActionCreator(props.socket, voiceText, microphone);
 
@@ -90,6 +94,11 @@ const FullScreen1on1Modal = (props) => {
     props.getVoiceTextActionCreator(props.socket, setVoiceText);
     props.getVideoChatIdFromCallerActionCreator(props.socket);
   }, []);
+
+  // ここにまんま書いていいのかね。reduxのstateの部分。→いや。reduxにしろcomponentのstateが変わっても毎回実行されちまう、それは良くない。
+  useState(() => {
+    props.recordStreamActionCreator(mediaRecorder, setChunks); // ここにmedia recorderのinstanceを引数で入れる感じの方がいいな。多分。
+  }, [props.mediaState.callAccepted]);
 
   // useEffect(() => {
   //   // これはここでいいと思う。chatが始まって二人のchatが始まったらこれを実行する。ここはmodul化した方がいいな。というか、action creatorかどっかに入れてmodule化する方がいい。
@@ -233,4 +242,5 @@ export default connect(mapStateToProps, {
   sendVoiceTextActionCreator,
   getVoiceTextActionCreator,
   getVideoChatIdFromCallerActionCreator,
+  recordStreamActionCreator,
 })(FullScreen1on1Modal);

@@ -25,12 +25,27 @@ export const createVideoChatActionCreator = (callerUserId, socket) => async (dis
 export const getVideoChatIdFromCallerActionCreator = (socket) => (dispatch, getState) => {
   try {
     socket.on(MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT, (dataFromServer) => {
-      console.log('get video chattttttt?????');
       dispatch({
         type: GET_VIDEO_CHAT_ID,
         payload: dataFromServer.videoChatId,
       });
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserStreamActionCreator = (blob) => async (dispatch, getState) => {
+  try {
+    const state = getState().mediaState;
+    const id = getState().videoChatState._id;
+    let result;
+    if (state.amICalling) {
+      result = await mosquitareAPI.patch(`/updatestream/${id}`, { callerUserStream: blob });
+    } else if (state.amIRecieving) {
+      result = await mosquitareAPI.patch(`/updatestream/${id}`, { recieverUserStream: blob });
+    }
+    console.log(result);
   } catch (error) {
     console.log(error);
   }

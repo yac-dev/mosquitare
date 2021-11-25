@@ -7,6 +7,7 @@ const videoChatSchema = new mongoose.Schema({
     ref: 'User',
   },
   calledUserStream: {
+    size: Number,
     type: String,
   },
   recievedUser: {
@@ -14,6 +15,7 @@ const videoChatSchema = new mongoose.Schema({
     ref: 'User',
   }, // もしかしたらarrayにした方がいいかも。
   recievedUserStream: {
+    size: Number,
     type: String,
   },
   // textChats: [

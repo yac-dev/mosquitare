@@ -1,7 +1,9 @@
 import express from 'express';
 const router = express.Router();
-import { createVideoChat } from '../controllers/videoChats';
+import { createVideoChat, updateVideoChatStream } from '../controllers/videoChats';
 
-router.post('/', createVideoChat);
+router.route('/').post(createVideoChat);
+
+router.route('/updatestream/:id').patch(updateVideoChatStream);
 
 export default router;

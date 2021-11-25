@@ -202,6 +202,7 @@ export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
     payload: '',
   });
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
+  // その前にrecordingだ。
   window.location = '/worldmap'; // まあこれでいいのかね。
 };
 
@@ -237,4 +238,25 @@ export const getVoiceTextActionCreator = (socket, setVoiceText) => () => {
     // display(voiceText)
     setVoiceText(dataFromServer.voiceText);
   });
+};
+
+export const recordStreamActionCreator = (mediaRecorder, setChunks) => (dispatch, getState) => {
+  try {
+    // const record = getState().mediaState.callAccepted;
+    // if (record) {
+    const { myVideoStreamObject } = getState().mediaState;
+    mediaRecorder = new MediaRecorder(myVideoStreamObject); // これだけ外に出しておいた方がいいかもな。hangupcallの時にonstopを実装するから。
+    // let chunks = [];
+    mediaRecorder.start();
+    mediaRecorder.ondataavailable = function (event) {
+      // chunks.push(event.data);
+      setChunks((oldChunks) => {
+        return [...oldChunks, event.data];
+      });
+    };
+    // } else {
+    // }
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -29,6 +29,7 @@ import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { updateUserConversationStateActionCreator } from '../actionCreators/authActionCreators';
 import { getUsersActionCreator } from '../actionCreators/usersActionCreator';
 import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreator';
+import { updateUserStreamActionCreator } from '../actionCreators/videoChatActionCreators';
 
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
@@ -96,7 +97,18 @@ const WorldMap = (props) => {
   };
 
   // 1on1 modalで実行してもらうcallback.modalのstate変えるからここに書いている。
-  const onHangUpClick = () => {
+  // ここにmediarecorderのinstanceを入れる前提だな。
+  const onHangUpClick = (mediaRecorder, chunks, setChunks) => {
+    mediaRecorder.stop();
+    mediaRecorder.onstop = (event) => {
+      let blob = new Blob(chunks, { type: 'video/mp4;' }); // blob自体は、object。
+      // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
+      // chunks = [];
+      console.log(blob);
+      props.updateUserStreamActionCreator(blob);
+      setChunks([]); // arrayを空にするのってどうやるんだっけ？？
+      // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+    };
     props.hangUpCallActionCreator(connectionRef);
     setShow1on1(false);
   };
@@ -182,4 +194,5 @@ export default connect(mapStateToProps, {
   hangUpCallActionCreator,
   // updateUserConversationStateActionCreator // ここでやるのはよそう。actionの順番がごちゃごちゃになる。
   getMeetingsActionCreator,
+  updateUserStreamActionCreator,
 })(WorldMap);
