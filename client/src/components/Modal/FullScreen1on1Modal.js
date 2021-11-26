@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import store from '../../store';
 import { Modal } from 'react-bootstrap';
 import { Button } from 'semantic-ui-react';
@@ -20,7 +20,7 @@ import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator
 import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVideoChatIdFromCallerActionCreator } from '../../actionCreators/videoChatActionCreators';
-import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
+// import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const microphone = new SpeechRecognition();
@@ -33,8 +33,8 @@ const FullScreen1on1Modal = (props) => {
   const [requestedSubtitle, setRequestedSubtitle] = useState(false);
   const [voiceText, setVoiceText] = useState('');
   const [isMinimumTimePassed, setIsMinimumTimePassed] = useState(false);
-  const [chunks, setChunks] = useState([]);
-  let mediaRecorder;
+  // const [chunks, setChunks] = useState([]);
+  // let mediaRecorder;
 
   // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
   const handleListen = () => {
@@ -81,8 +81,6 @@ const FullScreen1on1Modal = (props) => {
     //     voiceText: voiceText,
     //   });
     // });
-    const { myVideoStreamObject } = store.getState().mediaState;
-    const mediaRecorder = new MediaRecorder(myVideoStreamObject);
 
     props.sendVoiceTextActionCreator(props.socket, voiceText, microphone);
 
@@ -96,9 +94,15 @@ const FullScreen1on1Modal = (props) => {
   }, []);
 
   // ここにまんま書いていいのかね。reduxのstateの部分。→いや。reduxにしろcomponentのstateが変わっても毎回実行されちまう、それは良くない。
-  useState(() => {
-    props.recordStreamActionCreator(mediaRecorder, setChunks); // ここにmedia recorderのinstanceを引数で入れる感じの方がいいな。多分。
-  }, [props.mediaState.callAccepted]);
+  // const a = useSelector((state) => state.mediaState.callAccepted);
+  // console.log(a);
+  // useState(() => {
+  //   console.log('mediarecorder part!!!');
+  //   if (a) {
+  //     // この部分が動いていない。
+  //     props.recordStreamActionCreator(mediaRecorder, setChunks); // ここにmedia recorderのinstanceを引数で入れる感じの方がいいな。多分。
+  //   }
+  // }, [a]); // これやっぱ最初のrendering後も動いているな。。。
 
   // useEffect(() => {
   //   // これはここでいいと思う。chatが始まって二人のchatが始まったらこれを実行する。ここはmodul化した方がいいな。というか、action creatorかどっかに入れてmodule化する方がいい。
@@ -170,7 +174,13 @@ const FullScreen1on1Modal = (props) => {
               <Button
                 positive
                 onClick={() =>
-                  props.answerCallActionCreator(props.socket, props.myVideo, props.oppositeVideo, props.connectionRef)
+                  props.answerCallActionCreator(
+                    props.socket,
+                    props.myVideo,
+                    props.oppositeVideo,
+                    props.connectionRef,
+                    props.mediaRecorder
+                  )
                 }
                 style={{ width: '100%' }}
               >
@@ -242,5 +252,5 @@ export default connect(mapStateToProps, {
   sendVoiceTextActionCreator,
   getVoiceTextActionCreator,
   getVideoChatIdFromCallerActionCreator,
-  recordStreamActionCreator,
+  // recordStreamActionCreator,
 })(FullScreen1on1Modal);

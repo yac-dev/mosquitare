@@ -6,10 +6,7 @@ const videoChatSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  calledUserStream: {
-    size: Number,
-    type: String,
-  },
+  calledUserStream: mongoose.Schema.Types.Mixed,
   recievedUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',

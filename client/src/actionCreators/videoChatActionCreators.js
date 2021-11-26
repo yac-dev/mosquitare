@@ -1,11 +1,12 @@
 import { mosquitareAPI } from '../apis/mosquitare';
 import { CREATE_VIDEO_CHAT, GET_VIDEO_CHAT_ID } from './type';
 import { I_SEND_VIDEO_CHAT_ID_TO_MY_PARTNER, MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT } from './socketEvents';
+import { hangUpCallActionCreator } from './mediaActionCreator';
 
 // こいつを、chatが成立した後にtriggerさせないといかん。
 export const createVideoChatActionCreator = (callerUserId, socket) => async (dispatch, getState) => {
   try {
-    const result = await mosquitareAPI.post('/videoChats', { callerUserId });
+    const result = await mosquitareAPI.post('/videochats', { callerUserId });
     const { videoChat } = result.data; // ここでvideoChatのidを受け取ったら、すぐにpeerにあげないと。
     console.log(result);
     console.log(videoChat);
@@ -35,17 +36,25 @@ export const getVideoChatIdFromCallerActionCreator = (socket) => (dispatch, getS
   }
 };
 
-export const updateUserStreamActionCreator = (blob) => async (dispatch, getState) => {
+export const updateUserStreamActionCreator = (blob, connectionRef) => async (dispatch, getState) => {
   try {
+    console.log('updating viode chattttt!!');
     const state = getState().mediaState;
-    const id = getState().videoChatState._id;
+    const { videoChatId } = getState().videoChatState;
     let result;
+    // const postData = { calledUserStream: blob };
+    // console.log(postData);
+    const formData = new FormData();
+    formData.append('videoFile', blob); // api側のmulterで、こういうpropertyで設定している。
     if (state.amICalling) {
-      result = await mosquitareAPI.patch(`/updatestream/${id}`, { callerUserStream: blob });
+      result = await mosquitareAPI.post(`/videochats/updatestream/${videoChatId}`, formData, {
+        headers: { 'Content-type': 'multipart/form-data' },
+      });
     } else if (state.amIRecieving) {
-      result = await mosquitareAPI.patch(`/updatestream/${id}`, { recieverUserStream: blob });
+      result = await mosquitareAPI.post(`/videochats/updatestream/${videoChatId}`, { recieverUserStream: blob });
     }
-    console.log(result);
+    console.log(result); // これundefinedだった？？
+    hangUpCallActionCreator(connectionRef); // 引数に、
   } catch (error) {
     console.log(error);
   }

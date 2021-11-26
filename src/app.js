@@ -18,6 +18,6 @@ app.use('/api/languages', languagesRouter);
 app.use('/api/countries', countriesRouter);
 app.use('/api/meetings', meetingsRouter);
 app.use('/api/videos', videosRouter);
-app.use('/api/videoChats', videoChatsRouter);
+app.use('/api/videochats', videoChatsRouter);
 
 export default app;

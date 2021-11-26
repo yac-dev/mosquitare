@@ -43,13 +43,6 @@ import store from '../store';
 // socket 設定
 const socket = io(process.env.REACT_APP_WEBRTC);
 
-// speech recognition 設定
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const microphone = new SpeechRecognition();
-microphone.continuous = true;
-microphone.interimResults = true;
-microphone.lang = 'en-US';
-
 const WorldMap = (props) => {
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
   const myVideo = useRef();
@@ -66,9 +59,12 @@ const WorldMap = (props) => {
   const [showMeeting, setShowMeeting] = useState(false);
   // vertically centered modal用
   const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
-
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
+
+  const [chunks, setChunks] = useState([]);
+  const mediaRecorder = useRef();
+  let chunksBuffer = [];
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -93,23 +89,52 @@ const WorldMap = (props) => {
     setShow1on1(true);
     // setIsPopupOpen(false); // 消えねー。
     // myVideo.current.srcObject = props.mediaState.myVideoStreamObject; // ここだとエラーになるんだ。
-    props.callActionCreator(socket, mySocketId, myVideo, oppositeSocketId, oppositeVideo, connectionRef);
+    const { myVideoStreamObject } = props.mediaState;
+    mediaRecorder.current = new MediaRecorder(myVideoStreamObject);
+    mediaRecorder.current.ondataavailable = function (event) {
+      console.log('ondataavai');
+      console.log(event.data); // ここにはちゃんとdataが入っている。
+      // setChunks((oldChunks) => {
+      //   return [...oldChunks, event.data];
+      // });
+      chunksBuffer.push(event.data);
+    };
+    mediaRecorder.current.onstop = (event) => {
+      console.log(chunks);
+      let blob = new Blob(chunksBuffer, { type: 'video/mp4;' }); // blob自体は、object。
+      // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
+      // chunks = [];
+      chunksBuffer = [];
+      props.updateUserStreamActionCreator(blob, connectionRef);
+      // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
+      // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+    }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
+
+    props.callActionCreator(
+      socket,
+      mySocketId,
+      myVideo,
+      oppositeSocketId,
+      oppositeVideo,
+      connectionRef,
+      mediaRecorder.current
+    );
   };
 
   // 1on1 modalで実行してもらうcallback.modalのstate変えるからここに書いている。
   // ここにmediarecorderのinstanceを入れる前提だな。
-  const onHangUpClick = (mediaRecorder, chunks, setChunks) => {
-    mediaRecorder.stop();
-    mediaRecorder.onstop = (event) => {
-      let blob = new Blob(chunks, { type: 'video/mp4;' }); // blob自体は、object。
-      // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
-      // chunks = [];
-      console.log(blob);
-      props.updateUserStreamActionCreator(blob);
-      setChunks([]); // arrayを空にするのってどうやるんだっけ？？
-      // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-    };
-    props.hangUpCallActionCreator(connectionRef);
+  const onHangUpClick = () => {
+    // mediaRecorder.current.onstop = (event) => {
+    //   let blob = new Blob(chunks, { type: 'video/mp4;' }); // blob自体は、object。
+    //   // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
+    //   // chunks = [];
+    //   console.log(blob);
+    //   props.updateUserStreamActionCreator(blob);
+    //   // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
+    //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+    // };
+    mediaRecorder.current.stop();
+    // props.hangUpCallActionCreator(connectionRef); // これ自体、updateStreamの下にやらないとダメだ。それか、向こうをpromisifyするか。
     setShow1on1(false);
   };
 
@@ -136,6 +161,7 @@ const WorldMap = (props) => {
         myVideo={myVideo}
         oppositeVideo={oppositeVideo}
         connectionRef={connectionRef}
+        mediaRecorder={mediaRecorder}
       />
       <FullScreenMeetingModal
         socket={socket}
