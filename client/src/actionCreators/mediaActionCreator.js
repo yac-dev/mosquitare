@@ -199,7 +199,7 @@ export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   });
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
   // その前にrecordingだ。
-  // window.location = '/worldmap'; // まあこれでいいのかね。
+  window.location = '/worldmap'; // まあこれでいいのかね。
 };
 
 export const sendVoiceTextActionCreator = (socket, voiceText, microphone) => (dispatch, getState) => {

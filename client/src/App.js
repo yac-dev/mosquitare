@@ -14,6 +14,7 @@ import SignupDetails from './components/Signup/SignupDetails';
 import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 import ChatScreen from './components/ChatScreen';
+import Container from './components/Userpage/Container';
 
 const App = () => {
   // useEffect(() => {
@@ -67,8 +68,9 @@ const App = () => {
         <Route path='/login' exact component={Login} />
         <Route path='/socket' exact component={Socket} />
         <Route path='/worldmap' exact component={WorldMap} />
-        <Route path='/chatscreen' exact component={ChatScreen} />
+        {/* <Route path='/chatscreen' exact component={ChatScreen} /> */}
         <Route path='/about' exact component={About} />
+        <Route path='/userpage' exact component={Container} />
       </Router>
     </div>
   );

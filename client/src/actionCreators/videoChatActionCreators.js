@@ -57,7 +57,7 @@ export const updateUserStreamActionCreator = (blob, connectionRef) => async (dis
       });
     }
     console.log(result); // これundefinedだった？？
-    hangUpCallActionCreator(connectionRef); // 引数に、
+    dispatch(hangUpCallActionCreator(connectionRef)); // 引数に、
   } catch (error) {
     console.log(error);
   }
