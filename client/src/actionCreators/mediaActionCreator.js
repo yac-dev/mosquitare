@@ -15,9 +15,30 @@ import store from '../store';
 import { updateUserConversationStateActionCreator } from './authActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 import { createVideoChatActionCreator } from './videoChatActionCreators';
+import { updateUserStreamActionCreator } from './videoChatActionCreators';
 
-export const getMediaActionCreator = () => (dispatch) => {
+export const getMediaActionCreator = (mediaRecorder, chunksBuffer, connectionRef) => (dispatch) => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+    mediaRecorder.current = new MediaRecorder(stream);
+    mediaRecorder.current.ondataavailable = function (event) {
+      console.log('ondataavai');
+      console.log(event.data); // ここにはちゃんとdataが入っている。
+      // setChunks((oldChunks) => {
+      //   return [...oldChunks, event.data];
+      // });
+      chunksBuffer.push(event.data);
+    };
+    mediaRecorder.current.onstop = (event) => {
+      console.log(chunksBuffer);
+      let blob = new Blob(chunksBuffer, { type: 'video/mp4;' }); // blob自体は、object。
+      // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
+      // chunks = [];
+      console.log('recore stopped!!!');
+      chunksBuffer = [];
+      dispatch(updateUserStreamActionCreator(blob, connectionRef));
+      // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
+      // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+    }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
     dispatch({
       type: GET_MEDIA,
       payload: stream,
@@ -126,7 +147,25 @@ export const answerCallActionCreator =
     peerReciever.signal(callerSignal);
     connectionRef.current = peerReciever;
     console.log('I answered');
-    mediaRecorderRef.current = new MediaRecorder(myVideoStreamObject);
+
+    // mediaRecorderRef.current = new MediaRecorder(myVideoStreamObject);
+    // mediaRecorderRef.current.ondataavailable = function (event) {
+    //   console.log('ondataavai');
+    //   console.log(event.data); // ここにはちゃんとdataが入っている。
+    //   // setChunks((oldChunks) => {
+    //   //   return [...oldChunks, event.data];
+    //   // });
+    //   chunksBuffer.push(event.data);
+    // };
+    // mediaRecorderRef.current.onstop = (event) => {
+    //   let blob = new Blob(chunksBuffer, { type: 'video/mp4;' }); // blob自体は、object。
+    //   // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
+    //   // chunks = [];
+    //   chunksBuffer = [];
+    //   updateUserStreamActionCreator(blob, connectionRef); // connectionRefも引数に入れなきゃだ。chunksBufferもpropsバケツしなきゃだ。
+    //   // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
+    //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+    // }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
     mediaRecorderRef.current.start();
   };
 

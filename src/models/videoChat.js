@@ -6,15 +6,12 @@ const videoChatSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  calledUserStream: mongoose.Schema.Types.Mixed,
+  callerStreamFileName: String,
   recievedUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   }, // もしかしたらarrayにした方がいいかも。
-  recievedUserStream: {
-    size: Number,
-    type: String,
-  },
+  recieverStreamFileName: String,
   // textChats: [
   //   {
   //     type: mongoose.Schema.ObjectId,

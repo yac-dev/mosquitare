@@ -179,7 +179,8 @@ const FullScreen1on1Modal = (props) => {
                     props.myVideo,
                     props.oppositeVideo,
                     props.connectionRef,
-                    props.mediaRecorder
+                    props.mediaRecorder,
+                    props.chunksBuffer
                   )
                 }
                 style={{ width: '100%' }}

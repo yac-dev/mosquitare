@@ -47,11 +47,14 @@ export const updateUserStreamActionCreator = (blob, connectionRef) => async (dis
     const formData = new FormData();
     formData.append('videoFile', blob); // api側のmulterで、こういうpropertyで設定している。
     if (state.amICalling) {
-      result = await mosquitareAPI.post(`/videochats/updatestream/${videoChatId}`, formData, {
+      // bodyによって分けるって面倒くさいな。caller用のvideo提出endpoint、reciever用のvideo提出endpointってわけた方がいいかもしれないな。
+      result = await mosquitareAPI.post(`/videochats/upload/caller/${videoChatId}`, formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
     } else if (state.amIRecieving) {
-      result = await mosquitareAPI.post(`/videochats/updatestream/${videoChatId}`, { recieverUserStream: blob });
+      result = await mosquitareAPI.post(`/videochats/upload/reciever/${videoChatId}`, formData, {
+        headers: { 'Content-type': 'multipart/form-data' },
+      });
     }
     console.log(result); // これundefinedだった？？
     hangUpCallActionCreator(connectionRef); // 引数に、

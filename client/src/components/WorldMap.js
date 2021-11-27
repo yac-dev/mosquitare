@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import ReactMapGL, { Marker } from 'react-map-gl';
 import { Icon, Popup, Button } from 'semantic-ui-react';
 // import { Modal } from 'react-bootstrap';
@@ -64,6 +64,7 @@ const WorldMap = (props) => {
 
   const [chunks, setChunks] = useState([]);
   const mediaRecorder = useRef();
+  // const mediaState = useSelector((state) => state.mediaState);
   let chunksBuffer = [];
 
   useEffect(() => {
@@ -75,7 +76,7 @@ const WorldMap = (props) => {
       });
     }
 
-    props.getMediaActionCreator();
+    props.getMediaActionCreator(mediaRecorder, chunksBuffer, connectionRef);
     props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
     props.getMeetingsActionCreator();
   }, []);
@@ -89,26 +90,28 @@ const WorldMap = (props) => {
     setShow1on1(true);
     // setIsPopupOpen(false); // 消えねー。
     // myVideo.current.srcObject = props.mediaState.myVideoStreamObject; // ここだとエラーになるんだ。
-    const { myVideoStreamObject } = props.mediaState;
-    mediaRecorder.current = new MediaRecorder(myVideoStreamObject);
-    mediaRecorder.current.ondataavailable = function (event) {
-      console.log('ondataavai');
-      console.log(event.data); // ここにはちゃんとdataが入っている。
-      // setChunks((oldChunks) => {
-      //   return [...oldChunks, event.data];
-      // });
-      chunksBuffer.push(event.data);
-    };
-    mediaRecorder.current.onstop = (event) => {
-      console.log(chunks);
-      let blob = new Blob(chunksBuffer, { type: 'video/mp4;' }); // blob自体は、object。
-      // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
-      // chunks = [];
-      chunksBuffer = [];
-      props.updateUserStreamActionCreator(blob, connectionRef);
-      // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
-      // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-    }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
+
+    // 果たして、これで動いてくれるか。
+    // const { myVideoStreamObject } = props.mediaState;
+    // mediaRecorder.current = new MediaRecorder(myVideoStreamObject);
+    // mediaRecorder.current.ondataavailable = function (event) {
+    //   console.log('ondataavai');
+    //   console.log(event.data); // ここにはちゃんとdataが入っている。
+    //   // setChunks((oldChunks) => {
+    //   //   return [...oldChunks, event.data];
+    //   // });
+    //   chunksBuffer.push(event.data);
+    // };
+    // mediaRecorder.current.onstop = (event) => {
+    //   console.log(chunks);
+    //   let blob = new Blob(chunksBuffer, { type: 'video/mp4;' }); // blob自体は、object。
+    //   // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
+    //   // chunks = [];
+    //   chunksBuffer = [];
+    //   props.updateUserStreamActionCreator(blob, connectionRef);
+    //   // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
+    //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+    // }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
 
     props.callActionCreator(
       socket,
@@ -162,6 +165,7 @@ const WorldMap = (props) => {
         oppositeVideo={oppositeVideo}
         connectionRef={connectionRef}
         mediaRecorder={mediaRecorder}
+        chunksBuffer={chunksBuffer}
       />
       <FullScreenMeetingModal
         socket={socket}
