@@ -15,6 +15,7 @@ import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 import ChatScreen from './components/ChatScreen';
 import Container from './components/Userpage/Container';
+import Review from './components/Review';
 
 const App = () => {
   // useEffect(() => {
@@ -71,6 +72,7 @@ const App = () => {
         {/* <Route path='/chatscreen' exact component={ChatScreen} /> */}
         <Route path='/about' exact component={About} />
         <Route path='/userpage' exact component={Container} />
+        <Route path='/review' exacy component={Review} />
       </Router>
     </div>
   );
