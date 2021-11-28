@@ -15,7 +15,7 @@ import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 import ChatScreen from './components/ChatScreen';
 import Container from './components/Userpage/Container';
-import Review from './components/Review';
+import Review from './components/ReviewForm';
 
 const App = () => {
   // useEffect(() => {

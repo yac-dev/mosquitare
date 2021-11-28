@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   callerSignal: null,
   oppositeIdToCall: null,
   callAccepted: false,
+  callFinished: false,
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
@@ -53,10 +54,11 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         amICalling: false,
         amIRecieving: false,
         callingWith: null,
-        whoIsCalling: null,
+        // whoIsCalling: null,
         callerSignal: null,
         oppositeIdToCall: null,
         callAccepted: false,
+        callFinished: true,
       };
     default:
       return state;
