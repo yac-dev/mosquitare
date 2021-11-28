@@ -1,23 +1,36 @@
 import mongoose from 'mongoose';
 
 const videoChatSchema = new mongoose.Schema({
-  // conversationId: String, // uuidが入る。→やっぱ、これいらないかな。
   calledUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  callerStreamFileName: String,
+  calledUserVideo: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Video',
+  },
   recievedUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   }, // もしかしたらarrayにした方がいいかも。
-  recieverStreamFileName: String,
+  recievedUserVideo: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Video',
+  },
+  isVideoPublic: [Boolean],
+  reviws: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'review',
+    },
+  ],
+  duration: Number,
   // textChats: [
   //   {
   //     type: mongoose.Schema.ObjectId,
   //     ref: 'TextChat'
   //   }
-  // ] TextChatっていうschemaもおそらく作ることになるだろう。
+  // ] TextChatっていうschemaもおそらく作ることになるだろう。→こっちでもっておくことはやっぱやめよう。one to many
 });
 
 const VideoChat = mongoose.model('VideoChat', videoChatSchema);

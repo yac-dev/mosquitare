@@ -15,6 +15,7 @@ import MeetingsList from './Meeting/MeetingsList';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
 import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
+// こっから
 
 // socketio
 import { io } from 'socket.io-client';

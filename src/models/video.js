@@ -1,16 +1,12 @@
 import mongoose from 'mongoose';
 
 const videoSchema = new mongoose.Schema({
-  videoFile: String,
-  isPublic: Boolean,
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  partner: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-  },
+  videoFile: String,
+  audioFile: String,
 });
 
 const Video = mongoose.model('Video', videoSchema);
