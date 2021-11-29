@@ -14,8 +14,8 @@ import store from '../store';
 
 import { updateUserConversationStateActionCreator } from './authActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
-import { createVideoChatActionCreator } from './videoChatActionCreators';
-import { updateUserStreamActionCreator } from './videoChatActionCreators';
+import { createConversationActionCreator } from './conversationActionCreators';
+import { updateUserStreamActionCreator } from './conversationActionCreators';
 
 export const getMediaActionCreator = (mediaRecorder, chunksBuffer, connectionRef) => (dispatch) => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
@@ -82,8 +82,7 @@ export const callActionCreator =
       store.dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
       connectionRef.current = peerInitiator;
       console.log('call accepted??????');
-      store.dispatch(createVideoChatActionCreator(callerUserInfo._id, socket)); // ここでcreate chatのacをtriggerする。callerが作る。
-      // 長くなるけどここでmediarecorder.start()みたいにやるのがいいかもね。
+      store.dispatch(createConversationActionCreator(callerUserInfo._id, socket)); // ここでcreate chatのacをtriggerする。callerが作る。
       mediaRecorderRef.start();
     });
   };

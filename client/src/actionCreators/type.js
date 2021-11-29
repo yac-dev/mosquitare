@@ -18,9 +18,9 @@ export const CALL_ACCEPTED = 'CALL_ACCEPTED';
 export const HANG_UP_CALL = 'HANG_UP_CALL';
 
 // 次↓
-// videochat 始まり
-export const CREATE_VIDEO_CHAT = 'CREATE_VIDEO_CHAT';
-export const GET_VIDEO_CHAT_ID = 'GET_VIDEO_CHAT_ID';
+// conversation 始まり
+export const CREATE_CONVERSATION = 'CREATE_CONVERSATION';
+export const GET_CONVERSATION_ID = 'GET_CONVERSATION_ID';
 
 // users
 export const GET_USERS = 'GET_USERS';

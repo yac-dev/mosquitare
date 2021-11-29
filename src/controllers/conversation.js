@@ -1,15 +1,14 @@
-import VideoChat from '../models/videoChat';
+import Conversation from '../models/conversation';
 
-export const createVideoChat = async (request, response) => {
+export const createConversation = async (request, response) => {
   try {
-    const { callerUserId } = request.body;
-    const videoChat = await new VideoChat({
-      callerUser: callerUserId,
+    const { calledUserId } = request.body;
+    const conversation = await Conversation.create({
+      calledUser: calledUserId,
     });
 
-    videoChat.save();
     response.json({
-      videoChat,
+      conversation,
     });
   } catch (error) {
     console.log(error);

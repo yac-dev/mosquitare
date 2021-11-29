@@ -1,23 +1,27 @@
 import mongoose from 'mongoose';
 
-const videoChatSchema = new mongoose.Schema({
+const conversationSchema = new mongoose.Schema({
   calledUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  calledUserVideo: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Video',
-  },
+  // calledUserVideo: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'Video',
+  // },
   recievedUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-  }, // もしかしたらarrayにした方がいいかも。
-  recievedUserVideo: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Video',
   },
-  isVideoPublic: [Boolean],
+  // recievedUserVideo: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'Video',
+  // },
+  integratedUserMedia: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'IntegratedUserMedia',
+  },
+  // isVideoPublic: [Boolean],これいらないかな。二つのreviewがそれぞれscoreQuestion4でbooleanを持っているからな。
   reviws: [
     {
       type: mongoose.Schema.ObjectId,
@@ -33,5 +37,5 @@ const videoChatSchema = new mongoose.Schema({
   // ] TextChatっていうschemaもおそらく作ることになるだろう。→こっちでもっておくことはやっぱやめよう。one to many
 });
 
-const VideoChat = mongoose.model('VideoChat', videoChatSchema);
-export default VideoChat;
+const Conversation = mongoose.model('Conversation', conversationSchema);
+export default Conversation;

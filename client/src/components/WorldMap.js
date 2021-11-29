@@ -30,7 +30,7 @@ import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { updateUserConversationStateActionCreator } from '../actionCreators/authActionCreators';
 import { getUsersActionCreator } from '../actionCreators/usersActionCreator';
 import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreator';
-import { updateUserStreamActionCreator } from '../actionCreators/videoChatActionCreators';
+import { updateUserStreamActionCreator } from '../actionCreators/conversationActionCreators';
 
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';

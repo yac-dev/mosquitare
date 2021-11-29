@@ -19,7 +19,7 @@ import {
 import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator';
 import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
-import { getVideoChatIdFromCallerActionCreator } from '../../actionCreators/videoChatActionCreators';
+import { getConversationIdFromCalledUserActionCreator } from '../../actionCreators/conversationActionCreators';
 // import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -90,7 +90,7 @@ const FullScreen1on1Modal = (props) => {
     //   setVoiceText(voiceTetx);
     // });
     props.getVoiceTextActionCreator(props.socket, setVoiceText);
-    props.getVideoChatIdFromCallerActionCreator(props.socket);
+    props.getConversationIdFromCalledUserActionCreator(props.socket);
   }, []);
 
   // ここにまんま書いていいのかね。reduxのstateの部分。→いや。reduxにしろcomponentのstateが変わっても毎回実行されちまう、それは良くない。
@@ -252,6 +252,6 @@ export default connect(mapStateToProps, {
   answerCallActionCreator,
   sendVoiceTextActionCreator,
   getVoiceTextActionCreator,
-  getVideoChatIdFromCallerActionCreator,
+  getConversationIdFromCalledUserActionCreator,
   // recordStreamActionCreator,
 })(FullScreen1on1Modal);

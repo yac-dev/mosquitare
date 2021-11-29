@@ -30,7 +30,7 @@ import {
   MY_PARTENER_REQUESTS_MY_VOICE_TEXT,
   I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
   MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
-  I_SEND_VIDEO_CHAT_ID_TO_MY_PARTNER,
+  I_SEND_CONVERSATION_ID_TO_MY_PARTNER,
   MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT,
 } from '../client/src/actionCreators/socketEvents';
 
@@ -123,9 +123,11 @@ io.on('connection', (socket) => {
   });
 
   // videochatに関するevent
-  socket.on(I_SEND_VIDEO_CHAT_ID_TO_MY_PARTNER, (dataFromCaller) => {
+  socket.on(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, (dataFromCalledUser) => {
     console.log('chat video worrrrrrk');
-    io.to(dataFromCaller.to).emit(MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT, { videoChatId: dataFromCaller.videoChatId });
+    io.to(dataFromCalledUser.to).emit(MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT, {
+      conversationId: dataFromCalledUser.conversationId,
+    });
   });
 });
 
