@@ -15,9 +15,10 @@ import store from '../store';
 import { updateUserConversationStateActionCreator } from './authActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 import { createConversationActionCreator } from './conversationActionCreators';
-import { updateUserStreamActionCreator } from './conversationActionCreators';
+// import { updateUserStreamActionCreator } from './conversationActionCreators';
+import { createUserMedia } from './userMediasActionCreators';
 
-export const getMediaActionCreator = (mediaRecorder, chunksBuffer, connectionRef) => (dispatch) => {
+export const getMediaActionCreator = (mediaRecorder, chunksForVideo, chunksForAudio, connectionRef) => (dispatch) => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
     mediaRecorder.current = new MediaRecorder(stream);
     mediaRecorder.current.ondataavailable = function (event) {
@@ -26,16 +27,22 @@ export const getMediaActionCreator = (mediaRecorder, chunksBuffer, connectionRef
       // setChunks((oldChunks) => {
       //   return [...oldChunks, event.data];
       // });
-      chunksBuffer.push(event.data);
+      chunksForVideo.push(event.data);
+      chunksForAudio.push(event.data);
     };
     mediaRecorder.current.onstop = (event) => {
-      console.log(chunksBuffer);
-      let blob = new Blob(chunksBuffer, { type: 'video/mp4;' }); // blob自体は、object。
+      // console.log(chunksBuffer);
+      let blobForVideo = new File(chunksForVideo, { type: 'video/mp4;' }); // blob自体は、object。
+      let blobForAudio = new File(chunksForAudio, { type: 'audio/mp3;' }); // blob自体は、object。
       // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
       // chunks = [];
       console.log('recore stopped!!!');
-      chunksBuffer = [];
-      dispatch(updateUserStreamActionCreator(blob, connectionRef));
+      chunksForVideo = [];
+      chunksForAudio = [];
+      // console.log(blobForVideo);
+      // console.log(blobForAudio);
+      // dispatch(updateUserStreamActionCreator(blobForVideo, blobForAudio, connectionRef));
+      dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
       // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
       // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
     }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
@@ -198,7 +205,7 @@ export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   });
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
   // その前にrecordingだ。
-  window.location = '/worldmap'; // まあこれでいいのかね。
+  // window.location = '/worldmap'; // まあこれでいいのかね。
 };
 
 export const sendVoiceTextActionCreator = (socket, voiceText, microphone) => (dispatch, getState) => {

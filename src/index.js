@@ -31,7 +31,8 @@ import {
   I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
   MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
   I_SEND_CONVERSATION_ID_TO_MY_PARTNER,
-  MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT,
+  // MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT,
+  MY_CALLED_USER_CREATED_CONVERSATION,
 } from '../client/src/actionCreators/socketEvents';
 
 const io = new Server(server, {
@@ -125,7 +126,7 @@ io.on('connection', (socket) => {
   // videochatに関するevent
   socket.on(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, (dataFromCalledUser) => {
     console.log('chat video worrrrrrk');
-    io.to(dataFromCalledUser.to).emit(MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT, {
+    io.to(dataFromCalledUser.to).emit(MY_CALLED_USER_CREATED_CONVERSATION, {
       conversationId: dataFromCalledUser.conversationId,
     });
   });

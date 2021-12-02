@@ -5,6 +5,7 @@ import usersReducer from './usersReducer';
 import meetingsReducer from './meetingsReducer';
 import meetingReducer from './meetingReducer';
 import conversationReducer from './conversationReducer';
+import integratedUserMediasReducer from './integratedUserMediasReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   meetingsState: meetingsReducer,
   meetingState: meetingReducer,
   videoChatState: conversationReducer,
+  integratedUserMediaState: integratedUserMediasReducer,
 });
 
 export default rootReducer;

@@ -2,6 +2,8 @@ import React, { useState, useRef } from 'react';
 import { Button, Form, Rating } from 'semantic-ui-react';
 import ReactStars from 'react-rating-stars-component';
 import { Tooltip } from '@mui/material';
+// import audio from './1638434235029-7dad157d-6fa9-4472-8b44-228ca2e372ee.wav';
+import audio from './file_example_WAV_1MG.wav';
 
 const Review = (props) => {
   const [askDating, setAskDating] = useState(null);
@@ -70,6 +72,9 @@ const Review = (props) => {
 
         <Button onClick={onFormSubmit}>Submit</Button>
       </Form>
+      <audio controls>
+        <source src={audio} type='audio/wav' />
+      </audio>
     </>
   );
 };

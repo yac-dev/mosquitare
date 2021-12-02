@@ -19,13 +19,13 @@ const storage = multer.diskStorage({
   },
   filename: function (request, file, callback) {
     const extension = file.mimetype.split('/')[1];
-    const finalFileName = uuidv4() + '.' + extension;
+    const finalFileName = Date.now() + '-' + uuidv4() + '.' + extension;
     callback(null, finalFileName);
   },
 });
 
 const fileFilter = (request, file, callback) => {
-  if (file.mimetype === 'video/mp4') {
+  if (file.mimetype === 'video/mp4' || file.mimetype === 'audio/mp3') {
     callback(null, true);
   } else {
     // ここでerror文を出してあげるといいな。

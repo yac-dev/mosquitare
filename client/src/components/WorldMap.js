@@ -66,7 +66,8 @@ const WorldMap = (props) => {
   const [chunks, setChunks] = useState([]);
   const mediaRecorder = useRef();
   // const mediaState = useSelector((state) => state.mediaState);
-  let chunksBuffer = [];
+  let chunksForVideo = [];
+  let chunksForAudio = [];
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -77,7 +78,7 @@ const WorldMap = (props) => {
       });
     }
 
-    props.getMediaActionCreator(mediaRecorder, chunksBuffer, connectionRef);
+    props.getMediaActionCreator(mediaRecorder, chunksForVideo, chunksForAudio, connectionRef);
     props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
     props.getMeetingsActionCreator();
   }, []);
@@ -166,7 +167,8 @@ const WorldMap = (props) => {
         oppositeVideo={oppositeVideo}
         connectionRef={connectionRef}
         mediaRecorder={mediaRecorder}
-        chunksBuffer={chunksBuffer}
+        chunksForVideo={chunksForVideo}
+        chunksForAudio={chunksForAudio}
       />
       <FullScreenMeetingModal
         socket={socket}
@@ -225,5 +227,5 @@ export default connect(mapStateToProps, {
   hangUpCallActionCreator,
   // updateUserConversationStateActionCreator // ここでやるのはよそう。actionの順番がごちゃごちゃになる。
   getMeetingsActionCreator,
-  updateUserStreamActionCreator,
+  // updateUserStreamActionCreator,
 })(WorldMap);

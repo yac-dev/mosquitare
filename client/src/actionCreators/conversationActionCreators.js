@@ -38,28 +38,30 @@ export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatc
 
 // updateUserStreamActionCreator
 // createVideoAndStoreInConversationAC
-export const createVideoAndStoreInConversationActionCreator = (blob, connectionRef) => async (dispatch, getState) => {
-  try {
-    const state = getState().mediaState;
-    const { videoChatId } = getState().videoChatState;
-    let result;
-    // const postData = { calledUserStream: blob };
-    // console.log(postData);
-    const formData = new FormData();
-    formData.append('videoFile', blob); // api側のmulterで、こういうpropertyで設定している。 ここでcreateVideoのapi requestをするようにする。
-    if (state.amICalling) {
-      // bodyによって分けるって面倒くさいな。caller用のvideo提出endpoint、reciever用のvideo提出endpointってわけた方がいいかもしれないな。
-      result = await mosquitareAPI.post(`/videochats/upload/caller/${videoChatId}`, formData, {
-        headers: { 'Content-type': 'multipart/form-data' },
-      });
-    } else if (state.amIRecieving) {
-      result = await mosquitareAPI.post(`/videochats/upload/reciever/${videoChatId}`, formData, {
-        headers: { 'Content-type': 'multipart/form-data' },
-      });
+export const createVideoAndStoreInConversationActionCreator =
+  (blobForVideo, blobForAudio, connectionRef) => async (dispatch, getState) => {
+    try {
+      const state = getState().mediaState;
+      const { videoChatId } = getState().videoChatState;
+      let result;
+      // const postData = { calledUserStream: blob };
+      // console.log(postData);
+      const formData = new FormData();
+      formData.append('mediaFiles', blobForVideo); // api側のmulterで、こういうpropertyで設定している。 ここでcreateVideoのapi requestをするようにする。
+      formData.append('mediaFiles', blobForAudio);
+      if (state.amICalling) {
+        // bodyによって分けるって面倒くさいな。caller用のvideo提出endpoint、reciever用のvideo提出endpointってわけた方がいいかもしれないな。
+        result = await mosquitareAPI.post(`/videochats/upload/caller/${videoChatId}`, formData, {
+          headers: { 'Content-type': 'multipart/form-data' },
+        });
+      } else if (state.amIRecieving) {
+        result = await mosquitareAPI.post(`/videochats/upload/reciever/${videoChatId}`, formData, {
+          headers: { 'Content-type': 'multipart/form-data' },
+        });
+      }
+      console.log(result); // これundefinedだった？？
+      dispatch(hangUpCallActionCreator(connectionRef)); // 引数に、
+    } catch (error) {
+      console.log(error);
     }
-    console.log(result); // これundefinedだった？？
-    dispatch(hangUpCallActionCreator(connectionRef)); // 引数に、
-  } catch (error) {
-    console.log(error);
-  }
-};
+  };

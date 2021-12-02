@@ -21,6 +21,9 @@ export const HANG_UP_CALL = 'HANG_UP_CALL';
 // conversation 始まり
 export const CREATE_CONVERSATION = 'CREATE_CONVERSATION';
 export const GET_CONVERSATION_ID = 'GET_CONVERSATION_ID';
+// conversationが始まるのと同時に、integraedの方も作る。
+export const CREATE_INTEGRATED_USER_MEDIA = 'CREATE_INTEGRATED_USER_MEDIA';
+export const GET_INTEGRATED_USER_MEDIA_ID = 'GET_INTEGRATED_USER_MEDIA_ID';
 
 // users
 export const GET_USERS = 'GET_USERS';
