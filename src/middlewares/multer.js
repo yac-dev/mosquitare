@@ -24,16 +24,16 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (request, file, callback) => {
-  if (file.mimetype === 'video/mp4' || file.mimetype === 'audio/mp3') {
-    callback(null, true);
-  } else {
-    // ここでerror文を出してあげるといいな。
-    callback(new Error('only mp4 allowed'), false);
-  }
-};
+// const fileFilter = (request, file, callback) => {
+//   if (file.mimetype === 'video/mp4' || file.mimetype === 'audio/ogg') {
+//     callback(null, true);
+//   } else {
+//     // ここでerror文を出してあげるといいな。
+//     callback(new Error('only mp4 allowed'), false);
+//   }
+// };
 
 // express.json()がbody parserの役割であるなら、mmulterはform dataに関するデータをparseしてくれる。
 // const multerParser = multer({ dest: 'uploadedFiles/' }); // 先頭に/で/uploadだと絶対pathになる。きをつけろ。
-const multerParser = multer({ storage, fileFilter }); // buffer使ってform dataを整形したならそれを使う。
+const multerParser = multer({ storage }); // buffer使ってform dataを整形したならそれを使う。
 export default multerParser;

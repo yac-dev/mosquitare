@@ -20,7 +20,8 @@ import { createUserMedia } from './userMediasActionCreators';
 
 export const getMediaActionCreator = (mediaRecorder, chunksForVideo, chunksForAudio, connectionRef) => (dispatch) => {
   navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-    mediaRecorder.current = new MediaRecorder(stream);
+    // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
+    mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
     mediaRecorder.current.ondataavailable = function (event) {
       console.log('ondataavai');
       console.log(event.data); // ここにはちゃんとdataが入っている。
@@ -32,8 +33,8 @@ export const getMediaActionCreator = (mediaRecorder, chunksForVideo, chunksForAu
     };
     mediaRecorder.current.onstop = (event) => {
       // console.log(chunksBuffer);
-      let blobForVideo = new File(chunksForVideo, { type: 'video/mp4;' }); // blob自体は、object。
-      let blobForAudio = new File(chunksForAudio, { type: 'audio/mp3;' }); // blob自体は、object。
+      let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' }); // blob自体は、object。
+      let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' }); // blob自体は、object。
       // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
       // chunks = [];
       console.log('recore stopped!!!');

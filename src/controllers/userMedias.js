@@ -32,15 +32,7 @@ export const createUserMedia = async (request, response) => {
     console.log(files); // multer middlewareがあるから、ここでrequest objectのfile propertyにアクセスできる。
     // request.file.pathを使えば、postでdatabaseにfileを保村できるようになる.
     // const result = await uploadFile(file); // ここ、けっこう時間かかる。もしかしたら、clientから直接やるっていう方がいいかもな。
-    const p = path.join(__dirname, '..');
-    const process = new ffmpeg(`${p}.${files[1].path}`);
-    process.then((audio) => {
-      audio.fnExtractSoundToMP3(`${p}.${files[1].path}`, (error, file) => {
-        if (!error) {
-          console.log('ok');
-        }
-      });
-    });
+    // const p = path.join(__dirname, '..');
 
     // await Promise.all(
     //   //undefined is not iterableだって。
@@ -57,7 +49,7 @@ export const createUserMedia = async (request, response) => {
     // );
     const userMedia = await UserMedia.create({
       user: userId,
-      // videoFileName: files[0].filename,
+      videoFileName: files[0].filename,
       audioFileName: files[1].filename,
     });
     response.json({
