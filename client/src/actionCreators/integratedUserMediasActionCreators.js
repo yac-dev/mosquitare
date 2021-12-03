@@ -21,6 +21,10 @@ export const createIntegratedUserMediaActionCreator = (socket) => async (dispatc
     });
     // このタイミングでconversationの方もupdateする。{integratedUserMediaId: integratedUserMedia._id}をpost dataとしてね。
     // ここなー。promisifyの実験してみようかねー。。。
+    const { conversationId } = getState().conversationState;
+    const resultOfUpdate = await mosquitareAPI.patch(`/conversations/integratedusermedia/${conversationId}`, {
+      integratedUserMediaId: integratedUserMedia._id,
+    });
   } catch (error) {
     console.log(error);
   }
