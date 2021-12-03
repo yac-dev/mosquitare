@@ -28,25 +28,39 @@ export const updateConversationRecievedUser = async (request, response) => {
   }
 };
 
-export const storeVideoFileNames = async (request, response) => {
+export const updateConversationIntegratedUserMedia = async (request, response) => {
   try {
-    // ['', 'api','videoChats','upload', 'caller', 'id']
-    const file = request.file;
-    const endpoint = request.originalUrl.split('/')[4];
-    const videoChat = await VideoChat.findById(request.params.id);
-    if (endpoint === 'caller') {
-      videoChat.callerStreamFileName = file.filename;
-    } else if (endpoint === 'reciever') {
-      videoChat.recieverStreamFileName = file.filename;
-    }
-    await videoChat.save();
+    const { integratedUserMediaId } = request.body;
+    const conversation = await Conversation.findById(request.params.id);
+    conversation.integratedUserMedia = integratedUserMediaId;
+    await conversation.save();
     response.json({
-      videoChat,
+      conversation,
     });
   } catch (error) {
     console.log(error);
   }
 };
+
+// export const storeVideoFileNames = async (request, response) => {
+//   try {
+//     // ['', 'api','videoChats','upload', 'caller', 'id']
+//     const file = request.file;
+//     const endpoint = request.originalUrl.split('/')[4];
+//     const videoChat = await VideoChat.findById(request.params.id);
+//     if (endpoint === 'caller') {
+//       videoChat.callerStreamFileName = file.filename;
+//     } else if (endpoint === 'reciever') {
+//       videoChat.recieverStreamFileName = file.filename;
+//     }
+//     await videoChat.save();
+//     response.json({
+//       videoChat,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 // export const uploadCallerVideo = async (request, response) => {
 //   try {
@@ -82,14 +96,14 @@ export const storeVideoFileNames = async (request, response) => {
 //   }
 // };
 
-export const getStream = async (request, response) => {
-  try {
-    const videoChat = await VideoChat.findById(request.params.id);
-    console.log(videoChat);
-    response.json({
-      videoChat,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const getStream = async (request, response) => {
+//   try {
+//     const videoChat = await VideoChat.findById(request.params.id);
+//     console.log(videoChat);
+//     response.json({
+//       videoChat,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

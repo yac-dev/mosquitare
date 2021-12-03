@@ -36,6 +36,7 @@ export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatc
   }
 };
 
+// conversationが始まったら。
 export const updateConversationRecievedUserActionCreator = () => async (dispatch, getState) => {
   try {
     const recievedUserId = getState().authState.currentUser._id;

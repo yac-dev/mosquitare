@@ -33,6 +33,8 @@ import {
   I_SEND_CONVERSATION_ID_TO_MY_PARTNER,
   // MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT,
   MY_CALLED_USER_CREATED_CONVERSATION,
+  I_SEND_INTEGRATED_USER_MEDIA_ID_TO_MY_PARTNER, // integratedUserMediaに関すること。
+  MY_CALLED_USER_CREATED_INTEGRATED_USER_MEDIA,
 } from '../client/src/actionCreators/socketEvents';
 
 const io = new Server(server, {
@@ -123,11 +125,17 @@ io.on('connection', (socket) => {
     io.to(dataFromAnswerer.to).emit(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, { voiceText: dataFromAnswerer.voiceText });
   });
 
-  // videochatに関するevent
+  // conversatationに関するevent
   socket.on(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, (dataFromCalledUser) => {
     console.log('chat video worrrrrrk');
     io.to(dataFromCalledUser.to).emit(MY_CALLED_USER_CREATED_CONVERSATION, {
       conversationId: dataFromCalledUser.conversationId,
+    });
+  });
+
+  socket.on(I_SEND_INTEGRATED_USER_MEDIA_ID_TO_MY_PARTNER, (dataFromCalledUser) => {
+    io.to(dataFromCalledUser.to).emit(MY_CALLED_USER_CREATED_INTEGRATED_USER_MEDIA, {
+      integratedUserMediaId: dataFromCalledUser.integratedUserMediaId,
     });
   });
 });

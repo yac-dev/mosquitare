@@ -12,6 +12,7 @@ export const createUserMedia = (blobForVideo, blobForAudio, connectionRef) => as
     const { userMedia } = createMediaResult.data;
     const callingState = getState().mediaState;
     if (callingState.amICalling) {
+      // usermedia自体を{calledUserMedia: userMedia._id}みたいな感じでpost requestを送る。
       // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
     } else if (callingState.amIRecieving) {
       // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。

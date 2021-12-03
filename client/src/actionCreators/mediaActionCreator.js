@@ -15,6 +15,8 @@ import store from '../store';
 import { updateUserConversationStateActionCreator } from './authActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 import { createConversationActionCreator } from './conversationActionCreators';
+import { updateConversationRecievedUserActionCreator } from './conversationActionCreators';
+import { createIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
 // import { updateUserStreamActionCreator } from './conversationActionCreators';
 import { createUserMedia } from './userMediasActionCreators';
 
@@ -100,6 +102,7 @@ export const callActionCreator =
       connectionRef.current = peerInitiator;
       console.log('call accepted??????');
       store.dispatch(createConversationActionCreator(callerUserInfo._id, socket)); // ここでcreate chatのacをtriggerする。callerが作る。
+      dispatch(createIntegratedUserMediaActionCreator(socket)); // ここで受け取ったidを再度、partnerに送る。
       mediaRecorderRef.start();
     });
   };
@@ -163,7 +166,7 @@ export const answerCallActionCreator =
     peerReciever.signal(callerSignal);
     connectionRef.current = peerReciever;
     console.log('I answered');
-    // ここでrecievedUserもconversationの方に入れないと
+    dispatch(updateConversationRecievedUserActionCreator());
 
     // mediaRecorderRef.current = new MediaRecorder(myVideoStreamObject);
     // mediaRecorderRef.current.ondataavailable = function (event) {

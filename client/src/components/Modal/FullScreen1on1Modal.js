@@ -20,6 +20,7 @@ import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator
 import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getConversationIdFromCalledUserActionCreator } from '../../actionCreators/conversationActionCreators';
+import { getIntegratedUserMediaIdFromCalledUserActionCreator } from '../../actionCreators/integratedUserMediasActionCreators';
 // import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -91,6 +92,7 @@ const FullScreen1on1Modal = (props) => {
     // });
     props.getVoiceTextActionCreator(props.socket, setVoiceText);
     props.getConversationIdFromCalledUserActionCreator(props.socket);
+    props.getIntegratedUserMediaIdFromCalledUserActionCreator(props.socket);
   }, []);
 
   // ここにまんま書いていいのかね。reduxのstateの部分。→いや。reduxにしろcomponentのstateが変わっても毎回実行されちまう、それは良くない。
