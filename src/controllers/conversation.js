@@ -2,11 +2,24 @@ import Conversation from '../models/conversation';
 
 export const createConversation = async (request, response) => {
   try {
-    const { calledUserId } = request.body;
+    console.log(request.body);
+    const { calledUser } = request.body;
     const conversation = await Conversation.create({
-      calledUser: calledUserId,
+      calledUser: request.body.calledUser,
     });
 
+    response.json({
+      conversation,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateConversationRecievedUser = async (request, response) => {
+  try {
+    const { recievedUser } = request.body;
+    const conversation = await Conversation.create({ recievedUser });
     response.json({
       conversation,
     });

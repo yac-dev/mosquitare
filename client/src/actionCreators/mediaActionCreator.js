@@ -19,7 +19,16 @@ import { createConversationActionCreator } from './conversationActionCreators';
 import { createUserMedia } from './userMediasActionCreators';
 
 export const getMediaActionCreator = (mediaRecorder, chunksForVideo, chunksForAudio, connectionRef) => (dispatch) => {
-  navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
+  const audioConstraints = {
+    autoGainControl: false,
+    channelCount: 2,
+    echoCancellation: false,
+    latency: 0,
+    noiseSuppression: false,
+    sampleRate: 48000,
+    sampleSize: 16,
+  };
+  navigator.mediaDevices.getUserMedia({ video: true, audio: audioConstraints }).then((stream) => {
     // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
     mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
     mediaRecorder.current.ondataavailable = function (event) {
@@ -154,6 +163,7 @@ export const answerCallActionCreator =
     peerReciever.signal(callerSignal);
     connectionRef.current = peerReciever;
     console.log('I answered');
+    // ここでrecievedUserもconversationの方に入れないと
 
     // mediaRecorderRef.current = new MediaRecorder(myVideoStreamObject);
     // mediaRecorderRef.current.ondataavailable = function (event) {

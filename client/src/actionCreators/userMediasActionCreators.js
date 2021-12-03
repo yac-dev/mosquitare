@@ -9,7 +9,7 @@ export const createUserMedia = (blobForVideo, blobForAudio, connectionRef) => as
     formData.append('mediaFiles', blobForVideo);
     formData.append('mediaFiles', blobForAudio);
     const createMediaResult = await mosquitareAPI.post(`/userMedias/upload/${userId}`, formData);
-    const mediaId = createMediaResult.data._id;
+    const { userMedia } = createMediaResult.data;
     const callingState = getState().mediaState;
     if (callingState.amICalling) {
       // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。

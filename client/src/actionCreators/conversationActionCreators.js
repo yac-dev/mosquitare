@@ -1,12 +1,12 @@
 import { mosquitareAPI } from '../apis/mosquitare';
-import { CREATE_CONVERSATION, GET_CONVERSATION_ID } from './type';
+import { CREATE_CONVERSATION, GET_CONVERSATION_ID, UPDATE_CONVERSATION_RECIEVED_USER } from './type';
 import { I_SEND_CONVERSATION_ID_TO_MY_PARTNER, MY_CALLED_USER_CREATED_CONVERSATION } from './socketEvents';
 import { hangUpCallActionCreator } from './mediaActionCreator';
 
 // こいつを、chatが成立した後にtriggerさせないといかん。
 export const createConversationActionCreator = (calledUserId, socket) => async (dispatch, getState) => {
   try {
-    const result = await mosquitareAPI.post('/', { calledUser: calledUserId });
+    const result = await mosquitareAPI.post('/conversations', { calledUser: calledUserId });
     const { conversation } = result.data; // ここでvideoChatのidを受け取ったら、すぐにpeerにあげないと。
     console.log(result);
     console.log(conversation);
@@ -30,6 +30,20 @@ export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatc
         type: GET_CONVERSATION_ID,
         payload: dataFromServer.videoChatId,
       });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateConversationRecievedUserActionCreator = () => async (dispatch, getState) => {
+  try {
+    const recievedUserId = getState().authState.currentUser._id;
+    const result = await mosquitareAPI.patch('/conversation', { recievedUser: recievedUserId });
+    const { conversation } = result.data;
+    dispatch({
+      type: UPDATE_CONVERSATION_RECIEVED_USER,
+      payload: conversation._id,
     });
   } catch (error) {
     console.log(error);

@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
     const finalFileName = Date.now() + '-' + uuidv4() + '.' + extension;
     callback(null, finalFileName);
   },
-});
+}); // 後で、ffmpegを使った方法に直すことになる。ちゃんとしたmp3に直す。file名に関してはこのやり方でいい。
 
 // const fileFilter = (request, file, callback) => {
 //   if (file.mimetype === 'video/mp4' || file.mimetype === 'audio/ogg') {
