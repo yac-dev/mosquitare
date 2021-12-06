@@ -76,13 +76,13 @@ export const callActionCreator =
         payload: '',
       });
     });
-    peerInitiator.on('stream', (stream) => {
-      myVideoRef.current.srcObject = myVideoStreamObject;
-      oppositeVideoRef.current.srcObject = stream;
-      // dispatch(updateUserConversationStateActionCreator(currentUser._id)); // これも外に出すべきでしょう。。。
-      connectionRef.current = peerInitiator;
-      console.log('call accepted??????');
-    });
+    // peerInitiator.on('stream', (stream) => {
+    //   myVideoRef.current.srcObject = myVideoStreamObject;
+    //   oppositeVideoRef.current.srcObject = stream;
+    //   // dispatch(updateUserConversationStateActionCreator(currentUser._id)); // これも外に出すべきでしょう。。。
+    //   connectionRef.current = peerInitiator;
+    //   console.log('call accepted??????');
+    // });
     // ここで一回切るべきね。
 
     // socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
@@ -121,12 +121,21 @@ export const completeConnectionWithMyPartnerActionCreator =
   (socket, peerInitiator, myVideoRef, oppositeVideoRef, connectionRef, mediaRecorder) => (dispatch, getState) => {
     // return new Promise((resolve, reject) => {
     socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
+      const { peerInitiator } = getState().peerState;
+      const { myVideoStreamObject } = getState().mediaState;
       console.log('My call is accepted.');
       dispatch({
         type: CALL_ACCEPTED,
         payload: dataFromServer.recieverUserInfo,
       });
-      peerInitiator.signal(dataFromServer.signalData); // この部分は待機していてくれるのかな？？？
+      peerInitiator.signal(dataFromServer.signalData);
+      peerInitiator.on('stream', (stream) => {
+        myVideoRef.current.srcObject = myVideoStreamObject;
+        oppositeVideoRef.current.srcObject = stream;
+        // dispatch(updateUserConversationStateActionCreator(currentUser._id)); // これも外に出すべきでしょう。。。
+        connectionRef.current = peerInitiator;
+        console.log('call accepted??????');
+      });
       Promise.resolve()
         .then(() => {
           return dispatch(updateUserConversationStateActionCreator());
@@ -191,7 +200,7 @@ export const listenCallActionCreator = (socket, setFullscreen1on1Modal, setShow1
       type: LISTEN_CALL,
       payload: { signalData, whoIsCalling, callerUserInfo },
     });
-  }); // acに移そう。
+  });
 };
 
 export const answerCallActionCreator =

@@ -97,8 +97,9 @@ const WorldMap = (props) => {
       props.peerState.peerInitiator,
       myVideo,
       oppositeVideo,
-      connectionRef
-    );
+      connectionRef,
+      mediaRecorder
+    ); // これもいい学習だな。
     // .then(() => {
     //   return props.updateUserConversationStateActionCreator();
     // })
