@@ -4,15 +4,15 @@ import { I_SEND_CONVERSATION_ID_TO_MY_PARTNER, MY_CALLED_USER_CREATED_CONVERSATI
 import { hangUpCallActionCreator } from './mediaActionCreator';
 
 // こいつを、chatが成立した後にtriggerさせないといかん。
-export const createConversationActionCreator = (calledUserId, socket) => async (dispatch, getState) => {
+export const createConversationActionCreator = (socket) => async (dispatch, getState) => {
   try {
-    const result = await mosquitareAPI.post('/conversations', { calledUser: calledUserId });
+    const { currentUser } = getState().authState;
+    const result = await mosquitareAPI.post('/conversations', { calledUser: currentUser._id });
     return new Promise((resolve, reject) => {
       const { conversation } = result.data; // ここでvideoChatのidを受け取ったら、すぐにpeerにあげないと。
       console.log(result);
       console.log(conversation);
-
-      // ここら辺の名前も変えなきゃいけない。めちゃくちゃ分かりづらいわ。「最初のままずっと行こう、変えない」精神が、結局今の日本なんですよ。変える、更新することは体力も頭も使うが、長期的に見てどんないいことがあるか、ちゃんと考えないといかんのですよ。
+      // これも分けたほうがいいなー。細かく分けたいならね。今はいいや。
       const partnerSocketId = getState().mediaState.callingWith.socketId;
       socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId: conversation._id });
       dispatch({

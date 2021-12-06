@@ -24,6 +24,13 @@ import { io } from 'socket.io-client';
 import { loadMeAndUpdateActionCreator } from '../actionCreators/authActionCreators';
 import { getMediaActionCreator } from '../actionCreators/mediaActionCreator';
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
+import { completeConnectionWithMyPartnerActionCreator } from '../actionCreators/mediaActionCreator';
+import { startMediaRecorder } from '../actionCreators/mediaActionCreator';
+import { createConversationActionCreator } from '../actionCreators/conversationActionCreators';
+import { createIntegratedUserMediaActionCreator } from '../actionCreators/integratedUserMediasActionCreators';
+import { sendIntegratedUserMediaActionCeator } from '../actionCreators/integratedUserMediasActionCreators';
+import { updateConversationIntegratedUserMediaActionCreator } from '../actionCreators/integratedUserMediasActionCreators';
+
 import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { answerCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
@@ -42,7 +49,8 @@ import { GET_MEDIA } from '../actionCreators/type';
 import store from '../store';
 
 // socket 設定
-const socket = io(process.env.REACT_APP_WEBRTC);
+console.log('hello from worldmap');
+const socket = io(process.env.REACT_APP_WEBRTC); // こういう部分全てのcomponentで動いている。これなんかのバグ起こしそうだな。。。
 
 const WorldMap = (props) => {
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
@@ -83,6 +91,32 @@ const WorldMap = (props) => {
     props.getMediaActionCreator(mediaRecorder, chunksForVideo, chunksForAudio, connectionRef);
     props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
     props.getMeetingsActionCreator();
+
+    props.completeConnectionWithMyPartnerActionCreator(
+      socket,
+      props.peerState.peerInitiator,
+      myVideo,
+      oppositeVideo,
+      connectionRef
+    );
+    // .then(() => {
+    //   return props.updateUserConversationStateActionCreator();
+    // })
+    // .then(() => {
+    //   return props.startMediaRecorder(mediaRecorder);
+    // })
+    // .then(() => {
+    //   return props.createConversationActionCreator(socket); // 多分ここも分けることになる。
+    // })
+    // .then(() => {
+    //   return props.createIntegratedUserMediaActionCreator();
+    // })
+    // .then(() => {
+    //   return props.sendIntegratedUserMediaActionCeator(socket);
+    // })
+    // .then(() => {
+    //   return props.updateConversationIntegratedUserMediaActionCreator();
+    // });
   }, []);
 
   // 1on1 modalのtrigger
@@ -118,7 +152,6 @@ const WorldMap = (props) => {
     // }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
 
     props.callActionCreator(
-      // さらに細分化したほうがいいわ。長すぎ。
       socket,
       mySocketId,
       myVideo,
@@ -127,6 +160,15 @@ const WorldMap = (props) => {
       connectionRef,
       mediaRecorder.current
     );
+    // 上のuseEffectの方かなー。
+    // props
+    //   .completeConnectionWithMyPartnerActionCreator()
+    //   .then(() => {
+    //     return props.updateUserConversationStateActionCreator();
+    //   })
+    //   .then(() => {
+    //     // recorder start!
+    //   });
   };
 
   // 1on1 modalで実行してもらうcallback.modalのstate変えるからここに書いている。
@@ -216,6 +258,7 @@ const mapStateToProps = (state) => {
     usersState: Object.values(state.usersState),
     // meetingsState: state.meetingsState,
     meetingState: state.meetingState,
+    peerState: state.peerState,
   };
 };
 
@@ -224,6 +267,14 @@ export default connect(mapStateToProps, {
   getMediaActionCreator,
   listenCallActionCreator,
   callActionCreator,
+  completeConnectionWithMyPartnerActionCreator,
+  updateUserConversationStateActionCreator,
+  startMediaRecorder,
+  createConversationActionCreator,
+  createIntegratedUserMediaActionCreator,
+  sendIntegratedUserMediaActionCeator,
+  updateConversationIntegratedUserMediaActionCreator,
+
   answerCallActionCreator,
   getUsersActionCreator,
   loadMeAndUpdateActionCreator,

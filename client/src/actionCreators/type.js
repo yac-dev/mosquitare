@@ -35,3 +35,6 @@ export const CREATE_MEETING = 'CREATE_MEETING';
 
 // currentMeetingに関するやつ
 export const JOIN_MEETING = 'JOIN_MEETING'; // 基本、meetingを作ること、入ること両方の意味を持つ。
+
+// peer 持っておいて。
+export const HOLD_MY_INITIATED_PEER = 'HOLD_MY_INITIATED_PEER';

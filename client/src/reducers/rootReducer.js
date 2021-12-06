@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import authReducer from './authReducer';
 import mediaReducer from './mediaRudecer';
+import peerReducer from './peerReducer';
 import usersReducer from './usersReducer';
 import meetingsReducer from './meetingsReducer';
 import meetingReducer from './meetingReducer';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   meetingState: meetingReducer,
   conversationState: conversationReducer,
   integratedUserMediaState: integratedUserMediasReducer,
+  peerState: peerReducer,
 });
 
 export default rootReducer;

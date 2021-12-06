@@ -85,9 +85,12 @@ export const updateUserConversationStateActionCreator = () => async (dispatch, g
   try {
     const userId = getState().authState.currentUser._id;
     const result = await mosquitareAPI.patch(`/users/${userId}/conversation`);
-    dispatch({
-      type: UPDATE_CONVERSATION_STATE,
-      payload: '',
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: UPDATE_CONVERSATION_STATE,
+        payload: '',
+      });
+      resolve();
     });
   } catch (error) {
     console.log(error);

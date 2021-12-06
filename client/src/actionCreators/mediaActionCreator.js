@@ -1,4 +1,4 @@
-import { GET_MEDIA, CALL, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED, HANG_UP_CALL } from './type';
+import { GET_MEDIA, CALL, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED, HANG_UP_CALL, HOLD_MY_INITIATED_PEER } from './type';
 import {
   SOMEBODY_CALLS_ME,
   I_CALL_SOMEBODY,
@@ -65,6 +65,10 @@ export const callActionCreator =
     const callerUserInfo = getState().authState.currentUser;
 
     const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
+    dispatch({
+      type: HOLD_MY_INITIATED_PEER,
+      payload: peerInitiator,
+    });
     peerInitiator.on('signal', (signalData) => {
       socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo }); // ここに、callerのdataを加えよう。
       dispatch({
@@ -72,26 +76,67 @@ export const callActionCreator =
         payload: '',
       });
     });
+    peerInitiator.on('stream', (stream) => {
+      myVideoRef.current.srcObject = myVideoStreamObject;
+      oppositeVideoRef.current.srcObject = stream;
+      // dispatch(updateUserConversationStateActionCreator(currentUser._id)); // これも外に出すべきでしょう。。。
+      connectionRef.current = peerInitiator;
+      console.log('call accepted??????');
+    });
     // ここで一回切るべきね。
 
+    // socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
+    //   console.log('My call is accepted.');
+    //   dispatch({
+    //     type: CALL_ACCEPTED,
+    //     payload: dataFromServer.recieverUserInfo,
+    //   });
+    //   peerInitiator.signal(dataFromServer.signalData);
+    // });
+
+    // peerInitiator.on('stream', (stream) => {
+    //   myVideoRef.current.srcObject = myVideoStreamObject;
+    //   oppositeVideoRef.current.srcObject = stream;
+    //   dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
+    //   connectionRef.current = peerInitiator;
+    //   console.log('call accepted??????');
+
+    //   // ここで切ろう。
+    //   // dispatch(updateUserConversationStateActionCreator());
+    //   mediaRecorderRef.start();
+    //   dispatch(createConversationActionCreator(socket))
+    //     .then(() => {
+    //       return dispatch(createIntegratedUserMediaActionCreator());
+    //     })
+    //     .then(() => {
+    //       return dispatch(sendIntegratedUserMediaActionCeator(socket));
+    //     })
+    //     .then(() => {
+    //       return dispatch(updateConversationIntegratedUserMediaActionCreator());
+    //     });
+    // });
+  };
+
+export const completeConnectionWithMyPartnerActionCreator =
+  (socket, peerInitiator, myVideoRef, oppositeVideoRef, connectionRef, mediaRecorder) => (dispatch, getState) => {
+    // return new Promise((resolve, reject) => {
     socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
       console.log('My call is accepted.');
       dispatch({
         type: CALL_ACCEPTED,
         payload: dataFromServer.recieverUserInfo,
       });
-      peerInitiator.signal(dataFromServer.signalData);
-    });
-
-    peerInitiator.on('stream', (stream) => {
-      myVideoRef.current.srcObject = myVideoStreamObject;
-      oppositeVideoRef.current.srcObject = stream;
-      dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
-      connectionRef.current = peerInitiator;
-      console.log('call accepted??????');
-      // ここで切ろう。
-      mediaRecorderRef.start();
-      dispatch(createConversationActionCreator(callerUserInfo._id, socket))
+      peerInitiator.signal(dataFromServer.signalData); // この部分は待機していてくれるのかな？？？
+      Promise.resolve()
+        .then(() => {
+          return dispatch(updateUserConversationStateActionCreator());
+        })
+        .then(() => {
+          return dispatch(startMediaRecorder(mediaRecorder));
+        })
+        .then(() => {
+          return dispatch(createConversationActionCreator(socket)); // 多分ここも分けることになる。
+        })
         .then(() => {
           return dispatch(createIntegratedUserMediaActionCreator());
         })
@@ -102,7 +147,24 @@ export const callActionCreator =
           return dispatch(updateConversationIntegratedUserMediaActionCreator());
         });
     });
+    // const { myVideoStreamObject } = getState().mediaState;
+    // peerInitiator.on('stream', (stream) => {
+    //   myVideoRef.current.srcObject = myVideoStreamObject;
+    //   oppositeVideoRef.current.srcObject = stream;
+    //   // dispatch(updateUserConversationStateActionCreator(currentUser._id)); // これも外に出すべきでしょう。。。
+    //   connectionRef.current = peerInitiator;
+    //   console.log('call accepted??????');
+    // });
+    // return Promise.resolve();
+    // });
   };
+
+export const startMediaRecorder = (mediaRecorderRef) => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    mediaRecorderRef.current.start();
+    resolve();
+  });
+};
 
 // export const listenCallActionCreator = (socket) => (dispatch) => {
 //   console.log('it works????');
