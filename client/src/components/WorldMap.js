@@ -74,7 +74,9 @@ const WorldMap = (props) => {
     if (jwtToken) {
       socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
         // socketId.current = socketIdFromServer;
-        props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer);
+        props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer).then(() => {
+          props.getUsersActionCreator();
+        });
       });
     }
 
@@ -116,6 +118,7 @@ const WorldMap = (props) => {
     // }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
 
     props.callActionCreator(
+      // さらに細分化したほうがいいわ。長すぎ。
       socket,
       mySocketId,
       myVideo,

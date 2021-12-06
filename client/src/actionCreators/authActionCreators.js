@@ -40,11 +40,9 @@ export const loginActionCreator = (formData) => async (dispatch) => {
   }
 };
 
-// このLOAD_MEが複数回起こる原因は何なの？そもそもuseEffectで設定をしているのに。。。
+// このLOAD_MEが複数回起こる原因は何なの？そもそもuseEffectで設定をしているのに。。。→多分変なバグだろう。実際には、serverを何回も起こすなんてしないから、まあそんなに気にする必要もないだろう。
 export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispatch, getState) => {
   try {
-    // const socketId = getState().authState.socketId;
-    // console.log(socketId);
     console.log('load me side before finish');
     const result = await mosquitareAPI.patch(
       '/users/loadmeandupdate',
@@ -55,15 +53,14 @@ export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispa
         },
       }
     );
-    const { user } = result.data;
-
-    dispatch({
-      type: LOAD_ME,
-      payload: { user, jwtToken },
+    return new Promise((resolve, reject) => {
+      const { user } = result.data;
+      dispatch({
+        type: LOAD_ME,
+        payload: { user, jwtToken },
+      });
+      resolve();
     });
-    // store.dispatch(getSocketIdActionCreator());
-    // worldmapのsocketの中で、callback hellで実行することにしよう。
-    store.dispatch(getUsersActionCreator());
   } catch (error) {
     console.log(error);
   }

@@ -33,49 +33,34 @@ export const getMediaActionCreator = (mediaRecorder, chunksForVideo, chunksForAu
     sampleSize: 16,
   };
   navigator.mediaDevices.getUserMedia({ video: true, audio: audioConstraints }).then((stream) => {
-    // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
-    mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
-    mediaRecorder.current.ondataavailable = function (event) {
-      console.log('ondataavai');
-      console.log(event.data); // ここにはちゃんとdataが入っている。
-      // setChunks((oldChunks) => {
-      //   return [...oldChunks, event.data];
-      // });
-      chunksForVideo.push(event.data);
-      chunksForAudio.push(event.data);
-    };
-    mediaRecorder.current.onstop = (event) => {
-      // console.log(chunksBuffer);
-      let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' }); // blob自体は、object。
-      let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' }); // blob自体は、object。
-      // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
-      // chunks = [];
-      console.log('recore stopped!!!');
-      chunksForVideo = [];
-      chunksForAudio = [];
-      // console.log(blobForVideo);
-      // console.log(blobForAudio);
-      // dispatch(updateUserStreamActionCreator(blobForVideo, blobForAudio, connectionRef));
-      dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
-      // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
-      // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-    }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
     dispatch({
       type: GET_MEDIA,
       payload: stream,
     });
-    // setMyVideoStreamObject(stream);
-    // myVideoRef.current.srcObject = stream; // ここなーーー。どうだろう。// chatscreenの方でuseEffectすればいいのかね。。。ここだけ。
+    // 以下record用のsetting。ただそれだけ。
+    // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
+    mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+    mediaRecorder.current.ondataavailable = function (event) {
+      chunksForVideo.push(event.data);
+      chunksForAudio.push(event.data);
+    };
+    mediaRecorder.current.onstop = (event) => {
+      let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
+      let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
+      console.log('recore stopped!!!');
+      chunksForVideo = [];
+      chunksForAudio = [];
+      dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
+      // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
+      // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+    };
   });
 };
 
 export const callActionCreator =
   (socket, mySocketId, myVideoRef, oppositeSocketId, oppositeVideoRef, connectionRef, mediaRecorderRef, setChunks) =>
   (dispatch, getState) => {
-    // ここで、serverとのconnectionを確保してから、socketIdのupdateをするっていう方法なのかね。。。
     const { myVideoStreamObject } = getState().mediaState;
-    // const { mySocketId } = getState().mediaState;
-    // const mySocketId = getState().authState.currentUser.socketId; // ここはcomponentのstateを使う。
     console.log('Im calling...');
     const callerUserInfo = getState().authState.currentUser;
 
@@ -87,6 +72,8 @@ export const callActionCreator =
         payload: '',
       });
     });
+    // ここで一回切るべきね。
+
     socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
       console.log('My call is accepted.');
       dispatch({
@@ -99,11 +86,10 @@ export const callActionCreator =
     peerInitiator.on('stream', (stream) => {
       myVideoRef.current.srcObject = myVideoStreamObject;
       oppositeVideoRef.current.srcObject = stream;
-      // ここから録画開始みたいにできないかね。二つの動画を自分と相手のstreamを録画して、二つを組み合わせて新しいmp4 fileを作る感じにできないかね。少なくとも、getDisplayだとpopup windowが出て使いづらいんだわ。
       dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
       connectionRef.current = peerInitiator;
       console.log('call accepted??????');
-      //
+      // ここで切ろう。
       mediaRecorderRef.start();
       dispatch(createConversationActionCreator(callerUserInfo._id, socket))
         .then(() => {
