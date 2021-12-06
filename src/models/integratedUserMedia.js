@@ -12,5 +12,5 @@ const integratedUserMediaSchema = new mongoose.Schema({
   // comments: [], //ここはone to manyか。commentsっていうmodel作って、そっちでrefですればいいや。
 });
 
-const IntegratedUserMedia = mongoose.model('CombinedMediaData', integratedUserMediaSchema);
+const IntegratedUserMedia = mongoose.model('IntegratedUserMedia', integratedUserMediaSchema);
 export default IntegratedUserMedia;

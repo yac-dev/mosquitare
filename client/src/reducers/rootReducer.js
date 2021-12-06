@@ -13,7 +13,7 @@ const rootReducer = combineReducers({
   usersState: usersReducer,
   meetingsState: meetingsReducer,
   meetingState: meetingReducer,
-  videoChatState: conversationReducer,
+  conversationState: conversationReducer,
   integratedUserMediaState: integratedUserMediasReducer,
 });
 

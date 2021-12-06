@@ -20,7 +20,9 @@ import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator
 import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getConversationIdFromCalledUserActionCreator } from '../../actionCreators/conversationActionCreators';
+import { updateConversationRecievedUserActionCreator } from '../../actionCreators/conversationActionCreators';
 import { getIntegratedUserMediaIdFromCalledUserActionCreator } from '../../actionCreators/integratedUserMediasActionCreators';
+
 // import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -91,7 +93,11 @@ const FullScreen1on1Modal = (props) => {
     //   setVoiceText(voiceTetx);
     // });
     props.getVoiceTextActionCreator(props.socket, setVoiceText);
-    props.getConversationIdFromCalledUserActionCreator(props.socket);
+
+    props.getConversationIdFromCalledUserActionCreator(props.socket).then((conversationId) => {
+      props.updateConversationRecievedUserActionCreator(conversationId);
+    });
+
     props.getIntegratedUserMediaIdFromCalledUserActionCreator(props.socket);
   }, []);
 
@@ -255,5 +261,7 @@ export default connect(mapStateToProps, {
   sendVoiceTextActionCreator,
   getVoiceTextActionCreator,
   getConversationIdFromCalledUserActionCreator,
+  updateConversationRecievedUserActionCreator,
   // recordStreamActionCreator,
+  getIntegratedUserMediaIdFromCalledUserActionCreator,
 })(FullScreen1on1Modal);

@@ -10,7 +10,7 @@ import multerParser from '../middlewares/multer';
 // const multerParser = multer({ dest: 'uploadedFiles/' });
 
 router.route('/').post(createConversation);
-router.route('/:id').patch(updateConversationRecievedUser);
+router.route('/:id').post(updateConversationRecievedUser);
 router.route('/integratedusermedia/:id').patch(updateConversationIntegratedUserMedia);
 // router.post('/upload/caller/:id', multerParser.single('videoFile'), storeVideoFileNames);
 // router.post('/upload/reciever/:id', multerParser.single('videoFile'), storeVideoFileNames);

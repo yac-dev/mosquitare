@@ -6,24 +6,58 @@ import {
 } from './socketEvents';
 
 //  mediaActionCreator callActionCreatorの中で使っている。
+// 一つの関数で多くのことやりすぎね。やばい。
 export const createIntegratedUserMediaActionCreator = (socket) => async (dispatch, getState) => {
   try {
     const result = await mosquitareAPI.post('/integratedusermedias'); // dataは何も送らない。ただdocumentを作るだけ。
-    const { integratedUserMedia } = result.data;
-    dispatch({
-      type: CREATE_INTEGRATED_USER_MEDIA,
-      payload: integratedUserMedia._id, // このidは、会話終わりまで保持していなきゃいけないっていうことだ。
-    });
-    const partnerSocketId = getState().mediaState.callingWith.socketId;
-    socket.emit(I_SEND_INTEGRATED_USER_MEDIA_ID_TO_MY_PARTNER, {
-      to: partnerSocketId,
-      integratedUserMediaId: integratedUserMedia._id,
+    return new Promise((resolve, reject) => {
+      const { integratedUserMedia } = result.data;
+      console.log(integratedUserMedia);
+      dispatch({
+        type: CREATE_INTEGRATED_USER_MEDIA,
+        payload: integratedUserMedia._id, // このidは、会話終わりまで保持していなきゃいけないっていうことだ。
+      });
+      resolve();
+      // const partnerSocketId = getState().mediaState.callingWith.socketId;
+      // socket.emit(I_SEND_INTEGRATED_USER_MEDIA_ID_TO_MY_PARTNER, {
+      //   to: partnerSocketId,
+      //   integratedUserMediaId: integratedUserMedia._id,
+      // });
     });
     // このタイミングでconversationの方もupdateする。{integratedUserMediaId: integratedUserMedia._id}をpost dataとしてね。
-    // ここなー。promisifyの実験してみようかねー。。。
+    // ここなー。promisifyの実験してみようかねー。。。ここか。
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const sendIntegratedUserMediaActionCeator = (socket) => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    const partnerSocketId = getState().mediaState.callingWith.socketId;
+    const { integratedUserMediaId } = getState().integratedUserMediaState;
+    socket.emit(I_SEND_INTEGRATED_USER_MEDIA_ID_TO_MY_PARTNER, {
+      to: partnerSocketId,
+      integratedUserMediaId: integratedUserMediaId,
+    });
+    resolve();
+  });
+};
+
+// これ、あとでconversationACの方に変える。
+export const updateConversationIntegratedUserMediaActionCreator = () => async (dispatch, getState) => {
+  try {
     const { conversationId } = getState().conversationState;
-    const resultOfUpdate = await mosquitareAPI.patch(`/conversations/integratedusermedia/${conversationId}`, {
-      integratedUserMediaId: integratedUserMedia._id,
+    const { integratedUserMediaId } = getState().integratedUserMediaState;
+    const result = await mosquitareAPI.patch(`/conversations/integratedusermedia/${conversationId}`, {
+      integratedUserMedia: integratedUserMediaId,
+    });
+    const { conversation } = result.data;
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: 'UPDATE_CONVERSATION_INTEGRATED_USER_MEDIA',
+        payload: conversation._id,
+      });
+      resolve();
     });
   } catch (error) {
     console.log(error);

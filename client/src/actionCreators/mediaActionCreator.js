@@ -17,6 +17,8 @@ import { updateUserConversationToFalseActionCreator } from './authActionCreators
 import { createConversationActionCreator } from './conversationActionCreators';
 import { updateConversationRecievedUserActionCreator } from './conversationActionCreators';
 import { createIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
+import { sendIntegratedUserMediaActionCeator } from './integratedUserMediasActionCreators';
+import { updateConversationIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
 // import { updateUserStreamActionCreator } from './conversationActionCreators';
 import { createUserMedia } from './userMediasActionCreators';
 
@@ -98,12 +100,21 @@ export const callActionCreator =
       myVideoRef.current.srcObject = myVideoStreamObject;
       oppositeVideoRef.current.srcObject = stream;
       // ここから録画開始みたいにできないかね。二つの動画を自分と相手のstreamを録画して、二つを組み合わせて新しいmp4 fileを作る感じにできないかね。少なくとも、getDisplayだとpopup windowが出て使いづらいんだわ。
-      store.dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
+      dispatch(updateUserConversationStateActionCreator(callerUserInfo._id));
       connectionRef.current = peerInitiator;
       console.log('call accepted??????');
-      store.dispatch(createConversationActionCreator(callerUserInfo._id, socket)); // ここでcreate chatのacをtriggerする。callerが作る。
-      dispatch(createIntegratedUserMediaActionCreator(socket)); // ここで受け取ったidを再度、partnerに送る。
+      //
       mediaRecorderRef.start();
+      dispatch(createConversationActionCreator(callerUserInfo._id, socket))
+        .then(() => {
+          return dispatch(createIntegratedUserMediaActionCreator());
+        })
+        .then(() => {
+          return dispatch(sendIntegratedUserMediaActionCeator(socket));
+        })
+        .then(() => {
+          return dispatch(updateConversationIntegratedUserMediaActionCreator());
+        });
     });
   };
 

@@ -19,7 +19,11 @@ export const createConversation = async (request, response) => {
 export const updateConversationRecievedUser = async (request, response) => {
   try {
     const { recievedUser } = request.body;
-    const conversation = await Conversation.create({ recievedUser });
+
+    const conversation = await Conversation.findById(request.params.id);
+    console.log(conversation, 'updateRecieved working!');
+    conversation.recievedUser = recievedUser;
+    await conversation.save();
     response.json({
       conversation,
     });
@@ -30,9 +34,10 @@ export const updateConversationRecievedUser = async (request, response) => {
 
 export const updateConversationIntegratedUserMedia = async (request, response) => {
   try {
-    const { integratedUserMediaId } = request.body;
+    const { integratedUserMedia } = request.body;
+    console.log(integratedUserMedia);
     const conversation = await Conversation.findById(request.params.id);
-    conversation.integratedUserMedia = integratedUserMediaId;
+    conversation.integratedUserMedia = request.body.integratedUserMedia;
     await conversation.save();
     response.json({
       conversation,

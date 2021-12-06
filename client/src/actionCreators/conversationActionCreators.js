@@ -7,16 +7,19 @@ import { hangUpCallActionCreator } from './mediaActionCreator';
 export const createConversationActionCreator = (calledUserId, socket) => async (dispatch, getState) => {
   try {
     const result = await mosquitareAPI.post('/conversations', { calledUser: calledUserId });
-    const { conversation } = result.data; // ここでvideoChatのidを受け取ったら、すぐにpeerにあげないと。
-    console.log(result);
-    console.log(conversation);
+    return new Promise((resolve, reject) => {
+      const { conversation } = result.data; // ここでvideoChatのidを受け取ったら、すぐにpeerにあげないと。
+      console.log(result);
+      console.log(conversation);
 
-    // ここら辺の名前も変えなきゃいけない。めちゃくちゃ分かりづらいわ。「最初のままずっと行こう、変えない」精神が、結局今の日本なんですよ。変える、更新することは体力も頭も使うが、長期的に見てどんないいことがあるか、ちゃんと考えないといかんのですよ。
-    const partnerSocketId = getState().mediaState.callingWith.socketId;
-    socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId: conversation._id });
-    dispatch({
-      type: CREATE_CONVERSATION, // ここら辺の名前なー。後で直さないとな。
-      payload: conversation._id,
+      // ここら辺の名前も変えなきゃいけない。めちゃくちゃ分かりづらいわ。「最初のままずっと行こう、変えない」精神が、結局今の日本なんですよ。変える、更新することは体力も頭も使うが、長期的に見てどんないいことがあるか、ちゃんと考えないといかんのですよ。
+      const partnerSocketId = getState().mediaState.callingWith.socketId;
+      socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId: conversation._id });
+      dispatch({
+        type: CREATE_CONVERSATION, // ここら辺の名前なー。後で直さないとな。
+        payload: conversation._id,
+      });
+      resolve(); // promise返す。意図的に。
     });
   } catch (error) {
     console.log(error);
@@ -25,10 +28,13 @@ export const createConversationActionCreator = (calledUserId, socket) => async (
 
 export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatch, getState) => {
   try {
-    socket.on(MY_CALLED_USER_CREATED_CONVERSATION, (dataFromServer) => {
-      dispatch({
-        type: GET_CONVERSATION_ID,
-        payload: dataFromServer.videoChatId,
+    return new Promise((resolve, reject) => {
+      socket.on(MY_CALLED_USER_CREATED_CONVERSATION, (dataFromServer) => {
+        dispatch({
+          type: GET_CONVERSATION_ID,
+          payload: dataFromServer.conversationId,
+        });
+        resolve(dataFromServer.conversationId);
       });
     });
   } catch (error) {
@@ -36,16 +42,18 @@ export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatc
   }
 };
 
-// conversationが始まったら。
-export const updateConversationRecievedUserActionCreator = () => async (dispatch, getState) => {
+// conversationIdをもらったらこれを実行する。上の続きだな。
+export const updateConversationRecievedUserActionCreator = (conversationId) => async (dispatch, getState) => {
   try {
     const recievedUserId = getState().authState.currentUser._id;
-    const result = await mosquitareAPI.patch('/conversation', { recievedUser: recievedUserId });
-    const { conversation } = result.data;
-    dispatch({
-      type: UPDATE_CONVERSATION_RECIEVED_USER,
-      payload: conversation._id,
-    });
+    // const { conversationId } = getState().conversationState;
+    // console.log(getState().conversationState);
+    const result = await mosquitareAPI.post(`/conversations/${conversationId}`, { recievedUser: recievedUserId });
+    // const { conversation } = result.data;
+    // dispatch({
+    //   type: UPDATE_CONVERSATION_RECIEVED_USER,
+    //   payload: conversation._id,
+    // });
   } catch (error) {
     console.log(error);
   }

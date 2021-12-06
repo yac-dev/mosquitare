@@ -2,7 +2,8 @@ import IntegratedUserMedia from '../models/integratedUserMedia';
 
 export const createIntegratedUserMedia = async (request, response) => {
   try {
-    const integratedUserMedia = await IntegratedUserMedia.create(); // 一回まず作って、その後にこのid使ってupdateみたいにするか。
+    const integratedUserMedia = await IntegratedUserMedia.create({}); // 一回まず作って、その後にこのid使ってupdateみたいにするか。
+    console.log(integratedUserMedia);
     response.json({
       integratedUserMedia,
     });
@@ -11,7 +12,7 @@ export const createIntegratedUserMedia = async (request, response) => {
   }
 }; // これ作った後に、conversationの方に入れなきゃだよな。多分。
 
-export const updateIntegratedUserMediaCalledUserMedia = (request, response) => {
+export const updateIntegratedUserMediaCalledUserMedia = async (request, response) => {
   try {
     const integratedUserMedia = await IntegratedUserMedia.findById(request.params.id);
     integratedUserMedia.calledUserMedia = request.body.calledUserMedia;

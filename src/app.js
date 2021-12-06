@@ -20,6 +20,6 @@ app.use('/api/countries', countriesRouter);
 app.use('/api/meetings', meetingsRouter);
 app.use('/api/userMedias', userMediasRouter);
 app.use('/api/conversations', conversationsRouter);
-app.use('api/integratedusermedias', integratedUserMediasRouter);
+app.use('/api/integratedusermedias', integratedUserMediasRouter);
 
 export default app;
