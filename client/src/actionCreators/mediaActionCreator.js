@@ -132,7 +132,6 @@ export const completeConnectionWithMyPartnerActionCreator =
       peerInitiator.on('stream', (stream) => {
         myVideoRef.current.srcObject = myVideoStreamObject;
         oppositeVideoRef.current.srcObject = stream;
-        // dispatch(updateUserConversationStateActionCreator(currentUser._id)); // これも外に出すべきでしょう。。。
         connectionRef.current = peerInitiator;
         console.log('call accepted??????');
       });
@@ -156,16 +155,6 @@ export const completeConnectionWithMyPartnerActionCreator =
           return dispatch(updateConversationIntegratedUserMediaActionCreator());
         });
     });
-    // const { myVideoStreamObject } = getState().mediaState;
-    // peerInitiator.on('stream', (stream) => {
-    //   myVideoRef.current.srcObject = myVideoStreamObject;
-    //   oppositeVideoRef.current.srcObject = stream;
-    //   // dispatch(updateUserConversationStateActionCreator(currentUser._id)); // これも外に出すべきでしょう。。。
-    //   connectionRef.current = peerInitiator;
-    //   console.log('call accepted??????');
-    // });
-    // return Promise.resolve();
-    // });
   };
 
 export const startMediaRecorder = (mediaRecorderRef) => (dispatch, getState) => {
@@ -174,19 +163,6 @@ export const startMediaRecorder = (mediaRecorderRef) => (dispatch, getState) => 
     resolve();
   });
 };
-
-// export const listenCallActionCreator = (socket) => (dispatch) => {
-//   console.log('it works????');
-//   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
-//     console.log('somebody calls me!!!');
-//     console.log(dataFromServer);
-//     const { signalData, whoIsCalling } = dataFromServer;
-//     dispatch({
-//       type: LISTEN_CALL,
-//       payload: { signalData, whoIsCalling },
-//     });
-//   });
-// }; // 結局使わないかな。。。
 
 export const listenCallActionCreator = (socket, setFullscreen1on1Modal, setShow1on1) => (dispatch) => {
   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
@@ -205,37 +181,40 @@ export const listenCallActionCreator = (socket, setFullscreen1on1Modal, setShow1
 
 export const answerCallActionCreator =
   (socket, myVideoRef, oppositeVideoRef, connectionRef, mediaRecorderRef) => (dispatch, getState) => {
-    dispatch({
-      type: ANSWER_CALL,
-      payload: '',
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: ANSWER_CALL,
+        payload: '',
+      });
+      console.log('Im answering.');
+      // 確かに、こういう場合はcallerが誰か持ってなきゃな。
+      const { myVideoStreamObject } = getState().mediaState;
+      const { whoIsCalling } = getState().mediaState;
+      const { callerSignal } = getState().mediaState;
+
+      const recieverUserInfo = getState().authState.currentUser;
+      console.log(callerSignal);
+      const peerReciever = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
+      myVideoRef.current.srcObject = myVideoStreamObject;
+
+      peerReciever.on('stream', (stream) => {
+        console.log('working??');
+        console.log(stream);
+        oppositeVideoRef.current.srcObject = stream;
+      });
+
+      peerReciever.on('signal', (signalData) => {
+        socket.emit(I_ANSWER_THE_CALL, { signalData, whoIsCalling, recieverUserInfo });
+        // store.dispatch(updateUserConversationStateActionCreator(recieverUserInfo._id));
+      });
+
+      peerReciever.signal(callerSignal);
+      connectionRef.current = peerReciever;
+      console.log('I answered');
+      // dispatch(updateConversationRecievedUserActionCreator());
+      // mediaRecorderRef.current.start();
+      resolve();
     });
-    console.log('Im answering.');
-    // 確かに、こういう場合はcallerが誰か持ってなきゃな。
-    const { myVideoStreamObject } = getState().mediaState;
-    const { whoIsCalling } = getState().mediaState;
-    const { callerSignal } = getState().mediaState;
-
-    const recieverUserInfo = getState().authState.currentUser;
-    console.log(callerSignal);
-    const peerReciever = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
-    myVideoRef.current.srcObject = myVideoStreamObject;
-
-    peerReciever.on('stream', (stream) => {
-      console.log('working??');
-      console.log(stream);
-      oppositeVideoRef.current.srcObject = stream;
-    });
-
-    peerReciever.on('signal', (signalData) => {
-      socket.emit(I_ANSWER_THE_CALL, { signalData, whoIsCalling, recieverUserInfo });
-      store.dispatch(updateUserConversationStateActionCreator(recieverUserInfo._id));
-    });
-
-    peerReciever.signal(callerSignal);
-    connectionRef.current = peerReciever;
-    console.log('I answered');
-    dispatch(updateConversationRecievedUserActionCreator());
-
     // mediaRecorderRef.current = new MediaRecorder(myVideoStreamObject);
     // mediaRecorderRef.current.ondataavailable = function (event) {
     //   console.log('ondataavai');
@@ -254,8 +233,7 @@ export const answerCallActionCreator =
     //   // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
     //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
     // }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
-    mediaRecorderRef.current.start();
-  };
+  }; // ここは、startRecor、updateUserConversationStateActionCreator、updateConversationRecievedUserActionCreatorの順でpromisifyだな。
 
 // export const callAcceptedActionCreator = (oppositeVideoRef, connectionRef) => (dispatch) => {
 //   socket.on(MY_CALL_IS_ACCEPTED, (signalData) => {

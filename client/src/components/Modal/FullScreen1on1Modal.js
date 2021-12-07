@@ -17,10 +17,13 @@ import {
 
 // action creators
 import { answerCallActionCreator } from '../../actionCreators/mediaActionCreator';
+import { startMediaRecorder } from '../../actionCreators/mediaActionCreator';
+import { updateUserConversationStateActionCreator } from '../../actionCreators/authActionCreators';
+import { updateConversationRecievedUserActionCreator } from '../../actionCreators/conversationActionCreators';
+
 import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getConversationIdFromCalledUserActionCreator } from '../../actionCreators/conversationActionCreators';
-import { updateConversationRecievedUserActionCreator } from '../../actionCreators/conversationActionCreators';
 import { getIntegratedUserMediaIdFromCalledUserActionCreator } from '../../actionCreators/integratedUserMediasActionCreators';
 
 // import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
@@ -149,6 +152,24 @@ const FullScreen1on1Modal = (props) => {
   //   }, 10 * 60 * 1000);
   // }, []);
 
+  const handleAnswerCall = () => {
+    props
+      .answerCallActionCreator(
+        props.socket,
+        props.myVideo,
+        props.oppositeVideo,
+        props.connectionRef,
+        props.mediaRecorder,
+        props.chunksBuffer
+      )
+      .then(() => {
+        return props.startMediaRecorder(props.mediaRecorder);
+      })
+      .then(() => {
+        return props.updateUserConversationStateActionCreator();
+      });
+  };
+
   const onActivateSubtitleClick = () => {
     console.log('activate subtitle');
     props.socket.emit(I_REQUEST_PARTNERS_VOICE_TEXT, {
@@ -179,20 +200,7 @@ const FullScreen1on1Modal = (props) => {
           <>
             <div className='confirmation'>
               <UserInfoCard user={props.mediaState.callingWith} />
-              <Button
-                positive
-                onClick={() =>
-                  props.answerCallActionCreator(
-                    props.socket,
-                    props.myVideo,
-                    props.oppositeVideo,
-                    props.connectionRef,
-                    props.mediaRecorder,
-                    props.chunksBuffer
-                  )
-                }
-                style={{ width: '100%' }}
-              >
+              <Button positive onClick={() => handleAnswerCall()} style={{ width: '100%' }}>
                 <i className='handshake icon' />
                 Yes
               </Button>
@@ -258,10 +266,12 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   answerCallActionCreator,
+  startMediaRecorder,
+  updateUserConversationStateActionCreator,
+  updateConversationRecievedUserActionCreator,
   sendVoiceTextActionCreator,
   getVoiceTextActionCreator,
   getConversationIdFromCalledUserActionCreator,
-  updateConversationRecievedUserActionCreator,
   // recordStreamActionCreator,
   getIntegratedUserMediaIdFromCalledUserActionCreator,
 })(FullScreen1on1Modal);
