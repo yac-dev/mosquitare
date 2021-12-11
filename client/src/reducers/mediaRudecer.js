@@ -19,6 +19,7 @@ const INITIAL_STATE = {
   oppositeIdToCall: null,
   callAccepted: false,
   callFinished: false,
+  currentLanguage: null,
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
@@ -26,7 +27,11 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
     case GET_MEDIA:
       return { ...state, myVideoStreamObject: action.payload };
     case CALL:
-      return { ...state, amICalling: true };
+      return {
+        ...state,
+        amICalling: true,
+        // currentLanguage: '' // callと同時に入れたやつ。
+      };
     case GET_SOCKET_ID:
       return { ...state, mySocketId: action.payload };
     case LISTEN_CALL:
@@ -41,6 +46,7 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         callAccepted: true,
+        // currentLanguage: '' // socketでもらったlanguage objectが入る。
       };
     case CALL_ACCEPTED:
       return {
@@ -59,6 +65,7 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         oppositeIdToCall: null,
         callAccepted: false,
         callFinished: true,
+        currentLanguage: null,
       };
     default:
       return state;

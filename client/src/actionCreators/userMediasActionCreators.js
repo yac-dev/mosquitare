@@ -17,7 +17,7 @@ export const createUserMedia = (blobForVideo, blobForAudio, connectionRef) => as
     } else if (callingState.amIRecieving) {
       // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
     }
-    dispatch(hangUpCallActionCreator(connectionRef));
+    dispatch(hangUpCallActionCreator(connectionRef)); // ここもpromisifyだな。
   } catch (error) {
     console.log(error);
   }

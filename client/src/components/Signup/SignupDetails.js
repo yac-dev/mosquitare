@@ -21,16 +21,28 @@ const SignupDetails = (props) => {
 
   const mainLangs = {
     '61711a02dc33a75226a7f363': 'English',
-    '61711a02dc33a75226a7f358': 'Chinese',
-    '61711a02dc33a75226a7f383': 'Japanese',
+    '61711a02dc33a75226a7f358': 'Chinese', // Simplified, Chinaのことね。
     '61711a02dc33a75226a7f36a': 'French',
-    '61711a02dc33a75226a7f341': 'Arabic',
+    '61711a02dc33a75226a7f341': 'Arabic', // speech用のcodeが分からない。
     '61711a02dc33a75226a7f3c0': 'Russian',
+    '61711a02dc33a75226a7f383': 'Japanese',
     '61711a02dc33a75226a7f3bb': 'Portuguese',
     '61711a02dc33a75226a7f36e': 'German',
     '61711a02dc33a75226a7f381': 'Italian',
-    '61711a02dc33a75226a7f3cf': 'Spanish; Castilian',
-    '61711a02dc33a75226a7f376': 'Hindu',
+    '61711a02dc33a75226a7f3cf': 'Spanish', // Spanish; Castilian 元々はこの名前だった。
+    '61711a02dc33a75226a7f376': 'Hindi',
+    '61711a02dc33a75226a7f390': 'Korean',
+    '61711a02dc33a75226a7f361': 'Dutch',
+    '61711a02dc33a75226a7f3b9': 'Polish',
+    '61711a02dc33a75226a7f3d3': 'Swedish',
+    '61711a02dc33a75226a7f369': 'Finnish',
+    '61711a02dc33a75226a7f3ad': 'Norwegian',
+    '61711a02dc33a75226a7f35e': 'Czech',
+    '61711a02dc33a75226a7f3de': 'Turkish',
+    '61b42360476ed2196992b77e': 'Romanian',
+    '61b422eb476ed2196992b77d': 'Hebrew', // iw-IL js apiがこれに対応しているか分からない。
+    '61b4312f92ae00c28783dd1b': 'Greek',
+    // '61711a02dc33a75226a7f364': 'Esperanto', // これ、多分speech apiのcodeないわ。
   };
 
   const fetchData = async (uri, setState) => {

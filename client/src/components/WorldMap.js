@@ -120,6 +120,15 @@ const WorldMap = (props) => {
     // });
   }, []);
 
+  // useEffect(() => {
+  //   // つまりここから分かる通り、最初のrender後の時点ではまだauthStateはつあうことができない状態。
+  //   // こうすれば上手くいく。結局、最初にcomponentが「全部renderされた後」に上のuseEffectの中のapi requestが起こり、authStateの中身が埋まる。そのpropsが変化した時に、このuseEffectを実行する、って言うことができるわけよ。何も複雑なことはない。
+  //   if (props.authState.currentUser) {
+  //     console.log(props.authState);
+  //   }
+  //   // console.log(props.mediaState)
+  // }, [props.authState]);
+
   // 1on1 modalのtrigger
   const onCallClick = (event, oppositeSocketId) => {
     event.preventDefault();

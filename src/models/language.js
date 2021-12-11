@@ -9,6 +9,7 @@ const languageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  codeForSpeechRecognition: String,
 });
 
 const Language = mongoose.model('Language', languageSchema);

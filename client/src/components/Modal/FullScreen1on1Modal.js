@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { connect, useSelector } from 'react-redux';
 import store from '../../store';
 import { Modal } from 'react-bootstrap';
@@ -42,24 +42,80 @@ const FullScreen1on1Modal = (props) => {
   // const [chunks, setChunks] = useState([]);
   // let mediaRecorder;
 
-  // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
-  const handleListen = () => {
-    if (requestedSubtitle) {
-      microphone.start();
-      microphone.onend = () => {
-        console.log('continue..');
-        microphone.start();
-      };
-    } else {
-      microphone.stop();
-      microphone.onend = () => {
-        console.log('Stopped microphone on Click');
-      };
-    }
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition = useRef();
 
+  useEffect(() => {
+    recognition.current = new SpeechRecognition();
+    // let mic.currentState;
+    recognition.current.continuous = true;
+    recognition.current.interimResults = true;
+    // どっかのタイミングでlanguage switch、要はrecognition一旦ストップがされることを前提にまずは。
+    recognition.current.onend = () => {
+      // props.ac() // この実行でmediaStateのcurrent languageに自分のpractice 言語が入る。
+      // ここでsocket.emit('switch language', {to: '', language: ''})
+      // recognition.current.lang = 'practice langauge'
+      // recognition.current.start()
+      console.log('Stopped mic.current on Click');
+      recognition.current.lang = 'ja-JP';
+      // recognition.current.start(); // ここでstartして再び、onstartのsetSpeakingLearningLangOrNativeLang('learning');が再び動いちまうんだ。
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   props.socket.on('accept your switch lang', () => {
+  //     recognition.current.stop();
+  //     props.ac() // ここで、向こうからのlanguageをredux stateに入れる。
+  //     recognition.current.lang = 'accepted lang';
+  //     recognition.current.start()
+  //   })
+  // }, [])
+
+  // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
+  // const handleListen = () => {
+  //   if (requestedSubtitle) {
+  //     microphone.start();
+  //     microphone.onend = () => {
+  //       console.log('continue..');
+  //       microphone.start();
+  //     };
+  //   } else {
+  //     microphone.stop();
+  //     microphone.onend = () => {
+  //       console.log('Stopped microphone on Click');
+  //     };
+  //   }
+
+  //   microphone.onstart = () => {
+  //     console.log('microphones on');
+  //   };
+
+  //   microphone.onresult = (event) => {
+  //     const transcript = Array.from(event.results)
+  //       .map((result) => result[0])
+  //       .map((result) => result.transcript)
+  //       .join('');
+  //     console.log(transcript);
+  //     setVoiceText(transcript);
+  //     // props.sendVoiceTextActionCreator(props.socket, voiceText, setRequestedSubtitle);
+  //     microphone.onerror = (event) => {
+  //       console.log(event.error);
+  //     };
+  //   };
+  // };
+
+  const handleSpeechRecognition = () => {
+    // const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    microphone = new SpeechRecognition();
+    microphone.continuous = true;
+    microphone.interimResults = true;
+    microphone.lang = 'en-US';
     microphone.onstart = () => {
       console.log('microphones on');
     };
+    microphone.start();
+
+    // microphone.stop();
 
     microphone.onresult = (event) => {
       const transcript = Array.from(event.results)
@@ -73,7 +129,14 @@ const FullScreen1on1Modal = (props) => {
         console.log(event.error);
       };
     };
-  };
+  }; // useEffectで、特定のcall acceptedの時だけこれを実行させたいね。
+
+  useEffect(() => {
+    if (props.mediaState.currentLanguege) {
+      microphone.current.lang = props.mediaState.currentLanguege; // みたいな感じで書くだろな。
+    }
+  }, [props.mediaState.currentLanguege]);
+  // switchのbuttonで
 
   // useEffect(() => {
   //   handleListen();
@@ -253,6 +316,7 @@ const FullScreen1on1Modal = (props) => {
               Hang up
             </Button>
             <Button onClick={() => onActivateSubtitleClick()}>activate partners subtitle</Button>
+            <Button>Switch language</Button>
           </div>
         ) : null}
       </Modal.Body>
