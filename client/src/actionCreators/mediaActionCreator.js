@@ -63,17 +63,18 @@ export const callActionCreator =
     const { myVideoStreamObject } = getState().mediaState;
     console.log('Im calling...');
     const callerUserInfo = getState().authState.currentUser;
-
+    const startLanguage = callerUserInfo.learningLangs[0]; // ここはこれでいいと思うぞ。
+    console.log(startLanguage);
     const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
     dispatch({
       type: HOLD_MY_INITIATED_PEER,
       payload: peerInitiator,
     });
     peerInitiator.on('signal', (signalData) => {
-      socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo }); // ここに、callerのdataを加えよう。
+      socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo, startLanguage }); // ここに、callerのdataを加えよう。
       dispatch({
         type: CALL,
-        payload: '',
+        payload: startLanguage,
       });
     });
     // peerInitiator.on('stream', (stream) => {
@@ -124,9 +125,10 @@ export const completeConnectionWithMyPartnerActionCreator =
       const { peerInitiator } = getState().peerState;
       const { myVideoStreamObject } = getState().mediaState;
       console.log('My call is accepted.');
+      const startLanguage = getState().authState.currentUser.learningLangs[0];
       dispatch({
         type: CALL_ACCEPTED,
-        payload: dataFromServer.recieverUserInfo,
+        payload: { recieverUserInfo: dataFromServer.recieverUserInfo, startLanguage }, // callが受け入れられたら、相手のinfoとcurrentLanguageを埋める。
       });
       peerInitiator.signal(dataFromServer.signalData);
       peerInitiator.on('stream', (stream) => {
@@ -167,14 +169,14 @@ export const startMediaRecorder = (mediaRecorderRef) => (dispatch, getState) => 
 export const listenCallActionCreator = (socket, setFullscreen1on1Modal, setShow1on1) => (dispatch) => {
   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
     console.log('somebody calls me!!!');
-    const { signalData, whoIsCalling, callerUserInfo } = dataFromServer;
+    const { signalData, whoIsCalling, callerUserInfo, startLanguage } = dataFromServer;
     console.log(signalData, whoIsCalling);
     setFullscreen1on1Modal(true);
     setShow1on1(true);
     // myVideo.current.srcObject = myVideoStreamObject;
     dispatch({
       type: LISTEN_CALL,
-      payload: { signalData, whoIsCalling, callerUserInfo },
+      payload: { signalData, whoIsCalling, callerUserInfo, startLanguage },
     });
   });
 };

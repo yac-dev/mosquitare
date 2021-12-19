@@ -127,12 +127,12 @@ userSchema.index({ location: '2dsphere' });
 userSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'nativeLangs',
-    select: 'name code',
+    select: 'name code codeForSpeechRecognition',
   });
 
   this.populate({
     path: 'learningLangs',
-    select: 'name code',
+    select: 'name code codeForSpeechRecognition',
   });
 
   this.populate({

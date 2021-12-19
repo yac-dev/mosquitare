@@ -30,7 +30,7 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         amICalling: true,
-        // currentLanguage: '' // callと同時に入れたやつ。
+        currentLanguage: action.payload,
       };
     case GET_SOCKET_ID:
       return { ...state, mySocketId: action.payload };
@@ -41,6 +41,7 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         whoIsCalling: action.payload.whoIsCalling,
         callerSignal: action.payload.signalData,
         callingWith: action.payload.callerUserInfo,
+        currentLanguage: action.payload.startLanguage,
       };
     case ANSWER_CALL:
       return {
@@ -52,7 +53,7 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         callAccepted: true,
-        callingWith: action.payload,
+        callingWith: action.payload.recieverUserInfo,
       };
     case HANG_UP_CALL:
       return {

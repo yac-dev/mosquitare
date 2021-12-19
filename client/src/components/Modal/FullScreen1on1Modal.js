@@ -28,11 +28,11 @@ import { getIntegratedUserMediaIdFromCalledUserActionCreator } from '../../actio
 
 // import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
 
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const microphone = new SpeechRecognition();
-microphone.continuous = true;
-microphone.interimResults = true;
-microphone.lang = 'en-US';
+// const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+// const microphone = new SpeechRecognition();
+// microphone.continuous = true;
+// microphone.interimResults = true;
+// microphone.lang = 'en-US';
 
 const FullScreen1on1Modal = (props) => {
   const [isInConversation, setIsInConversation] = useState(false);
@@ -47,29 +47,45 @@ const FullScreen1on1Modal = (props) => {
 
   useEffect(() => {
     recognition.current = new SpeechRecognition();
-    // let mic.currentState;
     recognition.current.continuous = true;
     recognition.current.interimResults = true;
+
     // どっかのタイミングでlanguage switch、要はrecognition一旦ストップがされることを前提にまずは。
     recognition.current.onend = () => {
-      // props.ac() // この実行でmediaStateのcurrent languageに自分のpractice 言語が入る。
+      // props.ac() // この実行でmediaStateのcurrent languageに自分のpractice 言語が入る。dispatchだけ。
       // ここでsocket.emit('switch language', {to: '', language: ''})
       // recognition.current.lang = 'practice langauge'
       // recognition.current.start()
-      console.log('Stopped mic.current on Click');
+      console.log('Stopped mic.current on Click'); // ここと下いらない。
       recognition.current.lang = 'ja-JP';
       // recognition.current.start(); // ここでstartして再び、onstartのsetSpeakingLearningLangOrNativeLang('learning');が再び動いちまうんだ。
     };
   }, []);
+  // というよりも、recognition.onend自体をswitch functionの中に含めて書いて、その直後にstop()を実行するといいね。上のを全部移す。
 
-  // useEffect(() => {
-  //   props.socket.on('accept your switch lang', () => {
-  //     recognition.current.stop();
-  //     props.ac() // ここで、向こうからのlanguageをredux stateに入れる。
-  //     recognition.current.lang = 'accepted lang';
-  //     recognition.current.start()
-  //   })
-  // }, [])
+  useEffect(() => {
+    props.socket.on('LETS_TALK_YOUR_LEARNING_LANGUAGE', (dataFromServer) => {
+      // ここで再度onendのeventを設定していいかね。
+      props.recieveSwitchLanguage(dataFromServer.language); // ここで、向こうからのlanguageをredux stateに入れる。
+      const language = store.getState().mediaState.currentLanguage;
+      recognition.current.onend = () => {
+        recognition.current.lang = language;
+        recognition.current.start();
+      };
+    });
+  }, []);
+
+  const switchLanguage = () => {
+    props.switchCurrentLanguage(); // この実行でmediaStateのcurrent languageに自分のpractice 言語が入る。dispatchだけ。
+    const partnerSocketId = store.getState().mediaState.callingWith;
+    const language = store.getState().mediaState.currentLanguage;
+    props.socket.emit('I_WANNA_PRACTICE_MY_LEARNING_LANGUAGE', { to: partnerSocketId, language: language });
+    recognition.current.onend = () => {
+      recognition.current.lang = language;
+      recognition.current.start();
+    };
+    recognition.current.stop();
+  };
 
   // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
   // const handleListen = () => {
@@ -104,39 +120,32 @@ const FullScreen1on1Modal = (props) => {
   //   };
   // };
 
-  const handleSpeechRecognition = () => {
-    // const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    microphone = new SpeechRecognition();
-    microphone.continuous = true;
-    microphone.interimResults = true;
-    microphone.lang = 'en-US';
-    microphone.onstart = () => {
-      console.log('microphones on');
-    };
-    microphone.start();
+  // const handleSpeechRecognition = () => {
+  //   // const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  //   microphone = new SpeechRecognition();
+  //   microphone.continuous = true;
+  //   microphone.interimResults = true;
+  //   microphone.lang = 'en-US';
+  //   microphone.onstart = () => {
+  //     console.log('microphones on');
+  //   };
+  //   microphone.start();
 
-    // microphone.stop();
+  //   // microphone.stop();
 
-    microphone.onresult = (event) => {
-      const transcript = Array.from(event.results)
-        .map((result) => result[0])
-        .map((result) => result.transcript)
-        .join('');
-      console.log(transcript);
-      setVoiceText(transcript);
-      // props.sendVoiceTextActionCreator(props.socket, voiceText, setRequestedSubtitle);
-      microphone.onerror = (event) => {
-        console.log(event.error);
-      };
-    };
-  }; // useEffectで、特定のcall acceptedの時だけこれを実行させたいね。
-
-  useEffect(() => {
-    if (props.mediaState.currentLanguege) {
-      microphone.current.lang = props.mediaState.currentLanguege; // みたいな感じで書くだろな。
-    }
-  }, [props.mediaState.currentLanguege]);
-  // switchのbuttonで
+  //   microphone.onresult = (event) => {
+  //     const transcript = Array.from(event.results)
+  //       .map((result) => result[0])
+  //       .map((result) => result.transcript)
+  //       .join('');
+  //     console.log(transcript);
+  //     setVoiceText(transcript);
+  //     // props.sendVoiceTextActionCreator(props.socket, voiceText, setRequestedSubtitle);
+  //     microphone.onerror = (event) => {
+  //       console.log(event.error);
+  //     };
+  //   };
+  // }; // useEffectで、特定のcall acceptedの時だけこれを実行させたいね。
 
   // useEffect(() => {
   //   handleListen();
@@ -151,7 +160,7 @@ const FullScreen1on1Modal = (props) => {
     //   });
     // });
 
-    props.sendVoiceTextActionCreator(props.socket, voiceText, microphone);
+    // props.sendVoiceTextActionCreator(props.socket, voiceText, microphone);
 
     // props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (voiceTetx) => {
     //   // ここにrenderするfunctionを作る感じかな。
@@ -252,6 +261,18 @@ const FullScreen1on1Modal = (props) => {
     }
   };
 
+  const displayCurrentLanguage = () => {
+    if (props.mediaState.currentLanguage) {
+      return (
+        <>
+          <div style={{ color: 'white' }}>Now, We are speaking {props.mediaState.currentLanguage.name}</div>
+        </>
+      );
+    } else {
+      return null;
+    }
+  };
+
   const switchRender = () => {
     if (props.mediaState.callAccepted) {
       return null;
@@ -319,6 +340,7 @@ const FullScreen1on1Modal = (props) => {
             <Button>Switch language</Button>
           </div>
         ) : null}
+        {displayCurrentLanguage()}
       </Modal.Body>
     </Modal>
   );
