@@ -6,6 +6,8 @@ import {
   ANSWER_CALL,
   CALL_ACCEPTED,
   HANG_UP_CALL,
+  SWITCH_CURRENT_LANGUAGE,
+  RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
 } from '../actionCreators/type';
 
 const INITIAL_STATE = {
@@ -67,6 +69,16 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         callAccepted: false,
         callFinished: true,
         currentLanguage: null,
+      };
+    case SWITCH_CURRENT_LANGUAGE:
+      return {
+        ...state,
+        currentLanguage: action.payload,
+      };
+    case RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST:
+      return {
+        ...state,
+        currentLanguage: action.payload,
       };
     default:
       return state;

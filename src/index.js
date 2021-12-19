@@ -35,6 +35,8 @@ import {
   MY_CALLED_USER_CREATED_CONVERSATION,
   I_SEND_INTEGRATED_USER_MEDIA_ID_TO_MY_PARTNER, // integratedUserMediaに関すること。
   MY_CALLED_USER_CREATED_INTEGRATED_USER_MEDIA,
+  I_WANNA_SWITCH_CURRENT_LANGUAGE,
+  MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE,
 } from '../client/src/actionCreators/socketEvents';
 
 const io = new Server(server, {
@@ -138,6 +140,12 @@ io.on('connection', (socket) => {
   socket.on(I_SEND_INTEGRATED_USER_MEDIA_ID_TO_MY_PARTNER, (dataFromCalledUser) => {
     io.to(dataFromCalledUser.to).emit(MY_CALLED_USER_CREATED_INTEGRATED_USER_MEDIA, {
       integratedUserMediaId: dataFromCalledUser.integratedUserMediaId,
+    });
+  });
+
+  socket.on(I_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromSwitchingUser) => {
+    io.to(dataFromSwitchingUser.to).emit(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, {
+      switchingLanguage: dataFromSwitchingUser.switchingLanguage,
     });
   });
 });

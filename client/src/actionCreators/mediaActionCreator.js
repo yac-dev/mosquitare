@@ -1,4 +1,14 @@
-import { GET_MEDIA, CALL, LISTEN_CALL, ANSWER_CALL, CALL_ACCEPTED, HANG_UP_CALL, HOLD_MY_INITIATED_PEER } from './type';
+import {
+  GET_MEDIA,
+  CALL,
+  LISTEN_CALL,
+  ANSWER_CALL,
+  CALL_ACCEPTED,
+  HANG_UP_CALL,
+  HOLD_MY_INITIATED_PEER,
+  SWITCH_CURRENT_LANGUAGE,
+  RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
+} from './type';
 import {
   SOMEBODY_CALLS_ME,
   I_CALL_SOMEBODY,
@@ -7,6 +17,7 @@ import {
   MY_PARTENER_REQUESTS_MY_VOICE_TEXT,
   I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
   MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
+  I_WANNA_SWITCH_CURRENT_LANGUAGE,
 } from './socketEvents';
 
 import Peer from 'simple-peer';
@@ -63,7 +74,7 @@ export const callActionCreator =
     const { myVideoStreamObject } = getState().mediaState;
     console.log('Im calling...');
     const callerUserInfo = getState().authState.currentUser;
-    const startLanguage = callerUserInfo.learningLangs[0]; // ここはこれでいいと思うぞ。
+    const startLanguage = callerUserInfo.learningLangs[0];
     console.log(startLanguage);
     const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
     dispatch({
@@ -122,6 +133,7 @@ export const completeConnectionWithMyPartnerActionCreator =
   (socket, peerInitiator, myVideoRef, oppositeVideoRef, connectionRef, mediaRecorder) => (dispatch, getState) => {
     // return new Promise((resolve, reject) => {
     socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
+      // このcompleteConnectionっていうacを分解したほうがいいな。socket.onを、fullの方に書く。その後に、acを連ねて書いていく、って言うほうが確実に分かりやすいな。後で直したほうがいい。
       const { peerInitiator } = getState().peerState;
       const { myVideoStreamObject } = getState().mediaState;
       console.log('My call is accepted.');
@@ -162,6 +174,16 @@ export const completeConnectionWithMyPartnerActionCreator =
 export const startMediaRecorder = (mediaRecorderRef) => (dispatch, getState) => {
   return new Promise((resolve, reject) => {
     mediaRecorderRef.current.start();
+    resolve();
+  });
+};
+
+// これをcompleteconnection, answerの後に続けていく感じかね。。。
+export const startSpeechRecognition = (recognition) => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    const language = getState().mediaState.currentLanguage;
+    recognition.lang = language;
+    recognition.start();
     resolve();
   });
 };
@@ -303,3 +325,43 @@ export const getVoiceTextActionCreator = (socket, setVoiceText) => () => {
     setVoiceText(dataFromServer.voiceText);
   });
 };
+
+// recognitionのargumentには、recognition.currentを渡す。
+export const switchCurrentLanguageActionCreator = (socket, recognition) => (dispatch, getState) => {
+  const switchingLanguage = getState().authState.currentUser.learningLangs[0];
+  dispatch({
+    type: SWITCH_CURRENT_LANGUAGE,
+    payload: switchingLanguage,
+  });
+  const partnerSocketId = getState().mediaState.callingWith.socketId;
+  socket.emit(I_WANNA_SWITCH_CURRENT_LANGUAGE, { to: partnerSocketId, switchingLanguage });
+  // こっからrecognition
+  recognition.stop();
+  recognition.lang = switchingLanguage.codeForSpeechRecognition;
+  recognition.start(); //逆に、何で練習の方ではこれ動いてくれなかったんだろね。。。
+  // recognition.onend = () => {
+  //   recognition.lang = switchingLanguage.codeForSpeechRecognition;
+  //   recognition.start();
+  // };
+  // recognition.stop();
+  console.log(recognition);
+};
+
+// recognitionのargumentには、recognition.currentを渡す。
+export const recieveSwitchingLanguageRequestActionCreator =
+  (switchingLanguage, recognition) => (dispatch, getState) => {
+    dispatch({
+      type: RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
+      payload: switchingLanguage,
+    });
+    // こっからrecognitionに関するもの。
+    recognition.stop();
+    recognition.lang = switchingLanguage.codeForSpeechRecognition;
+    recognition.start();
+    // recognition.onend = () => {
+    //   recognition.lang = switchingLanguage.codeForSpeechRecognition;
+    //   recognition.start();
+    // };
+    // recognition.stop();
+    console.log(recognition);
+  };

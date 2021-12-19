@@ -92,6 +92,7 @@ const WorldMap = (props) => {
     props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
     props.getMeetingsActionCreator();
 
+    // このacは分解して、socket.onで始めたほうがいい。
     props.completeConnectionWithMyPartnerActionCreator(
       socket,
       props.peerState.peerInitiator,
