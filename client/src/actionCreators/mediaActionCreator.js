@@ -327,29 +327,42 @@ export const getVoiceTextActionCreator = (socket, setVoiceText) => () => {
 };
 
 // recognitionのargumentには、recognition.currentを渡す。
-export const switchCurrentLanguageActionCreator = (socket, recognition) => (dispatch, getState) => {
-  const switchingLanguage = getState().authState.currentUser.learningLangs[0];
-  dispatch({
-    type: SWITCH_CURRENT_LANGUAGE,
-    payload: switchingLanguage,
-  });
-  const partnerSocketId = getState().mediaState.callingWith.socketId;
-  socket.emit(I_WANNA_SWITCH_CURRENT_LANGUAGE, { to: partnerSocketId, switchingLanguage });
-  // こっからrecognition
-  recognition.stop();
-  recognition.lang = switchingLanguage.codeForSpeechRecognition;
-  recognition.start(); //逆に、何で練習の方ではこれ動いてくれなかったんだろね。。。
-  // recognition.onend = () => {
-  //   recognition.lang = switchingLanguage.codeForSpeechRecognition;
-  //   recognition.start();
-  // };
-  // recognition.stop();
-  console.log(recognition);
-};
+export const switchCurrentLanguageActionCreator =
+  (socket, recognition, setLearningLanguageScript, setNativeLanguageScript) => (dispatch, getState) => {
+    const switchingLanguage = getState().authState.currentUser.learningLangs[0];
+    dispatch({
+      type: SWITCH_CURRENT_LANGUAGE,
+      payload: switchingLanguage,
+    });
+    const partnerSocketId = getState().mediaState.callingWith.socketId;
+    socket.emit(I_WANNA_SWITCH_CURRENT_LANGUAGE, { to: partnerSocketId, switchingLanguage });
+    // こっからrecognition
+    recognition.stop();
+    recognition.lang = switchingLanguage.codeForSpeechRecognition;
+    recognition.start(); //逆に、何で練習の方ではこれ動いてくれなかったんだろね。。。
+    // recognition.onend = () => {
+    //   recognition.lang = switchingLanguage.codeForSpeechRecognition;
+    //   recognition.start();
+    // };
+    // recognition.stop();
+    // こっから下に、onresultをやるべきだ。
+    recognition.onresult = (event) => {
+      // console.log(event);
+      const transcript = Array.from(event.results)
+        .map((result) => result[0])
+        .map((result) => result.transcript)
+        .join('');
+      console.log(transcript);
+      setLearningLanguageScript(transcript);
+      recognition.current.onerror = (event) => {
+        console.log(event.error);
+      };
+    };
+  };
 
 // recognitionのargumentには、recognition.currentを渡す。
 export const recieveSwitchingLanguageRequestActionCreator =
-  (switchingLanguage, recognition) => (dispatch, getState) => {
+  (switchingLanguage, recognition, setNativeLanguageScript) => (dispatch, getState) => {
     dispatch({
       type: RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
       payload: switchingLanguage,
@@ -363,5 +376,17 @@ export const recieveSwitchingLanguageRequestActionCreator =
     //   recognition.start();
     // };
     // recognition.stop();
-    console.log(recognition);
+    // ここから下にonresultを書くべきだわ。
+    recognition.onresult = (event) => {
+      // console.log(event);
+      const transcript = Array.from(event.results)
+        .map((result) => result[0])
+        .map((result) => result.transcript)
+        .join('');
+      console.log(transcript);
+      setNativeLanguageScript(transcript);
+      recognition.current.onerror = (event) => {
+        console.log(event.error);
+      };
+    };
   };
