@@ -74,7 +74,11 @@ const FullScreen1on1Modal = (props) => {
 
   useEffect(() => {
     props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
-      props.recieveSwitchingLanguageRequestActionCreator(dataFromServer.switchingLanguage, recognition.current);
+      props.recieveSwitchingLanguageRequestActionCreator(
+        dataFromServer.switchingLanguage,
+        recognition.current,
+        setNativeLanguageScript
+      );
       // props.recieveSwitchLanguage(dataFromServer.language); // ここで、向こうからのlanguageをredux stateに入れる。
       // const language = store.getState().mediaState.currentLanguage;
       // recognition.current.onend = () => {
@@ -108,6 +112,7 @@ const FullScreen1on1Modal = (props) => {
           };
         };
       } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
+        console.log('india side should be working'); // 音声apiを一つのpcで二つ動かすのは無理みたいだな。。。
         recognition.current.onresult = (event) => {
           const transcript = Array.from(event.results)
             .map((result) => result[0])
