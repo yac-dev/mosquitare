@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { MONGODB_URL } from '../../config';
 
 mongoose
-  .connect(MONGODB_URL, {
+  .connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

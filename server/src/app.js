@@ -15,6 +15,10 @@ import conversationsRouter from './routes/conversations';
 app.use(express.json());
 app.use(cors());
 
+app.get('/', (request, response) => {
+  response.send('Hello guest');
+});
+
 app.use('/api/users', usersRouter);
 app.use('/api/languages', languagesRouter);
 app.use('/api/countries', countriesRouter);

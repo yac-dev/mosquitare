@@ -36,7 +36,7 @@ export const signup = async (request, response, next) => {
     user.password = await bcrypt.hash(user.password, salt);
     user.save();
 
-    const jwtToken = jwt.sign({ id: user._id }, JWT_PRIVATE_KEY, { expiresIn: '10d' });
+    const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
 
     response.json({
       user,

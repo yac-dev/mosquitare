@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
 import ReactMapGL, { Marker } from 'react-map-gl';
+
 import { Icon, Popup, Button } from 'semantic-ui-react';
 // import { Modal } from 'react-bootstrap';
 import Tooltip from '@mui/material/Tooltip';
@@ -47,6 +48,12 @@ import { JOIN_MEETING } from '../actionCreators/socketEvents';
 import { LISTEN_CALL } from '../actionCreators/type';
 import { GET_MEDIA } from '../actionCreators/type';
 import store from '../store';
+import mapboxgl from 'mapbox-gl';
+// The following is required to stop "npm build" from transpiling mapbox code.
+// notice the exclamation point in the import.
+// @ts-ignore
+// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 // socket 設定
 console.log('hello from worldmap');
