@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 const app = express();
 import './database/mongoose';
+import path from 'path';
 
 import usersRouter from './routes/users';
 import languagesRouter from './routes/languages';
@@ -21,5 +22,13 @@ app.use('/api/meetings', meetingsRouter);
 app.use('/api/userMedias', userMediasRouter);
 app.use('/api/conversations', conversationsRouter);
 app.use('/api/integratedusermedias', integratedUserMediasRouter);
+
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+
+//   app.get('*', (request, response) => {
+//     response.sendFile(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+//   });
+// }
 
 export default app;

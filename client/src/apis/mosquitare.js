@@ -7,7 +7,7 @@ import path from 'path';
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = dirname(__filename);
 
-require('dotenv').config({ path: path.join(__dirname, '../', '../', '.env') });
+// require('dotenv').config({ path: path.join(__dirname, '../', '../', '.env') });
 
 export const mosquitareAPI = axios.create({
   baseURL: process.env.REACT_APP_BASE_API_URL,
