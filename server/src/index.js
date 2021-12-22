@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
 
   socket.on(I_CALL_SOMEBODY, (dataFromCaller) => {
     // console.log(dataFromCaller);
-    console.log('server?????');
+    // console.log('server?????');
     // console.log(dataFromCaller.oppositeSocketId);
     // console.log(dataFromCaller);
     io.to(dataFromCaller.oppositeSocketId).emit(SOMEBODY_CALLS_ME, {
@@ -147,8 +147,8 @@ io.on('connection', (socket) => {
 
   // conversatationに関するevent
   socket.on(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, (dataFromCalledUser) => {
-    console.log('chat video worrrrrrk');
-    console.log(dataFromCalledUser.to);
+    // console.log('chat video worrrrrrk');
+    // console.log(dataFromCalledUser.to);
     io.to(dataFromCalledUser.to).emit(MY_CALLED_USER_CREATED_CONVERSATION, {
       conversationId: dataFromCalledUser.conversationId,
     });

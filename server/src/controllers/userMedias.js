@@ -7,26 +7,27 @@ import UserMedia from '../models/userMedia';
 import ffmpeg from 'ffmpeg';
 import path from 'path';
 
-const s3 = new S3({
-  region: AWS_S3BUCKET_REGION,
-  accessKeyId: AWS_S3BUCKET_ACCESS_KEY,
-  secretAccessKey: AWS_S3BUCKET_SECRET_KEY,
-});
+// const s3 = new S3({
+//   region: AWS_S3BUCKET_REGION,
+//   accessKeyId: AWS_S3BUCKET_ACCESS_KEY,
+//   secretAccessKey: AWS_S3BUCKET_SECRET_KEY,
+// });
 
-function uploadFile(file) {
-  const fileStream = fs.createReadStream(file.path); // ここでbinary dataを全て読み込んでs3に保存する。
+// function uploadFile(file) {
+//   const fileStream = fs.createReadStream(file.path); // ここでbinary dataを全て読み込んでs3に保存する。
 
-  const uploadParams = {
-    Bucket: AWS_S3BUCKET_NAME,
-    Body: fileStream,
-    Key: file.filename,
-  };
+//   const uploadParams = {
+//     Bucket: AWS_S3BUCKET_NAME,
+//     Body: fileStream,
+//     Key: file.filename,
+//   };
 
-  return s3.upload(uploadParams).promise();
-}
+//   return s3.upload(uploadParams).promise();
+// }
 
 export const createUserMedia = async (request, response) => {
   try {
+    console.log('ok???');
     const files = request.files; // 多分arryaになっているだろう。
     const userId = request.params.id;
     console.log(files); // multer middlewareがあるから、ここでrequest objectのfile propertyにアクセスできる。
@@ -51,7 +52,10 @@ export const createUserMedia = async (request, response) => {
       user: userId,
       videoFileName: files[0].filename,
       audioFileName: files[1].filename,
+      learningLanguageTextFileName: files[2].filename,
+      nativeLanguageTextFileName: files[3].filename,
     });
+    console.log('Done');
     response.json({
       userMedia,
     });

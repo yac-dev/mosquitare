@@ -22,7 +22,7 @@ const conversationSchema = new mongoose.Schema({
     ref: 'IntegratedUserMedia',
   },
   // isVideoPublic: [Boolean],これいらないかな。二つのreviewがそれぞれscoreQuestion4でbooleanを持っているからな。
-  reviws: [
+  reviews: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'review',

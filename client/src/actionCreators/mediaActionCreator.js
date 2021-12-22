@@ -68,7 +68,9 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
         chunksForAudio = [];
         Promise.resolve()
           .then(() => {
-            return dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef)); //ここにさらに上で足したanguageのblobを入れるな。
+            return dispatch(
+              createUserMedia(blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage, connectionRef)
+            ); //ここにさらに上で足したanguageのblobを入れるな。
           })
           .then(() => {
             return dispatch(hangUpCallActionCreator(connectionRef));
