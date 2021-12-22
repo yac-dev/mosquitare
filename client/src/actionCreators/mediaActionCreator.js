@@ -33,40 +33,52 @@ import { updateConversationIntegratedUserMediaActionCreator } from './integrated
 // import { updateUserStreamActionCreator } from './conversationActionCreators';
 import { createUserMedia } from './userMediasActionCreators';
 
-export const getMediaActionCreator = (mediaRecorder, chunksForVideo, chunksForAudio, connectionRef) => (dispatch) => {
-  const audioConstraints = {
-    autoGainControl: false,
-    channelCount: 2,
-    echoCancellation: false,
-    latency: 0,
-    noiseSuppression: false,
-    sampleRate: 48000,
-    sampleSize: 16,
-  };
-  navigator.mediaDevices.getUserMedia({ video: true, audio: audioConstraints }).then((stream) => {
-    dispatch({
-      type: GET_MEDIA,
-      payload: stream,
+export const getMediaActionCreator =  // ここのlearningLanguageとnativeLanguage、最初からこれ入れていいかね。空の文字烈で終わりそうだな。。。まあ実験だ。
+  (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
+  (dispatch) => {
+    const audioConstraints = {
+      autoGainControl: false,
+      channelCount: 2,
+      echoCancellation: false,
+      latency: 0,
+      noiseSuppression: false,
+      sampleRate: 48000,
+      sampleSize: 16,
+    };
+    navigator.mediaDevices.getUserMedia({ video: true, audio: audioConstraints }).then((stream) => {
+      dispatch({
+        type: GET_MEDIA,
+        payload: stream,
+      });
+      // 以下record用のsetting。ただそれだけ。
+      // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
+      mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+      mediaRecorder.current.ondataavailable = function (event) {
+        chunksForVideo.push(event.data);
+        chunksForAudio.push(event.data);
+      };
+      mediaRecorder.current.onstop = (event) => {
+        let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
+        let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
+        let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
+        let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+
+        console.log('recore stopped!!!');
+        chunksForVideo = [];
+        chunksForAudio = [];
+        Promise.resolve()
+          .then(() => {
+            return dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef)); //ここにさらに上で足したanguageのblobを入れるな。
+          })
+          .then(() => {
+            return dispatch(hangUpCallActionCreator(connectionRef));
+          });
+        // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
+        // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
+        // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+      };
     });
-    // 以下record用のsetting。ただそれだけ。
-    // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
-    mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
-    mediaRecorder.current.ondataavailable = function (event) {
-      chunksForVideo.push(event.data);
-      chunksForAudio.push(event.data);
-    };
-    mediaRecorder.current.onstop = (event) => {
-      let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
-      let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
-      console.log('recore stopped!!!');
-      chunksForVideo = [];
-      chunksForAudio = [];
-      dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
-      // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
-      // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-    };
-  });
-};
+  };
 
 export const callActionCreator =
   (socket, mySocketId, myVideoRef, oppositeSocketId, oppositeVideoRef, connectionRef, mediaRecorderRef, setChunks) =>
@@ -281,7 +293,7 @@ export const answerCallActionCreator =
 
 export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   console.log('should be working!!');
-  store.dispatch(updateUserConversationToFalseActionCreator());
+  dispatch(updateUserConversationToFalseActionCreator());
   connectionRef.current.destroy();
   dispatch({
     type: HANG_UP_CALL,
@@ -346,7 +358,7 @@ export const switchCurrentLanguageActionCreator =
         .map((result) => result.transcript)
         .join('');
       console.log(transcript);
-      setLearningLanguageScript(transcript);
+      setLearningLanguageScript((prev) => prev + transcript);
       recognition.onerror = (event) => {
         console.log(event.error);
       };
@@ -389,7 +401,7 @@ export const recieveSwitchingLanguageRequestActionCreator =
         .map((result) => result.transcript)
         .join('');
       console.log(transcript);
-      setNativeLanguageScript(transcript);
+      setNativeLanguageScript((prev) => prev + transcript);
       recognition.onerror = (event) => {
         console.log(event.error);
       };

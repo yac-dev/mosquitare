@@ -7,6 +7,8 @@ const userMediaSchema = new mongoose.Schema({
   },
   videoFileName: String,
   audioFileName: String,
+  learningLanguageTextFileName: String,
+  nativeLanguageTextFileName: String,
 });
 
 const UserMedia = mongoose.model('UserMedia', userMediaSchema);

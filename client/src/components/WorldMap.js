@@ -77,6 +77,8 @@ const WorldMap = (props) => {
   const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
+  const [learningLanguageScript, setLearningLanguageScript] = useState('');
+  const [nativeLanguageScript, setNativeLanguageScript] = useState(''); // 何でここかっていうと、getMediaでのonstopにこのlanguage scriptを含めたいから。ここのgetMediaにlearningScript, nativeScript両方とも入れておかないといかん。
 
   const [chunks, setChunks] = useState([]);
   const mediaRecorder = useRef();
@@ -95,7 +97,14 @@ const WorldMap = (props) => {
       });
     }
 
-    props.getMediaActionCreator(mediaRecorder, chunksForVideo, chunksForAudio, connectionRef);
+    props.getMediaActionCreator(
+      mediaRecorder,
+      chunksForVideo,
+      chunksForAudio,
+      learningLanguageScript,
+      nativeLanguageScript,
+      connectionRef
+    );
     props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
     props.getMeetingsActionCreator();
 
@@ -232,6 +241,8 @@ const WorldMap = (props) => {
         mediaRecorder={mediaRecorder}
         chunksForVideo={chunksForVideo}
         chunksForAudio={chunksForAudio}
+        setLearningLanguageScript={setLearningLanguageScript} //これでいいかなー。。。
+        setNativeLanguageScript={setNativeLanguageScript} // これでいいかなー。。。まあ今はこれでいいや。
       />
       <FullScreenMeetingModal
         socket={socket}

@@ -59,3 +59,14 @@ export const createUserMedia = async (request, response) => {
     console.log(error);
   }
 };
+
+export const updateUserMediaLanguageScripts = (request, response) => {
+  try {
+    // この前にuserMediaを作っているから、そのidで見つけてfieldをupdateする感じでいく感じかな。
+    const files = request.files;
+    const userId = request.params.id;
+    console.log(files);
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -42,8 +42,8 @@ const FullScreen1on1Modal = (props) => {
   const [requestedSubtitle, setRequestedSubtitle] = useState(false);
   const [voiceText, setVoiceText] = useState(''); // 字幕は、learningのときだけ動くのでいいや。
   const [isMinimumTimePassed, setIsMinimumTimePassed] = useState(false);
-  const [learningLanguageScript, setLearningLanguageScript] = useState('');
-  const [nativeLanguageScript, setNativeLanguageScript] = useState('');
+  // const [learningLanguageScript, setLearningLanguageScript] = useState('');
+  // const [nativeLanguageScript, setNativeLanguageScript] = useState('');
   // const [chunks, setChunks] = useState([]);
   // let mediaRecorder;
 
@@ -77,7 +77,7 @@ const FullScreen1on1Modal = (props) => {
       props.recieveSwitchingLanguageRequestActionCreator(
         dataFromServer.switchingLanguage,
         recognition.current,
-        setNativeLanguageScript
+        props.setNativeLanguageScript
       );
       // props.recieveSwitchLanguage(dataFromServer.language); // ここで、向こうからのlanguageをredux stateに入れる。
       // const language = store.getState().mediaState.currentLanguage;
@@ -106,7 +106,7 @@ const FullScreen1on1Modal = (props) => {
             .map((result) => result.transcript)
             .join('');
           console.log(transcript);
-          setLearningLanguageScript(transcript);
+          props.setLearningLanguageScript(transcript);
           recognition.current.onerror = (event) => {
             console.log(event.error);
           };
@@ -119,14 +119,14 @@ const FullScreen1on1Modal = (props) => {
             .map((result) => result.transcript)
             .join('');
           console.log(transcript);
-          setNativeLanguageScript(transcript);
+          props.setNativeLanguageScript(transcript);
           recognition.current.onerror = (event) => {
             console.log(event.error);
           };
         };
       }
     }
-  }, [props.mediaState.callAccepted]);
+  }, [props.mediaState.callAccepted]); // 実験して、おそらくちゃんと動いていることが分かった。
 
   useEffect(() => {}, [props.mediaState.currentLanguage]);
 
@@ -344,8 +344,8 @@ const FullScreen1on1Modal = (props) => {
               props.switchCurrentLanguageActionCreator(
                 props.socket,
                 recognition.current,
-                setLearningLanguageScript,
-                setNativeLanguageScript
+                props.setLearningLanguageScript,
+                props.setNativeLanguageScript
               )
             }
           >
@@ -415,7 +415,7 @@ const FullScreen1on1Modal = (props) => {
               negative
               // disabled={!isMinimumTimePassed}
               className='hang-up-button'
-              onClick={() => props.onHangUpClick()}
+              onClick={() => props.onHangUpClick()} // ここで、recorderのstopがかかって、onstopのeventが動くようになる。
             >
               Hang up
             </Button>
