@@ -142,7 +142,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, (dataFromAnswerer) => {
-    io.to(dataFromAnswerer.to).emit(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, { voiceText: dataFromAnswerer.voiceText });
+    io.to(dataFromAnswerer.to).emit(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, {
+      nativeLanguageScript: dataFromAnswerer.nativeLanguageScript,
+    });
   });
 
   // conversatationに関するevent

@@ -308,37 +308,41 @@ export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   // window.location = '/worldmap'; // まあこれでいいのかね。
 };
 
-export const sendVoiceTextActionCreator = (socket, voiceText, microphone) => (dispatch, getState) => {
+// こことか、redux thunk使う必要ないな。
+export const sendVoiceTextActionCreator = (socket, nativeLanguageScript) => (dispatch, getState) => {
   socket.on(MY_PARTENER_REQUESTS_MY_VOICE_TEXT, () => {
     console.log('gonna send voice text');
     // setRequestedSubtitle(true);
     const to = getState().mediaState.callingWith.socketId;
     // ここに何かいるのか。もしかしたら、ここでmicrophoneのresultのcallbackとして入れるのがいいかもしれん。setRequestedはいらないかも。
-    microphone.start();
-    microphone.onresult = (event) => {
-      // console.log(event);
-      const transcript = Array.from(event.results)
-        .map((result) => result[0])
-        .map((result) => result.transcript)
-        .join('');
-      console.log(transcript);
-      // setVoiceText(transcript);
-      // props.sendVoiceTextActionCreator(props.socket, voiceText, setRequestedSubtitle);
-      socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
-        to: to,
-        voiceText: transcript,
-      });
-    };
+    // ここで、自分のnativeLangのreact stateを全部送る。
+    socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, { to, nativeLanguageScript });
+
+    // microphone.start();
+    // microphone.onresult = (event) => {
+    //   // console.log(event);
+    //   const transcript = Array.from(event.results)
+    //     .map((result) => result[0])
+    //     .map((result) => result.transcript)
+    //     .join('');
+    //   console.log(transcript);
+    //   // setVoiceText(transcript);
+    //   // props.sendVoiceTextActionCreator(props.socket, voiceText, setRequestedSubtitle);
+    //   socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+    //     to: to,
+    //     voiceText: transcript,
+    //   });
+    // };
   });
 };
 
-export const getVoiceTextActionCreator = (socket, setVoiceText) => () => {
+export const getVoiceTextActionCreator = (socket, setLanguageSubtitle) => () => {
   socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
     // ここにrenderするfunctionを作る感じかな。
     console.log('partner sent to me...');
-    console.log(dataFromServer.voiceText);
+    console.log(dataFromServer.nativeLanguageScript);
     // display(voiceText)
-    setVoiceText(dataFromServer.voiceText);
+    setLanguageSubtitle(dataFromServer.nativeLanguageScript);
   });
 };
 

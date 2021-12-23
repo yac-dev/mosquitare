@@ -229,7 +229,6 @@ const WorldMap = (props) => {
     //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
     // };
     mediaRecorder.current.stop(); // いちいちonstopのなかにblobを書く必要ないんじゃないかね。。。
-
     // ここでまずblob4つ作るfunctionを実行して(promiseで)、
     makeBlobs()
       .then((blobs) => {

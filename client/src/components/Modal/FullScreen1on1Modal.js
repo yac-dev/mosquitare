@@ -40,7 +40,9 @@ import { recieveSwitchingLanguageRequestActionCreator } from '../../actionCreato
 const FullScreen1on1Modal = (props) => {
   const [isInConversation, setIsInConversation] = useState(false);
   const [requestedSubtitle, setRequestedSubtitle] = useState(false);
-  const [voiceText, setVoiceText] = useState(''); // 字幕は、learningのときだけ動くのでいいや。
+  // activate用のboolean state
+  const [isLanguageSubtitleActivate, setIsLanguageSubtitleActivate] = useState(false);
+  const [languageSubtitle, setLanguageSubtitle] = useState(''); // 字幕は、learningのときだけ動くのでいいや。
   const [isMinimumTimePassed, setIsMinimumTimePassed] = useState(false);
   // const [learningLanguageScript, setLearningLanguageScript] = useState('');
   // const [nativeLanguageScript, setNativeLanguageScript] = useState('');
@@ -53,24 +55,11 @@ const FullScreen1on1Modal = (props) => {
   recognition.current.continuous = true;
   recognition.current.interimResults = true;
 
-  // useEffect(() => {
-  //   if (props.mediaState.amICalling) {
-  //     recognition.current.lang = props.authState.currentUser.learningLangs[0].codeForSpeechRecognition;
-  //     recognition.current.start();
-  //     console.log(recognition.current);
-  //   }
-  //   // どっかのタイミングでlanguage switch、要はrecognition一旦ストップがされることを前提にまずは。
-  //   // recognition.current.onend = () => {
-  //   //   // props.ac() // この実行でmediaStateのcurrent languageに自分のpractice 言語が入る。dispatchだけ。
-  //   //   // ここでsocket.emit('switch language', {to: '', language: ''})
-  //   //   // recognition.current.lang = 'practice langauge'
-  //   //   // recognition.current.start()
-  //   //   console.log('Stopped mic.current on Click'); // ここと下いらない。
-  //   //   recognition.current.lang = 'ja-JP';
-  //   //   // recognition.current.start(); // ここでstartして再び、onstartのsetSpeakingLearningLangOrNativeLang('learning');が再び動いちまうんだ。
-  //   // };
-  // }, [props.mediaState.amICalling]);
-  // というよりも、recognition.onend自体をswitch functionの中に含めて書いて、その直後にstop()を実行するといいね。上のを全部移す。
+  useEffect(() => {
+    // button clickで、setIsLanguageSubtitleActivateをtrueにする。
+    if (isLanguageSubtitleActivate) {
+    }
+  }, [isLanguageSubtitleActivate]);
 
   useEffect(() => {
     props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
@@ -127,8 +116,6 @@ const FullScreen1on1Modal = (props) => {
       }
     }
   }, [props.mediaState.callAccepted]); // 実験して、おそらくちゃんと動いていることが分かった。
-
-  useEffect(() => {}, [props.mediaState.currentLanguage]);
 
   // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
   // const handleListen = () => {
@@ -203,14 +190,14 @@ const FullScreen1on1Modal = (props) => {
     //   });
     // });
 
-    // props.sendVoiceTextActionCreator(props.socket, voiceText, microphone);
+    props.sendVoiceTextActionCreator(props.socket, props.nativeLanguageScript);
 
     // props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (voiceTetx) => {
     //   // ここにrenderするfunctionを作る感じかな。
     //   // display(voiceText)
     //   setVoiceText(voiceTetx);
     // });
-    props.getVoiceTextActionCreator(props.socket, setVoiceText);
+    props.getVoiceTextActionCreator(props.socket, setLanguageSubtitle);
 
     props.getConversationIdFromCalledUserActionCreator(props.socket).then((conversationId) => {
       props.updateConversationRecievedUserActionCreator(conversationId);
@@ -290,6 +277,7 @@ const FullScreen1on1Modal = (props) => {
     // console.log(recognition);
   };
 
+  // 多分、字幕onですよっていうstateを用意したほうがいいわ。useEffectでその字幕onですよstateが変わるたびに色々やるっていう感じかね。。。
   const onActivateSubtitleClick = () => {
     console.log('activate subtitle');
     props.socket.emit(I_REQUEST_PARTNERS_VOICE_TEXT, {
@@ -298,10 +286,10 @@ const FullScreen1on1Modal = (props) => {
   };
 
   const displaySubtitle = () => {
-    if (voiceText) {
+    if (languageSubtitle) {
       return (
         <>
-          <p className='voice-text'>{voiceText}</p>
+          <p className='voice-text'>{languageSubtitle}</p>
         </>
       );
     } else {
