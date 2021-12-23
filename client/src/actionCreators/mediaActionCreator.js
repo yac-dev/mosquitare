@@ -34,7 +34,7 @@ import { updateConversationIntegratedUserMediaActionCreator } from './integrated
 import { createUserMedia } from './userMediasActionCreators';
 
 export const getMediaActionCreator =  // ここのlearningLanguageとnativeLanguage、最初からこれ入れていいかね。空の文字烈で終わりそうだな。。。まあ実験だ。
-  (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
+  (mediaRecorder, chunksForVideo, chunksForAudio, setChunksForVideo, setChunksForAudio, connectionRef) =>
   (dispatch) => {
     const audioConstraints = {
       autoGainControl: false,
@@ -54,31 +54,33 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
       // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
       mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
       mediaRecorder.current.ondataavailable = function (event) {
-        chunksForVideo.push(event.data);
-        chunksForAudio.push(event.data);
+        setChunksForVideo((prevState) => [...prevState, event.data]);
+        setChunksForAudio((prevState) => [...prevState, event.data]);
+        // chunksForVideo.push(event.data);
+        // chunksForAudio.push(event.data);
       };
-      mediaRecorder.current.onstop = (event) => {
-        let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
-        let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
-        let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
-        let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+      // mediaRecorder.current.onstop = (event) => {
+      //   let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
+      //   let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
+      //   let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
+      //   let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
 
-        console.log('recore stopped!!!');
-        chunksForVideo = [];
-        chunksForAudio = [];
-        Promise.resolve()
-          .then(() => {
-            return dispatch(
-              createUserMedia(blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage, connectionRef)
-            ); //ここにさらに上で足したanguageのblobを入れるな。
-          })
-          .then(() => {
-            return dispatch(hangUpCallActionCreator(connectionRef));
-          });
-        // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
-        // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
-        // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-      };
+      //   console.log('recore stopped!!!');
+      //   chunksForVideo = [];
+      //   chunksForAudio = [];
+      //   Promise.resolve()
+      //     .then(() => {
+      //       return dispatch(
+      //         createUserMedia(blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage, connectionRef)
+      //       ); //ここにさらに上で足したanguageのblobを入れるな。
+      //     })
+      //     .then(() => {
+      //       return dispatch(hangUpCallActionCreator(connectionRef));
+      //     });
+      //   // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
+      //   // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
+      //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+      // };
     });
   };
 
@@ -295,7 +297,7 @@ export const answerCallActionCreator =
 
 export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   console.log('should be working!!');
-  dispatch(updateUserConversationToFalseActionCreator());
+  dispatch(updateUserConversationToFalseActionCreator()); // ここpromisifyね。これだめ。
   connectionRef.current.destroy();
   dispatch({
     type: HANG_UP_CALL,

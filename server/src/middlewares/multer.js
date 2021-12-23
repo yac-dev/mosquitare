@@ -19,7 +19,7 @@ import { AWS_S3BUCKET_NAME, AWS_S3BUCKET_REGION, AWS_S3BUCKET_ACCESS_KEY, AWS_S3
 
 const storage = multer.diskStorage({
   destination: function (request, file, callback) {
-    callback(null, './uploadedFiles/'); // 第一引数はpotential errorのこと。nullでいい。./uploadsは相対パス。
+    callback(null, './uploadedFilesBuffer/'); // 第一引数はpotential errorのこと。nullでいい。./uploadsは相対パス。
   },
   filename: function (request, file, callback) {
     const extension = file.mimetype.split('/')[1];

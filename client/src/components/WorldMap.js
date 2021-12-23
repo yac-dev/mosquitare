@@ -40,6 +40,10 @@ import { getUsersActionCreator } from '../actionCreators/usersActionCreator';
 import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreator';
 import { updateUserStreamActionCreator } from '../actionCreators/conversationActionCreators';
 
+import { createUserMedia } from '../actionCreators/userMediasActionCreators';
+//
+import { updateUserConversationToFalseActionCreator } from '../actionCreators/authActionCreators';
+
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
 import { SOMEBODY_CALLS_ME } from '../actionCreators/socketEvents';
@@ -83,8 +87,10 @@ const WorldMap = (props) => {
   const [chunks, setChunks] = useState([]);
   const mediaRecorder = useRef();
   // const mediaState = useSelector((state) => state.mediaState);
-  let chunksForVideo = [];
-  let chunksForAudio = [];
+  const [chunksForVideo, setChunksForVideo] = useState([]);
+  const [chunksForAudio, setChunksForAudio] = useState([]);
+  // let chunksForVideo = []; // ここの二つ、別にuseRefううよ。
+  // let chunksForAudio = [];
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -101,8 +107,10 @@ const WorldMap = (props) => {
       mediaRecorder,
       chunksForVideo,
       chunksForAudio,
-      learningLanguageScript,
-      nativeLanguageScript,
+      // learningLanguageScript,
+      // nativeLanguageScript,
+      setChunksForVideo,
+      setChunksForAudio,
       connectionRef
     );
     props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
@@ -198,6 +206,16 @@ const WorldMap = (props) => {
     //   });
   };
 
+  const makeBlobs = () => {
+    return new Promise((resolve, reject) => {
+      let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
+      let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
+      let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
+      let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+      resolve({ blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage });
+    });
+  };
+
   // 1on1 modalで実行してもらうcallback.modalのstate変えるからここに書いている。
   // ここにmediarecorderのinstanceを入れる前提だな。
   const onHangUpClick = () => {
@@ -210,9 +228,29 @@ const WorldMap = (props) => {
     //   // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
     //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
     // };
-    mediaRecorder.current.stop();
-    // props.hangUpCallActionCreator(connectionRef); // これ自体、updateStreamの下にやらないとダメだ。それか、向こうをpromisifyするか。
-    setShow1on1(false);
+    mediaRecorder.current.stop(); // いちいちonstopのなかにblobを書く必要ないんじゃないかね。。。
+
+    // ここでまずblob4つ作るfunctionを実行して(promiseで)、
+    makeBlobs()
+      .then((blobs) => {
+        return props.createUserMedia(
+          blobs.blobForVideo,
+          blobs.blobForAudio,
+          blobs.blobForLearningLanguage,
+          blobs.blobForNativeLanguage
+        );
+      })
+      .then(() => {
+        return props.hangUpCallActionCreator(connectionRef); //っていう流れかね。。。。
+      })
+      .then(() => {
+        return props.updateUserConversationToFalseActionCreator();
+      })
+      .then(() => {
+        setShow1on1(false);
+      });
+
+    // setShow1on1(false); // これもpromisifyで繋げたほうがいいかも。
   };
 
   // meeting用のfull screen modalのtrigger
@@ -307,8 +345,10 @@ export default connect(mapStateToProps, {
   answerCallActionCreator,
   getUsersActionCreator,
   loadMeAndUpdateActionCreator,
-  hangUpCallActionCreator,
   // updateUserConversationStateActionCreator // ここでやるのはよそう。actionの順番がごちゃごちゃになる。
   getMeetingsActionCreator,
   // updateUserStreamActionCreator,
+  createUserMedia,
+  hangUpCallActionCreator,
+  updateUserConversationToFalseActionCreator,
 })(WorldMap);

@@ -105,6 +105,7 @@ export const updateUserConversationToFalseActionCreator = () => async (dispatch,
       type: UPDATE_CONVERSATION_TO_FALSE,
       payload: '',
     });
+    return Promise.resolve();
   } catch (error) {
     console.log(error);
   }

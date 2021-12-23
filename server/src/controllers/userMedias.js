@@ -23,7 +23,7 @@ const uploadFile = async (file) => {
   };
 
   await s3.upload(uploadParams).promise();
-  await unlinkFile(file.path);
+  // await unlinkFile(file.path);
 };
 
 export const createUserMedia = async (request, response) => {
