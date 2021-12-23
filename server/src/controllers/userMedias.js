@@ -1,29 +1,30 @@
 import fs from 'fs';
 import util from 'util';
 const unlinkFile = util.promisify(fs.unlink);
-import S3 from 'aws-sdk/clients/s3 ';
 import { AWS_S3BUCKET_NAME, AWS_S3BUCKET_REGION, AWS_S3BUCKET_ACCESS_KEY, AWS_S3BUCKET_SECRET_KEY } from '../../config';
 import UserMedia from '../models/userMedia';
 import ffmpeg from 'ffmpeg';
 import path from 'path';
+import S3 from 'aws-sdk/clients/s3';
 
-// const s3 = new S3({
-//   region: AWS_S3BUCKET_REGION,
-//   accessKeyId: AWS_S3BUCKET_ACCESS_KEY,
-//   secretAccessKey: AWS_S3BUCKET_SECRET_KEY,
-// });
+const s3 = new S3({
+  region: process.env.AWS_S3BUCKET_REGION,
+  accessKeyId: process.env.AWS_S3BUCKET_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_S3BUCKET_SECRET_KEY,
+});
 
-// function uploadFile(file) {
-//   const fileStream = fs.createReadStream(file.path); // ここでbinary dataを全て読み込んでs3に保存する。
+const uploadFile = async (file) => {
+  const fileStream = fs.createReadStream(file.path); // ここでbinary dataを全て読み込んでs3に保存する。
 
-//   const uploadParams = {
-//     Bucket: AWS_S3BUCKET_NAME,
-//     Body: fileStream,
-//     Key: file.filename,
-//   };
+  const uploadParams = {
+    Bucket: process.env.AWS_S3BUCKET_NAME,
+    Body: fileStream,
+    Key: file.filename,
+  };
 
-//   return s3.upload(uploadParams).promise();
-// }
+  await s3.upload(uploadParams).promise();
+  await unlinkFile(file.path);
+};
 
 export const createUserMedia = async (request, response) => {
   try {
@@ -35,12 +36,10 @@ export const createUserMedia = async (request, response) => {
     // const result = await uploadFile(file); // ここ、けっこう時間かかる。もしかしたら、clientから直接やるっていう方がいいかもな。
     // const p = path.join(__dirname, '..');
 
-    // await Promise.all(
-    //   //undefined is not iterableだって。
-    //   files.forEach(async (file) => {
-    //     await uploadFile(file);
-    //   })
-    // ); // 多分結構時間がかかる。
+    //undefined is not iterableだって。
+    files.forEach((file) => {
+      uploadFile(file);
+    });
 
     // await unlinkFile(file.path);
     // await Promise.all(
