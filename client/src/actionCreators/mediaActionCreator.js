@@ -311,6 +311,7 @@ export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
 // こことか、redux thunk使う必要ないな。
 export const sendVoiceTextActionCreator = (socket, nativeLanguageScript) => (dispatch, getState) => {
   socket.on(MY_PARTENER_REQUESTS_MY_VOICE_TEXT, () => {
+    console.log(nativeLanguageScript);
     console.log('gonna send voice text');
     // setRequestedSubtitle(true);
     const to = getState().mediaState.callingWith.socketId;
@@ -392,6 +393,7 @@ export const switchCurrentLanguageActionCreator =
     // };
   };
 
+// 直すのはこっちね。
 // recognitionのargumentには、recognition.currentを渡す。
 export const recieveSwitchingLanguageRequestActionCreator =
   (switchingLanguage, recognition, setNativeLanguageScript) => (dispatch, getState) => {

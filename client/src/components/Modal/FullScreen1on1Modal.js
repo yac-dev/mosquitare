@@ -41,7 +41,7 @@ const FullScreen1on1Modal = (props) => {
   const [isInConversation, setIsInConversation] = useState(false);
   const [requestedSubtitle, setRequestedSubtitle] = useState(false);
   // activate用のboolean state
-  const [isLanguageSubtitleActivate, setIsLanguageSubtitleActivate] = useState(false);
+  const [isLanguageSubtitleActivated, setIsLanguageSubtitleActivated] = useState(false);
   const [languageSubtitle, setLanguageSubtitle] = useState(''); // 字幕は、learningのときだけ動くのでいいや。
   const [isMinimumTimePassed, setIsMinimumTimePassed] = useState(false);
   // const [learningLanguageScript, setLearningLanguageScript] = useState('');
@@ -55,11 +55,19 @@ const FullScreen1on1Modal = (props) => {
   recognition.current.continuous = true;
   recognition.current.interimResults = true;
 
-  useEffect(() => {
-    // button clickで、setIsLanguageSubtitleActivateをtrueにする。
-    if (isLanguageSubtitleActivate) {
-    }
-  }, [isLanguageSubtitleActivate]);
+  // 保留
+  // useEffect(() => {
+  //   // button clickで、setIsLanguageSubtitleActivateをtrueにする。
+  //   if (isLanguageSubtitleActivated) {
+  //     props.socket.emit(I_REQUEST_PARTNERS_VOICE_TEXT, {
+  //       to: props.mediaState.callingWith.socketId,
+  //     });
+  //   } else {
+  //     // setLanguageSubtitle() これではなくて、「もう必要ありません」っていうsocket eventをpartnerに出すべきかね。
+  //     // isLanguageSubtitleActivatedがoffになったら字幕を消したいわけよ。deactivateをclickするか、switch languageを押された時にisLangをoffにする。
+  //     props.socket.removeListener(I_REQUEST_PARTNERS_VOICE_TEXT); // いや、ここでやるべきではないな。offと同時にremoveしなきゃな。
+  //   }
+  // }, [isLanguageSubtitleActivated]);
 
   useEffect(() => {
     props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
