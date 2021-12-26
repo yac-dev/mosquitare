@@ -23,7 +23,7 @@ export const createUserMedia =
       }
       // dispatch(hangUpCallActionCreator(connectionRef)); // ここもpromisifyだな。
     } catch (error) {
-      console.log(error);
+      console.log(error); // koko？？
     }
   };
 

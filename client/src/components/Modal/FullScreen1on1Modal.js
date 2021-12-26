@@ -110,12 +110,16 @@ const FullScreen1on1Modal = (props) => {
         };
       } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
         console.log('india side should be working'); // 音声apiを一つのpcで二つ動かすのは無理みたいだな。。。
+
         recognition.current.onresult = (event) => {
+          console.log('working in onresult???');
           const transcript = Array.from(event.results)
             .map((result) => result[0])
             .map((result) => result.transcript)
             .join('');
           console.log(transcript);
+          const to = store.getState().mediaState.callingWith.socketId;
+          props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, { to, nativeLanguageScript: transcript });
           props.setNativeLanguageScript(transcript);
           recognition.current.onerror = (event) => {
             console.log(event.error);
@@ -198,7 +202,7 @@ const FullScreen1on1Modal = (props) => {
     //   });
     // });
 
-    props.sendVoiceTextActionCreator(props.socket, props.nativeLanguageScript);
+    // props.sendVoiceTextActionCreator(props.socket, props.nativeLanguageScript);
 
     // props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (voiceTetx) => {
     //   // ここにrenderするfunctionを作る感じかな。
@@ -288,9 +292,10 @@ const FullScreen1on1Modal = (props) => {
   // 多分、字幕onですよっていうstateを用意したほうがいいわ。useEffectでその字幕onですよstateが変わるたびに色々やるっていう感じかね。。。
   const onActivateSubtitleClick = () => {
     console.log('activate subtitle');
-    props.socket.emit(I_REQUEST_PARTNERS_VOICE_TEXT, {
-      to: props.mediaState.callingWith.socketId,
-    });
+    // 表示するようにする感じかな。
+    // props.socket.emit(I_REQUEST_PARTNERS_VOICE_TEXT, {
+    //   to: props.mediaState.callingWith.socketId,
+    // });
   };
 
   const displaySubtitle = () => {
