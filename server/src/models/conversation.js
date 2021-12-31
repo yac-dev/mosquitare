@@ -29,6 +29,10 @@ const conversationSchema = new mongoose.Schema({
     },
   ],
   duration: Number,
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
   // textChats: [
   //   {
   //     type: mongoose.Schema.ObjectId,

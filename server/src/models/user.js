@@ -72,6 +72,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'No description.',
   },
+  conversations: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Conversation',
+    },
+  ],
   talkedWith: [
     {
       type: mongoose.Schema.ObjectId,
