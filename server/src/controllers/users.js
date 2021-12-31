@@ -81,6 +81,27 @@ export const login = async (request, response) => {
   }
 };
 
+// これ、loadme、そしてsocketIdのupdateを分けたほうがいいな。。。。
+export const loadMe = async (request, response) => {
+  try {
+    const { user } = request;
+    response.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserSocketId = async (request, response) => {
+  try {
+    // bodyにsocketIdが入るようにする。
+    console.log(request.body.socketId);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const loadMeAndUpdate = async (request, response) => {
   try {
     const { user } = request;

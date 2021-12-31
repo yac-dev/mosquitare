@@ -5,18 +5,10 @@ const conversationSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  // calledUserVideo: {
-  //   type: mongoose.Schema.ObjectId,
-  //   ref: 'Video',
-  // },
   recievedUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  // recievedUserVideo: {
-  //   type: mongoose.Schema.ObjectId,
-  //   ref: 'Video',
-  // },
   integratedUserMedia: {
     type: mongoose.Schema.ObjectId,
     ref: 'IntegratedUserMedia',
@@ -39,6 +31,14 @@ const conversationSchema = new mongoose.Schema({
   //     ref: 'TextChat'
   //   }
   // ] TextChatっていうschemaもおそらく作ることになるだろう。→こっちでもっておくことはやっぱやめよう。one to many
+});
+
+conversationSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'integratedUserMedia',
+  });
+
+  next();
 });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);

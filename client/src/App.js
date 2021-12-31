@@ -14,7 +14,7 @@ import SignupDetails from './components/Signup/SignupDetails';
 import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 import ChatScreen from './components/ChatScreen';
-import Container from './components/Userpage/Container';
+import UserPageContainer from './components/UserPage/UserPageContainer';
 import Review from './components/ReviewForm';
 
 const App = () => {
@@ -71,7 +71,7 @@ const App = () => {
         <Route path='/worldmap' exact component={WorldMap} />
         {/* <Route path='/chatscreen' exact component={ChatScreen} /> */}
         <Route path='/about' exact component={About} />
-        <Route path='/userpage' exact component={Container} />
+        <Route path='/userpage/:id' exact component={UserPageContainer} />
         <Route path='/review' exacy component={Review} />
       </Router>
     </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import Video from './Video';
 import myVideo from './ef392537-cb27-48a3-8905-43467c3eef6b.mp4'; // このやり方だといける。
 
-const Container = (props) => {
+const UserPageContainer = (props) => {
   return (
     <div>
       <div>This is a container</div>
@@ -21,4 +21,4 @@ const Container = (props) => {
   );
 };
 
-export default Container;
+export default UserPageContainer;

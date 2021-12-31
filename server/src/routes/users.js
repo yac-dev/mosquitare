@@ -3,6 +3,8 @@ const router = express.Router();
 import {
   signup,
   login,
+  loadMe,
+  updateUserSocketId,
   loadMeAndUpdate,
   getUsers,
   updateUsersSocketId,
@@ -17,6 +19,8 @@ router.patch('/:id/conversationtofalse', updateUserConversationToFalse); // こ�
 
 router.post('/signup', signup);
 router.post('/login', login);
+router.get('/loadme', authorization, loadMe); // これと、
+router.patch('/socketid', updateUserSocketId); // この二つに分けたほうがいいや。
 router.patch('/loadmeandupdate', authorization, loadMeAndUpdate);
 
 router.get('/', getUsers);

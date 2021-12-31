@@ -40,6 +40,23 @@ export const loginActionCreator = (formData) => async (dispatch) => {
   }
 };
 
+export const loadMeActionCreator = (jwtToken) => async (dispatch, getState) => {
+  try {
+    const result = await mosquitareAPI.get('/users/loadme', {
+      headers: {
+        authorization: `Bearer ${jwtToken}`,
+      },
+    });
+    const { user } = result.data;
+    dispatch({
+      type: LOAD_ME,
+      payload: { user, jwtToken },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // このLOAD_MEが複数回起こる原因は何なの？そもそもuseEffectで設定をしているのに。。。→多分変なバグだろう。実際には、serverを何回も起こすなんてしないから、まあそんなに気にする必要もないだろう。
 export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispatch, getState) => {
   try {
@@ -106,6 +123,16 @@ export const updateUserConversationToFalseActionCreator = () => async (dispatch,
       payload: '',
     });
     return Promise.resolve();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserConversationsActionCreator = () => async (dispatch, getState) => {
+  try {
+    // conversationのidを持っておいて、ここにbodyとしてupdateしていくことにする。これを、completeCallの後のcreateConversationの後にthen chainしていく。
+    const userId = getState().authState.currentUser._id;
+    const result = await mosquitareAPI.patch(`/users//${userId}`);
   } catch (error) {
     console.log(error);
   }
