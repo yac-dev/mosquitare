@@ -12,15 +12,25 @@ export const createUserMedia =
       formData.append('mediaFiles', blobForAudio);
       formData.append('mediaFiles', blobForLearningLanguage);
       formData.append('mediaFiles', blobForNativeLanguage);
-      const createMediaResult = await mosquitareAPI.post(`/userMedias/upload/${userId}`, formData);
+      const createMediaResult = await mosquitareAPI.post(`/userMedias/upload/${userId}`, formData, {
+        headers: { 'Content-type': 'multipart/form-data' },
+      });
       const { userMedia } = createMediaResult.data;
-      const callingState = getState().mediaState;
-      if (callingState.amICalling) {
-        // usermedia自体を{calledUserMedia: userMedia._id}みたいな感じでpost requestを送る。
-        // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
-      } else if (callingState.amIRecieving) {
-        // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
-      }
+      return Promise.resolve(userMedia);
+      // const callingState = getState().mediaState;
+      // const { integratedUserMediaId } = getState().integratedUserMediaState;
+      // if (callingState.amICalling) {
+      //   // usermedia自体を{calledUserMedia: userMedia._id}みたいな感じでpost requestを送る。
+      //   await mosquitareAPI.patch(`/integratedusermedias/${integratedUserMediaId}`, {
+      //     calledUserMedia: userMedia._id,
+      //   });
+      //   // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
+      // } else if (callingState.amIRecieving) {
+      //   // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
+      //   await mosquitareAPI.patch(`/integratedusermedias/${integratedUserMediaId}`, {
+      //     recievedUserMedia: userMedia._id,
+      //   });
+      // }
       // dispatch(hangUpCallActionCreator(connectionRef)); // ここもpromisifyだな。
     } catch (error) {
       console.log(error); // koko？？

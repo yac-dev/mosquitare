@@ -28,11 +28,12 @@ import { getConversationIdFromCalledUserActionCreator } from '../../actionCreato
 import { getIntegratedUserMediaIdFromCalledUserActionCreator } from '../../actionCreators/integratedUserMediasActionCreators';
 import { switchCurrentLanguageActionCreator } from '../../actionCreators/mediaActionCreator';
 import { recieveSwitchingLanguageRequestActionCreator } from '../../actionCreators/mediaActionCreator';
+// import Speechrecognition, { useSpeechrecognition } from 'react-speech-recognition';
 
 // import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
 
-// const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-// const microphone = new SpeechRecognition();
+// const Speechrecognition = window.Speechrecognition || window.webkitSpeechrecognition;
+// const microphone = new Speechrecognition();
 // microphone.continuous = true;
 // microphone.interimResults = true;
 // microphone.lang = 'en-US';
@@ -43,6 +44,7 @@ const FullScreen1on1Modal = (props) => {
   // activate用のboolean state
   const [isLanguageSubtitleActivated, setIsLanguageSubtitleActivated] = useState(false);
   const [languageSubtitle, setLanguageSubtitle] = useState(''); // 字幕は、learningのときだけ動くのでいいや。
+  const [isFinal, setIsFinal] = useState();
   const [isMinimumTimePassed, setIsMinimumTimePassed] = useState(false);
   // const [learningLanguageScript, setLearningLanguageScript] = useState('');
   // const [nativeLanguageScript, setNativeLanguageScript] = useState('');
@@ -55,26 +57,13 @@ const FullScreen1on1Modal = (props) => {
   recognition.current.continuous = true;
   recognition.current.interimResults = true;
 
-  // 保留
-  // useEffect(() => {
-  //   // button clickで、setIsLanguageSubtitleActivateをtrueにする。
-  //   if (isLanguageSubtitleActivated) {
-  //     props.socket.emit(I_REQUEST_PARTNERS_VOICE_TEXT, {
-  //       to: props.mediaState.callingWith.socketId,
-  //     });
-  //   } else {
-  //     // setLanguageSubtitle() これではなくて、「もう必要ありません」っていうsocket eventをpartnerに出すべきかね。
-  //     // isLanguageSubtitleActivatedがoffになったら字幕を消したいわけよ。deactivateをclickするか、switch languageを押された時にisLangをoffにする。
-  //     props.socket.removeListener(I_REQUEST_PARTNERS_VOICE_TEXT); // いや、ここでやるべきではないな。offと同時にremoveしなきゃな。
-  //   }
-  // }, [isLanguageSubtitleActivated]);
-
   useEffect(() => {
     props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
       props.recieveSwitchingLanguageRequestActionCreator(
         dataFromServer.switchingLanguage,
         recognition.current,
-        props.setNativeLanguageScript
+        props.setNativeLanguageScript,
+        props.socket
       );
       // props.recieveSwitchLanguage(dataFromServer.language); // ここで、向こうからのlanguageをredux stateに入れる。
       // const language = store.getState().mediaState.currentLanguage;
@@ -86,13 +75,10 @@ const FullScreen1on1Modal = (props) => {
   }, []);
 
   useEffect(() => {
-    // ここで、多分transcriptionな感じのを書くのかね。。。
-    // 最初の1回目には、実行せん。
     if (props.mediaState.callAccepted) {
       const { currentLanguage } = store.getState().mediaState;
-      recognition.current.lang = currentLanguage.codeForSpeechRecognition;
-      recognition.current.start();
-      console.log(recognition.current);
+      recognition.current.lang = currentLanguage.codeForSpeechrecognition;
+      recognition.current.start(); // onendをつけると、continueが160回繰り返されるのはなぜ。。。まじなぞ。
       if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
         // ここでlearning用の、recognitionでtranscriptionをsetStateするようにする。
         console.log('in useEffect');
@@ -104,30 +90,131 @@ const FullScreen1on1Modal = (props) => {
             .join('');
           console.log(transcript);
           props.setLearningLanguageScript(transcript);
-          recognition.current.onerror = (event) => {
-            console.log(event.error);
-          };
         };
-      } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
-        console.log('india side should be working'); // 音声apiを一つのpcで二つ動かすのは無理みたいだな。。。
 
+        // recognition.current.onerror = (event) => {
+        //   console.log(event.error);
+        // };
+        // recognition.current.onend = () => {
+        //   recognition.current.start();
+        // }; // ほんと謎だわこれ。。。。
+      } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
+        const to = store.getState().mediaState.callingWith.socketId;
+        console.log('india side workinggggggg???');
         recognition.current.onresult = (event) => {
-          console.log('working in onresult???');
+          console.log('sending isFinal text.');
           const transcript = Array.from(event.results)
             .map((result) => result[0])
             .map((result) => result.transcript)
             .join('');
           console.log(transcript);
-          const to = store.getState().mediaState.callingWith.socketId;
-          props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, { to, nativeLanguageScript: transcript });
+          // やっぱisFinalは必要かもしれん。
+          props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+            to,
+            nativeLanguageScript: transcript,
+          });
           props.setNativeLanguageScript(transcript);
-          recognition.current.onerror = (event) => {
-            console.log(event.error);
-          };
         };
+        // recognition.current.onspeechend = () => {
+        //   recognition.current.stop();
+        // };
+        // recognition.current.onerror = (event) => {
+        //   console.log(event.error);
+        // };
+        // recognition.current.onend = () => {
+        //   recognition.current.start(); // ここで確実に繰り返されるのかね。。。。分からんん。
+        // };
+        // recognition.current.start();
       }
     }
-  }, [props.mediaState.callAccepted]); // 実験して、おそらくちゃんと動いていることが分かった。
+  }, [props.mediaState.callAccepted]);
+
+  // useEffect(() => {
+  //   // ここで、多分transcriptionな感じのを書くのかね。。。
+  //   // 最初の1回目には、実行せん。
+  //   if (props.mediaState.callAccepted) {
+  //     const { currentLanguage } = store.getState().mediaState;
+  //     recognition.lang = currentLanguage.codeForSpeechrecognition;
+  //     recognition.start(); // onendをつけると、continueが160回繰り返されるのはなぜ。。。まじなぞ。
+  //     recognition.onspeechend = () => {
+  //       console.log('stop one sec...and start');
+  //       recognition.stop();
+  //       recognition.start();
+  //     };
+  //     if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
+  //       // ここでlearning用の、recognitionでtranscriptionをsetStateするようにする。
+  //       console.log('in useEffect');
+  //       recognition.onresult = (event) => {
+  //         // console.log(event);
+  //         const transcript = Array.from(event.results)
+  //           .map((result) => result[0])
+  //           .map((result) => result.transcript)
+  //           .join('');
+  //         console.log(transcript);
+  //         props.setLearningLanguageScript(transcript);
+  //         recognition.onerror = (event) => {
+  //           console.log(event.error);
+  //         };
+  //       };
+  //     } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
+  //       const to = store.getState().mediaState.callingWith.socketId;
+  //       console.log('india side workinggggggg???');
+  //       recognition.onresult = (event) => {
+  //         if (event.results[0].isFinal) {
+  //           console.log('sending isFinal text.');
+  //           const transcript = Array.from(event.results)
+  //             .map((result) => result[0])
+  //             .map((result) => result.transcript)
+  //             .join('');
+  //           console.log(transcript);
+  //           // やっぱisFinalは必要かもしれん。
+  //           props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+  //             to,
+  //             nativeLanguageScript: transcript,
+  //             isFinal: true,
+  //           });
+  //           props.setNativeLanguageScript(transcript);
+  //           recognition.stop(); // こうしておけば、たまったresultsは掃除されるだろう。→何で動かねー？？？
+
+  //           // recognition.current.onerror = (event) => {
+  //           //   console.log(event.error);
+  //           // };
+  //         } else {
+  //           console.log('working in NOT isFinal side');
+  //           const transcript = Array.from(event.results)
+  //             .map((result) => result[0])
+  //             .map((result) => result.transcript)
+  //             .join('');
+  //           console.log(transcript);
+  //           props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, { to, nativeLanguageScript: transcript });
+  //           props.setNativeLanguageScript(transcript);
+  //           recognition.onerror = (event) => {
+  //             console.log(event.error);
+  //           };
+  //         }
+  //       };
+  //     }
+  //   }
+  // }, [props.mediaState.callAccepted]); // 実験して、おそらくちゃんと動いていることが分かった。
+
+  // useEffect(() => {
+  //   if (props.mediaState.callAccepted) {
+  //     const { currentLanguage } = store.getState().mediaState;
+  //     console.log(currentLanguage);
+  //     Speechrecognition.startListening({ language: currentLanguage.codeForSpeechrecognition }).then(() => {
+  //       if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
+  //         console.log('learning side');
+  //         props.setLearningLanguageScript(transcript);
+  //       } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
+  //         const to = store.getState().mediaState.callingWith.socketId;
+  //         console.log('india side workinggggggg???');
+  //         console.log(transcript);
+  //         props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, { to, nativeLanguageScript: transcript });
+  //         props.setNativeLanguageScript(transcript);
+  //       }
+  //     });
+  //   }
+  // }, [props.mediaState.callAccepted]);
 
   // 「videoRef、oppositeVideoRef, onHangUpClick, switchRender」　をworldmapからprops使って、このcomponentに渡す。
   // const handleListen = () => {
@@ -162,9 +249,9 @@ const FullScreen1on1Modal = (props) => {
   //   };
   // };
 
-  // const handleSpeechRecognition = () => {
-  //   // const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  //   microphone = new SpeechRecognition();
+  // const handleSpeechrecognition = () => {
+  //   // const Speechrecognition = window.Speechrecognition || window.webkitSpeechrecognition;
+  //   microphone = new Speechrecognition();
   //   microphone.continuous = true;
   //   microphone.interimResults = true;
   //   microphone.lang = 'en-US';
@@ -209,7 +296,7 @@ const FullScreen1on1Modal = (props) => {
     //   // display(voiceText)
     //   setVoiceText(voiceTetx);
     // });
-    props.getVoiceTextActionCreator(props.socket, setLanguageSubtitle);
+    props.getVoiceTextActionCreator(props.socket, setLanguageSubtitle, isFinal, setIsFinal);
 
     props.getConversationIdFromCalledUserActionCreator(props.socket).then((conversationId) => {
       props.updateConversationRecievedUserActionCreator(conversationId);
@@ -284,7 +371,7 @@ const FullScreen1on1Modal = (props) => {
       });
 
     // const { currentLanguage } = store.getState().mediaState;
-    // recognition.lang = currentLanguage.codeForSpeechRecognition;
+    // recognition.lang = currentLanguage.codeForSpeechrecognition;
     // recognition.start();
     // console.log(recognition);
   };
@@ -298,12 +385,13 @@ const FullScreen1on1Modal = (props) => {
     // });
   };
 
+  // ここで文字数制限やら、字幕の高さを決めておいて、はみ出したらそこを表示しないようにする、くらいしかないかね。
   const displaySubtitle = () => {
     if (languageSubtitle) {
       return (
-        <>
+        <div className='partner-subtitle'>
           <p className='voice-text'>{languageSubtitle}</p>
-        </>
+        </div>
       );
     } else {
       return null;
@@ -368,7 +456,7 @@ const FullScreen1on1Modal = (props) => {
           <>
             <div className='confirmation'>
               <UserInfoCard user={props.mediaState.callingWith} />
-              <Button positive onClick={() => handleAnswerCall(recognition.current)} style={{ width: '100%' }}>
+              <Button positive onClick={() => handleAnswerCall()} style={{ width: '100%' }}>
                 <i className='handshake icon' />
                 Yes
               </Button>
@@ -395,12 +483,11 @@ const FullScreen1on1Modal = (props) => {
     >
       <Modal.Body style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
         {switchRender()}
-        <div className='videos-container' style={{ marginTop: '80px' }}>
+        {/* <div className='videos-container' style={{ marginTop: '80px' }}>
           <div className='myvideo-container'>
             <div className='myvideo'>
               <video playsInline muted ref={props.myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
             </div>
-            <div></div>
           </div>
           <div className='partner-video-container'>
             <div className='partner-video'>
@@ -408,6 +495,27 @@ const FullScreen1on1Modal = (props) => {
             </div>
             {displaySubtitle()}
           </div>
+        </div> */}
+
+        <div className='modal-container'>
+          {displayCurrentLanguage()}
+          <div className='partner-video-container'>
+            {/* <div className='partner-video'> */}
+            <video
+              className='partner-video'
+              playsInline
+              ref={props.oppositeVideo}
+              autoPlay
+              style={{ width: '600px', height: '600px' }} // これだとなんで真ん中に寄ってくれるの？？
+            />
+            {/* </div> */}
+            {displaySubtitle()} {/* divでその中にpが入っている。*/}
+          </div>
+          {/* <div className='myvideo-container'> */}
+          {/* <div className='myvideo'> */}
+          <video className='myvideo' playsInline muted ref={props.myVideo} autoPlay />
+          {/* </div> */}
+          {/* </div> */}
         </div>
 
         {props.mediaState.callAccepted ? (
@@ -424,7 +532,7 @@ const FullScreen1on1Modal = (props) => {
             {displaySwitchCurrentLanguageButton()}
           </div>
         ) : null}
-        {displayCurrentLanguage()}
+        {/* {displayCurrentLanguage()} */}
       </Modal.Body>
     </Modal>
   );

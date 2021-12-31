@@ -41,7 +41,7 @@ import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreato
 import { updateUserStreamActionCreator } from '../actionCreators/conversationActionCreators';
 
 import { createUserMedia } from '../actionCreators/userMediasActionCreators';
-//
+import { updateIntegratedUserMediaActionCreator } from '../actionCreators/integratedUserMediasActionCreators';
 import { updateUserConversationToFalseActionCreator } from '../actionCreators/authActionCreators';
 
 // socket events
@@ -239,6 +239,9 @@ const WorldMap = (props) => {
           blobs.blobForNativeLanguage
         );
       })
+      .then((userMedia) => {
+        return props.updateIntegratedUserMediaActionCreator(userMedia);
+      }) //.then((integratedUserMediaId) => {return conversationupdateするapiをここで。})
       .then(() => {
         return props.hangUpCallActionCreator(connectionRef); //っていう流れかね。。。。
       })
@@ -348,6 +351,7 @@ export default connect(mapStateToProps, {
   getMeetingsActionCreator,
   // updateUserStreamActionCreator,
   createUserMedia,
+  updateIntegratedUserMediaActionCreator,
   hangUpCallActionCreator,
   updateUserConversationToFalseActionCreator,
 })(WorldMap);

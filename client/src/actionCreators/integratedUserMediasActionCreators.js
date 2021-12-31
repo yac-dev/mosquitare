@@ -76,3 +76,25 @@ export const getIntegratedUserMediaIdFromCalledUserActionCreator = (socket) => a
     console.log(error);
   }
 };
+
+export const updateIntegratedUserMediaActionCreator = (userMedia) => async (dispatch, getState) => {
+  try {
+    const callingState = getState().mediaState;
+    const { integratedUserMediaId } = getState().integratedUserMediaState;
+    if (callingState.amICalling) {
+      // usermedia自体を{calledUserMedia: userMedia._id}みたいな感じでpost requestを送る。
+      await mosquitareAPI.patch(`/integratedusermedias/${integratedUserMediaId}`, {
+        calledUserMedia: userMedia._id,
+      });
+      // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
+    } else if (callingState.amIRecieving) {
+      // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
+      await mosquitareAPI.patch(`/integratedusermedias/${integratedUserMediaId}`, {
+        recievedUserMedia: userMedia._id,
+      });
+    }
+    return Promise.resolve(integratedUserMediaId);
+  } catch (error) {
+    console.log(error);
+  }
+};

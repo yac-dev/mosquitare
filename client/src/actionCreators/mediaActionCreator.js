@@ -29,7 +29,7 @@ import { createConversationActionCreator } from './conversationActionCreators';
 import { updateConversationRecievedUserActionCreator } from './conversationActionCreators';
 import { createIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
 import { sendIntegratedUserMediaActionCeator } from './integratedUserMediasActionCreators';
-import { updateConversationIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
+import { updateConversationIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators'; //これ自体、違うところにやらんといかん。
 // import { updateUserStreamActionCreator } from './conversationActionCreators';
 import { createUserMedia } from './userMediasActionCreators';
 
@@ -297,7 +297,7 @@ export const answerCallActionCreator =
 
 export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   console.log('should be working!!');
-  dispatch(updateUserConversationToFalseActionCreator()); // ここpromisifyね。これだめ。
+  // dispatch(updateUserConversationToFalseActionCreator()); // ここpromisifyね。これだめ。
   connectionRef.current.destroy();
   dispatch({
     type: HANG_UP_CALL,
@@ -337,7 +337,7 @@ export const sendVoiceTextActionCreator = (socket, nativeLanguageScript) => (dis
   });
 };
 
-export const getVoiceTextActionCreator = (socket, setLanguageSubtitle) => () => {
+export const getVoiceTextActionCreator = (socket, setLanguageSubtitle, isFinal, setIsFinal) => () => {
   socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
     // ここにrenderするfunctionを作る感じかな。
     console.log('partner sent to me...');
@@ -396,12 +396,13 @@ export const switchCurrentLanguageActionCreator =
 // 直すのはこっちね。
 // recognitionのargumentには、recognition.currentを渡す。
 export const recieveSwitchingLanguageRequestActionCreator =
-  (switchingLanguage, recognition, setNativeLanguageScript) => (dispatch, getState) => {
+  (switchingLanguage, recognition, setNativeLanguageScript, socket) => (dispatch, getState) => {
     dispatch({
       type: RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
       payload: switchingLanguage,
     });
     // こっからrecognitionに関するもの。
+    const to = getState().mediaState.callingWith.socketId;
     recognition.stop();
     recognition.lang = switchingLanguage.codeForSpeechRecognition;
     recognition.onresult = (event) => {
@@ -412,6 +413,7 @@ export const recieveSwitchingLanguageRequestActionCreator =
         .join('');
       console.log(transcript);
       setNativeLanguageScript((prev) => prev + transcript);
+      socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, { to, nativeLanguageScript: transcript });
       recognition.onerror = (event) => {
         console.log(event.error);
       };

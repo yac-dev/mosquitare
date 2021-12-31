@@ -1,12 +1,9 @@
 import express from 'express';
 const router = express.Router();
-import {
-  createIntegratedUserMedia,
-  updateIntegratedUserMediaCalledUserMedia,
-} from '../controllers/integratedUserMedias';
+import { createIntegratedUserMedia, updateIntegratedUserMedia } from '../controllers/integratedUserMedias';
 
 router.post('/', createIntegratedUserMedia);
-router.patch('/calleduser/:id', updateIntegratedUserMediaCalledUserMedia);
+router.patch('/:id', updateIntegratedUserMedia);
 // router.patch('/recieveduser/:id', updateIntegratedUserMediaRecievedUserMedia);
 
 export default router;

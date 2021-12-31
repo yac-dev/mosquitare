@@ -3,6 +3,7 @@
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { AWS_S3BUCKET_NAME, AWS_S3BUCKET_REGION, AWS_S3BUCKET_ACCESS_KEY, AWS_S3BUCKET_SECRET_KEY } from '../../config';
+import path from 'path';
 
 // const s3 = new aws.S3();
 // aws.config.update({
@@ -19,8 +20,12 @@ import { AWS_S3BUCKET_NAME, AWS_S3BUCKET_REGION, AWS_S3BUCKET_ACCESS_KEY, AWS_S3
 
 const storage = multer.diskStorage({
   destination: function (request, file, callback) {
-    callback(null, './uploadedFilesBuffer/'); // 第一引数はpotential errorのこと。nullでいい。./uploadsは相対パス。
+    const __dirname = path.resolve();
+    // console.log(__dirname);
+    const destination = path.join(__dirname, './uploadedFilesBuffer');
+    callback(null, destination); // 第一引数はpotential errorのこと。nullでいい。./uploadsは相対パス。
   },
+  // './uploadedFilesBuffer/'
   filename: function (request, file, callback) {
     const extension = file.mimetype.split('/')[1];
     const finalFileName = Date.now() + '-' + uuidv4() + '.' + extension;
