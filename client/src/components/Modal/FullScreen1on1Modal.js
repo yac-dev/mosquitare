@@ -25,6 +25,7 @@ import { updateConversationRecievedUserActionCreator } from '../../actionCreator
 import { sendVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { getConversationIdFromCalledUserActionCreator } from '../../actionCreators/conversationActionCreators';
+import { updateUserConversationsActionCreator } from '../../actionCreators/authActionCreators';
 import { getIntegratedUserMediaIdFromCalledUserActionCreator } from '../../actionCreators/integratedUserMediasActionCreators';
 import { switchCurrentLanguageActionCreator } from '../../actionCreators/mediaActionCreator';
 import { recieveSwitchingLanguageRequestActionCreator } from '../../actionCreators/mediaActionCreator';
@@ -298,9 +299,14 @@ const FullScreen1on1Modal = (props) => {
     // });
     props.getVoiceTextActionCreator(props.socket, setLanguageSubtitle, isFinal, setIsFinal);
 
-    props.getConversationIdFromCalledUserActionCreator(props.socket).then((conversationId) => {
-      props.updateConversationRecievedUserActionCreator(conversationId);
-    });
+    props
+      .getConversationIdFromCalledUserActionCreator(props.socket)
+      .then(() => {
+        return props.updateUserConversationsActionCreator();
+      })
+      .then(() => {
+        props.updateConversationRecievedUserActionCreator();
+      });
 
     props.getIntegratedUserMediaIdFromCalledUserActionCreator(props.socket);
   }, []);
@@ -550,6 +556,7 @@ export default connect(mapStateToProps, {
   sendVoiceTextActionCreator,
   getVoiceTextActionCreator,
   getConversationIdFromCalledUserActionCreator,
+  updateUserConversationsActionCreator,
   // recordStreamActionCreator,
   getIntegratedUserMediaIdFromCalledUserActionCreator,
   switchCurrentLanguageActionCreator,

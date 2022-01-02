@@ -12,6 +12,7 @@ export const createIntegratedUserMediaActionCreator = (socket) => async (dispatc
     const result = await mosquitareAPI.post('/integratedusermedias'); // dataは何も送らない。ただdocumentを作るだけ。
     return new Promise((resolve, reject) => {
       const { integratedUserMedia } = result.data;
+      console.log('integrated ok??');
       console.log(integratedUserMedia);
       dispatch({
         type: CREATE_INTEGRATED_USER_MEDIA,
@@ -77,21 +78,25 @@ export const getIntegratedUserMediaIdFromCalledUserActionCreator = (socket) => a
   }
 };
 
+// 父さんとのチャットでもここが原因で動かなかった。
 export const updateIntegratedUserMediaActionCreator = (userMedia) => async (dispatch, getState) => {
   try {
     const callingState = getState().mediaState;
     const { integratedUserMediaId } = getState().integratedUserMediaState;
+    let result;
     if (callingState.amICalling) {
       // usermedia自体を{calledUserMedia: userMedia._id}みたいな感じでpost requestを送る。
-      await mosquitareAPI.patch(`/integratedusermedias/${integratedUserMediaId}`, {
+      result = await mosquitareAPI.patch(`/integratedusermedias/${integratedUserMediaId}`, {
         calledUserMedia: userMedia._id,
       });
+      console.log(result);
       // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
     } else if (callingState.amIRecieving) {
       // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
-      await mosquitareAPI.patch(`/integratedusermedias/${integratedUserMediaId}`, {
+      result = await mosquitareAPI.patch(`/integratedusermedias/${integratedUserMediaId}`, {
         recievedUserMedia: userMedia._id,
       });
+      console.log(result);
     }
     return Promise.resolve(integratedUserMediaId);
   } catch (error) {

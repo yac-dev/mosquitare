@@ -26,10 +26,12 @@ import store from '../store';
 import { updateUserConversationStateActionCreator } from './authActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 import { createConversationActionCreator } from './conversationActionCreators';
+import { sendConversationIdActionCreator } from './conversationActionCreators';
 import { updateConversationRecievedUserActionCreator } from './conversationActionCreators';
 import { createIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
 import { sendIntegratedUserMediaActionCeator } from './integratedUserMediasActionCreators';
 import { updateConversationIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators'; //これ自体、違うところにやらんといかん。
+import { updateUserConversationsActionCreator } from './authActionCreators';
 // import { updateUserStreamActionCreator } from './conversationActionCreators';
 import { createUserMedia } from './userMediasActionCreators';
 
@@ -174,6 +176,12 @@ export const completeConnectionWithMyPartnerActionCreator =
         })
         .then(() => {
           return dispatch(createConversationActionCreator(socket)); // 多分ここも分けることになる。
+        })
+        .then(() => {
+          return dispatch(sendConversationIdActionCreator(socket));
+        })
+        .then(() => {
+          return dispatch(updateUserConversationsActionCreator()); // まずは実験。どうなるでしょうか。→だめ。userのinstanceをまんま渡してpatchはうまく動かん見たいだ。
         })
         .then(() => {
           return dispatch(createIntegratedUserMediaActionCreator());

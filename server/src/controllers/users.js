@@ -201,3 +201,18 @@ export const updateUserConversationToFalse = async (request, response) => {
     console.log(error);
   }
 };
+
+export const updateConversation = async (request, response) => {
+  try {
+    // 多分、userのinstanceをまんま送るのがベストかね。loadmeandUpdateもそうだけど。そのinstanceのfieldを変更して、saveするっていうのが一番早いしqueryの必要がなくなる。
+    const { conversationId } = request.body;
+    const user = await User.findById(request.params.id);
+    user.conversations.push(conversationId);
+    await user.save(); // TypeError: user.save is not a function これだめってなるね。。。考え直そう。
+    response.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

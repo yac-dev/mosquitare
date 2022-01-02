@@ -16,8 +16,10 @@ export const updateIntegratedUserMedia = async (request, response) => {
   try {
     const integratedUserMedia = await IntegratedUserMedia.findById(request.params.id);
     if (request.body.calledUserMedia) {
+      console.log('caled user media side');
       integratedUserMedia.calledUserMedia = request.body.calledUserMedia;
     } else if (request.body.recievedUserMedia) {
+      console.log('recieved user side');
       integratedUserMedia.recievedUserMedia = request.body.recievedUserMedia;
     }
     await integratedUserMedia.save();

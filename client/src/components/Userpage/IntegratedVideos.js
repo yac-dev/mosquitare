@@ -13,10 +13,10 @@ const IntegratedVideos = (props) => {
 
   // integratedのvideoを組み合わせて再生できるようにする。まず。s3から取ってくるapiを作らないといけないな。
   const test = () => {
-    if (props.authState.currentUser) {
-      return <div>{props.authState.currentUser.name}</div>;
-    } else {
+    if (!props.authState.currentUser) {
       return null;
+    } else {
+      return <div>{props.authState.currentUser.name}</div>;
     }
   };
 
@@ -28,7 +28,7 @@ const IntegratedVideos = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   return { authState: state.authState };
 };
 

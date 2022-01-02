@@ -13,18 +13,33 @@ export const createConversationActionCreator = (socket) => async (dispatch, getS
       console.log(result);
       console.log(conversation);
       // これも分けたほうがいいなー。細かく分けたいならね。今はいいや。
-      const partnerSocketId = getState().mediaState.callingWith.socketId;
-      socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId: conversation._id });
-      dispatch({
-        type: CREATE_CONVERSATION, // ここら辺の名前なー。後で直さないとな。
-        payload: conversation._id,
-      });
+      // const partnerSocketId = getState().mediaState.callingWith.socketId;
+      // socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId: conversation._id });
+      // dispatch({
+      //   type: CREATE_CONVERSATION, // ここら辺の名前なー。後で直さないとな。
+      //   payload: conversation._id,
+      // });
       resolve(); // promise返す。意図的に。
     });
   } catch (error) {
     console.log(error);
   }
 }; // 名前を変える。
+
+export const sendConversationIdActionCreator = (socket) => (dispatch, getState) => {
+  try {
+    const partnerSocketId = getState().mediaState.callingWith.socketId;
+    const conversation = getState().conversationState;
+    socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId: conversation._id });
+    dispatch({
+      type: CREATE_CONVERSATION, // ここら辺の名前なー。後で直さないとな。
+      payload: conversation._id,
+    });
+    return Promise.resolve();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatch, getState) => {
   try {
@@ -43,9 +58,11 @@ export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatc
 };
 
 // conversationIdをもらったらこれを実行する。上の続きだな。
-export const updateConversationRecievedUserActionCreator = (conversationId) => async (dispatch, getState) => {
+export const updateConversationRecievedUserActionCreator = () => async (dispatch, getState) => {
   try {
     const recievedUserId = getState().authState.currentUser._id;
+    const { conversationId } = getState().conversationState;
+    console.log(conversationId); // then chainしても、この段階で直前で更新したredux stateをここで使えないんだな。。。。
     // const { conversationId } = getState().conversationState;
     // console.log(getState().conversationState);
     const result = await mosquitareAPI.post(`/conversations/${conversationId}`, { recievedUser: recievedUserId });

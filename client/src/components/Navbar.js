@@ -4,6 +4,41 @@ import { connect } from 'react-redux';
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
 
 const Navbar = (props) => {
+  const UserPageLinkRender = () => {
+    if (props.authState.currentUser) {
+      return (
+        <>
+          <Link className='ui item' to={`/userpage/${props.authState.currentUser._id}`}>
+            Userpage
+          </Link>
+        </>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const SignupLoginButtonRender = () => {
+    if (props.authState.currentUser) {
+      return (
+        <>
+          <button onClick={() => props.logoutActionCreator()}>Logout</button>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Link className='ui item' to='/login'>
+            Login
+          </Link>
+          <Link className='ui item' to='/signup/basic'>
+            Signup
+          </Link>
+        </>
+      );
+    }
+  };
+
   return (
     <div className='ui secondary  menu'>
       <Link className='item' to='/'>
@@ -15,16 +50,21 @@ const Navbar = (props) => {
             <i className='search link icon'></i>
           </div>
         </div>
-        <Link className='ui item' to='/login'>
+        {UserPageLinkRender()}
+        {SignupLoginButtonRender()}
+        {/* <Link className='ui item' to='/login'>
           Login
         </Link>
         <Link className='ui item' to='/signup/basic'>
           Signup
-        </Link>
-        <button onClick={() => props.logoutActionCreator()}>Logout</button>
+        </Link> */}
       </div>
     </div>
   );
 };
 
-export default connect(null, { logoutActionCreator })(Navbar);
+const mapStateToProps = (state) => {
+  return { authState: state.authState };
+};
+
+export default connect(mapStateToProps, { logoutActionCreator })(Navbar);

@@ -131,8 +131,16 @@ export const updateUserConversationToFalseActionCreator = () => async (dispatch,
 export const updateUserConversationsActionCreator = () => async (dispatch, getState) => {
   try {
     // conversationのidを持っておいて、ここにbodyとしてupdateしていくことにする。これを、completeCallの後のcreateConversationの後にthen chainしていく。
+    // const userId = getState().authState.currentUser._id;
+    // const result = await mosquitareAPI.patch(`/users//${userId}`);
     const userId = getState().authState.currentUser._id;
-    const result = await mosquitareAPI.patch(`/users//${userId}`);
+    const { conversationId } = getState().conversationState;
+    const result = await mosquitareAPI.patch(`/users/${userId}/conversations`, { conversationId });
+    dispatch({
+      type: 'PUSH_CONVERSATION',
+      payload: result.data,
+    });
+    return Promise.resolve();
   } catch (error) {
     console.log(error);
   }
