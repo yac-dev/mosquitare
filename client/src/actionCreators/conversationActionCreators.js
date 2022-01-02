@@ -58,11 +58,11 @@ export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatc
 };
 
 // conversationIdをもらったらこれを実行する。上の続きだな。
-export const updateConversationRecievedUserActionCreator = () => async (dispatch, getState) => {
+export const updateConversationRecievedUserActionCreator = (conversationId) => async (dispatch, getState) => {
   try {
     const recievedUserId = getState().authState.currentUser._id;
-    const { conversationId } = getState().conversationState;
-    console.log(conversationId); // then chainしても、この段階で直前で更新したredux stateをここで使えないんだな。。。。
+    // const { conversationId } = getState().conversationState;
+    // console.log(conversationId); // then chainしても、この段階で直前で更新したredux stateをここで使えないんだな。。。。
     // const { conversationId } = getState().conversationState;
     // console.log(getState().conversationState);
     const result = await mosquitareAPI.post(`/conversations/${conversationId}`, { recievedUser: recievedUserId });
