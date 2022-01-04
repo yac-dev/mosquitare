@@ -308,7 +308,7 @@ const FullScreen1on1Modal = (props) => {
         props.updateConversationRecievedUserActionCreator();
       });
 
-    props.getIntegratedUserMediaIdFromCalledUserActionCreator(props.socket);
+    // props.getIntegratedUserMediaIdFromCalledUserActionCreator(props.socket);
   }, []);
 
   // ここにまんま書いていいのかね。reduxのstateの部分。→いや。reduxにしろcomponentのstateが変わっても毎回実行されちまう、それは良くない。

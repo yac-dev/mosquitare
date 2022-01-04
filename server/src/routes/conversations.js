@@ -3,7 +3,9 @@ const router = express.Router();
 import {
   createConversation,
   updateConversationRecievedUser,
-  updateConversationIntegratedUserMedia,
+  updateConversationUserMedia,
+  updateConversationUserScript,
+  // updateConversationIntegratedUserMedia,
 } from '../controllers/conversation';
 import multerParser from '../middlewares/multer';
 // import multer from 'multer';
@@ -11,7 +13,10 @@ import multerParser from '../middlewares/multer';
 
 router.route('/').post(createConversation);
 router.route('/:id').post(updateConversationRecievedUser);
-router.route('/integratedusermedia/:id').patch(updateConversationIntegratedUserMedia);
+router.route('/:id/usermedia').patch(updateConversationUserMedia);
+router.route('/:id/userscript').patch(updateConversationUserScript);
+// router.route('/integratedusermedia/:id').patch(updateConversationIntegratedUserMedia);
+
 // router.post('/upload/caller/:id', multerParser.single('videoFile'), storeVideoFileNames);
 // router.post('/upload/reciever/:id', multerParser.single('videoFile'), storeVideoFileNames);
 

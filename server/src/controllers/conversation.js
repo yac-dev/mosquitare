@@ -7,7 +7,6 @@ export const createConversation = async (request, response) => {
     const conversation = await Conversation.create({
       calledUser: request.body.calledUser,
     });
-
     response.json({
       conversation,
     });
@@ -19,12 +18,49 @@ export const createConversation = async (request, response) => {
 export const updateConversationRecievedUser = async (request, response) => {
   try {
     const { recievedUser } = request.body;
-
     const conversation = await Conversation.findById(request.params.id);
     console.log(conversation, 'updateRecieved working!');
     conversation.recievedUser = recievedUser;
     await conversation.save();
     response.json({
+      conversation,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateConversationUserMedia = async (request, response) => {
+  try {
+    const conversation = await Conversation.findById(request.params.id);
+    if (request.body.calledUserMedia) {
+      console.log('caled user media side');
+      conversation.calledUserMedia = request.body.calledUserMedia;
+    } else if (request.body.recievedUserMedia) {
+      console.log('recieved user side');
+      conversation.recievedUserMedia = request.body.recievedUserMedia;
+    }
+    await conversation.save();
+    response.status(200).json({
+      conversation,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateConversationUserScript = async (request, response) => {
+  try {
+    const conversation = await Conversation.findById(request.params.id);
+    if (request.body.calledUserScript) {
+      console.log('caled user media side');
+      conversation.calledUserScript = request.body.calledUserScript;
+    } else if (request.body.recievedUserScript) {
+      console.log('recieved user side');
+      conversation.recievedUserScript = request.body.recievedUserScript;
+    }
+    await conversation.save();
+    response.status(200).json({
       conversation,
     });
   } catch (error) {

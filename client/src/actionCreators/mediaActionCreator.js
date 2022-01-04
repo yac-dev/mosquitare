@@ -77,9 +77,9 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
           .then(() => {
             return dispatch(createUserMedia(blobForVideo, blobForAudio));
           })
-          .then((userMedia) => {
-            return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
-          })
+          // .then((userMedia) => {
+          //   return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
+          // })
           .then(() => {
             return dispatch(hangUpCallActionCreator(connectionRef));
           })
@@ -189,16 +189,16 @@ export const completeConnectionWithMyPartnerActionCreator =
         })
         .then(() => {
           return dispatch(updateUserConversationsActionCreator()); // まずは実験。どうなるでしょうか。→だめ。userのinstanceをまんま渡してpatchはうまく動かん見たいだ。
-        })
-        .then(() => {
-          return dispatch(createIntegratedUserMediaActionCreator());
-        })
-        .then(() => {
-          return dispatch(sendIntegratedUserMediaActionCeator(socket));
-        })
-        .then(() => {
-          return dispatch(updateConversationIntegratedUserMediaActionCreator());
         });
+      // .then(() => {
+      //   return dispatch(createIntegratedUserMediaActionCreator());
+      // })
+      // .then(() => {
+      //   return dispatch(sendIntegratedUserMediaActionCeator(socket));
+      // })
+      // .then(() => {
+      //   return dispatch(updateConversationIntegratedUserMediaActionCreator());
+      // });
     });
   };
 

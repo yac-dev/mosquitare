@@ -76,6 +76,56 @@ export const updateConversationRecievedUserActionCreator = () => async (dispatch
   }
 };
 
+export const updateConversationUserMediaActionCreator = (userMedia) => async (dispatch, getState) => {
+  try {
+    const callingState = getState().mediaState;
+    const { conversationId } = getState().conversationState;
+    let result;
+    if (callingState.amICalling) {
+      // usermedia自体を{calledUserMedia: userMedia._id}みたいな感じでpost requestを送る。
+      result = await mosquitareAPI.patch(`/conversations/${conversationId}/usermedia`, {
+        calledUserMedia: userMedia._id,
+      });
+      console.log(result);
+      // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
+    } else if (callingState.amIRecieving) {
+      // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
+      result = await mosquitareAPI.patch(`/conversations/${conversationId}/usermedia`, {
+        recievedUserMedia: userMedia._id,
+      });
+      console.log(result);
+    }
+    return Promise.resolve();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateConversationUserScript = (userScript) => async (dispatch, getState) => {
+  try {
+    const callingState = getState().mediaState;
+    const { conversationId } = getState().conversationState;
+    let result;
+    if (callingState.amICalling) {
+      // usermedia自体を{calledUserMedia: userMedia._id}みたいな感じでpost requestを送る。
+      result = await mosquitareAPI.patch(`/conversations/${conversationId}/userscript`, {
+        calledUserScript: userScript._id,
+      });
+      console.log(result);
+      // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
+    } else if (callingState.amIRecieving) {
+      // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
+      result = await mosquitareAPI.patch(`/conversations/${conversationId}/userscript`, {
+        recievedUserScript: userScript._id,
+      });
+      console.log(result);
+    }
+    return Promise.resolve();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // updateUserStreamActionCreator
 // createVideoAndStoreInConversationAC
 export const createVideoAndStoreInConversationActionCreator =

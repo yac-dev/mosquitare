@@ -5,15 +5,27 @@ const conversationSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
+  calledUserMedia: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'UserMedia',
+  },
+  calledUserScript: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'UserScript',
+  },
   recievedUser: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  integratedUserMedia: {
+  recievedUserMedia: {
     type: mongoose.Schema.ObjectId,
-    ref: 'IntegratedUserMedia',
+    ref: 'UserMedia',
   },
-  // isVideoPublic: [Boolean],これいらないかな。二つのreviewがそれぞれscoreQuestion4でbooleanを持っているからな。
+  recievedUserScript: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'UserScript',
+  },
+  isConversationPublic: Boolean,
   reviews: [
     {
       type: mongoose.Schema.ObjectId,
@@ -21,10 +33,23 @@ const conversationSchema = new mongoose.Schema({
     },
   ],
   duration: Number,
+  genre: {
+    type: String,
+  }, // これは、別でgenre用のmodelを作る必要があるかもしれない。
   createdAt: {
     type: Date,
     default: Date.now(),
   },
+  // textChats: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'TextChats',
+  // }, //ここよりも、textchats側のmodelでmount先を指定するほうがいいかもな。
+  // integratedUserMedia: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'IntegratedUserMedia',
+  // },
+  // isVideoPublic: [Boolean],これいらないかな。二つのreviewがそれぞれscoreQuestion4でbooleanを持っているからな。
+
   // textChats: [
   //   {
   //     type: mongoose.Schema.ObjectId,
