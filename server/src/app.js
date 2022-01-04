@@ -11,6 +11,7 @@ import meetingsRouter from './routes/meetings';
 import userMediasRouter from './routes/userMedias';
 import integratedUserMediasRouter from './routes/integratedUserMedias';
 import conversationsRouter from './routes/conversations';
+import userScriptsRouter from './routes/userScripts';
 
 app.use(express.json());
 app.use(cors());
@@ -26,6 +27,7 @@ app.use('/api/meetings', meetingsRouter);
 app.use('/api/userMedias', userMediasRouter);
 app.use('/api/conversations', conversationsRouter);
 app.use('/api/integratedusermedias', integratedUserMediasRouter);
+app.use('/api/userscripts', userScriptsRouter);
 
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));

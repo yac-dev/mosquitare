@@ -5,12 +5,22 @@ const integratedUserMediaSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'UserMedia',
   },
+  calledUserScript: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'UserScript',
+  },
   recievedUserMedia: {
     type: mongoose.Schema.ObjectId,
     ref: 'UserMedia',
-  }, // もしかしたら、ここはarrayに返るかも。groupチャット用の時も考えて。
+  },
+  recievedUserScript: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'UserScript',
+  },
   // comments: [], //ここはone to manyか。commentsっていうmodel作って、そっちでrefですればいいや。
-  publicOrPrivate: String,
+  // もしかしたら、ここはarrayに返るかも。groupチャット用の時も考えて。
+  // → chat 送信用のmodelも作らないといけない。one to manyでconversationかintegratedの方とrelationchipを実装する方向性になるだろう。
+  isPublic: Boolean,
   createdAt: {
     type: Date,
     default: Date.now(),

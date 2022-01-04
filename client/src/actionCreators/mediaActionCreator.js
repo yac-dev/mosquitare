@@ -24,7 +24,6 @@ import Peer from 'simple-peer';
 import store from '../store';
 
 import { updateUserConversationStateActionCreator } from './authActionCreators';
-import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 import { createConversationActionCreator } from './conversationActionCreators';
 import { sendConversationIdActionCreator } from './conversationActionCreators';
 import { updateConversationRecievedUserActionCreator } from './conversationActionCreators';
@@ -34,9 +33,11 @@ import { updateConversationIntegratedUserMediaActionCreator } from './integrated
 import { updateUserConversationsActionCreator } from './authActionCreators';
 // import { updateUserStreamActionCreator } from './conversationActionCreators';
 import { createUserMedia } from './userMediasActionCreators';
+import { updateIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
+import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 
 export const getMediaActionCreator =  // ここのlearningLanguageとnativeLanguage、最初からこれ入れていいかね。空の文字烈で終わりそうだな。。。まあ実験だ。
-  (mediaRecorder, chunksForVideo, chunksForAudio, setChunksForVideo, setChunksForAudio, connectionRef) =>
+  (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
   (dispatch) => {
     const audioConstraints = {
       autoGainControl: false,
@@ -56,33 +57,41 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
       // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
       mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
       mediaRecorder.current.ondataavailable = function (event) {
-        setChunksForVideo((prevState) => [...prevState, event.data]);
-        setChunksForAudio((prevState) => [...prevState, event.data]);
-        // chunksForVideo.push(event.data);
-        // chunksForAudio.push(event.data);
+        // setChunksForVideo((prevState) => [...prevState, event.data]);
+        // setChunksForAudio((prevState) => [...prevState, event.data]);
+        chunksForVideo.push(event.data);
+        chunksForAudio.push(event.data);
+        console.log(chunksForVideo);
+        console.log(chunksForAudio);
       };
-      // mediaRecorder.current.onstop = (event) => {
-      //   let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
-      //   let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
-      //   let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
-      //   let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+      mediaRecorder.current.onstop = (event) => {
+        let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
+        let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
+        let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
+        let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
 
-      //   console.log('recore stopped!!!');
-      //   chunksForVideo = [];
-      //   chunksForAudio = [];
-      //   Promise.resolve()
-      //     .then(() => {
-      //       return dispatch(
-      //         createUserMedia(blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage, connectionRef)
-      //       ); //ここにさらに上で足したanguageのblobを入れるな。
-      //     })
-      //     .then(() => {
-      //       return dispatch(hangUpCallActionCreator(connectionRef));
-      //     });
-      //   // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
-      //   // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
-      //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-      // };
+        console.log('record stopped!!!');
+        chunksForVideo = [];
+        chunksForAudio = [];
+        Promise.resolve()
+          .then(() => {
+            return dispatch(
+              createUserMedia(blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage)
+            );
+          })
+          .then((userMedia) => {
+            return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
+          })
+          .then(() => {
+            return dispatch(hangUpCallActionCreator(connectionRef));
+          })
+          .then(() => {
+            return dispatch(updateUserConversationToFalseActionCreator());
+          });
+        // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
+        // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
+        // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+      };
     });
   };
 

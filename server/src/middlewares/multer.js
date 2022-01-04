@@ -2,7 +2,6 @@
 // import multerS3 from 'multer-s3';
 import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
-import { AWS_S3BUCKET_NAME, AWS_S3BUCKET_REGION, AWS_S3BUCKET_ACCESS_KEY, AWS_S3BUCKET_SECRET_KEY } from '../../config';
 import path from 'path';
 
 // const s3 = new aws.S3();

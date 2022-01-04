@@ -87,10 +87,10 @@ const WorldMap = (props) => {
   const [chunks, setChunks] = useState([]);
   const mediaRecorder = useRef();
   // const mediaState = useSelector((state) => state.mediaState);
-  const [chunksForVideo, setChunksForVideo] = useState([]);
-  const [chunksForAudio, setChunksForAudio] = useState([]);
-  // let chunksForVideo = []; // ここの二つ、別にuseRefううよ。
-  // let chunksForAudio = [];
+  // const [chunksForVideo, setChunksForVideo] = useState([]);
+  // const [chunksForAudio, setChunksForAudio] = useState([]);
+  let chunksForVideo = []; // ここの二つ、別にuseRefううよ。
+  let chunksForAudio = [];
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -107,10 +107,10 @@ const WorldMap = (props) => {
       mediaRecorder,
       chunksForVideo,
       chunksForAudio,
-      // learningLanguageScript,
-      // nativeLanguageScript,
-      setChunksForVideo,
-      setChunksForAudio,
+      learningLanguageScript,
+      nativeLanguageScript,
+      // setChunksForVideo,
+      // setChunksForAudio,
       connectionRef
     );
     props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
@@ -230,27 +230,28 @@ const WorldMap = (props) => {
     // };
     mediaRecorder.current.stop(); // いちいちonstopのなかにblobを書く必要ないんじゃないかね。。。
     // ここでまずblob4つ作るfunctionを実行して(promiseで)、
-    makeBlobs()
-      .then((blobs) => {
-        return props.createUserMedia(
-          blobs.blobForVideo,
-          blobs.blobForAudio,
-          blobs.blobForLearningLanguage,
-          blobs.blobForNativeLanguage
-        );
-      })
-      .then((userMedia) => {
-        return props.updateIntegratedUserMediaActionCreator(userMedia);
-      }) //.then((integratedUserMediaId) => {return conversationupdateするapiをここで。})
-      .then(() => {
-        return props.hangUpCallActionCreator(connectionRef); //っていう流れかね。。。。
-      })
-      .then(() => {
-        return props.updateUserConversationToFalseActionCreator();
-      })
-      .then(() => {
-        setShow1on1(false);
-      });
+    setShow1on1(false);
+    // makeBlobs()
+    //   .then((blobs) => {
+    //     return props.createUserMedia(
+    //       blobs.blobForVideo,
+    //       blobs.blobForAudio,
+    //       blobs.blobForLearningLanguage,
+    //       blobs.blobForNativeLanguage
+    //     );
+    //   })
+    //   .then((userMedia) => {
+    //     return props.updateIntegratedUserMediaActionCreator(userMedia);
+    //   }) //.then((integratedUserMediaId) => {return conversationupdateするapiをここで。})
+    //   .then(() => {
+    //     return props.hangUpCallActionCreator(connectionRef); //っていう流れかね。。。。
+    //   })
+    //   .then(() => {
+    //     return props.updateUserConversationToFalseActionCreator();
+    //   })
+    //   .then(() => {
+    //     setShow1on1(false);
+    //   });
 
     // setShow1on1(false); // これもpromisifyで繋げたほうがいいかも。
   };

@@ -3,8 +3,7 @@ import { mosquitareAPI } from '../apis/mosquitare';
 import { hangUpCallActionCreator } from './mediaActionCreator';
 
 export const createUserMedia =
-  (blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage, connectionRef) =>
-  async (dispatch, getState) => {
+  (blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage) => async (dispatch, getState) => {
     try {
       const userId = getState().authState.currentUser._id;
       const formData = new FormData();
@@ -37,6 +36,7 @@ export const createUserMedia =
     }
   };
 
+// これだ。
 export const createLanguageScriptTextFileActionCreator =
   (learningLanguageScript, nativeLanguageScript) => async (dispatch, getState) => {
     let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });

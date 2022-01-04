@@ -15,10 +15,10 @@ export const createConversationActionCreator = (socket) => async (dispatch, getS
       // これも分けたほうがいいなー。細かく分けたいならね。今はいいや。
       // const partnerSocketId = getState().mediaState.callingWith.socketId;
       // socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId: conversation._id });
-      // dispatch({
-      //   type: CREATE_CONVERSATION, // ここら辺の名前なー。後で直さないとな。
-      //   payload: conversation._id,
-      // });
+      dispatch({
+        type: CREATE_CONVERSATION, // ここら辺の名前なー。後で直さないとな。
+        payload: conversation._id,
+      });
       resolve(); // promise返す。意図的に。
     });
   } catch (error) {
@@ -29,11 +29,11 @@ export const createConversationActionCreator = (socket) => async (dispatch, getS
 export const sendConversationIdActionCreator = (socket) => (dispatch, getState) => {
   try {
     const partnerSocketId = getState().mediaState.callingWith.socketId;
-    const conversation = getState().conversationState;
-    socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId: conversation._id });
+    const { conversationId } = getState().conversationState; // updateuserでもそうだったけど、この時点ではconversationがまだstoreのなかに入ってないんだよな。
+    socket.emit(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, { to: partnerSocketId, conversationId });
     dispatch({
       type: CREATE_CONVERSATION, // ここら辺の名前なー。後で直さないとな。
-      payload: conversation._id,
+      payload: conversationId,
     });
     return Promise.resolve();
   } catch (error) {
@@ -58,12 +58,12 @@ export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatc
 };
 
 // conversationIdをもらったらこれを実行する。上の続きだな。
-export const updateConversationRecievedUserActionCreator = (conversationId) => async (dispatch, getState) => {
+export const updateConversationRecievedUserActionCreator = () => async (dispatch, getState) => {
   try {
     const recievedUserId = getState().authState.currentUser._id;
     // const { conversationId } = getState().conversationState;
     // console.log(conversationId); // then chainしても、この段階で直前で更新したredux stateをここで使えないんだな。。。。
-    // const { conversationId } = getState().conversationState;
+    const { conversationId } = getState().conversationState;
     // console.log(getState().conversationState);
     const result = await mosquitareAPI.post(`/conversations/${conversationId}`, { recievedUser: recievedUserId });
     // const { conversation } = result.data;

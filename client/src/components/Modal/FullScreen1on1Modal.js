@@ -301,12 +301,11 @@ const FullScreen1on1Modal = (props) => {
 
     props
       .getConversationIdFromCalledUserActionCreator(props.socket)
-      .then((conversationId) => {
-        props.updateUserConversationsActionCreator();
-        return conversationId;
+      .then(() => {
+        return props.updateUserConversationsActionCreator();
       })
-      .then((conversationId) => {
-        props.updateConversationRecievedUserActionCreator(conversationId);
+      .then(() => {
+        props.updateConversationRecievedUserActionCreator();
       });
 
     props.getIntegratedUserMediaIdFromCalledUserActionCreator(props.socket);

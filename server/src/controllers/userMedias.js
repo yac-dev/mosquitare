@@ -7,24 +7,26 @@ import ffmpeg from 'ffmpeg';
 import path from 'path';
 import S3 from 'aws-sdk/clients/s3';
 
-const s3 = new S3({
-  region: process.env.AWS_S3BUCKET_REGION,
-  accessKeyId: process.env.AWS_S3BUCKET_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_S3BUCKET_SECRET_KEY,
-});
+// const s3 = new S3({
+//   region: process.env.AWS_S3BUCKET_REGION,
+//   accessKeyId: process.env.AWS_S3BUCKET_ACCESS_KEY,
+//   secretAccessKey: process.env.AWS_S3BUCKET_SECRET_KEY,
+// });
 
-const uploadFile = async (file) => {
-  const fileStream = fs.createReadStream(file.path); // ここでbinary dataを全て読み込んでs3に保存する。
+// const uploadFile = async (file) => {
+//   const fileStream = fs.createReadStream(file.path); // ここでbinary dataを全て読み込んでs3に保存する。
 
-  const uploadParams = {
-    Bucket: process.env.AWS_S3BUCKET_NAME,
-    Body: fileStream,
-    Key: file.filename,
-  };
+//   const uploadParams = {
+//     Bucket: process.env.AWS_S3BUCKET_NAME,
+//     Body: fileStream,
+//     Key: file.filename,
+//   };
 
-  await s3.upload(uploadParams).promise();
-  await unlinkFile(file.path);
-};
+//   await s3.upload(uploadParams).promise();
+//   await unlinkFile(file.path);
+// };
+
+import { uploadFile } from '../services/s3';
 
 export const createUserMedia = async (request, response) => {
   try {
@@ -51,8 +53,8 @@ export const createUserMedia = async (request, response) => {
       user: userId,
       videoFileName: files[0].filename,
       audioFileName: files[1].filename,
-      learningLanguageTextFileName: files[2].filename,
-      nativeLanguageTextFileName: files[3].filename,
+      // learningLanguageTextFileName: files[2].filename,
+      // nativeLanguageTextFileName: files[3].filename,
     });
     console.log('Done');
     response.json({
