@@ -3,6 +3,6 @@ const router = express.Router();
 import { createUserScript } from '../controllers/userScripts';
 import multerParser from '../middlewares/multer';
 
-router.post('/', multerParser.array('scriptFiles', 2), createUserScript);
+router.post('/upload/:id', multerParser.array('scriptFiles', 2), createUserScript);
 
 export default router;

@@ -103,3 +103,10 @@ export const updateIntegratedUserMediaActionCreator = (userMedia) => async (disp
     console.log(error);
   }
 };
+
+export const updateIntegratedUserMediaUserScriptActionCreator = () => async (dispatch, getState) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -67,17 +67,15 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
       mediaRecorder.current.onstop = (event) => {
         let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
         let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
-        let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
-        let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+        // let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
+        // let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
 
         console.log('record stopped!!!');
         chunksForVideo = [];
         chunksForAudio = [];
         Promise.resolve()
           .then(() => {
-            return dispatch(
-              createUserMedia(blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage)
-            );
+            return dispatch(createUserMedia(blobForVideo, blobForAudio));
           })
           .then((userMedia) => {
             return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
