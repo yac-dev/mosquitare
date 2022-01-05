@@ -33,6 +33,7 @@ import { updateConversationIntegratedUserMediaActionCreator } from './integrated
 import { updateUserConversationsActionCreator } from './authActionCreators';
 // import { updateUserStreamActionCreator } from './conversationActionCreators';
 import { createUserMedia } from './userMediasActionCreators';
+import { updateConversationUserMediaActionCreator } from './conversationActionCreators';
 import { updateIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 
@@ -76,6 +77,9 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
         Promise.resolve()
           .then(() => {
             return dispatch(createUserMedia(blobForVideo, blobForAudio));
+          }) // ここでconversatonのupdateだね。
+          .then((userMedia) => {
+            return dispatch(updateConversationUserMediaActionCreator(userMedia));
           })
           // .then((userMedia) => {
           //   return dispatch(updateIntegratedUserMediaActionCreator(userMedia));

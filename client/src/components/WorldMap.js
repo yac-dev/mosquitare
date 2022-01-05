@@ -44,6 +44,9 @@ import { createUserMedia } from '../actionCreators/userMediasActionCreators';
 import { updateIntegratedUserMediaActionCreator } from '../actionCreators/integratedUserMediasActionCreators';
 import { updateUserConversationToFalseActionCreator } from '../actionCreators/authActionCreators';
 
+import { createUserScriptActionCreator } from '../actionCreators/userScriptsActionCreators';
+import { updateConversationUserScriptActionCreator } from '../actionCreators/conversationActionCreators';
+
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
 import { SOMEBODY_CALLS_ME } from '../actionCreators/socketEvents';
@@ -206,15 +209,15 @@ const WorldMap = (props) => {
     //   });
   };
 
-  const makeBlobs = () => {
-    return new Promise((resolve, reject) => {
-      let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
-      let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
-      let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
-      let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
-      resolve({ blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage });
-    });
-  };
+  // const makeBlobs = () => {
+  //   return new Promise((resolve, reject) => {
+  //     let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
+  //     let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
+  //     let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
+  //     let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+  //     resolve({ blobForVideo, blobForAudio, blobForLearningLanguage, blobForNativeLanguage });
+  //   });
+  // };
 
   // 1on1 modalで実行してもらうcallback.modalのstate変えるからここに書いている。
   // ここにmediarecorderのinstanceを入れる前提だな。
@@ -230,7 +233,14 @@ const WorldMap = (props) => {
     // };
     mediaRecorder.current.stop(); // いちいちonstopのなかにblobを書く必要ないんじゃないかね。。。
     // ここでまずblob4つ作るfunctionを実行して(promiseで)、
-    setShow1on1(false);
+    props
+      .createUserScriptActionCreator(learningLanguageScript, nativeLanguageScript)
+      .then((userScript) => {
+        return props.updateConversationUserScriptActionCreator(userScript);
+      })
+      .then(() => {
+        return setShow1on1(false);
+      });
     // makeBlobs()
     //   .then((blobs) => {
     //     return props.createUserMedia(
@@ -355,4 +365,6 @@ export default connect(mapStateToProps, {
   updateIntegratedUserMediaActionCreator,
   hangUpCallActionCreator,
   updateUserConversationToFalseActionCreator,
+  createUserScriptActionCreator,
+  updateConversationUserScriptActionCreator,
 })(WorldMap);

@@ -37,7 +37,7 @@ export const updateConversationUserMedia = async (request, response) => {
       console.log('caled user media side');
       conversation.calledUserMedia = request.body.calledUserMedia;
     } else if (request.body.recievedUserMedia) {
-      console.log('recieved user side');
+      console.log('recieved user media side');
       conversation.recievedUserMedia = request.body.recievedUserMedia;
     }
     await conversation.save();
@@ -53,10 +53,10 @@ export const updateConversationUserScript = async (request, response) => {
   try {
     const conversation = await Conversation.findById(request.params.id);
     if (request.body.calledUserScript) {
-      console.log('caled user media side');
+      console.log('caled user script side ');
       conversation.calledUserScript = request.body.calledUserScript;
     } else if (request.body.recievedUserScript) {
-      console.log('recieved user side');
+      console.log('recieved user script side ');
       conversation.recievedUserScript = request.body.recievedUserScript;
     }
     await conversation.save();

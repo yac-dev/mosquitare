@@ -10,10 +10,10 @@ export const createUserMedia = (blobForVideo, blobForAudio) => async (dispatch, 
     formData.append('mediaFiles', blobForAudio);
     // formData.append('mediaFiles', blobForLearningLanguage);
     // formData.append('mediaFiles', blobForNativeLanguage);
-    const createMediaResult = await mosquitareAPI.post(`/userMedias/upload/${userId}`, formData, {
+    const result = await mosquitareAPI.post(`/userMedias/upload/${userId}`, formData, {
       headers: { 'Content-type': 'multipart/form-data' },
     });
-    const { userMedia } = createMediaResult.data;
+    const { userMedia } = result.data;
     return Promise.resolve(userMedia);
     // const callingState = getState().mediaState;
     // const { integratedUserMediaId } = getState().integratedUserMediaState;
