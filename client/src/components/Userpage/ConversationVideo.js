@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 
-const Video = (props) => {
+const ConversationVideo = (props) => {
   return (
     <div>
       <video
@@ -15,4 +16,8 @@ const Video = (props) => {
   );
 };
 
-export default Video;
+const mapStateToProps = (state, ownProps) => {
+  return {};
+};
+
+export default connect()(ConversationVideo);

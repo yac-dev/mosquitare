@@ -145,6 +145,10 @@ userSchema.pre(/^find/, function (next) {
     path: 'nationalities',
     select: 'name flagPic',
   });
+
+  this.populate({
+    path: 'conversations',
+  });
   next();
 });
 
