@@ -26,11 +26,10 @@ import S3 from 'aws-sdk/clients/s3';
 //   await unlinkFile(file.path);
 // };
 
-import { uploadFile } from '../services/s3';
+import { uploadFile, getFileStream } from '../services/s3';
 
 export const createUserMedia = async (request, response) => {
   try {
-    console.log('ok???');
     const files = request.files; // 多分arryaになっているだろう。
     const userId = request.params.id;
     console.log(files); // multer middlewareがあるから、ここでrequest objectのfile propertyにアクセスできる。
@@ -65,13 +64,23 @@ export const createUserMedia = async (request, response) => {
   }
 };
 
-export const updateUserMediaLanguageScripts = (request, response) => {
+export const getUserMedia = async (request, response) => {
   try {
-    // この前にuserMediaを作っているから、そのidで見つけてfieldをupdateする感じでいく感じかな。
-    const files = request.files;
-    const userId = request.params.id;
-    console.log(files);
+    const fileKey = request.params.key;
+    const readStream = getFileStream(fileKey);
+    readStream.pipe(response);
   } catch (error) {
     console.log(error);
   }
 };
+
+// export const updateUserMediaLanguageScripts = (request, response) => {
+//   try {
+//     // この前にuserMediaを作っているから、そのidで見つけてfieldをupdateする感じでいく感じかな。
+//     const files = request.files;
+//     const userId = request.params.id;
+//     console.log(files);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

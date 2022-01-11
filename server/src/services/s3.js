@@ -21,3 +21,13 @@ export const uploadFile = async (file) => {
   await s3.upload(uploadParams).promise();
   await unlinkFile(file.path);
 };
+
+// keyっていうか、単純にfile名のことね。
+export const getFileStream = async (fileKey) => {
+  const downloadParams = {
+    Key: fileKey,
+    Bucket: process.env.AWS_S3BUCKET_NAME,
+  };
+
+  return s3.getObject(downloadParams).createReadStream();
+};
