@@ -70,9 +70,19 @@ export const updateConversationUserScript = async (request, response) => {
 
 export const getConversation = async (request, response) => {
   try {
-    const conversation = await Conversation.findById(request.params.id).populate({
-      path: 'calledUserMedia recievedUserMedia',
-    });
+    const conversation = await Conversation.findById(request.params.id)
+      .populate({
+        path: 'calledUserMedia',
+        populate: {
+          path: 'videoFileName',
+        },
+      })
+      .populate({
+        path: 'recievedUserMedia',
+        populate: {
+          path: 'videoFileName',
+        },
+      });
 
     response.status(200).json({
       conversation,

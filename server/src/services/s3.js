@@ -29,5 +29,7 @@ export const getFileStream = async (fileKey) => {
     Bucket: process.env.AWS_S3BUCKET_NAME,
   };
 
-  return s3.getObject(downloadParams).createReadStream();
+  const data = await s3.getObject(downloadParams).promise();
+  // console.log(data); // logするとすごいことになる。binary dataだから。
+  return data.Body.toString('utf-8');
 };

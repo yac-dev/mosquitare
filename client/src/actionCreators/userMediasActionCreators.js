@@ -1,5 +1,5 @@
 import { mosquitareAPI } from '../apis/mosquitare';
-
+import { GET_CALLEDUSER_VIDEO_STREAM, GET_RECIEVEDUSER_VIDEO_STREAM } from './type';
 import { hangUpCallActionCreator } from './mediaActionCreator';
 
 export const createUserMedia = (blobForVideo, blobForAudio) => async (dispatch, getState) => {
@@ -32,6 +32,36 @@ export const createUserMedia = (blobForVideo, blobForAudio) => async (dispatch, 
     // dispatch(hangUpCallActionCreator(connectionRef)); // ここもpromisifyだな。
   } catch (error) {
     console.log(error); // koko？？
+  }
+};
+
+// ここら辺なー。もう少しうまく書けるだろう。
+export const getUserMediaActionCreator = (forCalledUserOrRecievedUser) => async (dispatch, getState) => {
+  try {
+    let fileKey;
+    if (forCalledUserOrRecievedUser === 'calledUser') {
+      fileKey = getState().currentWatchingConversationState.currentWatchingConversation.calledUserMedia.videoFileName;
+      const result = await mosquitareAPI.get(`/userMedias/${fileKey}`);
+      const { stream } = result.data;
+      console.log(result);
+      dispatch({
+        type: GET_CALLEDUSER_VIDEO_STREAM,
+        payload: stream,
+      });
+    } else if (forCalledUserOrRecievedUser === 'recievedUser') {
+      fileKey = getState().currentWatchingConversationState.currentWatchingConversation.recievedUserMedia.videoFileName;
+      const result = await mosquitareAPI.get(`/userMedias/${fileKey}`);
+      const { stream } = result.data;
+      dispatch({
+        type: GET_RECIEVEDUSER_VIDEO_STREAM,
+        payload: stream,
+      });
+    }
+    // const result = await mosquitareAPI.get(`/userMedias/${fileKey}`);
+    // console.log(result);
+    return Promise.resolve();
+  } catch (error) {
+    console.log(error);
   }
 };
 

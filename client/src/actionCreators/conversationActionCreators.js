@@ -133,6 +133,7 @@ export const getConversationActionCreator = (conversationId) => async (dispatch,
       type: GET_CONVERSATION,
       payload: conversation,
     });
+    return Promise.resolve();
   } catch (error) {
     console.log(error);
   }

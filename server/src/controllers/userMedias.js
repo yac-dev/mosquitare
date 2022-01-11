@@ -67,8 +67,12 @@ export const createUserMedia = async (request, response) => {
 export const getUserMedia = async (request, response) => {
   try {
     const fileKey = request.params.key;
-    const readStream = getFileStream(fileKey);
-    readStream.pipe(response);
+
+    const readStream = await getFileStream(fileKey); //promiseが返っているぽい。
+    // console.log(readStream);
+    response.status(200).json({
+      stream: readStream,
+    });
   } catch (error) {
     console.log(error);
   }
