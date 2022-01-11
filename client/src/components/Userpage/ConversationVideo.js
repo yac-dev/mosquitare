@@ -22,22 +22,32 @@ const ConversationVideo = (props) => {
       props.currentWatchingConversationState.calledUserVideo &&
       props.currentWatchingConversationState.recievedUserVideo
     ) {
-      <div>
-        <video
-          className='partner-video'
-          playsInline
-          ref={props.currentWatchingConversationState.calledUserVideo}
-          // autoPlay
-          style={{ width: '600px', height: '600px' }} // これだとなんで真ん中に寄ってくれるの？？
-        />
-        <video
-          className='partner-video'
-          playsInline
-          ref={props.currentWatchingConversationState.recievedUserVideo}
-          // autoPlay
-          style={{ width: '600px', height: '600px' }} // これだとなんで真ん中に寄ってくれるの？？
-        />
-      </div>;
+      return (
+        <div>
+          {/* <img src={`data:image/jpeg;base64,${props.currentWatchingConversationState.calledUserVideo}`} /> */}
+          <video
+            // className='partner-video'
+            // src={props.currentWatchingConversationState.calledUserVideo}
+            // autoPlay
+            style={{ width: '600px', height: '600px' }} // これだとなんで真ん中に寄ってくれるの？？
+            controls
+          >
+            <source
+              type='video/webm'
+              src={`data:video/webm;base64,${props.currentWatchingConversationState.calledUserVideo}`}
+              playsInline
+            ></source>
+          </video>
+          {/* <video
+            // className='partner-video'
+            playsInline
+            // ref={props.currentWatchingConversationState.recievedUserVideo} // ここstringのまま入れていいのかね？？なんか違う気がするんだよな。s3をreactでどうrenderするか、overflowで見てみるか。
+            // autoPlay
+            // src={props.currentWatchingConversationState.recievedUserVideo}
+            style={{ width: '600px', height: '600px' }} // これだとなんで真ん中に寄ってくれるの？？
+          /> */}
+        </div>
+      );
     } else {
       return null;
     }

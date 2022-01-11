@@ -31,5 +31,6 @@ export const getFileStream = async (fileKey) => {
 
   const data = await s3.getObject(downloadParams).promise();
   // console.log(data); // logするとすごいことになる。binary dataだから。
-  return data.Body.toString('utf-8');
+  return data.Body.toString('base64');
+  // return data.Body.toString('utf-8');
 };
