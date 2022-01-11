@@ -6,7 +6,8 @@ import usersReducer from './usersReducer';
 import meetingsReducer from './meetingsReducer';
 import meetingReducer from './meetingReducer';
 import conversationReducer from './conversationReducer';
-import integratedUserMediasReducer from './integratedUserMediasReducer';
+// import integratedUserMediasReducer from './integratedUserMediasReducer';
+import currentWatchingConversationReducer from './currentWatchingConversationReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -15,8 +16,9 @@ const rootReducer = combineReducers({
   meetingsState: meetingsReducer,
   meetingState: meetingReducer,
   conversationState: conversationReducer,
-  integratedUserMediaState: integratedUserMediasReducer,
+  // integratedUserMediaState: integratedUserMediasReducer,
   peerState: peerReducer,
+  currentWatchingConversationState: currentWatchingConversationReducer,
 });
 
 export default rootReducer;

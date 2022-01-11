@@ -74,7 +74,7 @@ const App = () => {
         <Route path='/about' exact component={About} />
         <Route path='/userpage/:id' exact component={UserPageContainer} />
         <Route path='/review' exact component={Review} />
-        <Route path='/uservideo/:userid/:usermediaid' exact component={ConversationVideo} />
+        <Route path='/uservideo/:userid/:conversationid' exact component={ConversationVideo} />
       </Router>
     </div>
   );

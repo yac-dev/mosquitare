@@ -1,5 +1,5 @@
 import { mosquitareAPI } from '../apis/mosquitare';
-import { CREATE_CONVERSATION, GET_CONVERSATION_ID, UPDATE_CONVERSATION_RECIEVED_USER } from './type';
+import { CREATE_CONVERSATION, GET_CONVERSATION_ID, UPDATE_CONVERSATION_RECIEVED_USER, GET_CONVERSATION } from './type';
 import { I_SEND_CONVERSATION_ID_TO_MY_PARTNER, MY_CALLED_USER_CREATED_CONVERSATION } from './socketEvents';
 import { hangUpCallActionCreator } from './mediaActionCreator';
 
@@ -125,35 +125,48 @@ export const updateConversationUserScriptActionCreator = (userScript) => async (
   }
 };
 
+export const getConversationActionCreator = (conversationId) => async (dispatch, getState) => {
+  try {
+    const result = await mosquitareAPI.get(`/conversations/${conversationId}`);
+    const { conversation } = result.data;
+    dispatch({
+      type: GET_CONVERSATION,
+      payload: conversation,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // updateUserStreamActionCreator
 // createVideoAndStoreInConversationAC
-export const createVideoAndStoreInConversationActionCreator =
-  (blobForVideo, blobForAudio, connectionRef) => async (dispatch, getState) => {
-    try {
-      const state = getState().mediaState;
-      const { videoChatId } = getState().videoChatState;
-      let result;
-      // const postData = { calledUserStream: blob };
-      // console.log(postData);
-      const formData = new FormData();
-      formData.append('mediaFiles', blobForVideo); // api側のmulterで、こういうpropertyで設定している。 ここでcreateVideoのapi requestをするようにする。
-      formData.append('mediaFiles', blobForAudio);
-      if (state.amICalling) {
-        // bodyによって分けるって面倒くさいな。caller用のvideo提出endpoint、reciever用のvideo提出endpointってわけた方がいいかもしれないな。
-        result = await mosquitareAPI.post(`/videochats/upload/caller/${videoChatId}`, formData, {
-          headers: { 'Content-type': 'multipart/form-data' },
-        });
-      } else if (state.amIRecieving) {
-        result = await mosquitareAPI.post(`/videochats/upload/reciever/${videoChatId}`, formData, {
-          headers: { 'Content-type': 'multipart/form-data' },
-        });
-      }
-      console.log(result); // これundefinedだった？？
-      dispatch(hangUpCallActionCreator(connectionRef)); // 引数に、
-    } catch (error) {
-      console.log(error);
-    }
-  };
+// export const createVideoAndStoreInConversationActionCreator =
+//   (blobForVideo, blobForAudio, connectionRef) => async (dispatch, getState) => {
+//     try {
+//       const state = getState().mediaState;
+//       const { videoChatId } = getState().videoChatState;
+//       let result;
+//       // const postData = { calledUserStream: blob };
+//       // console.log(postData);
+//       const formData = new FormData();
+//       formData.append('mediaFiles', blobForVideo); // api側のmulterで、こういうpropertyで設定している。 ここでcreateVideoのapi requestをするようにする。
+//       formData.append('mediaFiles', blobForAudio);
+//       if (state.amICalling) {
+//         // bodyによって分けるって面倒くさいな。caller用のvideo提出endpoint、reciever用のvideo提出endpointってわけた方がいいかもしれないな。
+//         result = await mosquitareAPI.post(`/videochats/upload/caller/${videoChatId}`, formData, {
+//           headers: { 'Content-type': 'multipart/form-data' },
+//         });
+//       } else if (state.amIRecieving) {
+//         result = await mosquitareAPI.post(`/videochats/upload/reciever/${videoChatId}`, formData, {
+//           headers: { 'Content-type': 'multipart/form-data' },
+//         });
+//       }
+//       console.log(result); // これundefinedだった？？
+//       dispatch(hangUpCallActionCreator(connectionRef)); // 引数に、
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   };
 
 // export const getConversationsActionCreator = () => async (dispatch, getState) => {
 //   try {
