@@ -52,6 +52,7 @@ export const getUserMediaActionCreator = (forCalledUserOrRecievedUser) => async 
       fileKey = getState().currentWatchingConversationState.currentWatchingConversation.recievedUserMedia.videoFileName;
       const result = await mosquitareAPI.get(`/userMedias/${fileKey}`);
       const { stream } = result.data;
+      console.log('recieved', stream);
       dispatch({
         type: GET_RECIEVEDUSER_VIDEO_STREAM,
         payload: stream,

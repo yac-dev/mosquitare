@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import VideoElement from './VideoElement';
 import { connect } from 'react-redux';
 import { getConversationActionCreator } from '../../actionCreators/conversationActionCreators';
 import { getUserMediaActionCreator } from '../../actionCreators/userMediasActionCreators';
 
 const ConversationVideo = (props) => {
+  // const calledUserVideoRef = useRef(null);
+  // const recievedUserVideoRef = useRef(null);
+  const [loaded, setLoaded] = useState(0);
+  const childRef = useRef();
+
   useEffect(() => {
     props
       .getConversationActionCreator(props.match.params.conversationid)
@@ -17,41 +23,47 @@ const ConversationVideo = (props) => {
     // 一応これでcalledUserMediaとrecievedUserediaの中身も引っ張ってこれている。
   }, []);
 
+  useEffect(() => {
+    if (loaded === 2) {
+      childRef.current.play();
+    }
+  }, [loaded]);
+
   const videosRender = () => {
     if (
       props.currentWatchingConversationState.calledUserVideo &&
       props.currentWatchingConversationState.recievedUserVideo
     ) {
       return (
-        <div>
-          {/* <img src={`data:image/jpeg;base64,${props.currentWatchingConversationState.calledUserVideo}`} /> */}
-          <video
-            // className='partner-video'
-            // src={props.currentWatchingConversationState.calledUserVideo}
-            // autoPlay
-            style={{ width: '600px', height: '600px' }} // これだとなんで真ん中に寄ってくれるの？？
-            controls
-          >
+        <div className='conversationvideo'>
+          {/* <video ref={calledUserVideoRef} style={{ width: '600px', height: '600px' }}>
             <source
               type='video/webm'
               src={`data:video/webm;base64,${props.currentWatchingConversationState.calledUserVideo}`}
               playsInline
             ></source>
           </video>
-          {/* <video
-            // className='partner-video'
-            playsInline
-            // ref={props.currentWatchingConversationState.recievedUserVideo} // ここstringのまま入れていいのかね？？なんか違う気がするんだよな。s3をreactでどうrenderするか、overflowで見てみるか。
-            // autoPlay
-            // src={props.currentWatchingConversationState.recievedUserVideo}
-            style={{ width: '600px', height: '600px' }} // これだとなんで真ん中に寄ってくれるの？？
-          /> */}
+          <video ref={recievedUserVideoRef} style={{ width: '200px', height: '200px' }}>
+            <source
+              type='video/webm'
+              src={`data:video/webm;base64,${props.currentWatchingConversationState.recievedUserVideo}`}
+              playsInline
+            ></source>
+          </video> */}
+          <VideoElement ref={childRef} setLoaded={setLoaded} />
+          <VideoElement ref={childRef} setLoaded={setLoaded} />
         </div>
       );
     } else {
       return null;
     }
   };
+
+  const playVideos = () => {
+    // ここでrefを選択していく。
+    // calledUserVideoRef.current.play();
+    // recievedUserVideoRef.current.play();
+  }; // これだと、少しずれるて再生されてしまう。同時に再生させる
 
   return (
     <div>
@@ -64,6 +76,7 @@ const ConversationVideo = (props) => {
       ></video>
       <video src='uploadedFiles/ef392537-cb27-48a3-8905-43467c3eef6b.mp4'></video> */}
       {videosRender()}
+      {/* <button onClick={() => playVideos()}>Play!</button> */}
     </div>
   );
 };
