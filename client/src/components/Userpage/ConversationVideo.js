@@ -33,7 +33,7 @@ const ConversationVideo = (props) => {
       childRef1.current.play();
       childRef2.current.play();
     }
-  }, [loaded]);
+  }, [loaded]); // pauseやら巻き戻しできるようなseekbarも設けないといけない。後で。
 
   const videosRender = () => {
     if (
@@ -42,20 +42,6 @@ const ConversationVideo = (props) => {
     ) {
       return (
         <div className='conversationvideo'>
-          {/* <video ref={calledUserVideoRef} style={{ width: '600px', height: '600px' }}>
-            <source
-              type='video/webm'
-              src={`data:video/webm;base64,${props.currentWatchingConversationState.calledUserVideo}`}
-              playsInline
-            ></source>
-          </video>
-          <video ref={recievedUserVideoRef} style={{ width: '200px', height: '200px' }}>
-            <source
-              type='video/webm'
-              src={`data:video/webm;base64,${props.currentWatchingConversationState.recievedUserVideo}`}
-              playsInline
-            ></source>
-          </video> */}
           {/* <VideoElement ref={childRef} setLoaded={setLoaded} /> */} {/* これと↓ではだめみたいだなー。 */}
           {/* <VideoElement ref={childRef} setLoaded={setLoaded} /> */}
           <DecoratedVideoElement ref={childRef1} setLoaded={setLoaded} />
@@ -66,12 +52,6 @@ const ConversationVideo = (props) => {
       return null;
     }
   };
-
-  const playVideos = () => {
-    // ここでrefを選択していく。
-    // calledUserVideoRef.current.play();
-    // recievedUserVideoRef.current.play();
-  }; // これだと、少しずれるて再生されてしまう。同時に再生させる
 
   return (
     <div>

@@ -1,4 +1,6 @@
 import UserScript from '../models/userScript';
+import LanguageStatus from '../models/languageStatus';
+
 import { uploadFile } from '../services/s3';
 
 export const createUserScript = async (request, response) => {
@@ -15,6 +17,7 @@ export const createUserScript = async (request, response) => {
       learningLanguageScriptFileName: files[0].filename,
       nativeLanguageScriptFileName: files[1].filename,
     });
+
     response.status(201).json({
       userScript,
     });
