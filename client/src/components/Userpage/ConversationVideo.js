@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import VideoElement from './VideoElement';
+import DecoratedVideoElement from './DecoratedVideoElement';
 import { connect } from 'react-redux';
 import { getConversationActionCreator } from '../../actionCreators/conversationActionCreators';
 import { getUserMediaActionCreator } from '../../actionCreators/userMediasActionCreators';
@@ -8,7 +9,8 @@ const ConversationVideo = (props) => {
   // const calledUserVideoRef = useRef(null);
   // const recievedUserVideoRef = useRef(null);
   const [loaded, setLoaded] = useState(0);
-  const childRef = useRef();
+  const childRef1 = useRef();
+  const childRef2 = useRef();
 
   useEffect(() => {
     props
@@ -25,7 +27,11 @@ const ConversationVideo = (props) => {
 
   useEffect(() => {
     if (loaded === 2) {
-      childRef.current.play();
+      console.log(loaded);
+      console.log(childRef1.current);
+      console.log(childRef2.current);
+      childRef1.current.play();
+      childRef2.current.play();
     }
   }, [loaded]);
 
@@ -50,8 +56,10 @@ const ConversationVideo = (props) => {
               playsInline
             ></source>
           </video> */}
-          <VideoElement ref={childRef} setLoaded={setLoaded} />
-          <VideoElement ref={childRef} setLoaded={setLoaded} />
+          {/* <VideoElement ref={childRef} setLoaded={setLoaded} /> */} {/* これと↓ではだめみたいだなー。 */}
+          {/* <VideoElement ref={childRef} setLoaded={setLoaded} /> */}
+          <DecoratedVideoElement ref={childRef1} setLoaded={setLoaded} />
+          <DecoratedVideoElement ref={childRef2} setLoaded={setLoaded} />
         </div>
       );
     } else {
