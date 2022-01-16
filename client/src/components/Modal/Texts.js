@@ -3,10 +3,14 @@ import React from 'react';
 import Subtitle from './Subtitle';
 import Chat from './Chat';
 
-const Texts = () => {
+const Texts = (props) => {
   return (
-    <div className='texts' style={{ backgroundColor: 'white' }}>
-      <Subtitle />
+    <div className='texts'>
+      <Subtitle
+        socket={props.socket}
+        setLearningLanguageScript={props.setLearningLanguageScript}
+        setNativeLanguageScript={props.setNativeLanguageScript}
+      />
       {/* <Chat /> */}
     </div>
   );

@@ -360,13 +360,14 @@ export const sendVoiceTextActionCreator = (socket, nativeLanguageScript) => (dis
   });
 };
 
-export const getVoiceTextActionCreator = (socket, setLanguageSubtitle, isFinal, setIsFinal) => () => {
+export const getVoiceTextActionCreator = (socket, setLanguageSubtitle, languageSubtitle) => () => {
   socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
     // ここにrenderするfunctionを作る感じかな。
     console.log('partner sent to me...');
     console.log(dataFromServer.nativeLanguageScript); // koko
     // display(voiceText)
     setLanguageSubtitle(dataFromServer.nativeLanguageScript);
+    console.log(languageSubtitle);
   });
 };
 

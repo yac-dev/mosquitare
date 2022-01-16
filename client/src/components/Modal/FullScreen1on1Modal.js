@@ -56,83 +56,83 @@ const FullScreen1on1Modal = (props) => {
   // let mediaRecorder;
 
   // こっから。。。
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let recognition = useRef();
-  recognition.current = new SpeechRecognition();
-  recognition.current.continuous = true;
-  recognition.current.interimResults = true;
+  // const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  // let recognition = useRef();
+  // recognition.current = new SpeechRecognition();
+  // recognition.current.continuous = true;
+  // recognition.current.interimResults = true;
 
-  useEffect(() => {
-    props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
-      props.recieveSwitchingLanguageRequestActionCreator(
-        dataFromServer.switchingLanguage,
-        recognition.current,
-        props.setNativeLanguageScript,
-        props.socket
-      );
-      // props.recieveSwitchLanguage(dataFromServer.language); // ここで、向こうからのlanguageをredux stateに入れる。
-      // const language = store.getState().mediaState.currentLanguage;
-      // recognition.current.onend = () => {
-      //   recognition.current.lang = language;
-      //   recognition.current.start();
-      // };
-    });
-  }, []);
+  // useEffect(() => {
+  //   props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
+  //     props.recieveSwitchingLanguageRequestActionCreator(
+  //       dataFromServer.switchingLanguage,
+  //       recognition.current,
+  //       props.setNativeLanguageScript,
+  //       props.socket
+  //     );
+  //     // props.recieveSwitchLanguage(dataFromServer.language); // ここで、向こうからのlanguageをredux stateに入れる。
+  //     // const language = store.getState().mediaState.currentLanguage;
+  //     // recognition.current.onend = () => {
+  //     //   recognition.current.lang = language;
+  //     //   recognition.current.start();
+  //     // };
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    if (props.mediaState.callAccepted) {
-      const { currentLanguage } = store.getState().mediaState;
-      recognition.current.lang = currentLanguage.codeForSpeechrecognition;
-      recognition.current.start(); // onendをつけると、continueが160回繰り返されるのはなぜ。。。まじなぞ。
-      if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
-        // ここでlearning用の、recognitionでtranscriptionをsetStateするようにする。
-        console.log('in useEffect');
-        recognition.current.onresult = (event) => {
-          // console.log(event);
-          const transcript = Array.from(event.results)
-            .map((result) => result[0])
-            .map((result) => result.transcript)
-            .join('');
-          console.log(transcript);
-          props.setLearningLanguageScript(transcript);
-        };
+  // useEffect(() => {
+  //   if (props.mediaState.callAccepted) {
+  //     const { currentLanguage } = store.getState().mediaState;
+  //     recognition.current.lang = currentLanguage.codeForSpeechrecognition;
+  //     recognition.current.start(); // onendをつけると、continueが160回繰り返されるのはなぜ。。。まじなぞ。
+  //     if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
+  //       // ここでlearning用の、recognitionでtranscriptionをsetStateするようにする。
+  //       console.log('in useEffect');
+  //       recognition.current.onresult = (event) => {
+  //         // console.log(event);
+  //         const transcript = Array.from(event.results)
+  //           .map((result) => result[0])
+  //           .map((result) => result.transcript)
+  //           .join('');
+  //         console.log(transcript);
+  //         props.setLearningLanguageScript(transcript);
+  //       };
 
-        // recognition.current.onerror = (event) => {
-        //   console.log(event.error);
-        // };
-        // recognition.current.onend = () => {
-        //   recognition.current.start();
-        // }; // ほんと謎だわこれ。。。。
-      } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
-        const to = store.getState().mediaState.callingWith.socketId;
-        console.log('india side workinggggggg???');
-        recognition.current.onresult = (event) => {
-          console.log('sending isFinal text.');
-          const transcript = Array.from(event.results)
-            .map((result) => result[0])
-            .map((result) => result.transcript)
-            .join('');
-          console.log(transcript);
-          // やっぱisFinalは必要かもしれん。
-          props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
-            to,
-            nativeLanguageScript: transcript,
-          });
-          props.setNativeLanguageScript(transcript);
-        };
-        // recognition.current.onspeechend = () => {
-        //   recognition.current.stop();
-        // };
-        // recognition.current.onerror = (event) => {
-        //   console.log(event.error);
-        // };
-        // recognition.current.onend = () => {
-        //   recognition.current.start(); // ここで確実に繰り返されるのかね。。。。分からんん。
-        // };
-        // recognition.current.start();
-      }
-    }
-  }, [props.mediaState.callAccepted]);
+  //       // recognition.current.onerror = (event) => {
+  //       //   console.log(event.error);
+  //       // };
+  //       // recognition.current.onend = () => {
+  //       //   recognition.current.start();
+  //       // }; // ほんと謎だわこれ。。。。
+  //     } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
+  //       const to = store.getState().mediaState.callingWith.socketId;
+  //       console.log('india side workinggggggg???');
+  //       recognition.current.onresult = (event) => {
+  //         console.log('sending isFinal text.');
+  //         const transcript = Array.from(event.results)
+  //           .map((result) => result[0])
+  //           .map((result) => result.transcript)
+  //           .join('');
+  //         console.log(transcript);
+  //         // やっぱisFinalは必要かもしれん。
+  //         props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+  //           to,
+  //           nativeLanguageScript: transcript,
+  //         });
+  //         props.setNativeLanguageScript(transcript);
+  //       };
+  //       // recognition.current.onspeechend = () => {
+  //       //   recognition.current.stop();
+  //       // };
+  //       // recognition.current.onerror = (event) => {
+  //       //   console.log(event.error);
+  //       // };
+  //       // recognition.current.onend = () => {
+  //       //   recognition.current.start(); // ここで確実に繰り返されるのかね。。。。分からんん。
+  //       // };
+  //       // recognition.current.start();
+  //     }
+  //   }
+  // }, [props.mediaState.callAccepted]);
   // ここまで、違うcomponentに移した。
 
   // useEffect(() => {
@@ -439,7 +439,7 @@ const FullScreen1on1Modal = (props) => {
     } else {
       return (
         <>
-          <Button
+          {/* <Button
             onClick={() =>
               props.switchCurrentLanguageActionCreator(
                 props.socket,
@@ -450,7 +450,7 @@ const FullScreen1on1Modal = (props) => {
             }
           >
             Switch
-          </Button>
+          </Button> */}
         </>
       );
     }
@@ -493,7 +493,7 @@ const FullScreen1on1Modal = (props) => {
       style={{ backgroundColor: 'rgb(8, 18, 23)' }}
     >
       {/* <Modal.Body bsPrefix='modal-body' style={{ backgroundColor: 'rgb(0, 25, 35)' }}> */}
-      <Modal.Body bsPrefix='modal-body' style={{ backgroundColor: 'rgb(80, 81, 79)' }}>
+      <Modal.Body bsPrefix='modal-body'>
         {switchRender()}
         {/* <div className='videos-container' style={{ marginTop: '80px' }}>
           <div className='myvideo-container'>
@@ -552,6 +552,7 @@ const FullScreen1on1Modal = (props) => {
         ) : null} */}
         <div className='info-and-app-wrapper'>
           <Texts
+            socket={props.socket}
             setLearningLanguageScript={props.setLearningLanguageScript}
             setNativeLanguageScript={props.setNativeLanguageScript}
           />

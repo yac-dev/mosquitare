@@ -71,6 +71,7 @@
   margin: 0;
   height: 100vh;
   display: grid;
+  background-color: #444444;
   grid-template-columns: 1fr 960px 1fr;
   grid-template-rows: 540px 1fr;
   row-gap: 20px;

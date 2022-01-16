@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import store from '../../store';
 import { connect } from 'react-redux';
 import {
@@ -9,10 +9,11 @@ import {
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const Subtitle = (props) => {
+  const [languageSubtitle, setLanguageSubtitle] = useState('');
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognition = useRef();
   recognition.current = new SpeechRecognition();
-  recognition.current.continuous = true;
+  // recognition.current.continuous = true;
   recognition.current.interimResults = true;
 
   // useEffect(() => {
@@ -33,7 +34,7 @@ const Subtitle = (props) => {
   // }, []);
 
   useEffect(() => {
-    props.getVoiceTextActionCreator(props.socket, props.setLanguageSubtitle);
+    props.getVoiceTextActionCreator(props.socket, setLanguageSubtitle, languageSubtitle);
   }, []);
 
   useEffect(() => {
@@ -50,16 +51,16 @@ const Subtitle = (props) => {
             .map((result) => result[0])
             .map((result) => result.transcript)
             .join('');
-          console.log(transcript);
+          console.log(transcript); // ここだけ出てるんだよな。brazil側がね。
           props.setLearningLanguageScript(transcript);
         };
 
         // recognition.current.onerror = (event) => {
         //   console.log(event.error);
         // };
-        // recognition.current.onend = () => {
-        //   recognition.current.start();
-        // }; // ほんと謎だわこれ。。。。
+        recognition.current.onend = () => {
+          recognition.current.start();
+        }; // ほんと謎だわこれ。。。。
       } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
         const to = store.getState().mediaState.callingWith.socketId;
         console.log('india side workinggggggg???');
@@ -76,6 +77,9 @@ const Subtitle = (props) => {
             nativeLanguageScript: transcript,
           });
           props.setNativeLanguageScript(transcript);
+          recognition.current.onend = () => {
+            recognition.current.start(); // ここで確実に繰り返されるのかね。。。。分からんん。
+          }; // これでできちゃっているよ。。。あの悩んだ5日間はなんだったんだ。。。
         };
         // recognition.current.onspeechend = () => {
         //   recognition.current.stop();
@@ -86,11 +90,27 @@ const Subtitle = (props) => {
         // recognition.current.onend = () => {
         //   recognition.current.start(); // ここで確実に繰り返されるのかね。。。。分からんん。
         // };
+
         // recognition.current.start();
       }
     }
   }, [props.mediaState.callAccepted]);
-  return <div>Our subtitle</div>;
+
+  const displaySubtitle = () => {
+    if (languageSubtitle) {
+      return (
+        <div className='partner-subtitle'>
+          <p className='voice-text' style={{ color: 'red' }}>
+            {languageSubtitle}
+          </p>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  return <>{displaySubtitle()}</>;
 };
 
 const mapStateToProps = (state) => {
