@@ -3,6 +3,9 @@ import { connect, useSelector } from 'react-redux';
 import store from '../../store';
 import { Modal } from 'react-bootstrap';
 import { Button } from 'semantic-ui-react';
+import PersonalInfo from './PersonalInfo';
+import ConversationApps from './ConversationApps';
+import Texts from './Texts';
 
 import Dimer from '../Dimer';
 import UserInfoCard from '../UserInfoCard';
@@ -52,6 +55,7 @@ const FullScreen1on1Modal = (props) => {
   // const [chunks, setChunks] = useState([]);
   // let mediaRecorder;
 
+  // こっから。。。
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognition = useRef();
   recognition.current = new SpeechRecognition();
@@ -129,6 +133,7 @@ const FullScreen1on1Modal = (props) => {
       }
     }
   }, [props.mediaState.callAccepted]);
+  // ここまで、違うcomponentに移した。
 
   // useEffect(() => {
   //   // ここで、多分transcriptionな感じのを書くのかね。。。
@@ -487,7 +492,8 @@ const FullScreen1on1Modal = (props) => {
       onHide={() => props.setShow1on1(false)}
       style={{ backgroundColor: 'rgb(8, 18, 23)' }}
     >
-      <Modal.Body style={{ backgroundColor: 'rgb(8, 18, 23)' }}>
+      {/* <Modal.Body bsPrefix='modal-body' style={{ backgroundColor: 'rgb(0, 25, 35)' }}> */}
+      <Modal.Body bsPrefix='modal-body' style={{ backgroundColor: 'rgb(80, 81, 79)' }}>
         {switchRender()}
         {/* <div className='videos-container' style={{ marginTop: '80px' }}>
           <div className='myvideo-container'>
@@ -502,29 +508,36 @@ const FullScreen1on1Modal = (props) => {
             {displaySubtitle()}
           </div>
         </div> */}
-
-        <div className='modal-container'>
-          {displayCurrentLanguage()}
-          <div className='partner-video-container'>
-            {/* <div className='partner-video'> */}
-            <video
-              className='partner-video'
-              playsInline
-              ref={props.oppositeVideo}
-              autoPlay
-              style={{ width: '600px', height: '600px' }} // これだとなんで真ん中に寄ってくれるの？？
-            />
-            {/* </div> */}
-            {displaySubtitle()} {/* divでその中にpが入っている。*/}
-          </div>
-          {/* <div className='myvideo-container'> */}
-          {/* <div className='myvideo'> */}
-          <video className='myvideo' playsInline muted ref={props.myVideo} autoPlay />
-          {/* </div> */}
-          {/* </div> */}
+        {/* <div className='modal-container'> */}
+        {/* {displayCurrentLanguage()} */}
+        {/* <div className='partner-video-container'> */}
+        {/* <div className='partner-video'> */}
+        <div></div>
+        <div className='videos-wrapper'>
+          <video
+            className='partner-video'
+            playsInline
+            ref={props.oppositeVideo}
+            autoPlay
+            style={{ width: '960px', height: '540px' }} // これだとなんで真ん中に寄ってくれるの？？
+            // style={{ width: '400px', height: '500px' }}
+          />
+          <video
+            className='myvideo'
+            playsInline
+            muted
+            ref={props.myVideo}
+            autoPlay
+            style={{ width: '160px', height: '90px' }}
+          />
         </div>
-
-        {props.mediaState.callAccepted ? (
+        {/* </div> */}
+        {/* {displaySubtitle()} divでその中にpが入っている。 */}
+        {/* </div> */}
+        {/* <div className='myvideo-container'> */}
+        {/* <div className='myvideo'> */}
+        {/* </div> */}
+        {/* {props.mediaState.callAccepted ? (
           <div className='button-wrapper'>
             <Button
               negative
@@ -534,11 +547,16 @@ const FullScreen1on1Modal = (props) => {
             >
               Hang up
             </Button>
-            <Button onClick={() => onActivateSubtitleClick()}>activate partners subtitle</Button>
             {displaySwitchCurrentLanguageButton()}
           </div>
-        ) : null}
-        {/* {displayCurrentLanguage()} */}
+        ) : null} */}
+        <div className='info-and-app-wrapper'>
+          <Texts
+            setLearningLanguageScript={props.setLearningLanguageScript}
+            setNativeLanguageScript={props.setNativeLanguageScript}
+          />
+          <ConversationApps />
+        </div>
       </Modal.Body>
     </Modal>
   );

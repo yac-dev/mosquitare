@@ -40,6 +40,10 @@ import { updateUserConversationToFalseActionCreator } from './authActionCreators
 export const getMediaActionCreator =  // ここのlearningLanguageとnativeLanguage、最初からこれ入れていいかね。空の文字烈で終わりそうだな。。。まあ実験だ。
   (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
   (dispatch) => {
+    const videoConstrains = {
+      width: { ideal: 480 },
+      height: { ideal: 270 },
+    };
     const audioConstraints = {
       autoGainControl: false,
       channelCount: 2,
@@ -49,7 +53,7 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
       sampleRate: 48000,
       sampleSize: 16,
     };
-    navigator.mediaDevices.getUserMedia({ video: true, audio: audioConstraints }).then((stream) => {
+    navigator.mediaDevices.getUserMedia({ video: videoConstrains, audio: audioConstraints }).then((stream) => {
       dispatch({
         type: GET_MEDIA,
         payload: stream,
