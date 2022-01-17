@@ -99,6 +99,13 @@
   border-radius: 10px;
 }
 
+.button-wrapper {
+  position: absolute;
+  right: 50%;
+  bottom: 10px;
+  border-radius: 10px;
+}
+
 .info-and-app-wrapper {
   grid-area: info-and-app-wrapper;
   display: grid;

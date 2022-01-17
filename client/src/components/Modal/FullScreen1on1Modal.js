@@ -3,6 +3,9 @@ import { connect, useSelector } from 'react-redux';
 import store from '../../store';
 import { Modal } from 'react-bootstrap';
 import { Button } from 'semantic-ui-react';
+import { Tooltip } from '@mui/material';
+
+// components
 import PersonalInfo from './PersonalInfo';
 import ConversationApps from './ConversationApps';
 import Texts from './Texts';
@@ -530,6 +533,24 @@ const FullScreen1on1Modal = (props) => {
             autoPlay
             style={{ width: '160px', height: '90px' }}
           />
+          {props.mediaState.callAccepted ? (
+            <div className='button-wrapper'>
+              {/* <Tooltip title='hang up call'> tooltip バグるね。他の方法試そう。 */}
+              <Button
+                negative
+                // disabled={!isMinimumTimePassed}
+                className='hang-up-button'
+                circular
+                icon='sign out'
+                onClick={() => props.onHangUpClick()} // ここで、recorderのstopがかかって、onstopのeventが動くようになる。
+              >
+                {/* <i className='sign out alternate icon'></i> */}
+              </Button>
+              {/* </Tooltip> */}
+
+              {displaySwitchCurrentLanguageButton()}
+            </div>
+          ) : null}
         </div>
         {/* </div> */}
         {/* {displaySubtitle()} divでその中にpが入っている。 */}
@@ -537,19 +558,6 @@ const FullScreen1on1Modal = (props) => {
         {/* <div className='myvideo-container'> */}
         {/* <div className='myvideo'> */}
         {/* </div> */}
-        {/* {props.mediaState.callAccepted ? (
-          <div className='button-wrapper'>
-            <Button
-              negative
-              // disabled={!isMinimumTimePassed}
-              className='hang-up-button'
-              onClick={() => props.onHangUpClick()} // ここで、recorderのstopがかかって、onstopのeventが動くようになる。
-            >
-              Hang up
-            </Button>
-            {displaySwitchCurrentLanguageButton()}
-          </div>
-        ) : null} */}
         <div className='info-and-app-wrapper'>
           <Texts
             socket={props.socket}
