@@ -366,7 +366,7 @@ export const getVoiceTextActionCreator = (socket, setLanguageSubtitle) => () => 
     console.log('partner sent to me...');
     console.log(dataFromServer.nativeLanguageScript); // koko
     // display(voiceText)
-    setLanguageSubtitle(dataFromServer.nativeLanguageScript);
+    setLanguageSubtitle((previousState) => [...previousState, dataFromServer.nativeLanguageScript]);
   });
 };
 

@@ -117,6 +117,7 @@
 .texts {
   grid-area: texts;
   border-radius: 15px;
+  background-color: black;
 }
 
 .app-menu {

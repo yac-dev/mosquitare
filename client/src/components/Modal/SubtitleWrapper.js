@@ -11,7 +11,8 @@ import Subtitle from './Subtitle';
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const SubtitleWrapper = (props) => {
-  const [languageSubtitle, setLanguageSubtitle] = useState('');
+  // const [languageSubtitle, setLanguageSubtitle] = useState('');
+  const [languageSubtitles, setLanguageSubtitles] = useState([]);
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognition = useRef();
   recognition.current = new SpeechRecognition();
@@ -64,6 +65,7 @@ const SubtitleWrapper = (props) => {
             nativeLanguageScript: transcript,
           });
           props.setLearningLanguageScript((previousState) => [...previousState, transcript]);
+          setLanguageSubtitles((previousState) => [...previousState, transcript]);
           // recognition.current.onend = () => {
           //   recognition.current.start();
           // }; // ほんと謎だわこれ。。。。これか？？
@@ -97,6 +99,7 @@ const SubtitleWrapper = (props) => {
             nativeLanguageScript: transcript,
           });
           props.setNativeLanguageScript((previousState) => [...previousState, transcript]);
+          setLanguageSubtitles((previousState) => [...previousState, transcript]);
           recognition.current.onend = () => {
             recognition.current.start(); // ここで確実に繰り返されるのかね。。。。分からんん。
           }; // これでできちゃっているよ。。。あの悩んだ5日間はなんだったんだ。。。
@@ -116,23 +119,27 @@ const SubtitleWrapper = (props) => {
     }
   }, [props.mediaState.callAccepted]); // 少なくとも、こっち側はgetVoiceTextを実行しないもんね。
 
-  const displaySubtitle = () => {
-    if (languageSubtitle) {
-      return (
-        <div className='partner-subtitle'>
-          <p className='voice-text' style={{ color: 'red' }}>
-            {languageSubtitle}
-          </p>
-        </div>
-      );
-    } else {
-      return null;
-    }
-  };
+  // const displaySubtitle = () => {
+  //   if (languageSubtitle) {
+  //     return (
+  //       <div className='partner-subtitle'>
+  //         <p className='voice-text' style={{ color: 'red' }}>
+  //           {languageSubtitle}
+  //         </p>
+  //       </div>
+  //     );
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
   return (
     <>
-      <Subtitle socket={props.socket} />
+      <Subtitle
+        socket={props.socket}
+        languageSubtitles={languageSubtitles}
+        setLanguageSubtitles={setLanguageSubtitles}
+      />
     </>
   ); // subtitle wrapperみたいな感じに変えるのかね。
 };
