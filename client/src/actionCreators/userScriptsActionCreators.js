@@ -4,8 +4,8 @@ export const createUserScriptActionCreator =
   (learningLanguageScript, nativeLanguageScript) => async (dispatch, getState) => {
     try {
       const userId = getState().authState.currentUser._id;
-      const blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
-      const blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+      const blobForLearningLanguage = new Blob(learningLanguageScript, { type: 'text/plain' });
+      const blobForNativeLanguage = new Blob(nativeLanguageScript, { type: 'text/plain' });
       const formData = new FormData();
       formData.append('scriptFiles', blobForLearningLanguage);
       formData.append('scriptFiles', blobForNativeLanguage);

@@ -1,12 +1,12 @@
 import React from 'react';
 // subtitle compoentnとchat componentを別々に分けて、toggleできるようにする。
-import Subtitle from './SubtitleWrapper';
+import SubtitleWrapper from './SubtitleWrapper';
 import Chat from './Chat';
 
 const Texts = (props) => {
   return (
     <div className='texts'>
-      <Subtitle
+      <SubtitleWrapper
         socket={props.socket}
         setLearningLanguageScript={props.setLearningLanguageScript}
         setNativeLanguageScript={props.setNativeLanguageScript}

@@ -47,6 +47,7 @@ const SubtitleWrapper = (props) => {
       recognition.current.start(); // onendをつけると、continueが160回繰り返されるのはなぜ。。。まじなぞ。
       if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
         // ここでlearning用の、recognitionでtranscriptionをsetStateするようにする。
+        const to = store.getState().mediaState.callingWith.socketId;
         console.log('in useEffect');
         // recognition.current.onend = () => {
         //   recognition.current.start();
@@ -58,7 +59,11 @@ const SubtitleWrapper = (props) => {
             .map((result) => result.transcript)
             .join('');
           console.log(transcript); // ここだけ出てるんだよな。brazil側がね。
-          props.setLearningLanguageScript(transcript);
+          props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+            to,
+            nativeLanguageScript: transcript,
+          });
+          props.setLearningLanguageScript((previousState) => [...previousState, transcript]);
           // recognition.current.onend = () => {
           //   recognition.current.start();
           // }; // ほんと謎だわこれ。。。。これか？？
@@ -91,7 +96,7 @@ const SubtitleWrapper = (props) => {
             to,
             nativeLanguageScript: transcript,
           });
-          props.setNativeLanguageScript(transcript);
+          props.setNativeLanguageScript((previousState) => [...previousState, transcript]);
           recognition.current.onend = () => {
             recognition.current.start(); // ここで確実に繰り返されるのかね。。。。分からんん。
           }; // これでできちゃっているよ。。。あの悩んだ5日間はなんだったんだ。。。
