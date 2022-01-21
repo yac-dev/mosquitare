@@ -71,7 +71,7 @@
   margin: 0;
   height: 100vh;
   display: grid;
-  background-color: #444444;
+  background-color: black;
   grid-template-columns: 1fr 960px 1fr;
   grid-template-rows: 540px 1fr;
   row-gap: 20px;
@@ -117,12 +117,13 @@
 .texts {
   grid-area: texts;
   border-radius: 15px;
-  background-color: black;
+  background-color: rgb(180, 180, 180);
 }
 
 .app-menu {
   grid-area: app-menu;
   border-radius: 15px;
+  background-color: rgb(180, 180, 180);
   /* margin-right: 20px; */
 }
 

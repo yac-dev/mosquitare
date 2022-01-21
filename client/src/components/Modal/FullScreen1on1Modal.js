@@ -305,7 +305,8 @@ const FullScreen1on1Modal = (props) => {
     //   // display(voiceText)
     //   setVoiceText(voiceTetx);
     // });
-    props.getVoiceTextActionCreator(props.socket, setLanguageSubtitle, isFinal, setIsFinal);
+
+    // props.getVoiceTextActionCreator(props.socket, setLanguageSubtitle, isFinal, setIsFinal); ここはもういらないだろ。
 
     props
       .getConversationIdFromCalledUserActionCreator(props.socket)
@@ -493,7 +494,7 @@ const FullScreen1on1Modal = (props) => {
       show={props.show1on1}
       fullscreen={props.fullscreen1on1Modal}
       onHide={() => props.setShow1on1(false)}
-      style={{ backgroundColor: 'rgba(0, 0, 0, 0.66)' }}
+      style={{ backgroundColor: 'black' }}
     >
       {/* <Modal.Body bsPrefix='modal-body' style={{ backgroundColor: 'rgb(0, 25, 35)' }}> */}
       <Modal.Body bsPrefix='modal-body'>

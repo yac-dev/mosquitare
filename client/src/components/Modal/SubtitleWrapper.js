@@ -12,7 +12,8 @@ import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreat
 
 const SubtitleWrapper = (props) => {
   // const [languageSubtitle, setLanguageSubtitle] = useState('');
-  const [languageSubtitles, setLanguageSubtitles] = useState([]);
+  const [languageSubtitles, setLanguageSubtitles] = useState([]); // ここ、component rerenderによって、useEffectが止まるんだわ。。。→親の方から渡すことにする。いや、そういうことでもない。。。なんなんだろ。。。
+
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognition = useRef();
   recognition.current = new SpeechRecognition();
@@ -65,7 +66,7 @@ const SubtitleWrapper = (props) => {
             nativeLanguageScript: transcript,
           });
           props.setLearningLanguageScript((previousState) => [...previousState, transcript]);
-          setLanguageSubtitles((previousState) => [...previousState, transcript]);
+          props.setLanguageSubtitles((previousState) => [...previousState, transcript]); // 結局これもだめかも。。。
           // recognition.current.onend = () => {
           //   recognition.current.start();
           // }; // ほんと謎だわこれ。。。。これか？？
@@ -99,7 +100,7 @@ const SubtitleWrapper = (props) => {
             nativeLanguageScript: transcript,
           });
           props.setNativeLanguageScript((previousState) => [...previousState, transcript]);
-          setLanguageSubtitles((previousState) => [...previousState, transcript]);
+          props.setLanguageSubtitles((previousState) => [...previousState, transcript]); //結局これもだめかも。。。
           recognition.current.onend = () => {
             recognition.current.start(); // ここで確実に繰り返されるのかね。。。。分からんん。
           }; // これでできちゃっているよ。。。あの悩んだ5日間はなんだったんだ。。。
@@ -117,7 +118,7 @@ const SubtitleWrapper = (props) => {
         // recognition.current.start();
       }
     }
-  }, [props.mediaState.callAccepted]); // 少なくとも、こっち側はgetVoiceTextを実行しないもんね。
+  }, [props.mediaState.callAccepted, languageSubtitles]); // 少なくとも、こっち側はgetVoiceTextを実行しないもんね。
 
   // const displaySubtitle = () => {
   //   if (languageSubtitle) {
