@@ -14,6 +14,9 @@ export const GET_MEDIA = 'GET_MEDIA';
 export const LISTEN_CALL = 'LISTEN_CALL';
 export const CALL = 'CALL';
 export const ANSWER_CALL = 'ANSWER_CALL';
+export const MY_CALL_ACCEPTED = 'MY_CALL_ACCEPTED';
+export const GET_PARTNER_MEDIA = 'GET_PARTNER_MEDIA';
+
 export const CALL_ACCEPTED = 'CALL_ACCEPTED';
 export const HANG_UP_CALL = 'HANG_UP_CALL';
 

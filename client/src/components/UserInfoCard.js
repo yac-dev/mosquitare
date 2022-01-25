@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Card, Table } from 'semantic-ui-react';
 import '../styles/userInfoCard.css';
 
@@ -42,4 +43,8 @@ const UserInfoCard = (props) => {
   );
 };
 
-export default UserInfoCard;
+const mapStateToProps = (state) => {
+  return { mediaState: state.mediaState };
+};
+
+export default connect(mapStateToProps)(UserInfoCard);

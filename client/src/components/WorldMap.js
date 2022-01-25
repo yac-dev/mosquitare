@@ -16,6 +16,7 @@ import MeetingsList from './Meeting/MeetingsList';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
 import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
+import CallingModal from './CallingModal';
 // こっから
 
 // socketio
@@ -25,7 +26,7 @@ import { io } from 'socket.io-client';
 import { loadMeAndUpdateActionCreator } from '../actionCreators/authActionCreators';
 import { getMediaActionCreator } from '../actionCreators/mediaActionCreator';
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
-import { completeConnectionWithMyPartnerActionCreator } from '../actionCreators/mediaActionCreator';
+// import { completeConnectionWithMyPartnerActionCreator } from '../actionCreators/mediaActionCreator';
 import { startMediaRecorder } from '../actionCreators/mediaActionCreator';
 import { createConversationActionCreator } from '../actionCreators/conversationActionCreators';
 import { createIntegratedUserMediaActionCreator } from '../actionCreators/integratedUserMediasActionCreators';
@@ -68,22 +69,21 @@ const socket = io(process.env.REACT_APP_WEBRTC); // こういう部分全てのc
 
 const WorldMap = (props) => {
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
-  const myVideo = useRef();
-  const oppositeVideo = useRef();
   const connectionRef = useRef();
-
   // popup用
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   // 1on1 modal用
   const [show1on1, setShow1on1] = useState(false);
   const [fullscreen1on1Modal, setFullscreen1on1Modal] = useState(true);
   // meeting modal用
-  const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
   const [showMeeting, setShowMeeting] = useState(false);
+  const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
   // vertically centered modal用
   const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
+  const [showCallingModal, setShowCallingModal] = useState(false);
+
   const [learningLanguageScript, setLearningLanguageScript] = useState([]); // ここか。
   const [nativeLanguageScript, setNativeLanguageScript] = useState([]); // 何でここかっていうと、getMediaでのonstopにこのlanguage scriptを含めたいから。ここのgetMediaにlearningScript, nativeScript両方とも入れておかないといかん。
 
@@ -116,18 +116,19 @@ const WorldMap = (props) => {
       // setChunksForAudio,
       connectionRef
     );
-    props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
+    // props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
+    props.listenCallActionCreator(socket, setShowCallingModal);
     props.getMeetingsActionCreator();
 
     // このacは分解して、socket.onで始めたほうがいい。
-    props.completeConnectionWithMyPartnerActionCreator(
-      socket,
-      props.peerState.peerInitiator,
-      myVideo,
-      oppositeVideo,
-      connectionRef,
-      mediaRecorder
-    ); // これもいい学習だな。
+    // props.completeConnectionWithMyPartnerActionCreator(
+    //   socket,
+    //   props.peerState.peerInitiator,
+    //   myVideo,
+    //   oppositeVideo,
+    //   connectionRef,
+    //   mediaRecorder
+    // ); // これもいい学習だな。
     // .then(() => {
     //   return props.updateUserConversationStateActionCreator();
     // })
@@ -148,6 +149,14 @@ const WorldMap = (props) => {
     // });
   }, []);
 
+  useEffect(() => {
+    // CallingModal componentでmodalを閉じてから、callAcceptedをonにしてこれが動く。
+    if (props.mediaState.callAccepted) {
+      setFullscreen1on1Modal(true);
+      setShow1on1(true);
+    }
+  }, [props.mediaState.callAccepted]);
+
   // useEffect(() => {
   //   // つまりここから分かる通り、最初のrender後の時点ではまだauthStateはつあうことができない状態。
   //   // こうすれば上手くいく。結局、最初にcomponentが「全部renderされた後」に上のuseEffectの中のapi requestが起こり、authStateの中身が埋まる。そのpropsが変化した時に、このuseEffectを実行する、って言うことができるわけよ。何も複雑なことはない。
@@ -156,6 +165,13 @@ const WorldMap = (props) => {
   //   }
   //   // console.log(props.mediaState)
   // }, [props.authState]);
+
+  const onCalling = (event, oppositeSocketId) => {
+    event.preventDefault();
+    const mySocketId = props.authState.currentUser.socketId;
+    setShowCallingModal(true);
+    props.callActionCreator(socket, mySocketId, oppositeSocketId);
+  };
 
   // 1on1 modalのtrigger
   const onCallClick = (event, oppositeSocketId) => {
@@ -189,15 +205,7 @@ const WorldMap = (props) => {
     //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
     // }; // これ自体、asyncな動きをしている、おそらく。だからhangupcallが先に動いちゃっている。
 
-    props.callActionCreator(
-      socket,
-      mySocketId,
-      myVideo,
-      oppositeSocketId,
-      oppositeVideo,
-      connectionRef,
-      mediaRecorder.current
-    );
+    props.callActionCreator(socket, mySocketId, oppositeSocketId);
     // 上のuseEffectの方かなー。
     // props
     //   .completeConnectionWithMyPartnerActionCreator()
@@ -286,9 +294,9 @@ const WorldMap = (props) => {
         setShow1on1={setShow1on1}
         fullscreen1on1Modal={fullscreen1on1Modal}
         onHangUpClick={onHangUpClick}
-        myVideo={myVideo}
-        oppositeVideo={oppositeVideo}
-        connectionRef={connectionRef}
+        // myVideo={myVideo}
+        // oppositeVideo={oppositeVideo}
+        // connectionRef={connectionRef}
         mediaRecorder={mediaRecorder}
         chunksForVideo={chunksForVideo}
         chunksForAudio={chunksForAudio}
@@ -308,6 +316,7 @@ const WorldMap = (props) => {
         onHide={() => setVerticallyCenteredModal(false)}
         socket={socket}
       />
+      <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
       {/* modals */}
 
       <div style={{ height: '100vh', width: '100%' }}>
@@ -320,7 +329,10 @@ const WorldMap = (props) => {
           onViewportChange={(viewport) => setViewport(viewport)}
         >
           {/* {usersMarkerRender()} */}
-          <UsersMarker onCallClick={onCallClick} />
+          <UsersMarker
+            // onCallClick={onCallClick}
+            onCallClick={onCalling}
+          />
           <MeetingsList socket={socket} onJoinClick={onJoinClick} />
           <Button className='create-meeting-button' onClick={() => setVerticallyCenteredModal(true)}>
             Create new meeting??
@@ -347,7 +359,7 @@ export default connect(mapStateToProps, {
   getMediaActionCreator,
   listenCallActionCreator,
   callActionCreator,
-  completeConnectionWithMyPartnerActionCreator,
+  // completeConnectionWithMyPartnerActionCreator,
   updateUserConversationStateActionCreator,
   startMediaRecorder,
   createConversationActionCreator,

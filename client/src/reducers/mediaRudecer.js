@@ -4,6 +4,8 @@ import {
   CALL,
   LISTEN_CALL,
   ANSWER_CALL,
+  MY_CALL_ACCEPTED,
+  GET_PARTNER_MEDIA,
   CALL_ACCEPTED,
   HANG_UP_CALL,
   SWITCH_CURRENT_LANGUAGE,
@@ -22,6 +24,8 @@ const INITIAL_STATE = {
   callAccepted: false,
   callFinished: false,
   currentLanguage: null,
+  partnerSignalData: null,
+  partnerVideoStreamObject: null,
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
@@ -51,12 +55,22 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         callAccepted: true,
         // currentLanguage: '' // socketでもらったlanguage objectが入る。
       };
-    case CALL_ACCEPTED:
+    // case CALL_ACCEPTED:
+    //   return {
+    //     ...state,
+    //     callAccepted: true,
+    //     callingWith: action.payload.recieverUserInfo,
+    //   };
+    case MY_CALL_ACCEPTED:
       return {
         ...state,
         callAccepted: true,
         callingWith: action.payload.recieverUserInfo,
+        partnerSignalData: action.payload.partnerSignalData,
       };
+    case GET_PARTNER_MEDIA:
+      return { ...state, partnerVideoStreamObject: action.payload };
+    // こんな具合でいんじゃないか。。
     case HANG_UP_CALL:
       return {
         ...state,

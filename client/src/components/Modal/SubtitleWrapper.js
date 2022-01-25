@@ -16,7 +16,7 @@ const SubtitleWrapper = (props) => {
   const [conversationNote, setConversationNote] = useState([]);
   const [myLearningLangScript, setMyLearningLangScript] = useState([]);
   const [myNativeLangScript, setMyNativeLangScript] = useState([]);
-  const [lang, setLang] = useState('en-GB');
+  // const [lang, setLang] = useState('en-GB');
 
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
@@ -28,6 +28,7 @@ const SubtitleWrapper = (props) => {
 
   useEffect(() => {
     if (!listening) {
+      const lang = store.getState().mediaState.currentLanguage.codeForSpeechRecognition;
       SpeechRecognition.startListening({
         language: lang,
       });
@@ -40,20 +41,22 @@ const SubtitleWrapper = (props) => {
     }
   }, [listening]); // 喋り終わったらrecognitionのlisteningが途切れる。それを再びonにする。
 
-  useEffect(() => {
-    SpeechRecognition.startListening({
-      language: lang,
-    });
-  }, [lang]); // 最初にまずここで、speechrecognitionをstartする。その後は、langが変わるたびにstartさせていく。
+  // useEffect(() => {
+  //   console.log('useEffect from subtitle');
+  //   const lang = store.getState().mediaState.currentLanguage.codeForSpeechRecognition;
+  //   SpeechRecognition.startListening({
+  //     language: lang,
+  //   });
+  // }, [lang]); // 最初にまずここで、speechrecognitionをstartする。その後は、langが変わるたびにstartさせていく。
 
   const switchLanguage = () => {
-    setLang('ja-jp'); //言語を切り替えたら、自動でoffになるみたい。
+    // setLang('ja-jp'); //言語を切り替えたら、自動でoffになるみたい。
     // SpeechRecognition.stopListening();
   };
 
   const transcriptsRender = () => {
-    const transcripts = conversationNote.map((ts) => {
-      return <div>{ts}</div>;
+    const transcripts = conversationNote.map((tscrpt) => {
+      return <div>{tscrpt}</div>;
     });
     return <>{transcripts}</>;
   };
@@ -85,7 +88,7 @@ const SubtitleWrapper = (props) => {
       </div>
     </div>
   );
-  return <></>; // subtitle wrapperみたいな感じに変えるのかね。
+  // return <></>; // subtitle wrapperみたいな感じに変えるのかね。// これはどういう意図で残していたんだろう。。。
 };
 
 // const SubtitleWrapper = (props) => {

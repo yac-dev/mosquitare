@@ -7,6 +7,7 @@ import { Tooltip } from '@mui/material';
 
 // components
 import PersonalInfo from './PersonalInfo';
+import VideosWrapper from '../VideosWrapper';
 import ConversationApps from './ConversationApps';
 import Texts from './Texts';
 
@@ -37,6 +38,9 @@ import { switchCurrentLanguageActionCreator } from '../../actionCreators/mediaAc
 import { recieveSwitchingLanguageRequestActionCreator } from '../../actionCreators/mediaActionCreator';
 // import Speechrecognition, { useSpeechrecognition } from 'react-speech-recognition';
 
+import { answerCallActionCreator2 } from '../../actionCreators/mediaActionCreator';
+import { completeConnectionWithMyPartnerActionCreator1 } from '../../actionCreators/mediaActionCreator';
+
 // import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
 
 // const Speechrecognition = window.Speechrecognition || window.webkitSpeechrecognition;
@@ -53,6 +57,10 @@ const FullScreen1on1Modal = (props) => {
   const [languageSubtitle, setLanguageSubtitle] = useState(''); // 字幕は、learningのときだけ動くのでいいや。
   const [isFinal, setIsFinal] = useState();
   const [isMinimumTimePassed, setIsMinimumTimePassed] = useState(false);
+
+  // const myVideoRef = useRef(); // ここの部分は、if文でrenderするようにしようか。
+  // const oppositeVideoRef = useRef();
+  // const connectionRef = useRef();
   // const [learningLanguageScript, setLearningLanguageScript] = useState('');
   // const [nativeLanguageScript, setNativeLanguageScript] = useState('');
   // const [chunks, setChunks] = useState([]);
@@ -401,29 +409,29 @@ const FullScreen1on1Modal = (props) => {
   };
 
   // ここで文字数制限やら、字幕の高さを決めておいて、はみ出したらそこを表示しないようにする、くらいしかないかね。
-  const displaySubtitle = () => {
-    if (languageSubtitle) {
-      return (
-        <div className='partner-subtitle'>
-          <p className='voice-text'>{languageSubtitle}</p>
-        </div>
-      );
-    } else {
-      return null;
-    }
-  };
+  // const displaySubtitle = () => {
+  //   if (languageSubtitle) {
+  //     return (
+  //       <div className='partner-subtitle'>
+  //         <p className='voice-text'>{languageSubtitle}</p>
+  //       </div>
+  //     );
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
-  const displayCurrentLanguage = () => {
-    if (props.mediaState.currentLanguage) {
-      return (
-        <>
-          <div style={{ color: 'white' }}>Now, We are speaking {props.mediaState.currentLanguage.name}</div>
-        </>
-      );
-    } else {
-      return null;
-    }
-  };
+  // const displayCurrentLanguage = () => {
+  //   if (props.mediaState.currentLanguage) {
+  //     return (
+  //       <>
+  //         <div style={{ color: 'white' }}>Now, We are speaking {props.mediaState.currentLanguage.name}</div>
+  //       </>
+  //     );
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
   // const switchCurrentLanguage = () => {
   //   props.switchCurrentLanguage(); // この実行でmediaStateのcurrent languageに自分のpractice 言語が入る。dispatchだけ。
@@ -437,139 +445,231 @@ const FullScreen1on1Modal = (props) => {
   //   // recognition.current.stop();
   // }; // ここで直接書くより、acにしたほうがいいね。
 
-  const displaySwitchCurrentLanguageButton = () => {
-    if (props.authState.currentUser.learningLangs[0].name === props.mediaState.currentLanguage.name) {
-      return null;
-    } else {
-      return (
-        <>
-          {/* <Button
-            onClick={() =>
-              props.switchCurrentLanguageActionCreator(
-                props.socket,
-                recognition.current,
-                props.setLearningLanguageScript,
-                props.setNativeLanguageScript
-              )
-            }
-          >
-            Switch
-          </Button> */}
-        </>
-      );
-    }
-  };
+  // const displaySwitchCurrentLanguageButton = () => {
+  //   if (props.authState.currentUser.learningLangs[0].name === props.mediaState.currentLanguage.name) {
+  //     return null;
+  //   } else {
+  //     return (
+  //       <>
+  //         {/* <Button
+  //           onClick={() =>
+  //             props.switchCurrentLanguageActionCreator(
+  //               props.socket,
+  //               recognition.current,
+  //               props.setLearningLanguageScript,
+  //               props.setNativeLanguageScript
+  //             )
+  //           }
+  //         >
+  //           Switch
+  //         </Button> */}
+  //       </>
+  //     );
+  //   }
+  // };
 
-  const switchRender = () => {
+  // const switchRender = () => {
+  //   if (props.mediaState.callAccepted) {
+  //     return null;
+  //   } else {
+  //     if (props.mediaState.amICalling) {
+  //       return <Dimer />;
+  //     } else if (props.mediaState.amIRecieving) {
+  //       return (
+  //         <>
+  //           <div className='confirmation'>
+  //             <UserInfoCard user={props.mediaState.callingWith} />
+  //             <Button positive onClick={() => handleAnswerCall()} style={{ width: '100%' }}>
+  //               <i className='handshake icon' />
+  //               Yes
+  //             </Button>
+  //             <Button negative style={{ width: '100%' }}>
+  //               <i className='x icon' />
+  //               No
+  //             </Button>
+  //           </div>
+  //         </>
+  //       );
+  //     } else {
+  //       return null;
+  //     }
+  //   }
+  // };
+
+  // // 一番最初のrenderでmodalだけ出すのでいいと思う。ただ、その最初のmodalのinitial render後に、videoのsrc objectをセットするように書いていく。
+  // useEffect(() => {
+  //   // ここでpeerInitiatorをはじめ、videoのsrcObjectのセットをする。ただこれだと、callした側がここに来た時もこれを実行しちゃうな。。。
+  //   if (props.mediaState.amIRecieving) {
+  //     props.answerCallActionCreator2(props.socket, myVideoRef, oppositeVideoRef, connectionRef);
+  //     console.log('useEffect of fullscreen');
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (props.mediaState.amICalling) {
+  //     // completeっぽいaction creatorを実行する。
+  //     props.completeConnectionWithMyPartnerActionCreator1(myVideoRef, oppositeVideoRef, connectionRef);
+  //   }
+  // }, []); // これでいいのかね。。。
+
+  // これでも分かる通り、基本modalはdefaultでrenderされていることになるね。違うやり方だ。要は、このmodalがセットされたときに実行するって言うことをやりたいのよ。もう最初からこれ実行されている。
+  useEffect(() => {
+    console.log('when mounted fullscreen');
+  }, []);
+
+  // modalがセットされたらここを実行してもらう。
+  // useEffect(() => {
+  //   if (props.show1on1) {
+  //     if (props.mediaState.amIRecieving) {
+  //       props.answerCallActionCreator2(props.socket, myVideoRef, oppositeVideoRef, connectionRef);
+  //       console.log('useEffect of fullscreen');
+  //     } else if (props.mediaState.amICalling) {
+  //       props.completeConnectionWithMyPartnerActionCreator1(myVideoRef, oppositeVideoRef, connectionRef);
+  //     }
+  //   }
+  // }, [props.show1on1]);
+
+  const screenRender = () => {
     if (props.mediaState.callAccepted) {
-      return null;
-    } else {
-      if (props.mediaState.amICalling) {
-        return <Dimer />;
-      } else if (props.mediaState.amIRecieving) {
-        return (
-          <>
-            <div className='confirmation'>
-              <UserInfoCard user={props.mediaState.callingWith} />
-              <Button positive onClick={() => handleAnswerCall()} style={{ width: '100%' }}>
-                <i className='handshake icon' />
-                Yes
-              </Button>
-              <Button negative style={{ width: '100%' }}>
-                <i className='x icon' />
-                No
-              </Button>
+      return (
+        <Modal
+          className='chat-modal'
+          show={props.show1on1}
+          fullscreen={props.fullscreen1on1Modal}
+          onHide={() => props.setShow1on1(false)}
+          style={{ backgroundColor: 'black' }}
+        >
+          <Modal.Body bsPrefix='modal-body'>
+            {/* <div></div>
+            <div className='videos-wrapper'>
+              <video
+                className='partner-video'
+                playsInline
+                ref={oppositeVideoRef}
+                autoPlay
+                style={{ width: '960px', height: '540px' }} // これだとなんで真ん中に寄ってくれるの？？
+                // style={{ width: '400px', height: '500px' }}
+              />
+              <video
+                className='myvideo'
+                playsInline
+                muted
+                ref={myVideoRef}
+                autoPlay
+                style={{ width: '160px', height: '90px' }}
+              />
+              <div className='button-wrapper'>
+                <Button
+                  negative
+                  // disabled={!isMinimumTimePassed}
+                  className='hang-up-button'
+                  circular
+                  icon='sign out'
+                  onClick={() => props.onHangUpClick()} // ここで、recorderのstopがかかって、onstopのeventが動くようになる。
+                ></Button>
+              </div>
+            </div> */}
+            <VideosWrapper show1on1={props.show1on1} socket={props.socket} />
+            <div className='info-and-app-wrapper'>
+              <Texts
+                socket={props.socket}
+                setLearningLanguageScript={props.setLearningLanguageScript}
+                setNativeLanguageScript={props.setNativeLanguageScript}
+              />
+              <ConversationApps />
             </div>
-          </>
-        );
-      } else {
-        return null;
-      }
+          </Modal.Body>
+        </Modal>
+      );
+    } else {
+      return null;
     }
   };
 
-  return (
-    <Modal
-      className='chat-modal'
-      show={props.show1on1}
-      fullscreen={props.fullscreen1on1Modal}
-      onHide={() => props.setShow1on1(false)}
-      style={{ backgroundColor: 'black' }}
-    >
-      {/* <Modal.Body bsPrefix='modal-body' style={{ backgroundColor: 'rgb(0, 25, 35)' }}> */}
-      <Modal.Body bsPrefix='modal-body'>
-        {switchRender()}
-        {/* <div className='videos-container' style={{ marginTop: '80px' }}>
-          <div className='myvideo-container'>
-            <div className='myvideo'>
-              <video playsInline muted ref={props.myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
-            </div>
-          </div>
-          <div className='partner-video-container'>
-            <div className='partner-video'>
-              <video playsInline ref={props.oppositeVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
-            </div>
-            {displaySubtitle()}
-          </div>
-        </div> */}
-        {/* <div className='modal-container'> */}
-        {/* {displayCurrentLanguage()} */}
-        {/* <div className='partner-video-container'> */}
-        {/* <div className='partner-video'> */}
-        <div></div>
-        <div className='videos-wrapper'>
-          <video
-            className='partner-video'
-            playsInline
-            ref={props.oppositeVideo}
-            autoPlay
-            style={{ width: '960px', height: '540px' }} // これだとなんで真ん中に寄ってくれるの？？
-            // style={{ width: '400px', height: '500px' }}
-          />
-          <video
-            className='myvideo'
-            playsInline
-            muted
-            ref={props.myVideo}
-            autoPlay
-            style={{ width: '160px', height: '90px' }}
-          />
-          {props.mediaState.callAccepted ? (
-            <div className='button-wrapper'>
-              {/* <Tooltip title='hang up call'> tooltip バグるね。他の方法試そう。 */}
-              <Button
-                negative
-                // disabled={!isMinimumTimePassed}
-                className='hang-up-button'
-                circular
-                icon='sign out'
-                onClick={() => props.onHangUpClick()} // ここで、recorderのstopがかかって、onstopのeventが動くようになる。
-              >
-                {/* <i className='sign out alternate icon'></i> */}
-              </Button>
-              {/* </Tooltip> */}
+  return <>{screenRender()}</>;
 
-              {displaySwitchCurrentLanguageButton()}
-            </div>
-          ) : null}
-        </div>
-        {/* </div> */}
-        {/* {displaySubtitle()} divでその中にpが入っている。 */}
-        {/* </div> */}
-        {/* <div className='myvideo-container'> */}
-        {/* <div className='myvideo'> */}
-        {/* </div> */}
-        <div className='info-and-app-wrapper'>
-          <Texts
-            socket={props.socket}
-            setLearningLanguageScript={props.setLearningLanguageScript}
-            setNativeLanguageScript={props.setNativeLanguageScript}
-          />
-          <ConversationApps />
-        </div>
-      </Modal.Body>
-    </Modal>
-  );
+  // return (
+  //   <Modal
+  //     className='chat-modal'
+  //     show={props.show1on1}
+  //     fullscreen={props.fullscreen1on1Modal}
+  //     onHide={() => props.setShow1on1(false)}
+  //     style={{ backgroundColor: 'black' }}
+  //   >
+  //     {/* <Modal.Body bsPrefix='modal-body' style={{ backgroundColor: 'rgb(0, 25, 35)' }}> */}
+  //     <Modal.Body bsPrefix='modal-body'>
+  //       {/* {switchRender()} */}
+  //       {/* <div className='videos-container' style={{ marginTop: '80px' }}>
+  //         <div className='myvideo-container'>
+  //           <div className='myvideo'>
+  //             <video playsInline muted ref={props.myVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
+  //           </div>
+  //         </div>
+  //         <div className='partner-video-container'>
+  //           <div className='partner-video'>
+  //             <video playsInline ref={props.oppositeVideo} autoPlay style={{ width: '600px', borderRadius: '20px' }} />
+  //           </div>
+  //           {displaySubtitle()}
+  //         </div>
+  //       </div> */}
+  //       {/* <div className='modal-container'> */}
+  //       {/* {displayCurrentLanguage()} */}
+  //       {/* <div className='partner-video-container'> */}
+  //       {/* <div className='partner-video'> */}
+  //       <div></div>
+  //       <div className='videos-wrapper'>
+  //         <video
+  //           className='partner-video'
+  //           playsInline
+  //           ref={props.oppositeVideo}
+  //           autoPlay
+  //           style={{ width: '960px', height: '540px' }} // これだとなんで真ん中に寄ってくれるの？？
+  //           // style={{ width: '400px', height: '500px' }}
+  //         />
+  //         <video
+  //           className='myvideo'
+  //           playsInline
+  //           muted
+  //           ref={props.myVideo}
+  //           autoPlay
+  //           style={{ width: '160px', height: '90px' }}
+  //         />
+  //         {props.mediaState.callAccepted ? (
+  //           <div className='button-wrapper'>
+  //             {/* <Tooltip title='hang up call'> tooltip バグるね。他の方法試そう。 */}
+  //             <Button
+  //               negative
+  //               // disabled={!isMinimumTimePassed}
+  //               className='hang-up-button'
+  //               circular
+  //               icon='sign out'
+  //               onClick={() => props.onHangUpClick()} // ここで、recorderのstopがかかって、onstopのeventが動くようになる。
+  //             >
+  //               {/* <i className='sign out alternate icon'></i> */}
+  //             </Button>
+  //             {/* </Tooltip> */}
+
+  //             {/* {displaySwitchCurrentLanguageButton()} */}
+  //           </div>
+  //         ) : null}
+  //       </div>
+  //       {/* </div> */}
+  //       {/* {displaySubtitle()} divでその中にpが入っている。 */}
+  //       {/* </div> */}
+  //       {/* <div className='myvideo-container'> */}
+  //       {/* <div className='myvideo'> */}
+  //       {/* </div> */}
+  //       <div className='info-and-app-wrapper'>
+  //         <Texts
+  //           socket={props.socket}
+  //           setLearningLanguageScript={props.setLearningLanguageScript}
+  //           setNativeLanguageScript={props.setNativeLanguageScript}
+  //         />
+  //         <ConversationApps />
+  //       </div>
+  //     </Modal.Body>
+  //   </Modal>
+  // );
 };
 
 const mapStateToProps = (state) => {
@@ -589,4 +689,6 @@ export default connect(mapStateToProps, {
   getIntegratedUserMediaIdFromCalledUserActionCreator,
   switchCurrentLanguageActionCreator,
   recieveSwitchingLanguageRequestActionCreator,
+  answerCallActionCreator2,
+  completeConnectionWithMyPartnerActionCreator1,
 })(FullScreen1on1Modal);
