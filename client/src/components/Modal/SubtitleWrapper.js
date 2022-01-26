@@ -5,6 +5,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 
 import {
   MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE,
+  MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
   I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
 } from '../../actionCreators/socketEvents';
 
@@ -14,6 +15,7 @@ import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreat
 
 const SubtitleWrapper = (props) => {
   const [conversationNote, setConversationNote] = useState([]);
+  const [partnerTranscript, setPartnerTranscript] = useState();
   const [myLearningLangScript, setMyLearningLangScript] = useState([]);
   const [myNativeLangScript, setMyNativeLangScript] = useState([]);
   // const [lang, setLang] = useState('en-GB');
@@ -32,7 +34,13 @@ const SubtitleWrapper = (props) => {
       SpeechRecognition.startListening({
         language: lang,
       });
+      // とりあえず、conversationに関してだけやろう。
       setConversationNote((previouState) => [...previouState, transcript]);
+      const to = store.getState().mediaState.callingWith.socketId;
+      props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
+        to,
+        nativeLanguageScript: transcript,
+      });
       if ('learning') {
         setMyLearningLangScript((previouState) => [...previouState, transcript]);
       } else if ('native') {
@@ -40,6 +48,19 @@ const SubtitleWrapper = (props) => {
       }
     }
   }, [listening]); // 喋り終わったらrecognitionのlisteningが途切れる。それを再びonにする。
+
+  useEffect(() => {
+    // 相手のscriptを受け取るsocket event
+    // props.getVoiceTextActionCreator(props.socket, setConversationNote); //ここの条件をどうしようか。→なくていいかもしれん。
+    props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
+      console.log('partner sent to me...');
+      console.log(dataFromServer.nativeLanguageScript); // koko
+      setPartnerTranscript(dataFromServer.nativeLanguageScript);
+      setPartnerTranscript('');
+      setConversationNote((previouState) => [...previouState, dataFromServer.nativeLanguageScript]);
+    });
+    // setLanguageSubtitle((previousState) => [...previousState, dataFromServer.nativeLanguageScript]);
+  }, []);
 
   // useEffect(() => {
   //   console.log('useEffect from subtitle');
@@ -83,7 +104,8 @@ const SubtitleWrapper = (props) => {
       {/* <div>{message}</div> */}
       <div>
         <span>{transcriptsRender()}</span>
-        <span>{transcript}</span>
+        <span>{transcript}</span> {/* これって何で必要なんだっけ？？？ */}
+        <span>{partnerTranscript}</span>
         {/* <span>{transcriptRender()}</span> */}
       </div>
     </div>
