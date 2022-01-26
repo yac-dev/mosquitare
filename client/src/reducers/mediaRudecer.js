@@ -26,6 +26,7 @@ const INITIAL_STATE = {
   currentLanguage: null,
   partnerSignalData: null,
   partnerVideoStreamObject: null,
+  chunks: [],
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
@@ -93,6 +94,11 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentLanguage: action.payload,
+      };
+    case 'SET_CHUNKS':
+      return {
+        ...state,
+        chunks: [...state.chunks, action.payload],
       };
     default:
       return state;

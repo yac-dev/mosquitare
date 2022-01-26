@@ -10,6 +10,7 @@ import PersonalInfo from './PersonalInfo';
 import VideosWrapper from '../VideosWrapper';
 import ConversationApps from './ConversationApps';
 import Texts from './Texts';
+import MediaRecorder from '../MediaRecorder';
 
 import Dimer from '../Dimer';
 import UserInfoCard from '../UserInfoCard';
@@ -540,6 +541,7 @@ const FullScreen1on1Modal = (props) => {
           style={{ backgroundColor: 'black' }}
         >
           <Modal.Body bsPrefix='modal-body'>
+            <MediaRecorder />
             {/* <div></div>
             <div className='videos-wrapper'>
               <video

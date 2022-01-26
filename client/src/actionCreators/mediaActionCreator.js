@@ -62,6 +62,7 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
       });
       // 以下record用のsetting。ただそれだけ。
       // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
+      // ----------------------
       mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
       mediaRecorder.current.ondataavailable = function (event) {
         // setChunksForVideo((prevState) => [...prevState, event.data]);
@@ -539,3 +540,10 @@ export const recieveSwitchingLanguageRequestActionCreator =
     //   };
     // };
   };
+
+export const forChunks = (chunksData) => {
+  return {
+    type: 'SET_CHUNKS',
+    payload: chunksData,
+  };
+};
