@@ -3,15 +3,16 @@ import { connect } from 'react-redux';
 import store from '../store';
 
 import { forChunks } from '../actionCreators/mediaActionCreator';
+import { createUserMedia } from '../actionCreators/userMediasActionCreators';
+import { updateConversationUserMediaActionCreator } from '../actionCreators/conversationActionCreators';
 
 // componentの名前を何かのweb apiと同名にするすると訳わからなくなる。。。これまじ気をつけよう。
-const MediaRecording = (props) => {
+const MediaRecorderComponent = (props) => {
   // const [chunks, setChunks] = useState(); // redux使いましょうか。
   const mediaRecorder = useRef();
   const blobForVideo = useRef();
   const blobForAudio = useRef();
 
-  // globalなstream stateを使ってmediaRecorderを起動する
   // callAcceptedが前提。
   useEffect(() => {
     const stream = store.getState().mediaState.myVideoStreamObject;
@@ -23,14 +24,24 @@ const MediaRecording = (props) => {
       const { chunks } = store.getState().mediaState;
       blobForVideo.current = new Blob(chunks, { type: 'video/mp4;' });
       blobForAudio.current = new Blob(chunks, { type: 'audio/webm;codecs=opus' });
-      // これはglobalのstateで持っておいた方がいいかな。そういう考えも持っておこう。
+      // blobはglobalのstateで持っておいた方がいいかな。そういう考えも持っておこう。
       console.log('record stopped!!!');
     };
     mediaRecorder.current.start();
   }, []);
 
-  // callが切れたら、mediaRecorderをstopする。
-  // asyncronousな挙動する。
+  useEffect(() => {
+    if (!props.mediaState.callAccepted) {
+      stopMediaRecorder()
+        .then(() => {
+          return props.createUserMedia(blobForVideo.current, blobForAudio.current);
+        })
+        .then((userMedia) => {
+          return props.updateConversationUserMediaActionCreator(userMedia);
+        });
+    }
+  }, [props.mediaState.callAccepted]);
+
   const stopMediaRecorder = () => {
     return new Promise((resolve, reject) => {
       mediaRecorder.current.stop();
@@ -45,4 +56,8 @@ const MediaRecording = (props) => {
   );
 };
 
-export default connect(null, { forChunks })(MediaRecording);
+const mapStateToProps = (state) => {};
+
+export default connect(null, { forChunks, createUserMedia, updateConversationUserMediaActionCreator })(
+  MediaRecorderComponent
+);

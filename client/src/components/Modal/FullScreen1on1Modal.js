@@ -10,7 +10,7 @@ import PersonalInfo from './PersonalInfo';
 import VideosWrapper from '../VideosWrapper';
 import ConversationApps from './ConversationApps';
 import Texts from './Texts';
-import MediaRecorder from '../MediaRecorder';
+import MediaRecorder from '../MediaRecorderComponent';
 
 import Dimer from '../Dimer';
 import UserInfoCard from '../UserInfoCard';
@@ -571,7 +571,7 @@ const FullScreen1on1Modal = (props) => {
                 ></Button>
               </div>
             </div> */}
-            <VideosWrapper show1on1={props.show1on1} socket={props.socket} />
+            <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
             <div className='info-and-app-wrapper'>
               <Texts
                 socket={props.socket}

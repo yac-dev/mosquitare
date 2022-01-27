@@ -156,6 +156,7 @@ export const completeConnectionWithMyPartnerActionCreator1 =
       oppositeVideoRef.current.srcObject = stream;
       connectionRef.current = peerInitiator;
     });
+    return Promise.resolve();
   };
 
 // call受ける側、worldmapで実行されるやつら。
@@ -206,58 +207,59 @@ export const answerCallActionCreator2 =
     });
     peerReciever.signal(callerSignal);
     console.log('I answered');
+    return Promise.resolve();
   };
 
-// export const completeConnectionWithMyPartnerActionCreator =
-//   (socket, peerInitiator, myVideoRef, oppositeVideoRef, connectionRef, mediaRecorder) => (dispatch, getState) => {
-//     // return new Promise((resolve, reject) => {
-//     socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
-//       // このcompleteConnectionっていうacを分解したほうがいいな。socket.onを、fullの方に書く。その後に、acを連ねて書いていく、って言うほうが確実に分かりやすいな。後で直したほうがいい。
-//       const { peerInitiator } = getState().peerState;
-//       const { myVideoStreamObject } = getState().mediaState;
-//       console.log('My call is accepted.');
-//       const startLanguage = getState().authState.currentUser.learningLangs[0];
-//       dispatch({
-//         type: CALL_ACCEPTED,
-//         payload: {
-//           recieverUserInfo: dataFromServer.recieverUserInfo,
-//           startLanguage,
-//         }, // callが受け入れられたら、相手のinfoとcurrentLanguageを埋める。
-//       });
-//       peerInitiator.signal(dataFromServer.signalData);
-//       peerInitiator.on('stream', (stream) => {
-//         myVideoRef.current.srcObject = myVideoStreamObject;
-//         oppositeVideoRef.current.srcObject = stream;
-//         connectionRef.current = peerInitiator;
-//         console.log('call accepted??????');
-//       });
-//       Promise.resolve()
-//         .then(() => {
-//           return dispatch(updateUserConversationStateActionCreator());
-//         })
-//         .then(() => {
-//           return dispatch(startMediaRecorder(mediaRecorder));
-//         })
-//         .then(() => {
-//           return dispatch(createConversationActionCreator(socket)); // 多分ここも分けることになる。
-//         })
-//         .then(() => {
-//           return dispatch(sendConversationIdActionCreator(socket));
-//         })
-//         .then(() => {
-//           return dispatch(updateUserConversationsActionCreator()); // まずは実験。どうなるでしょうか。→だめ。userのinstanceをまんま渡してpatchはうまく動かん見たいだ。
-//         });
-//       // .then(() => {
-//       //   return dispatch(createIntegratedUserMediaActionCreator());
-//       // })
-//       // .then(() => {
-//       //   return dispatch(sendIntegratedUserMediaActionCeator(socket));
-//       // })
-//       // .then(() => {
-//       //   return dispatch(updateConversationIntegratedUserMediaActionCreator());
-//       // });
-//     });
-//   };
+export const completeConnectionWithMyPartnerActionCreator =
+  (socket, peerInitiator, myVideoRef, oppositeVideoRef, connectionRef, mediaRecorder) => (dispatch, getState) => {
+    // return new Promise((resolve, reject) => {
+    socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
+      // このcompleteConnectionっていうacを分解したほうがいいな。socket.onを、fullの方に書く。その後に、acを連ねて書いていく、って言うほうが確実に分かりやすいな。後で直したほうがいい。
+      const { peerInitiator } = getState().peerState;
+      const { myVideoStreamObject } = getState().mediaState;
+      console.log('My call is accepted.');
+      const startLanguage = getState().authState.currentUser.learningLangs[0];
+      dispatch({
+        type: CALL_ACCEPTED,
+        payload: {
+          recieverUserInfo: dataFromServer.recieverUserInfo,
+          startLanguage,
+        }, // callが受け入れられたら、相手のinfoとcurrentLanguageを埋める。
+      });
+      peerInitiator.signal(dataFromServer.signalData);
+      peerInitiator.on('stream', (stream) => {
+        myVideoRef.current.srcObject = myVideoStreamObject;
+        oppositeVideoRef.current.srcObject = stream;
+        connectionRef.current = peerInitiator;
+        console.log('call accepted??????');
+      });
+      Promise.resolve()
+        .then(() => {
+          return dispatch(updateUserConversationStateActionCreator());
+        })
+        .then(() => {
+          return dispatch(startMediaRecorder(mediaRecorder));
+        })
+        .then(() => {
+          return dispatch(createConversationActionCreator(socket)); // 多分ここも分けることになる。
+        })
+        .then(() => {
+          return dispatch(sendConversationIdActionCreator(socket));
+        })
+        .then(() => {
+          return dispatch(updateUserConversationsActionCreator()); // まずは実験。どうなるでしょうか。→だめ。userのinstanceをまんま渡してpatchはうまく動かん見たいだ。
+        });
+      // .then(() => {
+      //   return dispatch(createIntegratedUserMediaActionCreator());
+      // })
+      // .then(() => {
+      //   return dispatch(sendIntegratedUserMediaActionCeator(socket));
+      // })
+      // .then(() => {
+      //   return dispatch(updateConversationIntegratedUserMediaActionCreator());
+      // });
+    });
+  };
 
 export const startMediaRecorder = (mediaRecorderRef) => (dispatch, getState) => {
   return new Promise((resolve, reject) => {

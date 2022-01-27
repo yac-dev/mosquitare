@@ -2,24 +2,73 @@ import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 
+// call recieve側
 import { answerCallActionCreator2 } from '../actionCreators/mediaActionCreator';
+import { getConversationIdFromCalledUserActionCreator } from '../actionCreators/conversationActionCreators';
+import { updateConversationRecievedUserActionCreator } from '../actionCreators/conversationActionCreators';
+
+// call した側
 import { completeConnectionWithMyPartnerActionCreator1 } from '../actionCreators/mediaActionCreator';
+import { createConversationActionCreator } from '../actionCreators/conversationActionCreators';
+import { sendConversationIdActionCreator } from '../actionCreators/conversationActionCreators';
+
+// 共通
+import { updateUserConversationStateActionCreator } from '../actionCreators/authActionCreators';
+import { updateUserConversationsActionCreator } from '../actionCreators/authActionCreators';
+
+// call 終わり
+import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
+import { updateUserConversationToFalseActionCreator } from '../actionCreators/authActionCreators';
 
 const VideosWrapper = (props) => {
-  const myVideoRef = useRef(); // ここの部分は、if文でrenderするようにしようか。
+  const myVideoRef = useRef();
   const oppositeVideoRef = useRef();
   const connectionRef = useRef();
 
   useEffect(() => {
     if (props.show1on1) {
       if (props.mediaState.amIRecieving) {
-        props.answerCallActionCreator2(props.socket, myVideoRef, oppositeVideoRef, connectionRef);
-        console.log('useEffect of fullscreen');
+        props.answerCallActionCreator2(props.socket, myVideoRef, oppositeVideoRef, connectionRef).then(() => {
+          return props.updateUserConversationStateActionCreator();
+        });
       } else if (props.mediaState.amICalling) {
-        props.completeConnectionWithMyPartnerActionCreator1(myVideoRef, oppositeVideoRef, connectionRef);
+        props
+          .completeConnectionWithMyPartnerActionCreator1(myVideoRef, oppositeVideoRef, connectionRef)
+          .then(() => {
+            return props.updateUserConversationStateActionCreator();
+          })
+          .then(() => {
+            return props.createConversationActionCreator();
+          })
+          .then(() => {
+            return props.sendConversationIdActionCreator(props.socket);
+          })
+          .then(() => {
+            return props.updateUserConversationsActionCreator();
+          });
       }
     }
   }, [props.show1on1]);
+
+  // call受けた側で実行される。
+  useEffect(() => {
+    props
+      .getConversationIdFromCalledUserActionCreator(props.socket)
+      .then(() => {
+        return props.updateUserConversationsActionCreator();
+      })
+      .then(() => {
+        return props.updateConversationRecievedUserActionCreator();
+      });
+  }, []);
+
+  const onHangUpClick = () => {
+    // 1, modalを閉じて
+    // 2, callacceptedを閉じるっていう具合かね。callacceptedがfalseを引き金に、mediarecorderとspeechrecognitionも停止する。
+    props.setShow1on1(false);
+    props.hangUpCallActionCreator(connectionRef);
+    props.updateUserConversationToFalseActionCreator();
+  };
 
   return (
     <>
@@ -48,7 +97,7 @@ const VideosWrapper = (props) => {
             className='hang-up-button'
             circular
             icon='sign out'
-            onClick={() => props.onHangUpClick()} // ここで、recorderのstopがかかって、onstopのeventが動くようになる。
+            onClick={() => onHangUpClick()}
           ></Button>
         </div>
       </div>
@@ -60,6 +109,15 @@ const mapStateToProps = (state) => {
   return { mediaState: state.mediaState };
 };
 
-export default connect(mapStateToProps, { answerCallActionCreator2, completeConnectionWithMyPartnerActionCreator1 })(
-  VideosWrapper
-);
+export default connect(mapStateToProps, {
+  answerCallActionCreator2,
+  getConversationIdFromCalledUserActionCreator,
+  updateConversationRecievedUserActionCreator,
+  completeConnectionWithMyPartnerActionCreator1,
+  updateUserConversationStateActionCreator,
+  createConversationActionCreator,
+  sendConversationIdActionCreator,
+  updateUserConversationsActionCreator,
+  hangUpCallActionCreator,
+  updateUserConversationToFalseActionCreator,
+})(VideosWrapper);

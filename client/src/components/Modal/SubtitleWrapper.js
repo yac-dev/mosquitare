@@ -12,13 +12,14 @@ import {
 import Subtitle from './Subtitle';
 
 import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
+import { createUserScriptActionCreator } from '../../actionCreators/userScriptsActionCreators';
+import { updateConversationUserScriptActionCreator } from '../../actionCreators/conversationActionCreators';
 
 const SubtitleWrapper = (props) => {
   const [conversationNote, setConversationNote] = useState([]);
   const [partnerTranscript, setPartnerTranscript] = useState();
-  const [myLearningLangScript, setMyLearningLangScript] = useState([]);
-  const [myNativeLangScript, setMyNativeLangScript] = useState([]);
-  // const [lang, setLang] = useState('en-GB');
+  const [myLearningLangTranscript, setMyLearningLangTranscript] = useState([]);
+  const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
 
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
@@ -34,24 +35,21 @@ const SubtitleWrapper = (props) => {
       SpeechRecognition.startListening({
         language: lang,
       });
-      // とりあえず、conversationに関してだけやろう。
       setConversationNote((previouState) => [...previouState, transcript]);
       const to = store.getState().mediaState.callingWith.socketId;
       props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
         to,
         nativeLanguageScript: transcript,
       });
-      if ('learning') {
-        setMyLearningLangScript((previouState) => [...previouState, transcript]);
-      } else if ('native') {
-        setMyNativeLangScript((previouState) => [...previouState, transcript]);
+      if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
+        setMyLearningLangTranscript((previouState) => [...previouState, transcript]); // これこそ、globalなstateに保存しておいた方がいいな。だって最終的にmediarecorder側でやるもんな。
+      } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
+        setMyNativeLangTranscript((previouState) => [...previouState, transcript]);
       }
     }
   }, [listening]); // 喋り終わったらrecognitionのlisteningが途切れる。それを再びonにする。
 
   useEffect(() => {
-    // 相手のscriptを受け取るsocket event
-    // props.getVoiceTextActionCreator(props.socket, setConversationNote); //ここの条件をどうしようか。→なくていいかもしれん。
     props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
       console.log('partner sent to me...');
       console.log(dataFromServer.nativeLanguageScript); // koko
@@ -59,8 +57,16 @@ const SubtitleWrapper = (props) => {
       setPartnerTranscript('');
       setConversationNote((previouState) => [...previouState, dataFromServer.nativeLanguageScript]);
     });
-    // setLanguageSubtitle((previousState) => [...previousState, dataFromServer.nativeLanguageScript]);
   }, []);
+
+  useEffect(() => {
+    if (!props.mediaState.callAccepted) {
+      SpeechRecognition.stopListening();
+      props.createUserScriptActionCreator(myLearningLangTranscript, myNativeLangTranscript).then((userScript) => {
+        return props.updateConversationUserScriptActionCreator(userScript);
+      });
+    }
+  }, [props.mediaState.callAccepted]);
 
   // useEffect(() => {
   //   console.log('useEffect from subtitle');
@@ -197,4 +203,8 @@ const mapStateToProps = (state) => {
   return { authState: state.authState, mediaState: state.mediaState };
 };
 
-export default connect(mapStateToProps, { getVoiceTextActionCreator })(SubtitleWrapper);
+export default connect(mapStateToProps, {
+  getVoiceTextActionCreator,
+  createUserScriptActionCreator,
+  updateConversationUserScriptActionCreator,
+})(SubtitleWrapper);
