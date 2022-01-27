@@ -63,44 +63,44 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
       // 以下record用のsetting。ただそれだけ。
       // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
       // ----------------------
-      mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
-      mediaRecorder.current.ondataavailable = function (event) {
-        // setChunksForVideo((prevState) => [...prevState, event.data]);
-        // setChunksForAudio((prevState) => [...prevState, event.data]);
-        chunksForVideo.push(event.data);
-        chunksForAudio.push(event.data);
-        console.log(chunksForVideo);
-        console.log(chunksForAudio);
-      };
-      mediaRecorder.current.onstop = (event) => {
-        let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
-        let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
-        // let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
-        // let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+      // mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+      // mediaRecorder.current.ondataavailable = function (event) {
+      //   // setChunksForVideo((prevState) => [...prevState, event.data]);
+      //   // setChunksForAudio((prevState) => [...prevState, event.data]);
+      //   chunksForVideo.push(event.data);
+      //   chunksForAudio.push(event.data);
+      //   console.log(chunksForVideo);
+      //   console.log(chunksForAudio);
+      // };
+      // mediaRecorder.current.onstop = (event) => {
+      //   let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
+      //   let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
+      //   // let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
+      //   // let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
 
-        console.log('record stopped!!!');
-        chunksForVideo = [];
-        chunksForAudio = [];
-        Promise.resolve()
-          .then(() => {
-            return dispatch(createUserMedia(blobForVideo, blobForAudio));
-          }) // ここでconversatonのupdateだね。
-          .then((userMedia) => {
-            return dispatch(updateConversationUserMediaActionCreator(userMedia));
-          })
-          // .then((userMedia) => {
-          //   return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
-          // })
-          .then(() => {
-            return dispatch(hangUpCallActionCreator(connectionRef));
-          })
-          .then(() => {
-            return dispatch(updateUserConversationToFalseActionCreator());
-          });
-        // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
-        // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
-        // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-      };
+      //   console.log('record stopped!!!');
+      //   chunksForVideo = [];
+      //   chunksForAudio = [];
+      //   Promise.resolve()
+      //     .then(() => {
+      //       return dispatch(createUserMedia(blobForVideo, blobForAudio));
+      //     }) // ここでconversatonのupdateだね。
+      //     .then((userMedia) => {
+      //       return dispatch(updateConversationUserMediaActionCreator(userMedia));
+      //     })
+      //     // .then((userMedia) => {
+      //     //   return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
+      //     // })
+      //     .then(() => {
+      //       return dispatch(hangUpCallActionCreator(connectionRef));
+      //     })
+      //     .then(() => {
+      //       return dispatch(updateUserConversationToFalseActionCreator());
+      //     });
+      //   // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
+      //   // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
+      //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+      // };
     });
   };
 
@@ -126,7 +126,7 @@ export const callActionCreator = (socket, mySocketId, oppositeSocketId) => (disp
 };
 
 // callする側、callingModalで実行されるやつら。
-export const myCallIsAcceptedActionCreator = (socket) => (dispatch, getState) => {
+export const myCallIsAcceptedActionCreator = (socket, setShowCallingModal) => (dispatch, getState) => {
   socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
     const { peerInitiator } = getState().peerState;
     console.log('My call is accepted.');
@@ -139,6 +139,7 @@ export const myCallIsAcceptedActionCreator = (socket) => (dispatch, getState) =>
         partnerSignalData: dataFromServer.signalData,
       },
     });
+    setShowCallingModal(false);
   });
 };
 

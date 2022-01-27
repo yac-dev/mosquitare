@@ -59,8 +59,10 @@ const SubtitleWrapper = (props) => {
     });
   }, []);
 
+  // recieve側でのみerrroが怒っている。unmountのエラーが。caller側ではそもそも動いてすらない。
   useEffect(() => {
     if (!props.mediaState.callAccepted) {
+      console.log('subtitle after finishing should work');
       SpeechRecognition.stopListening();
       props.createUserScriptActionCreator(myLearningLangTranscript, myNativeLangTranscript).then((userScript) => {
         return props.updateConversationUserScriptActionCreator(userScript);

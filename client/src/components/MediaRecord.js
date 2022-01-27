@@ -32,6 +32,7 @@ const MediaRecorderComponent = (props) => {
 
   useEffect(() => {
     if (!props.mediaState.callAccepted) {
+      console.log('mediarecord after finishing should work');
       stopMediaRecorder()
         .then(() => {
           return props.createUserMedia(blobForVideo.current, blobForAudio.current);
@@ -56,8 +57,10 @@ const MediaRecorderComponent = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {};
+const mapStateToProps = (state) => {
+  return { mediaState: state.mediaState };
+};
 
-export default connect(null, { forChunks, createUserMedia, updateConversationUserMediaActionCreator })(
+export default connect(mapStateToProps, { forChunks, createUserMedia, updateConversationUserMediaActionCreator })(
   MediaRecorderComponent
 );

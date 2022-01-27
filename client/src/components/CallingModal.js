@@ -14,7 +14,7 @@ const CallingModal = (props) => {
 
   useEffect(() => {
     // 少なくとも、ここのcomponentでは、refをもたない。refを持つのはfulscreenの方だからね。
-    props.myCallIsAcceptedActionCreator(props.socket);
+    props.myCallIsAcceptedActionCreator(props.socket, props.setShowCallingModal);
   }, []);
 
   const handleAnswerCall = () => {

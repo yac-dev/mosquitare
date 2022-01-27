@@ -10,7 +10,7 @@ import PersonalInfo from './PersonalInfo';
 import VideosWrapper from '../VideosWrapper';
 import ConversationApps from './ConversationApps';
 import Texts from './Texts';
-import MediaRecorder from '../MediaRecorderComponent';
+import MediaRecorder from '../MediaRecord';
 
 import Dimer from '../Dimer';
 import UserInfoCard from '../UserInfoCard';

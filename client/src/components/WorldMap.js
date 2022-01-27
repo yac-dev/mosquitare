@@ -87,13 +87,13 @@ const WorldMap = (props) => {
   const [learningLanguageScript, setLearningLanguageScript] = useState([]); // ここか。
   const [nativeLanguageScript, setNativeLanguageScript] = useState([]); // 何でここかっていうと、getMediaでのonstopにこのlanguage scriptを含めたいから。ここのgetMediaにlearningScript, nativeScript両方とも入れておかないといかん。
 
-  const [chunks, setChunks] = useState([]);
-  const mediaRecorder = useRef();
+  // const [chunks, setChunks] = useState([]);
+  // const mediaRecorder = useRef();
   // const mediaState = useSelector((state) => state.mediaState);
   // const [chunksForVideo, setChunksForVideo] = useState([]);
   // const [chunksForAudio, setChunksForAudio] = useState([]);
-  let chunksForVideo = []; // ここの二つ、別にuseRefううよ。
-  let chunksForAudio = [];
+  // let chunksForVideo = []; // ここの二つ、別にuseRefううよ。
+  // let chunksForAudio = [];
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -106,16 +106,17 @@ const WorldMap = (props) => {
       });
     }
 
-    props.getMediaActionCreator(
-      mediaRecorder,
-      chunksForVideo,
-      chunksForAudio,
-      learningLanguageScript,
-      nativeLanguageScript,
+    props
+      .getMediaActionCreator
+      // mediaRecorder
+      // chunksForVideo,
+      // chunksForAudio,
+      // learningLanguageScript,
+      // nativeLanguageScript,
       // setChunksForVideo,
       // setChunksForAudio,
-      connectionRef
-    );
+      // connectionRef
+      ();
     // props.listenCallActionCreator(socket, setFullscreen1on1Modal, setShow1on1);
     props.listenCallActionCreator(socket, setShowCallingModal);
     props.getMeetingsActionCreator();
@@ -229,50 +230,8 @@ const WorldMap = (props) => {
 
   // 1on1 modalで実行してもらうcallback.modalのstate変えるからここに書いている。
   // ここにmediarecorderのinstanceを入れる前提だな。
-  const onHangUpClick = () => {
-    // mediaRecorder.current.onstop = (event) => {
-    //   let blob = new Blob(chunks, { type: 'video/mp4;' }); // blob自体は、object。
-    //   // ここでmp4のdataが作られたらこれをmongoとs3に保存していくapi requestをすることだ。
-    //   // chunks = [];
-    //   console.log(blob);
-    //   props.updateUserStreamActionCreator(blob);
-    //   // setChunks([]); // arrayを空にするのってどうやるんだっけ？？
-    //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-    // };
-    mediaRecorder.current.stop(); // いちいちonstopのなかにblobを書く必要ないんじゃないかね。。。
-    // ここでまずblob4つ作るfunctionを実行して(promiseで)、
-    props
-      .createUserScriptActionCreator(learningLanguageScript, nativeLanguageScript)
-      .then((userScript) => {
-        return props.updateConversationUserScriptActionCreator(userScript);
-      })
-      .then(() => {
-        return setShow1on1(false);
-      });
-    // makeBlobs()
-    //   .then((blobs) => {
-    //     return props.createUserMedia(
-    //       blobs.blobForVideo,
-    //       blobs.blobForAudio,
-    //       blobs.blobForLearningLanguage,
-    //       blobs.blobForNativeLanguage
-    //     );
-    //   })
-    //   .then((userMedia) => {
-    //     return props.updateIntegratedUserMediaActionCreator(userMedia);
-    //   }) //.then((integratedUserMediaId) => {return conversationupdateするapiをここで。})
-    //   .then(() => {
-    //     return props.hangUpCallActionCreator(connectionRef); //っていう流れかね。。。。
-    //   })
-    //   .then(() => {
-    //     return props.updateUserConversationToFalseActionCreator();
-    //   })
-    //   .then(() => {
-    //     setShow1on1(false);
-    //   });
 
-    // setShow1on1(false); // これもpromisifyで繋げたほうがいいかも。
-  };
+  //
 
   // meeting用のfull screen modalのtrigger
   const onJoinClick = (meeting) => {
@@ -288,20 +247,12 @@ const WorldMap = (props) => {
   return (
     <>
       {/* modals */}
+      <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
       <FullScreen1on1Modal
         socket={socket}
         show1on1={show1on1}
         setShow1on1={setShow1on1}
         fullscreen1on1Modal={fullscreen1on1Modal}
-        onHangUpClick={onHangUpClick}
-        // myVideo={myVideo}
-        // oppositeVideo={oppositeVideo}
-        // connectionRef={connectionRef}
-        mediaRecorder={mediaRecorder}
-        chunksForVideo={chunksForVideo}
-        chunksForAudio={chunksForAudio}
-        setLearningLanguageScript={setLearningLanguageScript} //これでいいかなー。。。
-        setNativeLanguageScript={setNativeLanguageScript} // これでいいかなー。。。まあ今はこれでいいや。
       />
       <FullScreenMeetingModal
         socket={socket}
@@ -316,7 +267,6 @@ const WorldMap = (props) => {
         onHide={() => setVerticallyCenteredModal(false)}
         socket={socket}
       />
-      <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
       {/* modals */}
 
       <div style={{ height: '100vh', width: '100%' }}>
