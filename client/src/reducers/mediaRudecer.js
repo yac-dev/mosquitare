@@ -8,6 +8,9 @@ import {
   GET_PARTNER_MEDIA,
   CALL_ACCEPTED,
   HANG_UP_CALL,
+  CREATE_USER_MEDIA,
+  CREATE_USER_SCRIPT,
+  DISCONNECT_CALL,
   SWITCH_CURRENT_LANGUAGE,
   RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
 } from '../actionCreators/type';
@@ -27,6 +30,8 @@ const INITIAL_STATE = {
   partnerSignalData: null,
   partnerVideoStreamObject: null,
   chunks: [],
+  apiCallResult: 0,
+  callDisconnected: false,
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
@@ -100,6 +105,11 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         ...state,
         chunks: [...state.chunks, action.payload],
       };
+    case CREATE_USER_MEDIA:
+    case CREATE_USER_SCRIPT:
+      return { ...state, apiCallResult: state.apiCallResult + 1 };
+    case DISCONNECT_CALL:
+      return { ...state, callDisconnected: true };
     default:
       return state;
   }

@@ -7,6 +7,7 @@ import {
   GET_PARTNER_MEDIA,
   CALL_ACCEPTED,
   HANG_UP_CALL,
+  DISCONNECT_CALL,
   HOLD_MY_INITIATED_PEER,
   SWITCH_CURRENT_LANGUAGE,
   RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
@@ -400,10 +401,10 @@ export const answerCallActionCreator =
 //   connectionRef.current = peerInitiator;
 // };
 
-export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
+export const hangUpCallActionCreator = () => (dispatch) => {
   console.log('should be working!!');
   // dispatch(updateUserConversationToFalseActionCreator()); // ここpromisifyね。これだめ。
-  connectionRef.current.destroy();
+  // connectionRef.current.destroy();
   dispatch({
     type: HANG_UP_CALL,
     payload: '',
@@ -411,6 +412,14 @@ export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
   // その前にrecordingだ。
   // window.location = '/worldmap'; // まあこれでいいのかね。
+};
+
+export const disconnectCallActionCreator = (connectionRef) => (dispatch) => {
+  connectionRef.current.destroy();
+  dispatch({
+    type: DISCONNECT_CALL,
+    payload: '',
+  });
 };
 
 // こことか、redux thunk使う必要ないな。

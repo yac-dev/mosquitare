@@ -1,5 +1,12 @@
 import { mosquitareAPI } from '../apis/mosquitare';
-import { CREATE_CONVERSATION, GET_CONVERSATION_ID, UPDATE_CONVERSATION_RECIEVED_USER, GET_CONVERSATION } from './type';
+import {
+  CREATE_CONVERSATION,
+  GET_CONVERSATION_ID,
+  UPDATE_CONVERSATION_RECIEVED_USER,
+  GET_CONVERSATION,
+  CREATE_USER_MEDIA,
+  CREATE_USER_SCRIPT,
+} from './type';
 import { I_SEND_CONVERSATION_ID_TO_MY_PARTNER, MY_CALLED_USER_CREATED_CONVERSATION } from './socketEvents';
 import { hangUpCallActionCreator } from './mediaActionCreator';
 
@@ -45,6 +52,38 @@ export const updateConversationUserMediaActionCreator = (userMedia) => async (di
       });
       console.log(result);
     }
+    dispatch({
+      type: CREATE_USER_MEDIA,
+      payload: 1,
+    });
+    return Promise.resolve();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateConversationUserScriptActionCreator = (userScript) => async (dispatch, getState) => {
+  try {
+    const callingState = getState().mediaState;
+    const { conversationId } = getState().conversationState;
+    let result;
+    if (callingState.amICalling) {
+      result = await mosquitareAPI.patch(`/conversations/${conversationId}/userscript`, {
+        calledUserScript: userScript._id,
+      });
+      console.log(result);
+      // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
+    } else if (callingState.amIRecieving) {
+      // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
+      result = await mosquitareAPI.patch(`/conversations/${conversationId}/userscript`, {
+        recievedUserScript: userScript._id,
+      });
+      console.log(result);
+    }
+    dispatch({
+      type: CREATE_USER_SCRIPT,
+      payload: 1,
+    });
     return Promise.resolve();
   } catch (error) {
     console.log(error);
@@ -96,30 +135,6 @@ export const updateConversationRecievedUserActionCreator = () => async (dispatch
     //   type: UPDATE_CONVERSATION_RECIEVED_USER,
     //   payload: conversation._id,
     // });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const updateConversationUserScriptActionCreator = (userScript) => async (dispatch, getState) => {
-  try {
-    const callingState = getState().mediaState;
-    const { conversationId } = getState().conversationState;
-    let result;
-    if (callingState.amICalling) {
-      result = await mosquitareAPI.patch(`/conversations/${conversationId}/userscript`, {
-        calledUserScript: userScript._id,
-      });
-      console.log(result);
-      // integrated UserMediaを作る、というかupdateする。ここはcalledUserの方ね。
-    } else if (callingState.amIRecieving) {
-      // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
-      result = await mosquitareAPI.patch(`/conversations/${conversationId}/userscript`, {
-        recievedUserScript: userScript._id,
-      });
-      console.log(result);
-    }
-    return Promise.resolve();
   } catch (error) {
     console.log(error);
   }

@@ -18,6 +18,7 @@ import { updateUserConversationsActionCreator } from '../actionCreators/authActi
 
 // call 終わり
 import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
+import { disconnectCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { updateUserConversationToFalseActionCreator } from '../actionCreators/authActionCreators';
 
 const VideosWrapper = (props) => {
@@ -62,12 +63,23 @@ const VideosWrapper = (props) => {
       });
   }, []);
 
+  useEffect(() => {
+    if (props.mediaState.apiCallResult === 1) {
+      props.hangUpCallActionCreator(); //これだけだと、下ですぐにmodalを閉じて、api callをさまたげることになる。
+      props.setShow1on1(false);
+      props.updateUserConversationToFalseActionCreator();
+    }
+  }, [props.mediaState.apiCallResult]);
+
   const onHangUpClick = () => {
-    // 1, modalを閉じて
-    // 2, callacceptedを閉じるっていう具合かね。callacceptedがfalseを引き金に、mediarecorderとspeechrecognitionも停止する。
-    props.setShow1on1(false);
-    props.hangUpCallActionCreator(connectionRef);
-    props.updateUserConversationToFalseActionCreator();
+    // 1, callacceptedを閉じるっていう具合かね。callacceptedがfalseを引き金に、mediarecorderとspeechrecognitionも停止する。
+    // 2, modalを閉じる。
+    // modalを閉じてからだと、そもそもsubtitleとmediaRecorder共に、useEffect効かんわ。まあ当然だな。callAcceptedを閉じてから、modalを閉じないとな。
+    props.disconnectCallActionCreator(connectionRef);
+
+    // そうか、そもそもcallAcceptedをfalseにした時点で、もうmodalが表示されないようになっているんだ。
+    // props.setShow1on1(false);
+    // props.updateUserConversationToFalseActionCreator();
   };
 
   return (
@@ -119,5 +131,6 @@ export default connect(mapStateToProps, {
   sendConversationIdActionCreator,
   updateUserConversationsActionCreator,
   hangUpCallActionCreator,
+  disconnectCallActionCreator,
   updateUserConversationToFalseActionCreator,
 })(VideosWrapper);

@@ -4,6 +4,8 @@ import { hangUpCallActionCreator } from './mediaActionCreator';
 
 export const createUserMedia = (blobForVideo, blobForAudio) => async (dispatch, getState) => {
   try {
+    console.log(blobForVideo); // ここがなぜundefined？？
+    console.log(blobForAudio);
     const userId = getState().authState.currentUser._id;
     const formData = new FormData();
     formData.append('mediaFiles', blobForVideo);

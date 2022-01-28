@@ -17,8 +17,11 @@ export const ANSWER_CALL = 'ANSWER_CALL';
 export const MY_CALL_ACCEPTED = 'MY_CALL_ACCEPTED';
 export const GET_PARTNER_MEDIA = 'GET_PARTNER_MEDIA';
 
+export const CREATE_USER_MEDIA = 'CREATE_USER_MEDIA';
+export const CREATE_USER_SCRIPT = 'CREATE_USER_SCRIPT';
 export const CALL_ACCEPTED = 'CALL_ACCEPTED';
 export const HANG_UP_CALL = 'HANG_UP_CALL';
+export const DISCONNECT_CALL = 'DISCONNECT_CALL';
 
 // 次↓
 // conversation 始まり
