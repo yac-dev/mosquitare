@@ -119,9 +119,9 @@ const SubtitleWrapper = (props) => {
   const transcriptsRender = () => {
     const transcripts = conversationNote.map((transcriptObject) => {
       return (
-        <p>
+        <span>
           {transcriptObject.name}: {transcriptObject.transcript}
-        </p>
+        </span>
       );
     });
     return <>{transcripts}</>;
@@ -130,16 +130,16 @@ const SubtitleWrapper = (props) => {
   const partnerInterimTranscriptRender = () => {
     if (partnerInterimTranscript) {
       return (
-        <p>
+        <span>
           {props.mediaState.callingWith.name}: {partnerInterimTranscript}
-        </p>
+        </span>
       );
     }
   };
 
   const myInterimTranscriptRender = () => {
     if (transcript) {
-      return <p>You: {transcript}</p>;
+      return <span>You: {transcript}</span>;
     }
   };
 
@@ -147,22 +147,10 @@ const SubtitleWrapper = (props) => {
     <div>
       <div>
         <span>listening: {listening ? 'on' : 'off'}</span>
-        <div>
-          <button type='button' onClick={resetTranscript}>
-            Reset
-          </button>
-          {/* <button type='button' onClick={listenContinuously}>
-            Listen
-          </button> */}
-          {/* <button type='button' onClick={SpeechRecognition.stopListening}>
-            Stop
-          </button> */}
-          <button type='button' onClick={() => switchLanguage()}>
-            Switch Lang
-          </button>
-        </div>
+        <button type='button' onClick={() => switchLanguage()}>
+          Switch Lang
+        </button>
       </div>
-      {/* <div>{message}</div> */}
       <div>
         {transcriptsRender()}
         {partnerInterimTranscriptRender()}
