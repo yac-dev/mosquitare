@@ -7,6 +7,10 @@ import {
   MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE,
   MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
   I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
+  I_SEND_MY_INTERIM_TRANSCRIPT_TO_MY_PARTNER,
+  I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER,
+  MY_PARTNER_SEND_ME_INTERIM_TRANSCRIPT,
+  MY_PARTNER_SEND_ME_FINAL_TRANSCRIPT,
 } from '../../actionCreators/socketEvents';
 
 import Subtitle from './Subtitle';
@@ -16,16 +20,36 @@ import { createUserScriptActionCreator } from '../../actionCreators/userScriptsA
 import { updateConversationUserScriptActionCreator } from '../../actionCreators/conversationActionCreators';
 
 const SubtitleWrapper = (props) => {
-  const [conversationNote, setConversationNote] = useState([]);
-  const [partnerTranscript, setPartnerTranscript] = useState();
+  const [conversationNote, setConversationNote] = useState([{}]);
   const [myLearningLangTranscript, setMyLearningLangTranscript] = useState([]);
   const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
+  const [partnerInterimTranscript, setPartnerInterimTranscript] = useState('');
+  const [partnerFinalTranscript, setPartnerFinalTranscript] = useState('');
 
+  // 課題は、interimの場合は一行に全部出して最後finalTranscript
+  // 本当に表示させたいものだけconversationNoteをrenderさせるってすればいいのか。だから相手のfinalTranscriptだけをconversationNoteに入れて、interimは一時的な表示でいいってことだ。
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
   useEffect(() => {
     if (finalTranscript !== '') {
+      // finalTranscriptの時
       console.log('Got final result:', finalTranscript);
+      const transcriptObject = { name: 'you', transcript: finalTranscript };
+      setConversationNote((previouState) => [...previouState, transcriptObject]);
+      const to = store.getState().mediaState.callingWith.socketId;
+      props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
+      if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
+        setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]); //globalなstateに保存しておいた方がいいかも。
+      } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
+        setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
+      }
+    }
+    if (!finalTranscript) {
+      // interimの時
+      console.log('Im sending interim transcript to partner');
+      console.log(interimTranscript);
+      const to = store.getState().mediaState.callingWith.socketId;
+      props.socket.emit(I_SEND_MY_INTERIM_TRANSCRIPT_TO_MY_PARTNER, { to, interimTranscript });
     }
   }, [interimTranscript, finalTranscript]);
 
@@ -35,29 +59,38 @@ const SubtitleWrapper = (props) => {
       SpeechRecognition.startListening({
         language: lang,
       });
-      setConversationNote((previouState) => [...previouState, transcript]);
-      const to = store.getState().mediaState.callingWith.socketId;
-      props.socket.emit(I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER, {
-        to,
-        nativeLanguageScript: transcript,
-      });
-      if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
-        setMyLearningLangTranscript((previouState) => [...previouState, transcript]); // これこそ、globalなstateに保存しておいた方がいいな。だって最終的にmediarecorder側でやるもんな。
-      } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
-        setMyNativeLangTranscript((previouState) => [...previouState, transcript]);
-      }
     }
   }, [listening]); // 喋り終わったらrecognitionのlisteningが途切れる。それを再びonにする。
 
+  // ------------------------ この二つで分けて行う。
   useEffect(() => {
-    props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
-      console.log('partner sent to me...');
-      console.log(dataFromServer.nativeLanguageScript); // koko
-      setPartnerTranscript(dataFromServer.nativeLanguageScript);
-      setPartnerTranscript('');
-      setConversationNote((previouState) => [...previouState, dataFromServer.nativeLanguageScript]);
+    props.socket.on(MY_PARTNER_SEND_ME_FINAL_TRANSCRIPT, (dataFromServer) => {
+      console.log('I got final transcript from partner');
+      const transcriptObject = {};
+      transcriptObject['name'] = props.mediaState.callingWith.name;
+      transcriptObject['transcript'] = dataFromServer.finalTranscript;
+      setPartnerInterimTranscript('');
+      setConversationNote((previousState) => [...previousState, transcriptObject]);
     });
   }, []);
+
+  useEffect(() => {
+    props.socket.on(MY_PARTNER_SEND_ME_INTERIM_TRANSCRIPT, (dataFromServer) => {
+      console.log('Im getting interim transcript from partner.', dataFromServer.interimTranscript);
+      setPartnerInterimTranscript(dataFromServer.interimTranscript);
+    });
+  }, []);
+  //--------------------------
+
+  // useEffect(() => {
+  //   props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
+  //     console.log('partner sent to me...');
+  //     console.log(dataFromServer.nativeLanguageScript); // koko
+  //     setPartnerTranscript(dataFromServer.nativeLanguageScript);
+  //     setPartnerTranscript('');
+  //     setConversationNote((previouState) => [...previouState, dataFromServer.nativeLanguageScript]);
+  //   });
+  // }, []);
 
   // recieve側でのみerrroが怒っている。unmountのエラーが。caller側ではそもそも動いてすらない。
   useEffect(() => {
@@ -84,10 +117,30 @@ const SubtitleWrapper = (props) => {
   };
 
   const transcriptsRender = () => {
-    const transcripts = conversationNote.map((tscrpt) => {
-      return <div>{tscrpt}</div>;
+    const transcripts = conversationNote.map((transcriptObject) => {
+      return (
+        <p>
+          {transcriptObject.name}: {transcriptObject.transcript}
+        </p>
+      );
     });
     return <>{transcripts}</>;
+  };
+
+  const partnerInterimTranscriptRender = () => {
+    if (partnerInterimTranscript) {
+      return (
+        <p>
+          {props.mediaState.callingWith.name}: {partnerInterimTranscript}
+        </p>
+      );
+    }
+  };
+
+  const myInterimTranscriptRender = () => {
+    if (transcript) {
+      return <p>You: {transcript}</p>;
+    }
   };
 
   return (
@@ -111,10 +164,10 @@ const SubtitleWrapper = (props) => {
       </div>
       {/* <div>{message}</div> */}
       <div>
-        <span>{transcriptsRender()}</span>
-        <span>{transcript}</span> {/* これって何で必要なんだっけ？？？ */}
-        <span>{partnerTranscript}</span>
-        {/* <span>{transcriptRender()}</span> */}
+        {transcriptsRender()}
+        {partnerInterimTranscriptRender()}
+        {myInterimTranscriptRender()}
+        {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
       </div>
     </div>
   );

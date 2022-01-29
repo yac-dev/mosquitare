@@ -27,6 +27,10 @@ import {
   MY_PARTENER_REQUESTS_MY_VOICE_TEXT,
   I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
   MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
+  I_SEND_MY_INTERIM_TRANSCRIPT_TO_MY_PARTNER,
+  I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER,
+  MY_PARTNER_SEND_ME_INTERIM_TRANSCRIPT,
+  MY_PARTNER_SEND_ME_FINAL_TRANSCRIPT,
   I_SEND_CONVERSATION_ID_TO_MY_PARTNER,
   // MY_CALLER_CREATED_VIDEO_CHAT_DOCUMENT,
   MY_CALLED_USER_CREATED_CONVERSATION,
@@ -147,6 +151,18 @@ io.on('connection', (socket) => {
     });
   });
 
+  socket.on(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, (dataFromSpeaker) => {
+    io.to(dataFromSpeaker.to).emit(MY_PARTNER_SEND_ME_FINAL_TRANSCRIPT, {
+      finalTranscript: dataFromSpeaker.finalTranscript,
+    });
+  });
+
+  socket.on(I_SEND_MY_INTERIM_TRANSCRIPT_TO_MY_PARTNER, (dataFromSpeaker) => {
+    io.to(dataFromSpeaker.to).emit(MY_PARTNER_SEND_ME_INTERIM_TRANSCRIPT, {
+      interimTranscript: dataFromSpeaker.interimTranscript,
+    });
+  });
+
   // conversatationに関するevent
   socket.on(I_SEND_CONVERSATION_ID_TO_MY_PARTNER, (dataFromCalledUser) => {
     // console.log('chat video worrrrrrk');
@@ -169,6 +185,6 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT || 8000, () => {
   console.log(`Server listenning on port ${PORT}`);
 });

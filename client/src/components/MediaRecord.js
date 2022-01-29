@@ -39,7 +39,6 @@ const MediaRecorderComponent = (props) => {
 
   useEffect(() => {
     if (props.mediaState.callDisconnected) {
-      console.log('mediarecord after finishing should work');
       mediaRecorder.current.stop();
     }
   }, [props.mediaState.callDisconnected]);
