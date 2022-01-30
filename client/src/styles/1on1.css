@@ -118,6 +118,7 @@
   grid-area: texts;
   border-radius: 15px;
   background-color: rgb(180, 180, 180);
+  overflow: auto;
 }
 
 .app-menu {

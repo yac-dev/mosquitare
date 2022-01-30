@@ -9,7 +9,8 @@ import { Tooltip } from '@mui/material';
 import PersonalInfo from './PersonalInfo';
 import VideosWrapper from '../VideosWrapper';
 import ConversationApps from './ConversationApps';
-import Texts from './Texts';
+import VerticalTabs from '../VerticalTabs';
+// import Texts from './Texts';
 import MediaRecorder from '../MediaRecord';
 
 import Dimer from '../Dimer';
@@ -43,12 +44,6 @@ import { answerCallActionCreator2 } from '../../actionCreators/mediaActionCreato
 import { completeConnectionWithMyPartnerActionCreator1 } from '../../actionCreators/mediaActionCreator';
 
 // import { recordStreamActionCreator } from '../../actionCreators/mediaActionCreator';
-
-// const Speechrecognition = window.Speechrecognition || window.webkitSpeechrecognition;
-// const microphone = new Speechrecognition();
-// microphone.continuous = true;
-// microphone.interimResults = true;
-// microphone.lang = 'en-US';
 
 const FullScreen1on1Modal = (props) => {
   const [isInConversation, setIsInConversation] = useState(false);
@@ -573,7 +568,7 @@ const FullScreen1on1Modal = (props) => {
             </div> */}
             <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
             <div className='info-and-app-wrapper'>
-              <Texts
+              <VerticalTabs
                 socket={props.socket}
                 setLearningLanguageScript={props.setLearningLanguageScript}
                 setNativeLanguageScript={props.setNativeLanguageScript}
