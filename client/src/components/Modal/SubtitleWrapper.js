@@ -2,11 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import store from '../../store';
 import { connect } from 'react-redux';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import { Button } from 'semantic-ui-react';
 
 import {
   MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE,
-  MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
-  I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
   I_SEND_MY_INTERIM_TRANSCRIPT_TO_MY_PARTNER,
   I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER,
   MY_PARTNER_SEND_ME_INTERIM_TRANSCRIPT,
@@ -15,9 +14,10 @@ import {
 
 import Subtitle from './Subtitle';
 
-import { getVoiceTextActionCreator } from '../../actionCreators/mediaActionCreator';
 import { createUserScriptActionCreator } from '../../actionCreators/userScriptsActionCreators';
 import { updateConversationUserScriptActionCreator } from '../../actionCreators/conversationActionCreators';
+import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaActionCreator';
+import { recieveSwitchingLanguageRequestActionCreator1 } from '../../actionCreators/mediaActionCreator';
 
 const SubtitleWrapper = (props) => {
   const [conversationNote, setConversationNote] = useState([{}]);
@@ -25,9 +25,6 @@ const SubtitleWrapper = (props) => {
   const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
   const [partnerInterimTranscript, setPartnerInterimTranscript] = useState('');
   const [partnerFinalTranscript, setPartnerFinalTranscript] = useState('');
-
-  // 課題は、interimの場合は一行に全部出して最後finalTranscript
-  // 本当に表示させたいものだけconversationNoteをrenderさせるってすればいいのか。だから相手のfinalTranscriptだけをconversationNoteに入れて、interimは一時的な表示でいいってことだ。
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
   useEffect(() => {
@@ -60,9 +57,9 @@ const SubtitleWrapper = (props) => {
         language: lang,
       });
     }
-  }, [listening]); // 喋り終わったらrecognitionのlisteningが途切れる。それを再びonにする。
+  }, [listening, props.mediaState.currentLanguage]); // 喋り終わったらrecognitionのlisteningが途切れる。それを再びonにする。// ここのdependencyをcurrentLanguageを入れてもいいかね。。。
 
-  // ------------------------ この二つで分けて行う。
+  // ------------------------transcript受取り系
   useEffect(() => {
     props.socket.on(MY_PARTNER_SEND_ME_FINAL_TRANSCRIPT, (dataFromServer) => {
       console.log('I got final transcript from partner');
@@ -80,19 +77,15 @@ const SubtitleWrapper = (props) => {
       setPartnerInterimTranscript(dataFromServer.interimTranscript);
     });
   }, []);
-  //--------------------------
+  // --------------------------
 
-  // useEffect(() => {
-  //   props.socket.on(MY_PARTNER_SEND_VOICE_TEXT_TO_ME, (dataFromServer) => {
-  //     console.log('partner sent to me...');
-  //     console.log(dataFromServer.nativeLanguageScript); // koko
-  //     setPartnerTranscript(dataFromServer.nativeLanguageScript);
-  //     setPartnerTranscript('');
-  //     setConversationNote((previouState) => [...previouState, dataFromServer.nativeLanguageScript]);
-  //   });
-  // }, []);
+  useEffect(() => {
+    props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
+      props.recieveSwitchingLanguageRequestActionCreator1(dataFromServer.switchingLanguage);
+    });
+  }, []);
 
-  // recieve側でのみerrroが怒っている。unmountのエラーが。caller側ではそもそも動いてすらない。
+  // 電話切った時に発動。
   useEffect(() => {
     if (props.mediaState.callDisconnected) {
       console.log('subtitle after finishing should work');
@@ -104,57 +97,75 @@ const SubtitleWrapper = (props) => {
   }, [props.mediaState.callDisconnected]);
 
   // useEffect(() => {
-  //   console.log('useEffect from subtitle');
   //   const lang = store.getState().mediaState.currentLanguage.codeForSpeechRecognition;
   //   SpeechRecognition.startListening({
   //     language: lang,
   //   });
-  // }, [lang]); // 最初にまずここで、speechrecognitionをstartする。その後は、langが変わるたびにstartさせていく。
+  // }, [props.mediaState.currentLanguage]); // 最初にまずここで、speechrecognitionをstartする。その後は、langが変わるたびにstartさせていく。
+  // // currentLanguageを変えるactionをdispatchする感じ。下とのコンボで。
 
-  const switchLanguage = () => {
-    // setLang('ja-jp'); //言語を切り替えたら、自動でoffになるみたい。
-    // SpeechRecognition.stopListening();
-  };
-
-  const transcriptsRender = () => {
+  // render系
+  const renderTranscripts = () => {
     const transcripts = conversationNote.map((transcriptObject) => {
       return (
-        <span>
+        <p>
           {transcriptObject.name}: {transcriptObject.transcript}
-        </span>
+        </p>
       );
     });
     return <>{transcripts}</>;
   };
 
-  const partnerInterimTranscriptRender = () => {
+  const renderPartnerInterimTranscript = () => {
     if (partnerInterimTranscript) {
       return (
-        <span>
+        <p>
           {props.mediaState.callingWith.name}: {partnerInterimTranscript}
-        </span>
+        </p>
       );
     }
   };
 
-  const myInterimTranscriptRender = () => {
+  const renderMyInterimTranscript = () => {
     if (transcript) {
-      return <span>You: {transcript}</span>;
+      return <p>You: {transcript}</p>;
     }
+  };
+
+  const renderSwitchLangButton = () => {
+    const learningLangName = props.authState.currentUser.learningLangs[0].name;
+    if (props.authState.currentUser.learningLangs[0].name === props.mediaState.currentLanguage.name) {
+      return null;
+    } else {
+      return (
+        <Button type='button' onClick={() => switchLanguage()}>
+          Switch to {learningLangName}
+        </Button>
+      );
+    }
+  };
+
+  const switchLanguage = () => {
+    //言語を切り替えたら、自動でoffになると思う。。。
+    // const lang = store.getState().mediaState.learningLangs[0].codeForSpeechRecognition;
+    props.switchCurrentLanguageActionCreator1(props.socket);
+    // SpeechRecognition.startListening({
+    //   language: lang,
+    // });
   };
 
   return (
     <div>
       <div>
-        <span>listening: {listening ? 'on' : 'off'}</span>
-        <button type='button' onClick={() => switchLanguage()}>
-          Switch Lang
-        </button>
+        <span>
+          listening: {listening ? 'on' : 'off'}: Now we are speaking {props.mediaState.currentLanguage.name}
+        </span>
+        {renderSwitchLangButton()}
       </div>
       <div>
-        {transcriptsRender()}
-        {partnerInterimTranscriptRender()}
-        {myInterimTranscriptRender()}
+        {renderTranscripts()}
+        {renderPartnerInterimTranscript()}
+        {renderMyInterimTranscript()}
         {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
       </div>
     </div>
@@ -247,7 +258,8 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  getVoiceTextActionCreator,
   createUserScriptActionCreator,
   updateConversationUserScriptActionCreator,
+  switchCurrentLanguageActionCreator1,
+  recieveSwitchingLanguageRequestActionCreator1,
 })(SubtitleWrapper);

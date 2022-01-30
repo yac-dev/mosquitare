@@ -559,3 +559,20 @@ export const forChunks = (chunksData) => {
     payload: chunksData,
   };
 };
+
+export const switchCurrentLanguageActionCreator1 = (socket) => (dispatch, getState) => {
+  const switchingLanguage = getState().authState.currentUser.learningLangs[0];
+  const partnerSocketId = getState().mediaState.callingWith.socketId;
+  dispatch({
+    type: SWITCH_CURRENT_LANGUAGE,
+    payload: switchingLanguage,
+  });
+  socket.emit(I_WANNA_SWITCH_CURRENT_LANGUAGE, { to: partnerSocketId, switchingLanguage });
+};
+
+export const recieveSwitchingLanguageRequestActionCreator1 = (switchingLanguage) => {
+  return {
+    type: RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
+    payload: switchingLanguage,
+  };
+};
