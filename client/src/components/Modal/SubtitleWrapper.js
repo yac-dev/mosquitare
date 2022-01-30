@@ -25,6 +25,8 @@ const SubtitleWrapper = (props) => {
   const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
   const [partnerInterimTranscript, setPartnerInterimTranscript] = useState('');
   const [partnerFinalTranscript, setPartnerFinalTranscript] = useState('');
+  const [countLearningLangLength, setCountLearningLangLength] = useState(0);
+  const [countNativeLangLength, setCountNativeLangLength] = useState(0);
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
   useEffect(() => {
@@ -37,8 +39,10 @@ const SubtitleWrapper = (props) => {
       props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
       if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
         setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]); //globalなstateに保存しておいた方がいいかも。
+        countTranscriptWords(finalTranscript, setCountLearningLangLength);
       } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
         setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
+        countTranscriptWords(finalTranscript, setCountNativeLangLength);
       }
     }
     if (!finalTranscript) {
@@ -93,16 +97,9 @@ const SubtitleWrapper = (props) => {
       props.createUserScriptActionCreator(myLearningLangTranscript, myNativeLangTranscript).then((userScript) => {
         return props.updateConversationUserScriptActionCreator(userScript);
       });
+      // ここで、文字数をapiに送ることもする。
     }
   }, [props.mediaState.callDisconnected]);
-
-  // useEffect(() => {
-  //   const lang = store.getState().mediaState.currentLanguage.codeForSpeechRecognition;
-  //   SpeechRecognition.startListening({
-  //     language: lang,
-  //   });
-  // }, [props.mediaState.currentLanguage]); // 最初にまずここで、speechrecognitionをstartする。その後は、langが変わるたびにstartさせていく。
-  // // currentLanguageを変えるactionをdispatchする感じ。下とのコンボで。
 
   // render系
   const renderTranscripts = () => {
@@ -145,13 +142,24 @@ const SubtitleWrapper = (props) => {
     }
   };
 
+  const renderWordsLength = () => {
+    return (
+      <>
+        <span>learning lang length: {countLearningLangLength}</span>
+        <span>native lang length: {countNativeLangLength}</span>
+      </>
+    );
+  };
+
   const switchLanguage = () => {
-    //言語を切り替えたら、自動でoffになると思う。。。
-    // const lang = store.getState().mediaState.learningLangs[0].codeForSpeechRecognition;
+    //言語を切り替えたら、自動でoffになる。
     props.switchCurrentLanguageActionCreator1(props.socket);
-    // SpeechRecognition.startListening({
-    //   language: lang,
-    // });
+  };
+
+  // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
+  const countTranscriptWords = (transcript, setCountLangLength) => {
+    const wordsLength = transcript.split(' ').length;
+    setCountLangLength((previousState) => previousState + wordsLength);
   };
 
   return (
@@ -167,6 +175,7 @@ const SubtitleWrapper = (props) => {
         {renderPartnerInterimTranscript()}
         {renderMyInterimTranscript()}
         {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
+        {renderWordsLength()}
       </div>
     </div>
   );
