@@ -26,22 +26,22 @@ const MediaRecorderComponent = (props) => {
       blobForAudio.current = new Blob(chunks, { type: 'audio/webm;codecs=opus' });
       // blobはglobalのstateで持っておいた方がいいかな。そういう考えも持っておこう。
       console.log('record stopped!!!');
-      Promise.resolve()
-        .then(() => {
-          return props.createUserMedia(blobForVideo.current, blobForAudio.current);
-        })
-        .then((userMedia) => {
-          return props.updateConversationUserMediaActionCreator(userMedia);
-        });
+      // Promise.resolve()
+      //   .then(() => {
+      //     return props.createUserMedia(blobForVideo.current, blobForAudio.current);
+      //   })
+      //   .then((userMedia) => {
+      //     return props.updateConversationUserMediaActionCreator(userMedia);
+      //   });
     };
     mediaRecorder.current.start();
   }, []);
 
-  useEffect(() => {
-    if (props.mediaState.callDisconnected) {
-      mediaRecorder.current.stop();
-    }
-  }, [props.mediaState.callDisconnected]);
+  // useEffect(() => {
+  //   if (props.mediaState.callDisconnected) {
+  //     mediaRecorder.current.stop();
+  //   }
+  // }, [props.mediaState.callDisconnected]);
 
   return <>{/* <button onClick={() => stopMediaRecorder()}>recordstop</button> */}</>;
 };

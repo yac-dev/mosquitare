@@ -9,7 +9,7 @@ import { Tooltip } from '@mui/material';
 import PersonalInfo from './PersonalInfo';
 import VideosWrapper from '../VideosWrapper';
 import ConversationApps from './ConversationApps';
-import VerticalTabs from '../VerticalTabs';
+import VerticalTabsWrapper from '../VerticalTabsWrapper';
 // import Texts from './Texts';
 import MediaRecorder from '../MediaRecord';
 
@@ -567,14 +567,12 @@ const FullScreen1on1Modal = (props) => {
               </div>
             </div> */}
             <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
-            <div className='info-and-app-wrapper'>
-              <VerticalTabs
-                socket={props.socket}
-                setLearningLanguageScript={props.setLearningLanguageScript}
-                setNativeLanguageScript={props.setNativeLanguageScript}
-              />
-              <ConversationApps />
-            </div>
+            <VerticalTabsWrapper
+              socket={props.socket}
+              // setLearningLanguageScript={props.setLearningLanguageScript}
+              // setNativeLanguageScript={props.setNativeLanguageScript}
+            />
+            {/* <ConversationApps /> */}
           </Modal.Body>
         </Modal>
       );

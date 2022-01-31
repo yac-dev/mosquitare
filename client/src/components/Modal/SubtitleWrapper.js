@@ -90,16 +90,16 @@ const SubtitleWrapper = (props) => {
   }, []);
 
   // 電話切った時に発動。
-  useEffect(() => {
-    if (props.mediaState.callDisconnected) {
-      console.log('subtitle after finishing should work');
-      SpeechRecognition.stopListening();
-      props.createUserScriptActionCreator(myLearningLangTranscript, myNativeLangTranscript).then((userScript) => {
-        return props.updateConversationUserScriptActionCreator(userScript);
-      });
-      // ここで、文字数をapiに送ることもする。
-    }
-  }, [props.mediaState.callDisconnected]);
+  // useEffect(() => {
+  //   if (props.mediaState.callDisconnected) {
+  //     console.log('subtitle after finishing should work');
+  //     SpeechRecognition.stopListening();
+  //     props.createUserScriptActionCreator(myLearningLangTranscript, myNativeLangTranscript).then((userScript) => {
+  //       return props.updateConversationUserScriptActionCreator(userScript);
+  //     });
+  //     // ここで、文字数をapiに送ることもする。
+  //   }
+  // }, [props.mediaState.callDisconnected]);
 
   // render系
   const renderTranscripts = () => {
@@ -163,7 +163,10 @@ const SubtitleWrapper = (props) => {
   };
 
   return (
-    <div>
+    <div
+      className={`tab-content ${props.isActiveTranscriptComponent ? undefined : 'hidden'}`}
+      style={{ color: 'white' }}
+    >
       <div>
         <span>
           listening: {listening ? 'on' : 'off'}: Now we are speaking {props.mediaState.currentLanguage.name}

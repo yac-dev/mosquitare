@@ -84,7 +84,7 @@ const VideosWrapper = (props) => {
 
   return (
     <>
-      <div></div>
+      {/* <div></div> */}
       <div className='videos-wrapper'>
         <video
           className='partner-video'
