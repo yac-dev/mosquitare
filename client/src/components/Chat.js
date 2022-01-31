@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Chat = (props) => {
+  const [text, setText] = useState('');
+
   return (
-    <div className={`tab-content ${props.isActiveChatComponent ? undefined : 'hidden'}`} style={{ color: 'white' }}>
-      <div>Here is Chat tab content</div>
-    </div>
+    <div
+      className={`tab-content ${props.isActiveChatComponent ? undefined : 'hidden'}`}
+      style={{ color: 'white' }}
+    ></div>
   );
 };
 
