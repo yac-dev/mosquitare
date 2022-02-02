@@ -15,6 +15,23 @@
   border-bottom-right-radius: 10px;
 }
 
+.video-displaying-modal {
+  width: 80vw; /* Occupy the 90% of the screen width */
+  max-width: 80vw;
+  /* height: 80vh;
+  max-height: 80vh; */
+  /* background-color: white; */
+}
+
+.video-displaying-modal-body {
+  height: 80vh;
+  max-height: 80vh;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 600px 1fr;
+  grid-template-areas: 'videos-wrapper menu';
+}
+
 video {
   width: 150px;
   height: 150px;

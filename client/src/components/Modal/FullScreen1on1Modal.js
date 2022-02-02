@@ -21,13 +21,12 @@ const FullScreen1on1Modal = (props) => {
     if (props.mediaState.callAccepted) {
       return (
         <Modal
-          className='chat-modal'
           show={props.show1on1}
           fullscreen={props.fullscreen1on1Modal}
           onHide={() => props.setShow1on1(false)}
-          style={{ backgroundColor: 'black' }}
+          // style={{ backgroundColor: 'black' }}
         >
-          <Modal.Body bsPrefix='modal-body'>
+          <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
             <MediaRecorder />
             <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
             <VerticalTabsWrapper socket={props.socket} />

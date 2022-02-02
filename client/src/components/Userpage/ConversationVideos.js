@@ -1,9 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { loadMeActionCreator } from '../../actionCreators/authActionCreators';
-import { Link } from 'react-router-dom';
+// import { loadMeActionCreator } from '../../actionCreators/authActionCreators';
+// import { Link } from 'react-router-dom';
+
+// components
+import VideoDisplayingModal from './VideoDisplayingModal';
 
 const ConversationVideos = (props) => {
+  const [showVideoDisplayingModal, setShowVideoDisplayingModal] = useState(false);
   useEffect(() => {}, []);
   // const test = () => {
   //   if (!props.authState.currentUser) {
@@ -20,9 +24,13 @@ const ConversationVideos = (props) => {
   //   }
   // };
 
+  const handleClose = () => setShowVideoDisplayingModal(false);
+  const handleShow = () => setShowVideoDisplayingModal(true);
+
   const onConversationClick = (event) => {
     event.preventDefault();
     console.log('conversation here!!');
+    setShowVideoDisplayingModal(true);
     // ここを押したら、modal画面でvideoを再生できるようにする。面白いね。
   };
 
@@ -34,7 +42,6 @@ const ConversationVideos = (props) => {
       const conversationList = props.authState.currentUser.conversations.map((conversation) => {
         return (
           <>
-            {/* conversation wrapper自体、thumbnailの下に少し情報を載せる。 calledUserMedia自体、idしか持ってない状況。だね*/}
             <div
               className='conversation-wrapper'
               style={{ cursor: 'pointer' }}
@@ -67,7 +74,15 @@ const ConversationVideos = (props) => {
     }
   };
 
-  return <>{renderConversationList()}</>;
+  return (
+    <>
+      {renderConversationList()}
+      <VideoDisplayingModal
+        showVideoDisplayingModal={showVideoDisplayingModal}
+        setShowVideoDisplayingModal={setShowVideoDisplayingModal}
+      />
+    </>
+  );
 };
 
 const mapStateToProps = (state, ownProps) => {

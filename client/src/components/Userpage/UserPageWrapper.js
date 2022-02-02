@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 // import ConversationVideo from './ConversationVideo';
 import myVideo from './ef392537-cb27-48a3-8905-43467c3eef6b.mp4'; // このやり方だといける。
@@ -9,6 +9,7 @@ import ConversationVideos from './ConversationVideos';
 // ac
 import { loadMeActionCreator } from '../../actionCreators/authActionCreators';
 
+// css
 import '../../styles/userpage.css';
 
 const UserPageWrapper = (props) => {
