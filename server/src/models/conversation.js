@@ -58,13 +58,13 @@ const conversationSchema = new mongoose.Schema({
   // ] TextChatっていうschemaもおそらく作ることになるだろう。→こっちでもっておくことはやっぱやめよう。one to many
 });
 
-// conversationSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'integratedUserMedia',
-//   });
+conversationSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'calledUserMedia recievedUserMedia',
+  });
 
-//   next();
-// });
+  next();
+});
 
 const Conversation = mongoose.model('Conversation', conversationSchema);
 export default Conversation;

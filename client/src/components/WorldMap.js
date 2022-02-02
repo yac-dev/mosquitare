@@ -6,8 +6,8 @@ import { Button } from 'semantic-ui-react';
 // components
 import CallingModal from './CallingModal';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
-import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
-import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
+// import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
+// import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
 import UsersMarker from './UsersMarker';
 import MeetingsList from './Meeting/MeetingsList';
 
@@ -28,7 +28,6 @@ import { callActionCreator } from '../actionCreators/mediaActionCreator';
 
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
-import { JOIN_MEETING } from '../actionCreators/socketEvents';
 
 // mapbox設定。コメント含めて必要。
 import mapboxgl from 'mapbox-gl';
@@ -49,10 +48,10 @@ const WorldMap = (props) => {
   const [show1on1, setShow1on1] = useState(false);
   const [fullscreen1on1Modal, setFullscreen1on1Modal] = useState(true);
   // meeting modal用
-  const [showMeeting, setShowMeeting] = useState(false);
-  const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
+  // const [showMeeting, setShowMeeting] = useState(false);
+  // const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
   // vertically centered modal用
-  const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
+  // const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -85,14 +84,14 @@ const WorldMap = (props) => {
   };
 
   // meeting用のfull screen modalのtrigger
-  const onJoinClick = (meeting) => {
-    setFullScreenMeetingModal(true);
-    setShowMeeting(true);
-    socket.emit(JOIN_MEETING, {
-      meeting: meeting,
-      userInfo: props.authState.currentUser,
-    });
-  };
+  // const onJoinClick = (meeting) => {
+  //   setFullScreenMeetingModal(true);
+  //   setShowMeeting(true);
+  //   socket.emit(JOIN_MEETING, {
+  //     meeting: meeting,
+  //     userInfo: props.authState.currentUser,
+  //   });
+  // };
 
   return (
     <>
@@ -104,11 +103,11 @@ const WorldMap = (props) => {
         setShow1on1={setShow1on1}
         fullscreen1on1Modal={fullscreen1on1Modal}
       />
-      <VerticallyCenteredModal
+      {/* <VerticallyCenteredModal
         show={verticallyCenteredModal}
         onHide={() => setVerticallyCenteredModal(false)}
         socket={socket}
-      />
+      /> */}
       {/* <FullScreenMeetingModal
         socket={socket}
         showMeeting={showMeeting}
@@ -129,8 +128,14 @@ const WorldMap = (props) => {
           onViewportChange={(viewport) => setViewport(viewport)}
         >
           <UsersMarker onCallClick={onCallClick} />
-          <MeetingsList socket={socket} onJoinClick={onJoinClick} />
-          <Button className='create-meeting-button' onClick={() => setVerticallyCenteredModal(true)}>
+          <MeetingsList
+            socket={socket}
+            // onJoinClick={onJoinClick}
+          />
+          <Button
+            className='create-meeting-button'
+            // onClick={() => setVerticallyCenteredModal(true)}
+          >
             Create new meeting??
           </Button>
         </ReactMapGL>
