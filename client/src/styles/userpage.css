@@ -16,16 +16,16 @@
 }
 
 .video-displaying-modal {
-  width: 80vw; /* Occupy the 90% of the screen width */
-  max-width: 80vw;
+  width: 90vw; /* Occupy the 90% of the screen width */
+  max-width: 90vw;
   /* height: 80vh;
   max-height: 80vh; */
   /* background-color: white; */
 }
 
 .video-displaying-modal-body {
-  height: 80vh;
-  max-height: 80vh;
+  height: 70vh;
+  max-height: 70vh;
   background-color: white;
   display: grid;
   grid-template-columns: 600px 1fr;
@@ -35,5 +35,21 @@
 video {
   width: 150px;
   height: 150px;
+  object-fit: cover;
+}
+
+.displaying-video {
+  display: flex;
+}
+
+.displaying-video-1 {
+  width: 450px;
+  height: 400px;
+  object-fit: cover;
+}
+
+.displaying-video-2 {
+  width: 450px;
+  height: 400px;
   object-fit: cover;
 }

@@ -1,35 +1,39 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 import VideoContext from './contexts/VideoContext';
 
 const DisplayVideo = () => {
+  const [loaded, setLoaded] = useState(0);
+  const refForPlayingVideo1 = useRef();
+  const refForPlayingVideo2 = useRef();
   const videos = useContext(VideoContext);
-  console.log(videos);
-  console.log(videos.videoRef1.src);
-  console.log(videos.videoRef2.src);
 
-  // const renderVideoSrc = () => {
-  //   if (videos) {
-  //     return (
-  //       <div className='displaying-video'>
-  //         <video>
-  //           <source src={videos.videoRef1.src} />
-  //         </video>
-  //         {/* <video>
-  //       <source src={videos.video2Ref} />
-  //     </video> */}
-  //       </div>
-  //     );
-  //   }
-  // };
+  useEffect(() => {
+    if (loaded === 2) {
+      refForPlayingVideo1.current.play();
+      refForPlayingVideo2.current.play();
+      // 多分これで同時再生になってくれている。
+    }
+  }, [loaded]);
+
   return (
     // <>{renderVideoSrc()}</>
     <div className='displaying-video'>
-      <video>
+      <video
+        className='displaying-video-1'
+        ref={refForPlayingVideo1}
+        onLoadedMetadata={() => setLoaded((previousState) => previousState + 1)}
+        controls
+      >
         <source src={videos.videoRef1.src} />
       </video>
-      <video>
+      <video
+        className='displaying-video-2'
+        ref={refForPlayingVideo2}
+        onLoadedMetadata={() => setLoaded((previousState) => previousState + 1)}
+        controls
+      >
         <source src={videos.videoRef2.src} />
       </video>
     </div>
