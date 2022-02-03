@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import DisplayVideo from './DisplayVideo';
 
 const VideoDisplayingModal = (props) => {
   return (
@@ -12,7 +13,9 @@ const VideoDisplayingModal = (props) => {
         dialogClassName={'video-displaying-modal'}
       >
         <Modal.Header closeButton>{/* <Modal.Title>With Jonh!!</Modal.Title> */}</Modal.Header>
-        <Modal.Body bsPrefix='video-displaying-modal-body'>Here is gonna be set videos!!!</Modal.Body>
+        <Modal.Body bsPrefix='video-displaying-modal-body'>
+          <DisplayVideo />
+        </Modal.Body>
       </Modal>
     </>
   );

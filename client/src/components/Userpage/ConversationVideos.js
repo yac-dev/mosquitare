@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { connect } from 'react-redux';
 // import { loadMeActionCreator } from '../../actionCreators/authActionCreators';
 // import { Link } from 'react-router-dom';
@@ -6,8 +6,14 @@ import { connect } from 'react-redux';
 // components
 import VideoDisplayingModal from './VideoDisplayingModal';
 
+// context
+import VideoContext from './contexts/VideoContext';
+
 const ConversationVideos = (props) => {
   const [showVideoDisplayingModal, setShowVideoDisplayingModal] = useState(false);
+  const videoRef1 = useRef();
+  const videoRef2 = useRef();
+
   useEffect(() => {}, []);
   // const test = () => {
   //   if (!props.authState.currentUser) {
@@ -24,21 +30,18 @@ const ConversationVideos = (props) => {
   //   }
   // };
 
-  const handleClose = () => setShowVideoDisplayingModal(false);
-  const handleShow = () => setShowVideoDisplayingModal(true);
-
   const onConversationClick = (event) => {
     event.preventDefault();
-    console.log('conversation here!!');
     setShowVideoDisplayingModal(true);
-    // ここを押したら、modal画面でvideoを再生できるようにする。面白いね。
+    // どのvideoがclickされたか、event.targetとかで検知できないかね。そのurlのvideoをそのまま再生する的な感じでいいんだよな。
+    // videoRef.current
+    // videoRef2.current
   };
 
   const renderConversationList = () => {
     if (!props.authState.currentUser) {
       return null;
     } else {
-      // controlなし。再生できないようにしている。あくまでthunmnailを見せることが目的。
       const conversationList = props.authState.currentUser.conversations.map((conversation) => {
         return (
           <>
@@ -51,15 +54,16 @@ const ConversationVideos = (props) => {
                 <video style={{ borderTopLeftRadius: '10px' }}>
                   <source
                     src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${conversation.calledUserMedia.videoFileName}`}
+                    ref={videoRef1}
                   />
                 </video>
                 <video style={{ borderTopRightRadius: '10px' }}>
                   <source
                     src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${conversation.recievedUserMedia.videoFileName}`}
+                    ref={videoRef2}
                   />
                 </video>
-              </div>{' '}
-              {/* ここ、二つ並べるようにする。*/}
+              </div>
               <div className='conversation-information'>
                 information here!!
                 <p>{conversation.createdAt}</p>
@@ -68,8 +72,6 @@ const ConversationVideos = (props) => {
           </>
         );
       });
-
-      // conversation list自体、gridで横に並べるようにしましょう。
       return <div className='conversation-list'>{conversationList}</div>;
     }
   };
@@ -77,10 +79,14 @@ const ConversationVideos = (props) => {
   return (
     <>
       {renderConversationList()}
-      <VideoDisplayingModal
-        showVideoDisplayingModal={showVideoDisplayingModal}
-        setShowVideoDisplayingModal={setShowVideoDisplayingModal}
-      />
+      <VideoContext.Provider value={{ videoRef1: videoRef1.current, videoRef2: videoRef2.current }}>
+        <VideoDisplayingModal
+          showVideoDisplayingModal={showVideoDisplayingModal}
+          setShowVideoDisplayingModal={setShowVideoDisplayingModal}
+          // videoRef1={videoRef1.current}
+          // videoRef2={videoRef2.current}
+        />
+      </VideoContext.Provider>
     </>
   );
 };
