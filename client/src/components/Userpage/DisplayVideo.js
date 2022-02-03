@@ -19,7 +19,7 @@ const DisplayVideo = () => {
 
   return (
     // <>{renderVideoSrc()}</>
-    <div className='displaying-video'>
+    <div className='videos-wrapper'>
       <video
         className='displaying-video-1'
         ref={refForPlayingVideo1}

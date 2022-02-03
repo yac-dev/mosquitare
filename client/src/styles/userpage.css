@@ -28,8 +28,8 @@
   max-height: 70vh;
   background-color: white;
   display: grid;
-  grid-template-columns: 600px 1fr;
-  grid-template-areas: 'videos-wrapper menu';
+  grid-template-columns: 900px 1fr;
+  grid-template-areas: 'videos-wrapper resource-tab';
 }
 
 video {
@@ -38,7 +38,8 @@ video {
   object-fit: cover;
 }
 
-.displaying-video {
+.videos-wrapper {
+  grid-area: videos-wrapper;
   display: flex;
 }
 
@@ -52,4 +53,8 @@ video {
   width: 450px;
   height: 400px;
   object-fit: cover;
+}
+
+.resource-tab {
+  grid-area: resource-tab;
 }
