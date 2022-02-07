@@ -19,7 +19,7 @@ export const uploadFile = async (file) => {
   };
 
   await s3.upload(uploadParams).promise();
-  await unlinkFile(file.path);
+  await unlinkFile(file.path); // これが急に動かなくなった理由は何だ？？？とにかく、これが動いてねーんだよな。。。急にどうした。。
 };
 
 // keyっていうか、単純にfile名のことね。

@@ -40,22 +40,18 @@ export const createUserMedia = async (request, response) => {
     //undefined is not iterableだって。
     files.forEach((file) => {
       uploadFile(file);
-    });
+    }); // ここでunlinkFileが動いていないのよな。
 
     // await unlinkFile(file.path);
     // await Promise.all(
     //   files.forEach((file) => {
     //     await unlinkFile(file.path);
     //   })
-    // );
     const userMedia = await UserMedia.create({
       user: userId,
       videoFileName: files[0].filename,
       audioFileName: files[1].filename,
-      // learningLanguageTextFileName: files[2].filename,
-      // nativeLanguageTextFileName: files[3].filename,
     });
-    console.log('Done');
     response.json({
       userMedia,
     });

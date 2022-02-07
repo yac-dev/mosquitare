@@ -48,7 +48,7 @@ export const updateConversationUserMediaActionCreator = (userMedia) => async (di
     } else if (callingState.amIRecieving) {
       // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
       result = await mosquitareAPI.patch(`/conversations/${conversationId}/usermedia`, {
-        recievedUserMedia: userMedia._id,
+        recievedUserMedia: userMedia._id, // これ。promiseが返っていないよな、多分。
       });
       console.log(result);
     }
@@ -76,7 +76,7 @@ export const updateConversationUserScriptActionCreator = (userScript) => async (
     } else if (callingState.amIRecieving) {
       // integrated UserMediaを作る、というかupdateする。ここはrecievedUserの方ね。
       result = await mosquitareAPI.patch(`/conversations/${conversationId}/userscript`, {
-        recievedUserScript: userScript._id,
+        recievedUserScript: userScript._id, // これと
       });
       console.log(result);
     }

@@ -14,8 +14,9 @@ export const createUserScript = async (request, response) => {
 
     const userScript = await UserScript.create({
       user: userId,
-      learningLanguageScriptFileName: files[0].filename,
-      nativeLanguageScriptFileName: files[1].filename,
+      conversationTranscriptFileName: files[0].filename,
+      learningLanguageScriptFileName: files[1].filename,
+      nativeLanguageScriptFileName: files[2].filename,
     });
 
     response.status(201).json({

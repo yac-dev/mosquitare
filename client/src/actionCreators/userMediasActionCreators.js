@@ -15,6 +15,7 @@ export const createUserMedia = (blobForVideo, blobForAudio) => async (dispatch, 
     const result = await mosquitareAPI.post(`/userMedias/upload/${userId}`, formData, {
       headers: { 'Content-type': 'multipart/form-data' },
     });
+    console.log(result);
     const { userMedia } = result.data;
     return Promise.resolve(userMedia);
     // const callingState = getState().mediaState;

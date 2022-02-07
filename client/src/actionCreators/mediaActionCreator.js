@@ -402,7 +402,7 @@ export const answerCallActionCreator =
 // };
 
 export const hangUpCallActionCreator = () => (dispatch) => {
-  console.log('should be working!!');
+  console.log('hangup should be working!!');
   // dispatch(updateUserConversationToFalseActionCreator()); // ここpromisifyね。これだめ。
   // connectionRef.current.destroy();
   dispatch({

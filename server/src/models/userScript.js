@@ -5,6 +5,7 @@ const userScriptSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
+  conversationTranscriptFileName: String,
   learningLanguageScriptFileName: String,
   nativeLanguageScriptFileName: String,
 });

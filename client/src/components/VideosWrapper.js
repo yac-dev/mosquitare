@@ -69,7 +69,7 @@ const VideosWrapper = (props) => {
       props.setShow1on1(false);
       props.updateUserConversationToFalseActionCreator();
     }
-  }, [props.mediaState.apiCallResult]);
+  }, [props.mediaState.apiCallResult]); // これ、どういう目的で作った。。。？
 
   const onHangUpClick = () => {
     // 1, callacceptedを閉じるっていう具合かね。callacceptedがfalseを引き金に、mediarecorderとspeechrecognitionも停止する。

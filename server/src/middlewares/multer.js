@@ -27,6 +27,7 @@ const storage = multer.diskStorage({
   // './uploadedFilesBuffer/'
   filename: function (request, file, callback) {
     const extension = file.mimetype.split('/')[1];
+    // ここでjsonに直そうとしてもだめだ。
     const finalFileName = Date.now() + '-' + uuidv4() + '.' + extension;
     callback(null, finalFileName);
   },

@@ -20,21 +20,25 @@ import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaA
 import { recieveSwitchingLanguageRequestActionCreator1 } from '../../actionCreators/mediaActionCreator';
 
 const SubtitleWrapper = (props) => {
-  const [conversationNote, setConversationNote] = useState([{}]);
+  const [conversationTranscript, setConversationTranscript] = useState([]);
   const [myLearningLangTranscript, setMyLearningLangTranscript] = useState([]);
   const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
-  const [partnerInterimTranscript, setPartnerInterimTranscript] = useState('');
-  const [partnerFinalTranscript, setPartnerFinalTranscript] = useState('');
+  const [partnerInterimTranscript, setPartnerInterimTranscript] = useState();
+  const [partnerFinalTranscript, setPartnerFinalTranscript] = useState();
   const [countLearningLangLength, setCountLearningLangLength] = useState(0);
   const [countNativeLangLength, setCountNativeLangLength] = useState(0);
+
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
   useEffect(() => {
     if (finalTranscript !== '') {
       // finalTranscriptの時
       console.log('Got final result:', finalTranscript);
-      const transcriptObject = { name: 'you', transcript: finalTranscript };
-      setConversationNote((previouState) => [...previouState, transcriptObject]);
+      const myName = store.getState().authState.currentUser.name;
+      const transcriptObject = {};
+      transcriptObject['name'] = myName;
+      transcriptObject['transcript'] = finalTranscript;
+      setConversationTranscript((previouState) => [...previouState, transcriptObject]);
       const to = store.getState().mediaState.callingWith.socketId;
       props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
       if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
@@ -71,7 +75,7 @@ const SubtitleWrapper = (props) => {
       transcriptObject['name'] = props.mediaState.callingWith.name;
       transcriptObject['transcript'] = dataFromServer.finalTranscript;
       setPartnerInterimTranscript('');
-      setConversationNote((previousState) => [...previousState, transcriptObject]);
+      setConversationTranscript((previousState) => [...previousState, transcriptObject]);
     });
   }, []);
 
@@ -94,16 +98,19 @@ const SubtitleWrapper = (props) => {
     if (props.mediaState.callDisconnected) {
       console.log('subtitle after finishing should work');
       SpeechRecognition.stopListening();
-      props.createUserScriptActionCreator(myLearningLangTranscript, myNativeLangTranscript).then((userScript) => {
-        return props.updateConversationUserScriptActionCreator(userScript);
-      });
+      // ここで、promiseを分けて行うことできるかね。正直、calledUser側だけ送るのでいいよな。
+      props
+        .createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript)
+        .then((userScript) => {
+          return props.updateConversationUserScriptActionCreator(userScript);
+        });
       // ここで、文字数をapiに送ることもする。
     }
   }, [props.mediaState.callDisconnected]);
 
   // render系
   const renderTranscripts = () => {
-    const transcripts = conversationNote.map((transcriptObject) => {
+    const transcripts = conversationTranscript.map((transcriptObject) => {
       return (
         <p>
           {transcriptObject.name}: {transcriptObject.transcript}

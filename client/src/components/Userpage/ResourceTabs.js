@@ -17,6 +17,7 @@ const ResourceTabs = () => {
     setValue(newValue);
   };
 
+  //'https://www.w3schools.com/html/mov_bbb.mp4'
   return (
     // でかいwrapperとしてのclassnameをつけるべきだな。ここに。
     <div className='resource-tab'>
