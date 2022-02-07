@@ -52,9 +52,10 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
       channelCount: 2,
       echoCancellation: true,
       latency: 0,
-      noiseSuppression: true,
-      sampleRate: 48000,
-      sampleSize: 16,
+      noiseSuppression: false, // これあると聞こえづらくなるわ。
+      // sampleRate: 48000,
+      // sampleSize: 16,
+      // volume: 1.0,
     };
     navigator.mediaDevices.getUserMedia({ video: videoConstrains, audio: audioConstraints }).then((stream) => {
       dispatch({

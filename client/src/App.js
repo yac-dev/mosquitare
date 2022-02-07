@@ -15,7 +15,7 @@ import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 import ChatScreen from './components/ChatScreen';
 import UserPageWrapper from './components/UserPage/UserPageWrapper';
-import ConversationVideo from './components/UserPage/ConversationVideo';
+// import ConversationVideo from './components/UserPage/ConversationVideo';
 import Review from './components/ReviewForm';
 
 const App = () => {
@@ -74,7 +74,7 @@ const App = () => {
         <Route path='/about' exact component={About} />
         <Route path='/userpage/:id' exact component={UserPageWrapper} />
         <Route path='/review' exact component={Review} />
-        <Route path='/uservideo/:userid/:conversationid' exact component={ConversationVideo} />
+        {/* <Route path='/uservideo/:userid/:conversationid' exact component={ConversationVideo} /> */}
       </Router>
     </div>
   );

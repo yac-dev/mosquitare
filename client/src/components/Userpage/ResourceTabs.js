@@ -4,6 +4,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import { Icon } from 'semantic-ui-react';
 
 // components
 import Chat from './Chat';
@@ -25,9 +26,9 @@ const ResourceTabs = () => {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label='lab API tabs example'>
-              <Tab label='Chat' value='1' />
-              <Tab label='Transcript' value='2' />
-              <Tab label='Comments' value='3' />
+              <Tab label={`Chat ${(<Icon enabled name='comment outline' size='big' />)}`} value='1' />
+              <Tab label={`Transcript ${(<Icon enabled name='file alternate outline' size='big' />)}`} value='2' />
+              <Tab label={`Comments ${(<Icon enabled name='comments outline' size='big' />)}`} value='3' />
             </TabList>
           </Box>
           <TabPanel value='1'>

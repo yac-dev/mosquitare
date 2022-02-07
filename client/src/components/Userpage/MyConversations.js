@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 // import { Link } from 'react-router-dom';
 
 // components
-import VideoDisplayingModal from './VideoDisplayingModal';
+import DisplayVideoModal from './DisplayVideoModal';
 
 // context
 import VideoContext from './contexts/VideoContext';
@@ -80,7 +80,7 @@ const ConversationVideos = (props) => {
     <>
       {renderConversationList()}
       <VideoContext.Provider value={{ videoRef1: videoRef1.current, videoRef2: videoRef2.current }}>
-        <VideoDisplayingModal
+        <DisplayVideoModal
           showVideoDisplayingModal={showVideoDisplayingModal}
           setShowVideoDisplayingModal={setShowVideoDisplayingModal}
           // videoRef1={videoRef1.current}
