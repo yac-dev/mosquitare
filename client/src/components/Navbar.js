@@ -10,7 +10,7 @@ const Navbar = (props) => {
       return (
         <>
           <Link className='ui item' to={`/userpage/${props.authState.currentUser._id}`}>
-            <Icon enabled name='address book' size='big' />
+            <Icon enabled name='address book' size='small' />
           </Link>
         </>
       );
@@ -23,7 +23,7 @@ const Navbar = (props) => {
     if (props.authState.currentUser) {
       return (
         <>
-          <Icon enabled name='sign-out alternate' size='big' onClick={() => props.logoutActionCreator()} />
+          <Icon enabled name='sign-out alternate' size='small' onClick={() => props.logoutActionCreator()} />
         </>
       );
     } else {
@@ -43,7 +43,7 @@ const Navbar = (props) => {
   return (
     <div className='ui secondary  menu'>
       <Link className='item' to='/worldmap'>
-        <Icon enabled name='map signs' size='big' />
+        <Icon enabled name='map signs' size='small' />
       </Link>
       {/* <Icon enabled name='film' size='small' />
       <Icon enabled name='film' size='small' /> */}
@@ -54,10 +54,10 @@ const Navbar = (props) => {
           </div>
         </div>
         <Link className='ui item'>
-          <Icon enanled name='group' size='big' />
+          <Icon enanled name='group' size='small' />
         </Link>
         <Link className='ui item'>
-          <Icon enabled name='film' size='big' />
+          <Icon enabled name='film' size='small' />
         </Link>
         {UserPageLinkRender()}
         {SignupLoginButtonRender()}
@@ -234,12 +234,12 @@ export default connect(mapStateToProps, { logoutActionCreator })(Navbar);
 //           <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
 //             Echolocation
 //           </Typography>
-//           {/* <Search>
+//           <Search>
 //             <SearchIconWrapper>
 //               <SearchIcon />
 //             </SearchIconWrapper>
 //             <StyledInputBase placeholder='Search…' inputProps={{ 'aria-label': 'search' }} />
-//           </Search> */}
+//           </Search>
 //           <Box sx={{ flexGrow: 1 }} />
 //           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
 //             <IconButton size='large' aria-label='show 4 new mails' color='inherit'>

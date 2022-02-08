@@ -26,9 +26,9 @@ const ResourceTabs = () => {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label='lab API tabs example'>
-              <Tab label={`Chat ${(<Icon enabled name='comment outline' size='big' />)}`} value='1' />
-              <Tab label={`Transcript ${(<Icon enabled name='file alternate outline' size='big' />)}`} value='2' />
-              <Tab label={`Comments ${(<Icon enabled name='comments outline' size='big' />)}`} value='3' />
+              <Tab label={`Chat ${(<Icon enabled name='comment outline' size='small' />)}`} value='1' />
+              <Tab label={`Transcript ${(<Icon enabled name='file alternate outline' size='small' />)}`} value='2' />
+              <Tab label={`Comments ${(<Icon enabled name='comments outline' size='small' />)}`} value='3' />
             </TabList>
           </Box>
           <TabPanel value='1'>

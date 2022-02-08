@@ -127,7 +127,7 @@ const WorldMap = (props) => {
           mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
           onViewportChange={(viewport) => setViewport(viewport)}
         >
-          <UsersMarker onCallClick={onCallClick} />
+          <UsersMarker setShowCallingModal={setShowCallingModal} />
           <MeetingsList
             socket={socket}
             // onJoinClick={onJoinClick}
