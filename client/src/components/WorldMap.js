@@ -127,17 +127,17 @@ const WorldMap = (props) => {
           mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
           onViewportChange={(viewport) => setViewport(viewport)}
         >
-          <UsersMarker setShowCallingModal={setShowCallingModal} />
-          <MeetingsList
+          <UsersMarker socket={socket} setShowCallingModal={setShowCallingModal} />
+          {/* <MeetingsList
             socket={socket}
             // onJoinClick={onJoinClick}
-          />
-          <Button
+          /> */}
+          {/* <Button
             className='create-meeting-button'
             // onClick={() => setVerticallyCenteredModal(true)}
           >
             Create new meeting??
-          </Button>
+          </Button> */}
         </ReactMapGL>
       </div>
     </>

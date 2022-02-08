@@ -16,7 +16,13 @@ const UsersMarker = (props) => {
       if (user.isOnline && !user.isInConversation) {
         return (
           <>
-            <EachUserInfo viewport={viewport} setViewport={setViewport} user={user} onCallClick={props.onCallClick} />
+            <EachUserInfo
+              viewport={viewport}
+              setViewport={setViewport}
+              socket={props.socket}
+              user={user}
+              setShowCallingModal={props.setShowCallingModal}
+            />
           </>
         );
       } else {

@@ -23,7 +23,14 @@ const EachUserInfo = (props) => {
     >
       <Popup
         trigger={<Icon className='green user icon' size='large' style={{ cursor: 'pointer' }} />}
-        content={<UserInfoCardNew user={props.user} onCallClick={props.onCallClick} setIsPopupOpen={setIsPopupOpen} />}
+        content={
+          <UserInfoCardNew
+            user={props.user}
+            socket={props.socket}
+            setShowCallingModal={props.setShowCallingModal}
+            setIsPopupOpen={setIsPopupOpen}
+          />
+        }
         open={isPopupOpen}
         onOpen={() => setIsPopupOpen(true)} //意味は、hoverした時にisPopupOpen stateをopenにします。ってこと。
         onClose={() => setIsPopupOpen(false)} // 意味は、hoverが外れた時にisPopupOpen stateをfalseにします、ってこと。
