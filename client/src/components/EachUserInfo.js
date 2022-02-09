@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Marker } from 'react-map-gl';
 import { Icon, Popup, Button } from 'semantic-ui-react';
 import UserInfoCardNew from './UserInfoCardNew';
@@ -22,7 +23,13 @@ const EachUserInfo = (props) => {
       offsetTop={-7 * props.viewport.zoom}
     >
       <Popup
-        trigger={<Icon className='green user icon' size='large' style={{ cursor: 'pointer' }} />}
+        trigger={
+          <Icon
+            className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
+            size='large'
+            style={{ cursor: 'pointer' }}
+          />
+        }
         content={
           <UserInfoCardNew
             user={props.user}
@@ -41,4 +48,8 @@ const EachUserInfo = (props) => {
   );
 };
 
-export default EachUserInfo;
+const mapStateToProps = (state) => {
+  return { authState: state.authState };
+};
+
+export default connect(mapStateToProps)(EachUserInfo);

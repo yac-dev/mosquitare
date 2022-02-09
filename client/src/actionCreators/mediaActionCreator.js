@@ -107,11 +107,12 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
   };
 
 // callする側、worldmapで実行されるやつら。
-export const callActionCreator = (socket, mySocketId, oppositeSocketId) => (dispatch, getState) => {
+export const callActionCreator = (socket, mySocketId, oppositeSocketId, startLanguage) => (dispatch, getState) => {
+  // startLanguageはobjectな。
   const { myVideoStreamObject } = getState().mediaState;
   console.log('Im calling...');
   const callerUserInfo = getState().authState.currentUser;
-  const startLanguage = callerUserInfo.learningLangs[0];
+  // const startLanguage = callerUserInfo.learningLangs[0];
   console.log(startLanguage);
   const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
   dispatch({

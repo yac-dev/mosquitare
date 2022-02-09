@@ -1,0 +1,47 @@
+.user-info-card {
+  min-width: 250px;
+}
+
+.user-overview {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-areas: 'user-image user-name-and-job';
+  column-gap: 10px;
+  margin-bottom: 10px;
+}
+
+.user-image {
+  grid-area: user-image;
+  grid-column: 0/1;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  background-color: blue;
+}
+
+.user-name-and-job {
+  grid-area: user-name-and-job;
+}
+
+.user-language-overview {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-areas: 'languages-list languages-chart';
+  margin-bottom: 10px;
+}
+
+.languages-list {
+  grid-area: languages-list;
+}
+
+.languages-chart {
+  grid-area: languages-chart;
+}
+
+.user-message {
+  margin-bottom: 10px;
+}
+
+/* .icon-dropdown {
+  background-color: blue;
+} */

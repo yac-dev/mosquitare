@@ -2,9 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 import { Button } from 'semantic-ui-react';
+
+// components
 import Dimer from './Dimer';
-import UserInfoCard from './UserInfoCard';
+import UserInfoCardNew from './UserInfoCardNew';
+// import UserInfoCard from './UserInfoCard';
+
+// css
 import '../styles/callingModal.css';
+import '../styles/userInfocardNew.css';
 
 import { answerCallActionCreator1 } from '../actionCreators/mediaActionCreator';
 import { myCallIsAcceptedActionCreator } from '../actionCreators/mediaActionCreator';
@@ -32,7 +38,17 @@ const CallingModal = (props) => {
     } else if (props.mediaState.amIRecieving) {
       return (
         <>
-          <div className='confirmation'>
+          <div>You got a video chat call from...</div>
+          <UserInfoCardNew user={props.mediaState.callingWith} />
+          <Button positive onClick={() => handleAnswerCall()} style={{ width: '70%' }}>
+            <i className='handshake icon' />
+            Yes
+          </Button>
+          <Button negative style={{ width: '70%' }}>
+            <i className='x icon' />
+            No
+          </Button>
+          {/* <div className='confirmation'>
             <div className='userinfo-card'>
               <div className='upper-card'>
                 <div className='language-space'>
@@ -76,7 +92,7 @@ const CallingModal = (props) => {
               <i className='x icon' />
               No
             </Button>
-          </div>
+          </div> */}
         </>
       );
     }
@@ -85,7 +101,7 @@ const CallingModal = (props) => {
   return (
     <>
       <Modal show={props.show} onHide={() => props.setShowCallingModal(false)} backdrop='static' keyboard={false}>
-        <Modal.Body bsPrefix='modal-body'>{switchRender()}</Modal.Body>
+        <Modal.Body bsPrefix='calling-modal-body'>{switchRender()}</Modal.Body>
         <Modal.Footer>
           <Button
             variant='secondary'

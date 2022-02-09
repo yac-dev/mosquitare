@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'semantic-ui-react';
+import { Button, Dropdown } from 'semantic-ui-react';
+
+// components
+import CallButton from './CallButton';
+
+// css
+import '../styles/userInfocardNew.css';
 
 // action creatores
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 
 const UserInfoCardNew = (props) => {
-  const onCallClick = (event, oppositeSocketId) => {
-    event.preventDefault();
-    props.setIsPopupOpen(false);
-    const mySocketId = props.authState.currentUser.socketId;
-    props.setShowCallingModal(true);
-    props.callActionCreator(props.socket, mySocketId, oppositeSocketId);
-  };
+  // const onCallClick = (event, oppositeSocketId) => {
+  //   event.preventDefault();
+  //   props.setIsPopupOpen(false);
+  //   const mySocketId = props.authState.currentUser.socketId;
+  //   props.setShowCallingModal(true);
+  //   props.callActionCreator(props.socket, mySocketId, oppositeSocketId);
+  // };
 
   // flagは面倒くさそうだ。今はやめよう。
   const renderCountriesFlag = () => {};
@@ -45,7 +51,7 @@ const UserInfoCardNew = (props) => {
 
     return (
       <div className='user-native-languages'>
-        native languages
+        <span style={{ borderBottom: '1px solid black' }}>native languages</span>
         {userNativeLanguages}
       </div>
     );
@@ -62,22 +68,36 @@ const UserInfoCardNew = (props) => {
 
     return (
       <div className='user-learning-languages'>
-        leaning languages
+        <span style={{ borderBottom: '1px solid black' }}>leaning languages</span>
         {userLearningLanguages}
       </div>
     );
   };
 
+  const checkCallableOrNot = () => {
+    // 最終的にboolを返せばいいか。
+    for (let i = 0; i < props.authState.currentUser.learningLangs.length; i++) {
+      for (let j = 0; j < props.user.nativeLangs.length; j++) {
+        if (props.authState.currentUser.learningLangs[i].name === props.user.nativeLangs[j].name) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   const renderUserInfoCard = () => {
     return (
-      <div style={{ border: '1px solid red' }}>
+      <div className='user-info-card' style={{ border: '1px solid red' }}>
         <div className='user-overview'>
-          <div>{props.user.name}</div>&nbsp;
-          <div>{props.user.job}</div>
+          <div className='user-image'></div>
+          <div className='user-name-and-job'>
+            <div className='user-name'>{props.user.name}</div>
+            <div className='user-job'>{props.user.job}</div>
+          </div>
         </div>
-        {/* <div className='user-personal-status'>{renderUserStatus()}</div> */}
+        {/* <div className='user-personal-status'>{renderUserStatus()}</div> ここは後でrenderするようにする。*/}
         <div className='user-language-overview'>
-          {/* ここのwrapper、cssでgridにしましょう。*/}
           <div className='languages-list'>
             {renderUserNativeLanguages(props.user)}
             {renderUserLearningLanguages(props.user)}
@@ -85,14 +105,21 @@ const UserInfoCardNew = (props) => {
           <div className='languages-chart'>chart here!!</div>
         </div>
         <div className='user-message'>{props.user.description}</div>
-        <Button
+        <CallButton
+          user={props.user}
+          socket={props.socket}
+          setIsPopupOpen={props.setIsPopupOpen}
+          setShowCallingModal={props.setShowCallingModal}
+        />
+        {/* <Button
           positive
-          // disabled={!props.mediaState}
+          // disabled={!props.mediaState} // このuserのnative langsの中に、自分の言語が入っていない時。でもこれって結構計算することになるよな。全員分となると多分きついんじゃないか。。。
+          // disabled={checkCallableOrNot() ? 'false' : 'true'} ここのcallable checkは後でいいや。
           onClick={(event) => onCallClick(event, props.user.socketId)}
-          style={{ width: '100%' }}
+          style={{ width: '80%' }}
         >
           <i className='video icon'>call</i>
-        </Button>
+        </Button> */}
       </div>
     );
   };
