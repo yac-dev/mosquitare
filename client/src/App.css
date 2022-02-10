@@ -14,7 +14,9 @@ body {
   z-index: 10;
 } */
 
-.map-container {
+/*こっから下までcomment out*/
+
+/* .map-container {
   width: 100%;
   height: 100%;
 }
@@ -48,7 +50,9 @@ body {
 .modal-title {
   color: #fff;
   margin: 0;
-}
+} */
+
+/* 一旦commentout*/
 
 /* .video-container {
   display: flex;

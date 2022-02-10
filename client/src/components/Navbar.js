@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Icon } from 'semantic-ui-react';
+
+// components
+import SignupWrapper from './Signup/SignupWrapper';
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
 
 const Navbar = (props) => {
+  const [showSignupModal, setShowSignupModal] = useState(false);
+
   const UserPageLinkRender = () => {
     if (props.authState.currentUser) {
       return (
@@ -32,37 +37,42 @@ const Navbar = (props) => {
           <Link className='ui item' to='/login'>
             Login
           </Link>
-          <Link className='ui item' to='/signup/basic'>
+          {/* <Link className='ui item' to='/signup/basic'>
             Signup
-          </Link>
+          </Link> */}
+          {/* <Icon enabled name='sign-in alternate' size='large' /> */}
+          <button onClick={() => setShowSignupModal(true)}>Signup</button>
         </>
       );
     }
   };
 
   return (
-    <div className='ui secondary  menu'>
-      <Link className='item' to='/worldmap'>
-        <Icon enabled name='map signs' size='small' />
-      </Link>
-      {/* <Icon enabled name='film' size='small' />
+    <>
+      <div className='ui secondary menu'>
+        <Link className='item' to='/worldmap'>
+          <Icon enabled name='map signs' size='small' />
+        </Link>
+        {/* <Icon enabled name='film' size='small' />
       <Icon enabled name='film' size='small' /> */}
-      <div className='right menu'>
-        <div className='item'>
-          <div className='ui icon input'>
-            <i className='search link icon'></i>
+        <div className='right menu'>
+          <div className='item'>
+            <div className='ui icon input'>
+              <i className='search link icon'></i>
+            </div>
           </div>
+          <Link className='ui item'>
+            <Icon enanled name='group' size='small' />
+          </Link>
+          <Link className='ui item'>
+            <Icon enabled name='film' size='small' />
+          </Link>
+          {UserPageLinkRender()}
+          {SignupLoginButtonRender()}
         </div>
-        <Link className='ui item'>
-          <Icon enanled name='group' size='small' />
-        </Link>
-        <Link className='ui item'>
-          <Icon enabled name='film' size='small' />
-        </Link>
-        {UserPageLinkRender()}
-        {SignupLoginButtonRender()}
       </div>
-    </div>
+      <SignupWrapper showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
+    </>
   );
 };
 
