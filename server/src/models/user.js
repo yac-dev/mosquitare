@@ -23,6 +23,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['male', 'female'],
   },
+  photo: {
+    type: String,
+  },
   nativeLangs: [
     {
       type: mongoose.Schema.ObjectId,
@@ -30,7 +33,6 @@ const userSchema = new mongoose.Schema({
       ref: 'Language',
     },
   ],
-  // learningLangs: [mongoose.Schema.Types.Mixed],
   learningLangs: [
     {
       type: mongoose.Schema.ObjectId,
@@ -38,6 +40,13 @@ const userSchema = new mongoose.Schema({
       ref: 'Language',
     },
   ],
+  myLangs: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Language',
+    },
+  ],
+  myLangsStatus: [Number],
   nationalities: [
     {
       type: mongoose.Schema.ObjectId,
@@ -45,43 +54,19 @@ const userSchema = new mongoose.Schema({
       ref: 'Country',
     },
   ],
-  penaltyReviews: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'PenaltyReview',
-    },
-  ],
-  personalityReviews: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'PersonalityReview',
-    },
-  ],
-  pendingPenalty: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'PenaltyReview',
-    },
-  ], // こっちは月毎にupdate。
-  degrees: [String],
   job: {
     type: String,
     required: true,
   },
-  description: {
+  selfIntroduction: {
     type: String,
+    maxlength: 70,
     default: 'No description.',
   },
   conversations: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'Conversation',
-    },
-  ],
-  talkedWith: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
     },
   ],
   location: {
@@ -104,22 +89,30 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  voiceTexts: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'VoiceText',
-    },
-  ],
-  videos: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Video',
-    },
-  ],
+  isReady: {
+    type: Boolean,
+    default: false,
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
   },
+  pendingPenalty: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'PenaltyReview',
+    },
+  ], // こっちは月毎にupdate。
+  personalStatus: {
+    type: Array,
+    default: ['Just started📚'],
+  },
+  talkedWith: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
 userSchema.index({ location: '2dsphere' });
