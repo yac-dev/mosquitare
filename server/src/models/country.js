@@ -5,7 +5,11 @@ const countrySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  flagPic: {
+  code1: {
+    type: String,
+    required: true,
+  },
+  code2: {
     type: String,
     required: true,
   },
@@ -17,6 +21,8 @@ const countrySchema = new mongoose.Schema({
     },
     coordinates: [Number],
   },
+  timezones: [String],
+  flagPics: [String],
 });
 
 countrySchema.index({ location: '2dsphere' });
