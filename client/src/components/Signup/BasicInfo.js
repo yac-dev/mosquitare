@@ -41,7 +41,7 @@ const BasicInfo = (props) => {
         />
       </Form.Field>
       <Form.Field>
-        <label>Your picture (Not required)</label>
+        <label>Profile Image (Not required)</label>
         <input type='file' onChange={() => props.setPhoto()} />
       </Form.Field>
       {/* <Button type='submit'>Submit</Button> */}

@@ -56,7 +56,6 @@ const userSchema = new mongoose.Schema({
   ],
   job: {
     type: String,
-    required: true,
   },
   selfIntroduction: {
     type: String,

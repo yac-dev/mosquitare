@@ -17,7 +17,9 @@ const SignupWrapper = (props) => {
   const [learningLanguages, setLearningLanguages] = useState([]);
   const [nativeLanguages, setNativeLanguages] = useState([]);
   const [nationalities, setNationalities] = useState([]);
+  const [location, setLocation] = useState('');
   const [job, setJob] = useState('');
+
   const [amIFillingBasic, setAmIFillingBasic] = useState(true);
 
   const renderModalBody = () => {
@@ -48,6 +50,8 @@ const SignupWrapper = (props) => {
             setNativeLanguages={setNativeLanguages}
             nationalities={nationalities}
             setNationalities={setNationalities}
+            location={location}
+            setLocation={setLocation}
             job={job}
             setJob={setJob}
           />
@@ -83,7 +87,19 @@ const SignupWrapper = (props) => {
   };
 
   const onSubmitClick = () => {
-    console.log('submitted!!!!');
+    const formData = {
+      name: name,
+      email: email,
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+      photo: photo,
+      learningLanguages: learningLanguages,
+      nativeLanguages: nativeLanguages,
+      nationalities: nationalities,
+      location: location,
+    };
+    // これをbodyとして、api requestを送る。
+    console.log(formData);
   };
 
   return (
@@ -98,7 +114,7 @@ const SignupWrapper = (props) => {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Signup form</Modal.Title>
+          <Modal.Title>Welcome to Lamppost!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className='signup-form'>{renderModalBody()}</div>

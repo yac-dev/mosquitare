@@ -1,44 +1,111 @@
 import User from '../models/user';
+import City from '../models/city';
+import mongoose from 'mongoose';
+
 import jwt from 'jsonwebtoken';
 // import bcrypt from 'bcryptjs';
 import bcrypt from 'bcrypt';
 import { JWT_PRIVATE_KEY } from '../../config';
 
-export const signup = async (request, response, next) => {
+// export const signup = async (request, response, next) => {
+//   try {
+//     const {
+//       name,
+//       email,
+//       password,
+//       passwordConfirmation,
+//       nativeLangs,
+//       learningLangs,
+//       nationalities,
+//       job,
+//       location,
+//       socketId,
+//     } = request.body;
+
+//     const user = await new User({
+//       name,
+//       email,
+//       password,
+//       passwordConfirmation,
+//       nativeLangs,
+//       learningLangs,
+//       nationalities,
+//       job,
+//       location,
+//       socketId,
+//     });
+//     // location, socketに関してはbrowserから取得してpostするようにしよう。
+//     const salt = await bcrypt.genSalt(10);
+//     user.password = await bcrypt.hash(user.password, salt);
+//     user.save();
+
+//     const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
+
+//     response.json({
+//       user,
+//       jwtToken,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+export const signup = async (request, response) => {
   try {
     const {
       name,
       email,
       password,
       passwordConfirmation,
-      nativeLangs,
-      learningLangs,
-      nationalities,
-      job,
-      location,
-      socketId,
+      nativeLangs, // [langのid, langのid]って感じ。来たのはただの文字列だから、new ObjectIdでやる。
+      learningLangs, // [langのid, langのid]
+      nationalities, // [countryのid, countryのid]
+      location, // citiesから、来たcountryのidを使ってrandomなcityをpickする。そのlngとlatを入れる感じ。
+      photo,
     } = request.body;
 
+    const city = await City.aggregate([
+      {
+        $match: {
+          country: mongoose.Types.ObjectId(location),
+        },
+      },
+      { $sample: { size: 1 } },
+    ]);
+
+    const myLangs = [];
+    for (let i = 0; i < nativeLangs.length; i++) {
+      myLangs.push(mongoose.Types.ObjectId(nativeLangs[i]));
+    }
+    for (let i = 0; i < learningLangs.length; i++) {
+      myLangs.push(mongoose.Types.ObjectId(learningLangs[i]));
+    } // generate myLangs
+
+    const myLangsStatus = new Array(myLangs.length).fill(0);
+
     const user = await new User({
-      name,
-      email,
-      password,
-      passwordConfirmation,
-      nativeLangs,
-      learningLangs,
-      nationalities,
-      job,
-      location,
-      socketId,
+      name: name,
+      email: email,
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+      nativeLangs: nativeLangs.map((lang) => mongoose.Types.ObjectId(lang)),
+      learningLangs: learningLangs.map((lang) => mongoose.Types.ObjectId(lang)),
+      myLangs: myLangs,
+      myLangsStatus: myLangsStatus,
+      nationalities: nationalities.map((nationality) => mongoose.Types.ObjectId(nationality)),
+      location: {
+        type: 'Point',
+        coordinates: [city[0].location.coordinates[0], city[0].location.coordinates[1]],
+      },
+      socketId: '11111',
     });
-    // location, socketに関してはbrowserから取得してpostするようにしよう。
+
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     user.save();
 
     const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
-
-    response.json({
+    response.status(201).send({
       user,
       jwtToken,
     });

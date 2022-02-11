@@ -24,7 +24,7 @@ const Navbar = (props) => {
     }
   };
 
-  const SignupLoginButtonRender = () => {
+  const renderSignupAndLoginButton = () => {
     if (props.authState.currentUser) {
       return (
         <>
@@ -51,7 +51,7 @@ const Navbar = (props) => {
     <>
       <div className='ui secondary menu'>
         <Link className='item' to='/worldmap'>
-          <Icon enabled name='map signs' size='small' />
+          <Icon enabled name='map signs' size='large' />
         </Link>
         {/* <Icon enabled name='film' size='small' />
       <Icon enabled name='film' size='small' /> */}
@@ -68,7 +68,7 @@ const Navbar = (props) => {
             <Icon enabled name='film' size='small' />
           </Link>
           {UserPageLinkRender()}
-          {SignupLoginButtonRender()}
+          {renderSignupAndLoginButton()}
         </div>
       </div>
       <SignupWrapper showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
