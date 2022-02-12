@@ -1,5 +1,8 @@
 import React from 'react';
 import { Dropdown, Form } from 'semantic-ui-react';
+import TranslateIcon from '@mui/icons-material/Translate';
+import LanguageIcon from '@mui/icons-material/Language';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const countryOptions = [
   { key: 'af', value: '6205d501d1a32299c6c3f5a7', flag: 'af', text: 'Afghanistan' },
@@ -288,7 +291,10 @@ const DetailInfo = (props) => {
   return (
     <Form>
       <Form.Field>
-        <label>Learning Language</label>
+        <label>
+          <TranslateIcon />
+          &nbsp;Learning Language
+        </label>
         <Dropdown
           placeholder='Which languages are you learning?'
           fluid
@@ -301,7 +307,10 @@ const DetailInfo = (props) => {
       </Form.Field>
 
       <Form.Field>
-        <label>Native Language</label>
+        <label>
+          <TranslateIcon />
+          &nbsp;Native Language
+        </label>
         <Dropdown
           placeholder='Which languages do you speak fluently?'
           fluid
@@ -313,7 +322,10 @@ const DetailInfo = (props) => {
         />
       </Form.Field>
       <Form.Field>
-        <label>Nationality</label>
+        <label>
+          <LanguageIcon />
+          &nbsp;Nationality
+        </label>
         <Dropdown
           placeholder='What is your nationality?'
           fluid
@@ -325,7 +337,10 @@ const DetailInfo = (props) => {
         />
       </Form.Field>
       <Form.Field>
-        <label>Place</label>
+        <label>
+          <LanguageIcon />
+          &nbsp; Place
+        </label>
         <Dropdown
           placeholder='Which country are you living in?'
           fluid

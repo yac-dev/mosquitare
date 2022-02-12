@@ -1,11 +1,18 @@
 import React from 'react';
 import { Button, Form } from 'semantic-ui-react';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import EmailIcon from '@mui/icons-material/Email';
+import PasswordIcon from '@mui/icons-material/Password';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const BasicInfo = (props) => {
   return (
     <Form>
       <Form.Field>
-        <label>Name</label>
+        <label>
+          <AccountCircleIcon />
+          &nbsp;Name
+        </label>
         <input
           type='text'
           placeholder='Please enter your name.'
@@ -14,7 +21,10 @@ const BasicInfo = (props) => {
         />
       </Form.Field>
       <Form.Field>
-        <label>Email</label>
+        <label>
+          <EmailIcon />
+          &nbsp;Email
+        </label>
         <input
           type='email'
           placeholder='Please enter your email.'
@@ -23,7 +33,10 @@ const BasicInfo = (props) => {
         />
       </Form.Field>
       <Form.Field>
-        <label>Password</label>
+        <label>
+          <PasswordIcon />
+          &nbsp;Password
+        </label>
         <input
           type='password'
           placeholder='Please enter your password.'
@@ -32,7 +45,10 @@ const BasicInfo = (props) => {
         />
       </Form.Field>
       <Form.Field>
-        <label>Password Confirmation</label>
+        <label>
+          <PasswordIcon />
+          &nbsp;Password Confirmation
+        </label>
         <input
           type='password'
           placeholder='Please enter your password again.'
@@ -41,7 +57,10 @@ const BasicInfo = (props) => {
         />
       </Form.Field>
       <Form.Field>
-        <label>Profile Image (Not required)</label>
+        <label>
+          <CloudUploadIcon />
+          &nbsp; Profile Image (Not required)
+        </label>
         <input type='file' onChange={() => props.setPhoto()} />
       </Form.Field>
       {/* <Button type='submit'>Submit</Button> */}
