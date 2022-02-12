@@ -1,14 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+// 最大で20個くらいの色のoptionを用意しておいて割り振っていけばいいか。20言語以上のmyLangsになる特殊なやつ多分いないだろう。
+export const colorOptions = [
+  'lightgreen',
+  'lightblue',
+  'mediumorchid',
+  'tomato',
+  'burlywood',
+  'sienna',
+  'navy',
+  'darkgreen',
+  'skyblue',
+  'gold',
+  'mistyrose',
+];
+
 const data = {
   labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
   datasets: [
     {
-      label: '# of Votes',
+      label: 'Language Status',
       data: [12, 19, 3, 5, 2, 3],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
@@ -31,8 +46,49 @@ const data = {
   ],
 };
 
-const LanguageChart = () => {
-  return <Doughnut data={data} />;
+const LanguageChart = (props) => {
+  const [labels, setLabels] = useState([]);
+  const [langsData, setLangsData] = useState([]);
+  const [backgroundColor, setBackgroundColor] = useState([]);
+  const [borderColor, setBorderColor] = useState([]);
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const langLabels = props.user.myLangs.map((lang) => {
+      return lang.name;
+    });
+    setLabels(langLabels);
+
+    const langBackgroundColor = new Array(props.user.myLangs.length).fill(
+      Math.floor(Math.random() * colorOptions.length)
+    );
+    setBackgroundColor(langBackgroundColor);
+  }, []);
+
+  useEffect(() => {
+    if (labels && backgroundColor && borderColor) {
+      setData({
+        labels: labels,
+        datasets: {
+          label: 'Language Status',
+          data: langsData,
+          backgroundColor: backgroundColor,
+          borderColor: backgroundColor,
+          borderWidth: 1,
+        },
+      });
+    }
+  }, [labels, backgroundColor, borderColor]);
+
+  const renderDoughnut = () => {
+    if (data) {
+      return <Doughnut data={data} />;
+    } else {
+      return null;
+    }
+  };
+
+  return <>{renderDoughnut()}</>;
 };
 
 export default LanguageChart;

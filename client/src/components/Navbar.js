@@ -37,12 +37,17 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Tooltip from '@mui/material/Tooltip';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import MapIcon from '@mui/icons-material/Map';
+import ExploreIcon from '@mui/icons-material/Explore';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
 import SendIcon from '@mui/icons-material/Send';
@@ -99,8 +104,15 @@ const Navbar = (props) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => history.push(`/userpage/${props.authState.currentUser._id}`)}>Repositry</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Setting</MenuItem>
+      <MenuItem onClick={() => history.push(`/userpage/${props.authState.currentUser._id}`)}>
+        Library&nbsp; <LocalLibraryIcon />
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        Setting&nbsp; <SettingsIcon />
+      </MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        Logout&nbsp; <LogoutIcon />
+      </MenuItem>
     </Menu>
   );
 
@@ -197,7 +209,19 @@ const Navbar = (props) => {
       return (
         <>
           <Stack direction='row' spacing={2}>
-            <Tooltip title='Group Chat ( Sorry now not available 😐 )'>
+            <Tooltip title='World Clock ( Sorry, not available now 😐 )'>
+              <IconButton
+                size='large'
+                edge='end'
+                aria-label='show 4 new mails'
+                aria-controls={menuId}
+                // onClick={handleProfileMenuOpen}
+                color='inherit'
+              >
+                <AccessTimeFilledIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Group Chat ( Sorry, not available now 😐 )'>
               <IconButton
                 size='large'
                 edge='end'
@@ -208,7 +232,6 @@ const Navbar = (props) => {
               >
                 {/* <Badge badgeContent={4} color='error'> */}
                 <GroupsIcon />
-
                 {/* </Badge> */}
               </IconButton>
             </Tooltip>
@@ -237,9 +260,9 @@ const Navbar = (props) => {
                 {/* </Link> */}
               </IconButton>
             </Tooltip>
-            <Button variant='contained' endIcon={<LogoutIcon />}>
+            {/* <Button variant='contained' endIcon={<LogoutIcon />}>
               Logout
-            </Button>
+            </Button> */}
           </Stack>
         </>
       );
@@ -257,7 +280,17 @@ const Navbar = (props) => {
               <MenuIcon />
             </IconButton>
             <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
-              Lamppost
+              Lamppost&nbsp;
+              <Tooltip title='So where to?'>
+                <IconButton
+                  size='large'
+                  aria-label='show 17 new notifications'
+                  color='inherit'
+                  onClick={() => history.push('/worldmap')}
+                >
+                  <ExploreIcon />
+                </IconButton>
+              </Tooltip>
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

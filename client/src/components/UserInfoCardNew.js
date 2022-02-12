@@ -24,6 +24,15 @@ const UserInfoCardNew = (props) => {
   // flagは面倒くさそうだ。今はやめよう。
   const renderCountriesFlag = () => {};
 
+  const renderLanguageChart = () => {
+    // 今はとりあえず, if statementでrenderしておこう。
+    if (props.user.myLangs) {
+      return <LanguageChart user={props.user} />;
+    } else {
+      return null;
+    }
+  };
+
   const renderUserStatus = (user) => {
     if (user.status.dating) {
       return <div>💓💓💓 I'm looking for dating partner 💓💓💓</div>;
@@ -33,7 +42,7 @@ const UserInfoCardNew = (props) => {
       return (
         <>
           <div>💓💓💓 I'm looking for dating partner 💓💓💓</div>
-          <div>💰💰💰 Help!! I need some money 💰💰💰</div>
+          <div>💰💰💰 Help!! I need some money 💰💰💰 Can you help me???</div>
         </>
       );
     } else {
@@ -104,7 +113,7 @@ const UserInfoCardNew = (props) => {
             {renderUserLearningLanguages(props.user)}
           </div>
           <div className='languages-chart'>
-            <LanguageChart />
+            {renderLanguageChart()} {/* redux使った方がいいのかもなここ。。。*/}
           </div>
         </div>
         <div className='user-message'>{props.user.description}</div>
