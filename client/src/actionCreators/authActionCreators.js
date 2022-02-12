@@ -26,7 +26,6 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
 
 export const loginActionCreator = (formData) => async (dispatch) => {
   try {
-    console.log('working???');
     const result = await mosquitareAPI.post('/users/login', formData);
     localStorage.setItem('mosquitare token', result.data.jwtToken);
     console.log(result);
@@ -36,7 +35,9 @@ export const loginActionCreator = (formData) => async (dispatch) => {
     });
     window.location = '/worldmap';
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
+    const errorMessage = error.response.data.message;
+    console.log(errorMessage);
   }
 };
 

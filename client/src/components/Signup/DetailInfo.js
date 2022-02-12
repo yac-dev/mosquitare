@@ -1,8 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Dropdown, Form } from 'semantic-ui-react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import LanguageIcon from '@mui/icons-material/Language';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+
+// ac
+import { loginActionCreator } from '../../actionCreators/authActionCreators';
 
 const countryOptions = [
   { key: 'af', value: '6205d501d1a32299c6c3f5a7', flag: 'af', text: 'Afghanistan' },
@@ -358,4 +362,4 @@ const DetailInfo = (props) => {
   );
 };
 
-export default DetailInfo;
+export default connect(null, { loginActionCreator })(DetailInfo);

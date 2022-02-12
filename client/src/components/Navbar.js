@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 // import { Icon, Button } from 'semantic-ui-react';
 // import {
@@ -35,9 +35,14 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
+import Tooltip from '@mui/material/Tooltip';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import GroupsIcon from '@mui/icons-material/Groups';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import LogoutIcon from '@mui/icons-material/Logout';
 import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
 import SendIcon from '@mui/icons-material/Send';
@@ -49,18 +54,19 @@ import Login from './Signup/Login';
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
 
 const Navbar = (props) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const history = useHistory();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
-  };
+  }; // icon clickでこれを起こす。
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -93,8 +99,8 @@ const Navbar = (props) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={() => history.push(`/userpage/${props.authState.currentUser._id}`)}>Repositry</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Setting</MenuItem>
     </Menu>
   );
 
@@ -132,6 +138,17 @@ const Navbar = (props) => {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
+      <MenuItem>
+        <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+          <Badge badgeContent={17} color='error'>
+            <Button variant='contained' endIcon={<PowerSettingsNewIcon />}>
+              Logout
+            </Button>
+          </Badge>
+        </IconButton>
+        <p>Notifications</p>
+      </MenuItem>
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size='large'
@@ -179,27 +196,51 @@ const Navbar = (props) => {
     if (props.authState.currentUser) {
       return (
         <>
-          <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-            <Badge badgeContent={4} color='error'>
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-            <Badge badgeContent={17} color='error'>
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton
-            size='large'
-            edge='end'
-            aria-label='account of current user'
-            aria-controls={menuId}
-            aria-haspopup='true'
-            onClick={handleProfileMenuOpen}
-            color='inherit'
-          >
-            <AccountCircle />
-          </IconButton>
+          <Stack direction='row' spacing={2}>
+            <Tooltip title='Group Chat ( Sorry now not available 😐 )'>
+              <IconButton
+                size='large'
+                edge='end'
+                aria-label='show 4 new mails'
+                aria-controls={menuId}
+                onClick={handleProfileMenuOpen}
+                color='inherit'
+              >
+                {/* <Badge badgeContent={4} color='error'> */}
+                <GroupsIcon />
+
+                {/* </Badge> */}
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title='Everybody videos'>
+              <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+                {/* <Badge badgeContent={17} color='error'> */}
+                <VideoLibraryIcon />
+                {/* </Badge> */}
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Your Personal Page'>
+              <IconButton
+                size='large'
+                edge='end'
+                aria-label='account of current user'
+                // component={Link}
+                // to={`/userpage/${props.authState.currentUser._id}`}
+                aria-controls={menuId}
+                aria-haspopup='true'
+                onClick={handleProfileMenuOpen}
+                color='inherit'
+              >
+                {/* <Link to={`/userpage/${props.authState.currentUser._id}`}> */}
+                <AccountCircle />
+                {/* </Link> */}
+              </IconButton>
+            </Tooltip>
+            <Button variant='contained' endIcon={<LogoutIcon />}>
+              Logout
+            </Button>
+          </Stack>
         </>
       );
     } else {

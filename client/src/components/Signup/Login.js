@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 import { Form } from 'semantic-ui-react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 import PasswordIcon from '@mui/icons-material/Password';
+
+// ac
+import { loginActionCreator } from '../../actionCreators/authActionCreators';
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
@@ -16,7 +20,7 @@ const Login = (props) => {
       password: password,
     };
 
-    console.log(formData);
+    props.loginActionCreator(formData);
   };
 
   return (
@@ -71,4 +75,4 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default connect(null, { loginActionCreator })(Login);

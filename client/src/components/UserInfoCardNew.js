@@ -4,6 +4,7 @@ import { Button, Dropdown } from 'semantic-ui-react';
 
 // components
 import CallButton from './CallButton';
+import LanguageChart from './LanguageChart';
 
 // css
 import '../styles/userInfocardNew.css';
@@ -102,7 +103,9 @@ const UserInfoCardNew = (props) => {
             {renderUserNativeLanguages(props.user)}
             {renderUserLearningLanguages(props.user)}
           </div>
-          <div className='languages-chart'>chart here!!</div>
+          <div className='languages-chart'>
+            <LanguageChart />
+          </div>
         </div>
         <div className='user-message'>{props.user.description}</div>
         <CallButton
