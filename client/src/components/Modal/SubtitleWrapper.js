@@ -43,6 +43,7 @@ const SubtitleWrapper = (props) => {
       props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
       if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
         setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]); //globalなstateに保存しておいた方がいいかも。
+        // props.mediaState.currentLanguage._id: 67
         countTranscriptWords(finalTranscript, setCountLearningLangLength);
       } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
         setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
@@ -108,6 +109,12 @@ const SubtitleWrapper = (props) => {
     }
   }, [props.mediaState.callDisconnected]);
 
+  // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
+  const countTranscriptWords = (transcript, setCountLangLength) => {
+    const wordsLength = transcript.split(' ').length;
+    setCountLangLength((previousState) => previousState + wordsLength);
+  };
+
   // render系
   const renderTranscripts = () => {
     const transcripts = conversationTranscript.map((transcriptObject) => {
@@ -161,12 +168,6 @@ const SubtitleWrapper = (props) => {
   const switchLanguage = () => {
     //言語を切り替えたら、自動でoffになる。
     props.switchCurrentLanguageActionCreator1(props.socket);
-  };
-
-  // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
-  const countTranscriptWords = (transcript, setCountLangLength) => {
-    const wordsLength = transcript.split(' ').length;
-    setCountLangLength((previousState) => previousState + wordsLength);
   };
 
   return (

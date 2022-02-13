@@ -37,6 +37,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Tooltip from '@mui/material/Tooltip';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import CreateIcon from '@mui/icons-material/Create';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import MapIcon from '@mui/icons-material/Map';
 import ExploreIcon from '@mui/icons-material/Explore';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -56,29 +58,42 @@ import Stack from '@mui/material/Stack';
 // components
 import SignupWrapper from './Signup/SignupWrapper';
 import Login from './Signup/Login';
+
+// components
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
 
 const Navbar = (props) => {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElForUserMenu, setAnchorElForUserMenu] = useState(null);
+  const [anchorElForGroupMenu, setAnchorElForGroupMenu] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
-  const isMenuOpen = Boolean(anchorEl);
+  const isUserMenuOpen = Boolean(anchorElForUserMenu);
+  const isGroupMenuOpen = Boolean(anchorElForGroupMenu);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const history = useHistory();
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleGroupMenuOpen = (event) => {
+    setAnchorElForGroupMenu(event.currentTarget);
+  };
+
+  const handleUserMenuOpen = (event) => {
+    setAnchorElForUserMenu(event.currentTarget);
   }; // icon clickでこれを起こす。
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const handleUserMenuClose = () => {
+    setAnchorElForUserMenu(null);
+    handleMobileMenuClose();
+  };
+
+  const handleGroupMenuClose = () => {
+    setAnchorElForGroupMenu(null);
     handleMobileMenuClose();
   };
 
@@ -87,36 +102,61 @@ const Navbar = (props) => {
   };
 
   // これなんだろね。。。
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
+  const userMenuId = 'primary-search-account-menu';
+  const renderUserMenu = (
     <Menu
-      anchorEl={anchorEl}
+      anchorEl={anchorElForUserMenu}
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'right',
       }}
-      id={menuId}
+      id={userMenuId}
       keepMounted
       transformOrigin={{
         vertical: 'top',
         horizontal: 'right',
       }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
+      open={isUserMenuOpen}
+      onClose={handleUserMenuClose}
     >
       <MenuItem onClick={() => history.push(`/userpage/${props.authState.currentUser._id}`)}>
         Library&nbsp; <LocalLibraryIcon />
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem onClick={handleUserMenuClose} disabled={true}>
         Setting&nbsp; <SettingsIcon />
       </MenuItem>
-      <MenuItem onClick={handleMenuClose}>
+      <MenuItem onClick={() => props.logoutActionCreator()}>
         Logout&nbsp; <LogoutIcon />
       </MenuItem>
     </Menu>
   );
 
-  // これなんだろね。。。
+  const groupMenuId = 'primary-search-account-menu';
+  const renderGroupMenu = (
+    <Menu
+      anchorEl={anchorElForGroupMenu}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={groupMenuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isGroupMenuOpen}
+      onClose={handleGroupMenuClose}
+    >
+      <MenuItem disabled={true}>
+        Create a Meeting&nbsp; <CreateIcon />
+      </MenuItem>
+      <MenuItem disabled={true}>
+        Join a Meeting&nbsp; <MeetingRoomIcon />
+      </MenuItem>
+    </Menu>
+  );
+
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
     <Menu
@@ -161,7 +201,7 @@ const Navbar = (props) => {
         <p>Notifications</p>
       </MenuItem>
 
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem onClick={handleUserMenuOpen}>
         <IconButton
           size='large'
           aria-label='account of current user'
@@ -214,7 +254,7 @@ const Navbar = (props) => {
                 size='large'
                 edge='end'
                 aria-label='show 4 new mails'
-                aria-controls={menuId}
+                aria-controls={userMenuId}
                 // onClick={handleProfileMenuOpen}
                 color='inherit'
               >
@@ -226,8 +266,9 @@ const Navbar = (props) => {
                 size='large'
                 edge='end'
                 aria-label='show 4 new mails'
-                aria-controls={menuId}
-                onClick={handleProfileMenuOpen}
+                aria-controls={groupMenuId}
+                aria-haspopup='true'
+                onClick={handleGroupMenuOpen}
                 color='inherit'
               >
                 {/* <Badge badgeContent={4} color='error'> */}
@@ -250,9 +291,9 @@ const Navbar = (props) => {
                 aria-label='account of current user'
                 // component={Link}
                 // to={`/userpage/${props.authState.currentUser._id}`}
-                aria-controls={menuId}
+                aria-controls={userMenuId}
                 aria-haspopup='true'
-                onClick={handleProfileMenuOpen}
+                onClick={handleUserMenuOpen}
                 color='inherit'
               >
                 {/* <Link to={`/userpage/${props.authState.currentUser._id}`}> */}
@@ -325,7 +366,8 @@ const Navbar = (props) => {
           </Toolbar>
         </AppBar>
         {renderMobileMenu}
-        {renderMenu}
+        {renderUserMenu}
+        {renderGroupMenu}
       </Box>
       <SignupWrapper showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
       <Login showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />

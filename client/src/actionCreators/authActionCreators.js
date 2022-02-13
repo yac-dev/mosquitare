@@ -88,6 +88,7 @@ export const logoutActionCreator = () => async (dispatch, getState) => {
   try {
     const userId = getState().authState.currentUser._id;
     const result = await mosquitareAPI.patch(`/users/${userId}/logout`); // ここではbodyはいらない
+    // いや。ここでは、isOnlineをfalseにしなきゃいけない。
     localStorage.removeItem('mosquitare token');
     dispatch({
       type: LOGOUT,
