@@ -90,7 +90,7 @@ const userSchema = new mongoose.Schema({
   },
   isReady: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   createdAt: {
     type: Date,
@@ -104,7 +104,7 @@ const userSchema = new mongoose.Schema({
   ], // こっちは月毎にupdate。
   personalStatus: {
     type: Array,
-    default: ['Just started📚'],
+    default: ['Just started 📚'],
   },
   talkedWith: [
     {
