@@ -139,6 +139,11 @@ userSchema.pre(/^find/, function (next) {
   });
 
   this.populate({
+    path: 'myLangs',
+    select: 'name flagPic',
+  });
+
+  this.populate({
     path: 'conversations',
   });
   next();

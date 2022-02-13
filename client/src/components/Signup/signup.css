@@ -22,6 +22,10 @@
   margin-top: 40px;
 }
 
+.ui.form.fieldStyle {
+  margin-bottom: 10px;
+}
+
 /* .ui.label.light-green {
   background-color: lightgreen !important;
 }

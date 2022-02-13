@@ -8,6 +8,9 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 // ac
 import { loginActionCreator } from '../../actionCreators/authActionCreators';
 
+// css
+import './signup.css';
+
 const countryOptions = [
   { key: 'af', value: '6205d501d1a32299c6c3f5a7', flag: 'af', text: 'Afghanistan' },
   { key: 'al', value: '6205d501d1a32299c6c3f5a8', flag: 'al', text: 'Albania' },
@@ -294,7 +297,7 @@ const languageOptions = [
 const DetailInfo = (props) => {
   return (
     <Form>
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '40px' }}>
         <label>
           <TranslateIcon />
           &nbsp;Learning Language
@@ -310,7 +313,7 @@ const DetailInfo = (props) => {
         />
       </Form.Field>
 
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '40px' }}>
         <label>
           <TranslateIcon />
           &nbsp;Native Language
@@ -325,7 +328,7 @@ const DetailInfo = (props) => {
           value={props.nativeLanguages}
         />
       </Form.Field>
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '40px' }}>
         <label>
           <LanguageIcon />
           &nbsp;Nationality
@@ -340,7 +343,7 @@ const DetailInfo = (props) => {
           value={props.nationalities}
         />
       </Form.Field>
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '40px' }}>
         <label>
           <LanguageIcon />
           &nbsp; Place

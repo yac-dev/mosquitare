@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 
 // components
 import BasicInfo from './BasicInfo';
 import DetailInfo from './DetailInfo';
+
+// ac
+import { signupActionCreator } from '../../actionCreators/authActionCreators';
 
 const SignupWrapper = (props) => {
   // basic info用
@@ -93,13 +97,14 @@ const SignupWrapper = (props) => {
       password: password,
       passwordConfirmation: passwordConfirmation,
       photo: photo,
-      learningLanguages: learningLanguages,
-      nativeLanguages: nativeLanguages,
+      learningLangs: learningLanguages,
+      nativeLangs: nativeLanguages,
       nationalities: nationalities,
       location: location,
     };
     // これをbodyとして、api requestを送る。
     console.log(formData);
+    props.signupActionCreator(formData);
   };
 
   return (
@@ -127,4 +132,4 @@ const SignupWrapper = (props) => {
   );
 };
 
-export default SignupWrapper;
+export default connect(null, { signupActionCreator })(SignupWrapper);

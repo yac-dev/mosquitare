@@ -1,8 +1,9 @@
 .user-info-card {
-  min-width: 250px;
+  /* min-width: 250px; */
+  min-width: 300px;
 }
 
-.user-overview {
+/* .user-overview {
   display: grid;
   grid-template-columns: 60px 1fr;
   grid-template-areas: 'user-image user-name-and-job';
@@ -36,11 +37,12 @@
 
 .languages-chart {
   grid-area: languages-chart;
+
 }
 
 .user-message {
   margin-bottom: 10px;
-}
+} */
 
 /* .icon-dropdown {
   background-color: blue;

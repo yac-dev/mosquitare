@@ -24,15 +24,6 @@ const UserInfoCardNew = (props) => {
   // flagは面倒くさそうだ。今はやめよう。
   const renderCountriesFlag = () => {};
 
-  const renderLanguageChart = () => {
-    // 今はとりあえず, if statementでrenderしておこう。
-    if (props.user.myLangs) {
-      return <LanguageChart user={props.user} />;
-    } else {
-      return null;
-    }
-  };
-
   const renderUserStatus = (user) => {
     if (user.status.dating) {
       return <div>💓💓💓 I'm looking for dating partner 💓💓💓</div>;
@@ -96,8 +87,21 @@ const UserInfoCardNew = (props) => {
     return false;
   };
 
+  const renderLanguageChart = () => {
+    // 今はとりあえず, if statementでrenderしておこう。
+    // if (props.user.myLangs) {
+    //   return <LanguageChart user={props.user} />;
+    // } else {
+    //   return null;
+    // }
+    // return ()
+  };
+
   const renderUserInfoCard = () => {
     return (
+      // <>
+      //   <LanguageChart user={props.user} />
+      // </>
       <div className='user-info-card' style={{ border: '1px solid red' }}>
         <div className='user-overview'>
           <div className='user-image'></div>
@@ -113,7 +117,8 @@ const UserInfoCardNew = (props) => {
             {renderUserLearningLanguages(props.user)}
           </div>
           <div className='languages-chart'>
-            {renderLanguageChart()} {/* redux使った方がいいのかもなここ。。。*/}
+            {/* {renderLanguageChart()} redux使った方がいいのかもなここ。。。 */}
+            <LanguageChart user={props.user} />
           </div>
         </div>
         <div className='user-message'>{props.user.description}</div>
@@ -125,8 +130,8 @@ const UserInfoCardNew = (props) => {
         />
         {/* <Button
           positive
-          // disabled={!props.mediaState} // このuserのnative langsの中に、自分の言語が入っていない時。でもこれって結構計算することになるよな。全員分となると多分きついんじゃないか。。。
-          // disabled={checkCallableOrNot() ? 'false' : 'true'} ここのcallable checkは後でいいや。
+          // disabled={!props.mediaState}
+          // disabled={checkCallableOrNot() ? 'false' : 'true'}
           onClick={(event) => onCallClick(event, props.user.socketId)}
           style={{ width: '80%' }}
         >

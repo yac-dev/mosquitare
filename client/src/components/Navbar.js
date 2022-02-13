@@ -271,6 +271,27 @@ const Navbar = (props) => {
     }
   };
 
+  const renderExploreIcon = () => {
+    if (props.authState.currentUser) {
+      return (
+        <>
+          <Tooltip title='So where to?'>
+            <IconButton
+              size='large'
+              aria-label='show 17 new notifications'
+              color='inherit'
+              onClick={() => (window.location = '/worldmap')}
+            >
+              <ExploreIcon />
+            </IconButton>
+          </Tooltip>
+        </>
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -281,16 +302,7 @@ const Navbar = (props) => {
             </IconButton>
             <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
               Lamppost&nbsp;
-              <Tooltip title='So where to?'>
-                <IconButton
-                  size='large'
-                  aria-label='show 17 new notifications'
-                  color='inherit'
-                  onClick={() => history.push('/worldmap')}
-                >
-                  <ExploreIcon />
-                </IconButton>
-              </Tooltip>
+              {renderExploreIcon()}
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

@@ -8,7 +8,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 const BasicInfo = (props) => {
   return (
     <Form>
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <AccountCircleIcon />
           &nbsp;Name
@@ -20,7 +20,7 @@ const BasicInfo = (props) => {
           value={props.name}
         />
       </Form.Field>
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <EmailIcon />
           &nbsp;Email
@@ -32,7 +32,7 @@ const BasicInfo = (props) => {
           value={props.email}
         />
       </Form.Field>
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <PasswordIcon />
           &nbsp;Password
@@ -44,7 +44,7 @@ const BasicInfo = (props) => {
           value={props.password}
         />
       </Form.Field>
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <PasswordIcon />
           &nbsp;Password Confirmation
@@ -56,7 +56,7 @@ const BasicInfo = (props) => {
           value={props.passwordConfirmation}
         />
       </Form.Field>
-      <Form.Field>
+      <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <CloudUploadIcon />
           &nbsp; Profile Image (Not required)
