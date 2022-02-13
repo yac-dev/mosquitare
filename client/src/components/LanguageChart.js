@@ -75,31 +75,38 @@ const LanguageChart = (props) => {
   // const [datasets, setDatasets] = useState([
   //   { label: '', data: [], backgroundColor: [], borderColor: [], borderWidth: 0, hoverOffset: 0 },
   // ]);
-  const [data, setData] = useState({
-    labels: [],
-    datasets: [{ label: '', data: [], backgroundColor: [], borderColor: [], borderWidth: 0, hoverOffset: 0 }],
-  });
+  const [data, setData] = useState(null);
 
   useEffect(() => {
-    console.log(props.user);
+    // console.log(props.user);
     const mappedLangLabels = props.user.myLangs.map((lang) => {
       return lang.name;
     });
-    setLangLabels((previousState) => [...previousState, mappedLangLabels]);
-    setLangData((previousState) => [...previousState, props.user.myLangsStatus]);
-    const insertingData = { ...data };
-    insertingData.labels = langLabels;
-    insertingData.datasets[0].label = 'Language Status';
-    insertingData.datasets[0].data = langData;
-    insertingData.datasets[0].backgroundColor = langBackgroundColors;
-    insertingData.datasets[0].borderColor = borderColors;
-    insertingData.datasets[0].borderWidth = 1;
-    insertingData.datasets[0].hoverOffset = 50;
-    setData(insertingData);
-    const myChart = new Chart(chartRef.current, {
-      type: 'pie',
-      data,
-    });
+    // setLangLabels((previousState) => [...previousState, mappedLangLabels]);
+    // setLangData((previousState) => [...previousState, props.user.myLangsStatus]);
+    // const insertingData = { ...data };
+    // insertingData.labels = langLabels;
+    // insertingData.datasets[0].label = 'Language Status';
+    // insertingData.datasets[0].data = langData;
+    // insertingData.datasets[0].backgroundColor = langBackgroundColors;
+    // insertingData.datasets[0].borderColor = borderColors;
+    // insertingData.datasets[0].borderWidth = 1;
+    // insertingData.datasets[0].hoverOffset = 50;
+    // setData(insertingData);
+    const d = {
+      labels: mappedLangLabels,
+      datasets: [
+        {
+          label: 'Language Status',
+          data: props.user.myLangsStatus,
+          backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+          borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+          borderWidth: 1,
+          hoverOffset: 50,
+        },
+      ],
+    };
+    setData(d);
 
     // console.log(langLabels);
 
@@ -152,27 +159,27 @@ const LanguageChart = (props) => {
   //   }
   // }, [data]);
 
-  // const renderDoughnut = () => {
-  //   if (data.labels.length && data.datasets[0].data.length) {
-  //     return (
-  //       <Doughnut
-  //         data={data}
-  //         width={50}
-  //         height={50}
-  //         options={{
-  //           responsive: true,
-  //           // legend: { display: false },
-  //           // title: { display: true, text: 'Açılan Oylar' },
-  //         }}
-  //       />
-  //     );
-  //   }
-  // };
+  const renderDoughnut = () => {
+    if (data) {
+      return (
+        <Doughnut
+          data={data}
+          width={50}
+          height={50}
+          options={{
+            responsive: true,
+            // legend: { display: false },
+            // title: { display: true, text: 'Açılan Oylar' },
+          }}
+        />
+      );
+    }
+  };
 
   return (
     <>
-      <canvas ref={chartRef} width={50} height={50} />
-      {/* {renderDoughnut()} */}
+      {/* <canvas ref={chartRef} width={50} height={50} /> */}
+      {renderDoughnut()}
     </>
   );
 };
