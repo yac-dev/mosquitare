@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Chart, Doughnut } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
+// ChartJS.plugins.register(ChartDataLabels);
 
 // 最大で20個くらいの色のoptionを用意しておいて割り振っていけばいいか。20言語以上のmyLangsになる特殊なやつ多分いないだろう。
 export const colorOptions = [
@@ -58,6 +60,38 @@ export const colorOptions = [
 //   ],
 // };
 
+const options = {
+  plugins: {
+    // legend: {
+    //   display: false,
+    // },
+    tooltips: {
+      titleFont: { size: 17 },
+      bodyFont: { size: 17 },
+      backgroundColor: 'red',
+    },
+    // title: { display: true, text: 'Language Status' },
+    datalabels: {
+      display: true,
+      color: 'black',
+      // labels: {
+      //   font: {
+      //     size: 'bold',
+      //   },
+      // },
+
+      labels: {
+        padding: 20,
+        title: {
+          font: {
+            weight: 'bold',
+          },
+        },
+      },
+    },
+  },
+};
+
 const LanguageChart = (props) => {
   const chartRef = useRef();
   const [langLabels, setLangLabels] = useState([]);
@@ -78,21 +112,24 @@ const LanguageChart = (props) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    // console.log(props.user);
-    const mappedLangLabels = props.user.myLangs.map((lang) => {
-      return lang.name;
-    });
-    // setLangLabels((previousState) => [...previousState, mappedLangLabels]);
-    // setLangData((previousState) => [...previousState, props.user.myLangsStatus]);
-    // const insertingData = { ...data };
-    // insertingData.labels = langLabels;
-    // insertingData.datasets[0].label = 'Language Status';
-    // insertingData.datasets[0].data = langData;
-    // insertingData.datasets[0].backgroundColor = langBackgroundColors;
-    // insertingData.datasets[0].borderColor = borderColors;
-    // insertingData.datasets[0].borderWidth = 1;
-    // insertingData.datasets[0].hoverOffset = 50;
-    // setData(insertingData);
+    console.log(props.user);
+    // const mappedLangLabels = props.user.myLangs.map((lang) => {
+    //   if (props.user.nativeLangs.includes(lang)) {
+    //     return `${lang.name} (native)`;
+    //   } else {
+    //     return `${lang.name} (learning)`;
+    //   }
+    // });
+    const mappedLangLabels = [];
+    for (let i = 0; i < props.user.nativeLangs.length; i++) {
+      for (let j = 0; j < props.user.myLangs.length; j++) {
+        if (props.user.nativeLangs[i].name === props.user.myLangs[j].name) {
+          mappedLangLabels.push(`${props.user.myLangs[j].name} (native)`);
+        } else {
+          mappedLangLabels.push(`${props.user.myLangs[j].name} (learning)`);
+        }
+      }
+    }
     const d = {
       labels: mappedLangLabels,
       datasets: [
@@ -107,72 +144,12 @@ const LanguageChart = (props) => {
       ],
     };
     setData(d);
-
-    // console.log(langLabels);
-
-    // const bgcs = new Array(props.user.myLangs.length).fill(
-    //   colorOptions[Math.floor(Math.random() * colorOptions.length)]
-    // );
-    // const bgcs = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'];
-
-    // setLangBackgroundColors((previousState) => [...previousState, bgcs]);
-    // setBorderColors((previousState) => [...previousState, bgcs]);
+    // ChartJS.plugins.register(ChartDataLabels);
   }, []);
-
-  // useEffect(() => {
-  //   if (langLabels.length && langBackgroundColors.length && borderColors.length && langData.length) {
-  //     // console.log(langLabels);
-  //     // console.log(langBackgroundColors);
-  //     // console.log(borderColors);
-  //     // console.log(langData);
-  //     const insertingData = { ...data };
-  //     insertingData.labels = langLabels;
-  //     insertingData.datasets[0].label = 'Language Status';
-  //     insertingData.datasets[0].data = langData;
-  //     insertingData.datasets[0].backgroundColor = langBackgroundColors;
-  //     insertingData.datasets[0].borderColor = borderColors;
-  //     insertingData.datasets[0].borderWidth = 1;
-  //     insertingData.datasets[0].hoverOffset = 50;
-  //     setData(insertingData);
-  //   }
-  // }, [langLabels, langBackgroundColors, borderColors, langData]);
-
-  // useEffect(() => {
-  //   if (
-  //     langLabels.length &&
-  //     langBackgroundColors.length &&
-  //     borderColors.length &&
-  //     langData.length &&
-  //     datasets.length === 1
-  //   ) {
-  //     setData({
-  //       ...data,
-  //       labels: langLabels,
-  //       datasets: datasets,
-  //     });
-  //   }
-  // }, [langLabels, langBackgroundColors, borderColors, langData, datasets]);
-
-  // useEffect(() => {
-  //   if (data.labels.length && data.datasets[0].data.length) {
-  //     console.log(data);
-  //   }
-  // }, [data]);
 
   const renderDoughnut = () => {
     if (data) {
-      return (
-        <Doughnut
-          data={data}
-          width={50}
-          height={50}
-          options={{
-            responsive: true,
-            // legend: { display: false },
-            // title: { display: true, text: 'Açılan Oylar' },
-          }}
-        />
-      );
+      return <Doughnut data={data} options={options} />;
     }
   };
 
