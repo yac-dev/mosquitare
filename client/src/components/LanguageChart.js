@@ -62,33 +62,47 @@ export const colorOptions = [
 
 const options = {
   plugins: {
-    // legend: {
-    //   display: false,
-    // },
-    tooltips: {
-      titleFont: { size: 17 },
-      bodyFont: { size: 17 },
-      backgroundColor: 'red',
+    legend: {
+      display: false,
     },
-    // title: { display: true, text: 'Language Status' },
+    tooltip: {
+      enabled: false,
+    },
+    // responsive: true,
+    maintainAspectRatio: false,
     datalabels: {
       display: true,
-      color: 'black',
-      // labels: {
-      //   font: {
-      //     size: 'bold',
-      //   },
-      // },
-
-      labels: {
-        padding: 20,
-        title: {
-          font: {
-            weight: 'bold',
-          },
-        },
+      formatter: (val, ctx) => {
+        return `${ctx.chart.data.labels[ctx.dataIndex]} ${val}%`;
       },
+      color: '#fff',
+      backgroundColor: '#404040',
     },
+    // title: { display: true, text: 'Language Status' },
+    // datalabels: {
+    //   display: true,
+    //   color: 'black',
+    //   // labels: {
+    //   //   font: {
+    //   //     size: 'bold',
+    //   //   },
+    //   // },
+    // tooltips: {
+    //   titleFont: { size: 17 },
+    //   bodyFont: { size: 17 },
+    //   backgroundColor: 'red',
+    //   display: false,
+    // },
+
+    //   labels: {
+    //     padding: 20,
+    //     title: {
+    //       font: {
+    //         weight: 'bold',
+    //       },
+    //     },
+    //   },
+    // },
   },
 };
 
@@ -139,7 +153,7 @@ const LanguageChart = (props) => {
           backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
           borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
           borderWidth: 1,
-          hoverOffset: 50,
+          hoverOffset: 30,
         },
       ],
     };
@@ -149,7 +163,7 @@ const LanguageChart = (props) => {
 
   const renderDoughnut = () => {
     if (data) {
-      return <Doughnut data={data} options={options} />;
+      return <Doughnut data={data} width='100px' height='50px' options={options} />;
     }
   };
 
