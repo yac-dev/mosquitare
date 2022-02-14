@@ -163,12 +163,38 @@ const LanguageChart = (props) => {
   }, []);
 
   const renderDoughnut = () => {
-    if (data) {
-      return <Doughnut data={data} options={options} />;
+    // if (data) {
+    return <Doughnut data={data} options={options} />;
+    // } else if (props.user.myLangsStatus.reduce((partialSum, a) => partialSum + a, 0) === 0) {
+    //   return (
+    //     <div>
+    //       <p>No data now.</p>
+    //     </div>
+    //   );
+    // }
+  };
+
+  // 何がnativeかと何を勉強したいかの表示ね。
+  const renderInitialData = () => {
+    return <div>No data.</div>;
+  };
+
+  const render = () => {
+    const statusSum = props.user.myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
+    if (statusSum === 0) {
+      return <>{renderInitialData()}</>;
+    } else if (data) {
+      return <>{renderDoughnut()}</>;
     }
   };
 
-  return <>{renderDoughnut()}</>;
+  return (
+    <>
+      {render()}
+      {/* {renderDoughnut()} */}
+      {/* {renderInitialData()} */}
+    </>
+  );
 };
 
 export default LanguageChart;

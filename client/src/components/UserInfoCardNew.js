@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import HelpIcon from '@mui/icons-material/Help';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import TranslateIcon from '@mui/icons-material/Translate';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
 // components
 import CallButton from './CallButton';
@@ -109,9 +110,11 @@ const UserInfoCardNew = (props) => {
       // <>
       //   <LanguageChart user={props.user} />
       // </>
-      <div className='user-info-card' style={{ border: '1px solid red' }}>
+      <div className='user-info-card' style={{ border: '1px solid red', padding: '10px' }}>
         <div className='user-info-overview'>
-          <div className='user-image'></div>
+          {/* <div className='user-image'> */}
+          <img className='user-image' src={props.user.photo} alt={props.user.name} style={{ borderRadius: '10px' }} />
+          {/* </div> */}
           <div className='user-name-and-job'>
             <div className='user-name'>{props.user.name}</div>
             {/* <div className='user-job'>{props.user.job}</div> */}
@@ -119,7 +122,8 @@ const UserInfoCardNew = (props) => {
         </div>
         <div className='language-and-status' style={{ width: '300px', marginBottom: '10px' }}>
           <span className='header' style={{ borderBottom: '1px solid black' }}>
-            Languages &amp; Status{' '}
+            <TranslateIcon />
+            <BarChartIcon /> Languages &amp; Status{' '}
           </span>
           <Tooltip title='This shows you which language and how much this user speak.' placement='top'>
             <IconButton>
@@ -137,7 +141,7 @@ const UserInfoCardNew = (props) => {
         </div> */}
 
         <div className='user-message'>
-          <div style={{ borderBottom: '1px solid black' }}>Introduction</div>
+          <div style={{ borderBottom: '1px solid black' }}>Self-Introduction</div>
           {props.user.selfIntroduction}
         </div>
         <CallButton

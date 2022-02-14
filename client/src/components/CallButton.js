@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Dropdown } from 'semantic-ui-react';
 import VoiceChatIcon from '@mui/icons-material/VoiceChat';
+import DuoIcon from '@mui/icons-material/Duo';
 
 // action creators
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
@@ -20,12 +21,10 @@ const CallButton = (props) => {
       return (
         <Dropdown.Item
           label={{ color: 'red', empty: true, circular: true }}
-          // text=
+          text='yr'
           onClick={(event) => onCallClick(event, props.user.socketId, language)}
-          style={{ color: 'black', backgroundColor: 'white' }}
         >
-          {language.name}
-          <VoiceChatIcon />
+          {language.name}&nbsp; <DuoIcon />
         </Dropdown.Item>
       );
     });
@@ -33,19 +32,16 @@ const CallButton = (props) => {
     return (
       <Dropdown
         text={`Call`}
-        // pointing='left'
+        pointing='right'
         button
         floating
         labeled
         className='icon'
+        style={{ backgroundColor: 'lightgreen' }}
       >
         <Dropdown.Menu>
-          <Dropdown.Header
-            // icon='tags'
-            content='Which language you wanna speak?'
-            style={{ color: 'black', backgroundColor: 'white' }}
-          />
-          <Dropdown.Divider style={{ color: 'black', backgroundColor: 'white' }} />
+          <Dropdown.Header content='Which language you wanna speak in with this partner?' />
+          <Dropdown.Divider />
           {languageDropdown}
         </Dropdown.Menu>
       </Dropdown>

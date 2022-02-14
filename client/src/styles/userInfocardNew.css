@@ -21,9 +21,9 @@
   height: 300px;
 } */
 
-/* .user-overview {
+.user-info-overview {
   display: grid;
-  grid-template-columns: 60px 1fr;
+  /* grid-template-columns: 80px 1fr; */
   grid-template-areas: 'user-image user-name-and-job';
   column-gap: 10px;
   margin-bottom: 10px;
@@ -31,18 +31,17 @@
 
 .user-image {
   grid-area: user-image;
-  grid-column: 0/1;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  background-color: blue;
+  /* grid-column: 0/1; */
+  /* border-radius: 50%; */
+  /* padding: 10px; */
 }
 
 .user-name-and-job {
   grid-area: user-name-and-job;
+  /* grid-column: 1/2; */
 }
 
-.user-language-overview {
+/* .user-language-overview {
   display: grid;
   grid-template-columns: 50% 50%;
   grid-template-areas: 'languages-list languages-chart';

@@ -83,11 +83,18 @@ export const signup = async (request, response) => {
 
     const myLangsStatus = new Array(myLangs.length).fill(0);
 
+    let randomPhotoURL;
+    if (!photo) {
+      const randomId = Math.floor(Math.random() * 1084);
+      randomPhotoURL = `https://picsum.photos/id/${randomId}/80/80`;
+    }
+
     const user = await new User({
       name: name,
       email: email,
       password: password,
       passwordConfirmation: passwordConfirmation,
+      photo: randomPhotoURL,
       nativeLangs: nativeLangs.map((lang) => mongoose.Types.ObjectId(lang)),
       learningLangs: learningLangs.map((lang) => mongoose.Types.ObjectId(lang)),
       myLangs: myLangs,
