@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Dropdown } from 'semantic-ui-react';
+import { Button, Dropdown, Icon } from 'semantic-ui-react';
+
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import HelpIcon from '@mui/icons-material/Help';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import TranslateIcon from '@mui/icons-material/Translate';
 
 // components
 import CallButton from './CallButton';
@@ -11,6 +17,7 @@ import '../styles/userInfocardNew.css';
 
 // action creatores
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
+import { display } from '@mui/system';
 
 const UserInfoCardNew = (props) => {
   // const onCallClick = (event, oppositeSocketId) => {
@@ -103,31 +110,45 @@ const UserInfoCardNew = (props) => {
       //   <LanguageChart user={props.user} />
       // </>
       <div className='user-info-card' style={{ border: '1px solid red' }}>
-        <div className='user-overview'>
+        <div className='user-info-overview'>
           <div className='user-image'></div>
           <div className='user-name-and-job'>
             <div className='user-name'>{props.user.name}</div>
-            <div className='user-job'>{props.user.job}</div>
+            {/* <div className='user-job'>{props.user.job}</div> */}
           </div>
         </div>
+        <div className='language-and-status' style={{ width: '300px', marginBottom: '10px' }}>
+          <span className='header' style={{ borderBottom: '1px solid black' }}>
+            Languages &amp; Status{' '}
+          </span>
+          <Tooltip title='This shows you which language and how much this user speak.' placement='top'>
+            <IconButton>
+              <HelpIcon fontSize='small' />
+            </IconButton>
+          </Tooltip>
+          <LanguageChart user={props.user} />
+        </div>
         {/* <div className='user-personal-status'>{renderUserStatus()}</div> ここは後でrenderするようにする。*/}
-        <div className='user-language-overview'>
+        {/* <div className='user-language-overview'>
           <div className='languages-list'>
             {renderUserNativeLanguages(props.user)}
             {renderUserLearningLanguages(props.user)}
           </div>
-          <div className='languages-chart'>
-            {/* {renderLanguageChart()} redux使った方がいいのかもなここ。。。 */}
-            <LanguageChart user={props.user} />
-          </div>
+        </div> */}
+
+        <div className='user-message'>
+          <div style={{ borderBottom: '1px solid black' }}>Introduction</div>
+          {props.user.selfIntroduction}
         </div>
-        <div className='user-message'>{props.user.description}</div>
         <CallButton
           user={props.user}
           socket={props.socket}
           setIsPopupOpen={props.setIsPopupOpen}
           setShowCallingModal={props.setShowCallingModal}
         />
+        {/* <div className='languages-chart'>
+          <LanguageChart user={props.user} />
+        </div> */}
         {/* <Button
           positive
           // disabled={!props.mediaState}

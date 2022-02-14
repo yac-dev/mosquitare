@@ -63,7 +63,8 @@ export const colorOptions = [
 const options = {
   plugins: {
     legend: {
-      display: false,
+      display: true,
+      position: 'top',
     },
     tooltip: {
       enabled: false,
@@ -163,16 +164,11 @@ const LanguageChart = (props) => {
 
   const renderDoughnut = () => {
     if (data) {
-      return <Doughnut data={data} width='100px' height='50px' options={options} />;
+      return <Doughnut data={data} options={options} />;
     }
   };
 
-  return (
-    <>
-      {/* <canvas ref={chartRef} width={50} height={50} /> */}
-      {renderDoughnut()}
-    </>
-  );
+  return <>{renderDoughnut()}</>;
 };
 
 export default LanguageChart;
