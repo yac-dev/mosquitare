@@ -16,13 +16,25 @@ const CallButton = (props) => {
     props.callActionCreator(props.socket, mySocketId, oppositeSocketId, startLanguage);
   };
 
+  const checkCallableOrNot = () => {
+    for (let i = 0; i < props.user.nativeLangs.length; i++) {
+      for (let j = 0; j < props.authState.currentUser.learningLangs.length; j++) {
+        if (props.user.nativeLangs[i].name === props.authState.currentUser.learningLangs[j].name) {
+          return 'false';
+        } else {
+          return 'true';
+        }
+      }
+    }
+  }; // 分からん。。。
+
   const renderLanguageDropdownMenu = () => {
     const languageDropdown = props.user.nativeLangs.map((language) => {
       return (
         <Dropdown.Item
           label={{ color: 'red', empty: true, circular: true }}
-          text='yr'
           onClick={(event) => onCallClick(event, props.user.socketId, language)}
+          // disabled={checkCallableOrNot()}
         >
           {language.name}&nbsp; <DuoIcon />
         </Dropdown.Item>

@@ -3,6 +3,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import ChatIcon from '@mui/icons-material/Chat';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 
 import Chat from './Chat';
 import SubtitleWrapper from './Modal/SubtitleWrapper';
@@ -32,7 +35,10 @@ const VerticalTabsWrapper = (props) => {
           style={{ color: 'white', marginBottom: '5px', cursor: 'pointer' }}
         >
           <p className={`tab-word ${isActiveChatComponent ? 'word-active' : undefined}`}>
-            Chat&nbsp;<i className='comments outline icon'></i>
+            Chat&nbsp;
+            <IconButton>
+              <ChatIcon />
+            </IconButton>
           </p>
         </div>
         <div
@@ -41,7 +47,10 @@ const VerticalTabsWrapper = (props) => {
           style={{ color: 'white', marginBottom: '5px', cursor: 'pointer' }}
         >
           <p className={`tab-word ${isActiveTranscriptComponent ? 'word-active' : undefined}`}>
-            Transcript&nbsp;<i className='file alternate outline icon'></i>
+            Transcript&nbsp;
+            <IconButton>
+              <RecordVoiceOverIcon />
+            </IconButton>
           </p>
         </div>
       </div>

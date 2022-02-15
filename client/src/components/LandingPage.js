@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// const [showCallingModal, setShowCallingModal] = useState(false);
+import Paper from '@mui/material/Paper';
+
+const styles = {
+  paperContainer: {
+    backgroundImage: 'url(https://source.unsplash.com/Q1p7bh3SHj8)',
+  },
+};
 
 const LandingPage = () => {
-  // const [showCallingModal, setShowCallingModal] = useState(false);
   return (
     <>
-      <div className='welcome'>
+      <img
+        src='https://source.unsplash.com/Q1p7bh3SHj8'
+        alt={'imag'}
+        style={{
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          width: '100vw',
+          height: '100vh',
+        }}
+      />
+
+      {/* <div className='welcome'>
         <div className='messages-wrapper'>
           <div className='message'>Welcome!</div>
           <div className='message'>¡Bienvenido!</div>
@@ -93,7 +110,7 @@ const LandingPage = () => {
             </a>
           </div>
         </footer>
-      </div>
+      </div> */}
     </>
   );
 };

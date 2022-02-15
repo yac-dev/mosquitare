@@ -40,6 +40,7 @@ import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import CreateIcon from '@mui/icons-material/Create';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import MapIcon from '@mui/icons-material/Map';
+import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import ExploreIcon from '@mui/icons-material/Explore';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MailIcon from '@mui/icons-material/Mail';
@@ -312,7 +313,7 @@ const Navbar = (props) => {
     }
   };
 
-  const renderExploreIcon = () => {
+  const renderExploreAndSearchIcon = () => {
     if (props.authState.currentUser) {
       return (
         <>
@@ -326,6 +327,16 @@ const Navbar = (props) => {
               <ExploreIcon />
             </IconButton>
           </Tooltip>
+          <Tooltip title='Search People'>
+            <IconButton
+              size='large'
+              aria-label='show 17 new notifications'
+              color='inherit'
+              // onClick={() => (window.location = '/worldmap')}
+            >
+              <TravelExploreIcon />
+            </IconButton>
+          </Tooltip>
         </>
       );
     } else {
@@ -336,17 +347,32 @@ const Navbar = (props) => {
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position='static'>
+        <AppBar
+          position='fixed'
+          color='transparent'
+          style={{ background: 'transparent !important', boxShadow: 'none' }}
+        >
           <Toolbar>
-            <IconButton size='large' edge='start' color='inherit' aria-label='open drawer' sx={{ mr: 2 }}>
+            <IconButton
+              size='large'
+              edge='start'
+              color='inherit'
+              aria-label='open drawer'
+              sx={{ mr: 2, color: 'white' }}
+            >
               <MenuIcon />
             </IconButton>
-            <Typography variant='h6' noWrap component='div' sx={{ display: { xs: 'none', sm: 'block' } }}>
+            <Typography
+              variant='h6'
+              noWrap
+              component='div'
+              sx={{ display: { xs: 'none', sm: 'block' }, color: 'white' }}
+            >
               Lamppost&nbsp;
-              {renderExploreIcon()}
+              {renderExploreAndSearchIcon()}
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, color: 'white' }}>
               {renderSignupAndLogin()}
               {renderToolIconButtons()}
             </Box>

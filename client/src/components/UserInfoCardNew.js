@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Button, Dropdown, Icon } from 'semantic-ui-react';
+import { Button, Dropdown, Icon, Popup } from 'semantic-ui-react';
 
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -121,15 +121,24 @@ const UserInfoCardNew = (props) => {
           </div>
         </div>
         <div className='language-and-status' style={{ width: '300px', marginBottom: '10px' }}>
-          <span className='header' style={{ borderBottom: '1px solid black' }}>
+          <div
+            className='header'
+            // style={{ borderBottom: '1px solid black' }}
+          >
             <TranslateIcon />
             <BarChartIcon /> Languages &amp; Status{' '}
-          </span>
-          <Tooltip title='This shows you which language and how much this user speak.' placement='top'>
+            <Popup
+              content='This chart shows you what language and how much this user speak.'
+              trigger={<HelpIcon fontSize='small' />}
+            />
+          </div>
+          <hr style={{ width: '70%', textAlign: 'left', marginLleft: '0' }}></hr>
+          {/* <Tooltip title='This shows you which language and how much this user speak.' placement='top'>
             <IconButton>
               <HelpIcon fontSize='small' />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
+
           <LanguageChart user={props.user} />
         </div>
         {/* <div className='user-personal-status'>{renderUserStatus()}</div> ここは後でrenderするようにする。*/}
@@ -140,8 +149,9 @@ const UserInfoCardNew = (props) => {
           </div>
         </div> */}
 
-        <div className='user-message'>
-          <div style={{ borderBottom: '1px solid black' }}>Self-Introduction</div>
+        <div className='user-message' style={{ marginBottom: '10px' }}>
+          <div className='header'>Self-Introduction</div>
+          <hr style={{ width: '70%', textAlign: 'left', marginLleft: '0' }}></hr>
           {props.user.selfIntroduction}
         </div>
         <CallButton
