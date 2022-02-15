@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import store from '../store';
 
+import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { withStyles } from '@mui/styles';
@@ -77,15 +79,47 @@ const CustomInput = React.forwardRef(function CustomInput(props, ref) {
 });
 
 const Chat = (props) => {
-  const [text, setText] = useState('');
+  const [chats, setChats] = useState([]);
+  const [inputText, setInputText] = useState('');
   // const classes = styles(props);
+
+  useEffect(() => {
+    props.socket.on('I_RECIEVE_CHAT_MESSAGE', (dataFromServer) => {
+      setChats((previousState) => [...previousState, dataFromServer.messageObject]);
+    });
+  }, []);
+
+  const sendChat = () => {
+    if (!inputText) {
+      console.log('type somthing.');
+    } else {
+      const myName = store.getState().authState.currentUser.name;
+      const messageObject = { name: myName, message: inputText };
+      setChats((previousState) => [...previousState, messageObject]);
+      // socket使って、partnerに送る。
+      const partnerSocketId = store.getState().mediaState.partnerSocketId;
+      props.socket.emit('I_SEND_CHAT_MESSAGE', { to: partnerSocketId, messageObject });
+    }
+  };
+
+  const renderChats = () => {
+    const renderedChats = chats.map((chat) => {
+      return (
+        <div>
+          {chat.name}: &nbsp;{chat.message}
+        </div>
+      );
+    });
+
+    return <>{renderedChats}</>;
+  };
 
   return (
     <div
       className={`tab-content ${props.isSelected === 'chat' ? undefined : 'hidden'}`}
       style={{ color: 'white', position: 'relative' }}
     >
-      <div className='chats'>hello</div>
+      <div className='chats'>{renderChats()}</div>
       <hr style={{ color: 'white' }}></hr>
       <div className='input-and-send' style={{ width: '700px', position: 'absolute', bottom: '0' }}>
         {/* <Stack direction='row' spacing={2}> */}
@@ -106,11 +140,19 @@ const Chat = (props) => {
               // }}
               InputProps={{ style: { color: 'black', backgroundColor: 'white' } }}
             /> */}
-        <CustomInput aria-label='Demo input' placeholder='Type message...' />
+        <CustomInput
+          aria-label='Demo input'
+          placeholder='Message...'
+          value={inputText}
+          onChange={(event) => setInputText(event.target.value)}
+        />
         {/* </Box> */}
         {/* <Button variant='contained' startIcon={<SendIcon />} width='20%'>
-            Send
-          </Button> */}
+          Send
+        </Button> */}
+        <IconButton>
+          <SendIcon />
+        </IconButton>
         {/* </Stack> */}
       </div>
     </div>
