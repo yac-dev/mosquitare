@@ -9,17 +9,21 @@ import { styled } from '@mui/material/styles';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import PersonIcon from '@mui/icons-material/Person';
 import ChatIcon from '@mui/icons-material/Chat';
+import SendIcon from '@mui/icons-material/Send';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import SubtitlesIcon from '@mui/icons-material/Subtitles';
 
 import Chat from './Chat';
 import SubtitleWrapper from './Modal/SubtitleWrapper';
 
 const useStyles = makeStyles((theme) => ({
   toggleButton: {
-    backgroundColor: '#808080!important',
+    backgroundColor: 'rgb(29, 49, 79)!important',
     color: 'white !important',
-    // border: [10, 'solid', 'black'],
+    // border: [1, 'solid', 'rgb(44, 76, 122)'],
     // padding: 10,
     // boxShadow: [[0, 0, 0, 1, 'blue']],
   },
@@ -90,23 +94,34 @@ const VerticalTabsWrapper = (props) => {
         value={alignment}
         exclusive
         onChange={handleChange}
-        // sx={{ backgroundColor: 'black' }}
+        // sx={{ border: '1px solid rgb(33, 53, 82)' }}
       >
         <ToggleButton
           value='chat'
           classes={{ selected: classes.toggleButton }}
-          sx={{ backgroundColor: 'black', color: 'white' }}
+          sx={{ color: 'white', border: 'none' }}
+          // backgroundColor: 'rgb(33, 53, 82)',  border: '1px solid rgb(33, 53, 82)'
         >
-          Chat&nbsp;
-          <ChatIcon />
+          <SendIcon />
+          &nbsp; Chat
         </ToggleButton>
         <ToggleButton
           value='transcript'
           classes={{ selected: classes.toggleButton }}
-          sx={{ backgroundColor: 'black', color: ' white' }}
+          sx={{ color: ' white', border: 'none' }}
+          // backgroundColor: 'rgb(33, 53, 82)',なしかありか。。。どっちにしよう。border: '1px solid rgb(33, 53, 82)'
         >
-          Transcript&nbsp;
           <RecordVoiceOverIcon />
+          &nbsp; Transcript
+        </ToggleButton>
+        <ToggleButton
+          value='partner'
+          classes={{ selected: classes.toggleButton }}
+          sx={{ color: ' white', border: 'none' }}
+          // backgroundColor: 'rgb(33, 53, 82)',なしかありか。。。どっちにしよう。border: '1px solid rgb(33, 53, 82)'
+        >
+          <PersonIcon />
+          &nbsp;Partner
         </ToggleButton>
       </ToggleButtonGroup>
 

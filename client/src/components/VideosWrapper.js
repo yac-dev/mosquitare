@@ -1,6 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { Button } from 'semantic-ui-react';
+// import { Button } from 'semantic-ui-react';
+
+// mui
+import TranslateIcon from '@mui/icons-material/Translate';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MicIcon from '@mui/icons-material/Mic';
+import IconButton from '@mui/material/IconButton';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { styled } from '@mui/system';
 
 // call recieve側
 import { answerCallActionCreator2 } from '../actionCreators/mediaActionCreator';
@@ -20,6 +29,31 @@ import { updateUserConversationsActionCreator } from '../actionCreators/authActi
 import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { disconnectCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { updateUserConversationToFalseActionCreator } from '../actionCreators/authActionCreators';
+
+// styles for mui
+const LogoutIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(255, 0, 0)',
+  '&:hover': {
+    backgroundColor: 'rgba(255, 0, 0, 0.8)',
+  },
+}));
+
+const SwitchLangIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(35, 63, 105)',
+  '&:hover': {
+    backgroundColor: 'rgba(39, 78, 138)',
+  },
+}));
+
+const MicIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(36, 208, 145)',
+  '&:hover': {
+    backgroundColor: 'rgba(36, 208, 145,0.8)',
+  },
+}));
 
 const VideosWrapper = (props) => {
   const myVideoRef = useRef();
@@ -103,14 +137,38 @@ const VideosWrapper = (props) => {
           style={{ width: '160px', height: '90px' }}
         />
         <div className='button-wrapper'>
-          <Button
+          <Tooltip title='Disconnect call'>
+            {/* <LogoutButton variant='contained' onClick={() => onHangUpClick()}>
+              <LogoutIcon /> */}
+            <LogoutIconButton>
+              <LogoutIcon />
+            </LogoutIconButton>
+            {/* </LogoutButton> */}
+          </Tooltip>
+          <Tooltip title='Switch current language' variant='contained'>
+            <SwitchLangIconButton sx={{ margin: '5px' }}>
+              {/* {'lang'}&nbsp; */}
+              {/* <SwitchRightIcon /> */}
+              <TranslateIcon />
+              {/* &nbsp;{'lang'} */}
+            </SwitchLangIconButton>
+          </Tooltip>
+          <Tooltip title='Volume change' variant='contained'>
+            <MicIconButton>
+              {/* {'lang'}&nbsp; */}
+              {/* <SwitchRightIcon /> */}
+              <MicIcon />
+              {/* &nbsp;{'lang'} */}
+            </MicIconButton>
+          </Tooltip>
+          {/* <Button
             negative
             // disabled={!isMinimumTimePassed}
             className='hang-up-button'
             circular
             icon='sign out'
             onClick={() => onHangUpClick()}
-          ></Button>
+          ></Button> */}
         </div>
       </div>
     </>

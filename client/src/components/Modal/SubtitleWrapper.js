@@ -119,9 +119,12 @@ const SubtitleWrapper = (props) => {
   const renderTranscripts = () => {
     const transcripts = conversationTranscript.map((transcriptObject) => {
       return (
-        <p>
-          {transcriptObject.name}: {transcriptObject.transcript}
-        </p>
+        <>
+          <p>{transcriptObject.name}</p>
+          <div style={{ borderRadius: '5px', backgroundColor: 'rgb(35, 63, 105)', border: '1px solid white' }}>
+            {transcriptObject.transcript}
+          </div>
+        </>
       );
     });
     return <>{transcripts}</>;
@@ -173,12 +176,10 @@ const SubtitleWrapper = (props) => {
   return (
     <div
       className={`tab-content ${props.isSelected === 'transcript' ? undefined : 'hidden'}`}
-      style={{ color: 'white' }}
+      style={{ color: 'white', backgroundColor: 'rgb(29, 49, 79)', borderRadius: '5px', overflow: 'auto' }}
     >
       <div>
-        <span>
-          listening: {listening ? 'on' : 'off'}: Now we are speaking {props.mediaState.currentLanguage.name}
-        </span>
+        <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>
         {renderSwitchLangButton()}
       </div>
       <div>

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import store from '../store';
-
+import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import TranslateIcon from '@mui/icons-material/Translate';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { withStyles } from '@mui/styles';
@@ -78,6 +79,28 @@ const CustomInput = React.forwardRef(function CustomInput(props, ref) {
   return <InputUnstyled components={{ Input: StyledInputElement }} {...props} ref={ref} />;
 });
 
+const ColorButton = styled(Button)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(35, 63, 105)',
+  '&:hover': {
+    backgroundColor: 'rgb(39, 78, 138)',
+  },
+}));
+
+const SwitchLanguageIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(35, 63, 105)',
+  '&:hover': {
+    backgroundColor: 'rgb(39, 78, 138)',
+  },
+}));
+
+// const styles = {
+//   floatingLabelFocusStyle: {
+//     color: 'somecolor',
+//   },
+// };
+
 const Chat = (props) => {
   const [chats, setChats] = useState([]);
   const [inputText, setInputText] = useState('');
@@ -117,43 +140,75 @@ const Chat = (props) => {
   return (
     <div
       className={`tab-content ${props.isSelected === 'chat' ? undefined : 'hidden'}`}
-      style={{ color: 'white', position: 'relative' }}
+      style={{
+        color: 'white',
+        backgroundColor: 'rgb(29, 49, 79)',
+        position: 'relative',
+        borderRadius: '5px',
+        overflow: 'auto',
+      }}
     >
+      <p style={{ marginLeft: '5px' }}>
+        chat in English...&nbsp;
+        <Tooltip title='Switch current language'>
+          <SwitchLanguageIconButton color='inherit'>
+            <TranslateIcon variant='contained' size='small' />
+          </SwitchLanguageIconButton>
+        </Tooltip>
+      </p>
       <div className='chats'>{renderChats()}</div>
-      <hr style={{ color: 'white' }}></hr>
-      <div className='input-and-send' style={{ width: '700px', position: 'absolute', bottom: '0' }}>
-        {/* <Stack direction='row' spacing={2}> */}
-        {/* <Box
+      {/*  ここら辺、smart phoneの場合でwidthを書くだけだな。*/}
+      <div className='input-and-send' style={{ width: '100%', position: 'absolute', bottom: '0', padding: '5px' }}>
+        <hr style={{ color: 'white' }}></hr>
+        <Stack direction='row' spacing={1}>
+          {/* <Box
             sx={{
               width: 500,
               maxWidth: '100%',
             }}
           > */}
-        {/* <TextField
-              fullWidth
-              label='Message'
-              id='fullWidth'
-              className={classes.textField}
-              // sx={{ input: { color: 'white' } }}
-              // InputProps={{
-              //   className: classes.input,
-              // }}
-              InputProps={{ style: { color: 'black', backgroundColor: 'white' } }}
-            /> */}
-        <CustomInput
-          aria-label='Demo input'
-          placeholder='Message...'
-          value={inputText}
-          onChange={(event) => setInputText(event.target.value)}
-        />
-        {/* </Box> */}
-        {/* <Button variant='contained' startIcon={<SendIcon />} width='20%'>
+          <TextField
+            fullWidth
+            label='Type something...'
+            id='fullWidth'
+            // className={classes.textField}
+            // sx={{ color: 'white' }}
+            // InputProps={{
+            //   className: classes.input,
+            // }}rgb(186, 184, 184)
+            InputProps={{ style: { color: 'white', backgroundColor: 'rgb(35, 63, 105)' } }}
+            InputLabelProps={{
+              style: { color: 'white' },
+            }}
+          />
+          {/* <CustomInput
+            aria-label='Demo input'
+            placeholder='Message...'
+            value={inputText}
+            onChange={(event) => setInputText(event.target.value)}
+          /> */}
+          {/* </Box> */}
+          {/* <Button variant='contained' startIcon={<SendIcon />} width='20%'>
           Send
         </Button> */}
-        <IconButton>
-          <SendIcon />
-        </IconButton>
-        {/* </Stack> */}
+          {/* <IconButton
+            size='large'
+            edge='end'
+            aria-label='show 4 new mails'
+            // aria-controls={userMenuId}
+            // onClick={handleProfileMenuOpen}
+            color='inherit'
+          >
+            <SendIcon />
+          </IconButton> */}
+          <ColorButton
+            variant='contained'
+            endIcon={<SendIcon />}
+            // sx={{ border: '1px solid white' }}
+          >
+            Send
+          </ColorButton>
+        </Stack>
       </div>
     </div>
   );
