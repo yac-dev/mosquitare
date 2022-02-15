@@ -49,10 +49,12 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import Button from '@mui/material/Button';
-import LoginIcon from '@mui/icons-material/Login';
+
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 
@@ -217,32 +219,38 @@ const Navbar = (props) => {
     </Menu>
   );
 
-  const renderSignupAndLogin = () => {
-    if (props.authState.currentUser) {
-      return null;
-    } else {
-      return (
-        <>
-          <Stack direction='row' spacing={2}>
-            <Button
-              variant='contained'
-              // startIcon={<LoginIcon />}
-              onClick={() => setShowSignupModal(true)}
-            >
-              Signup
-            </Button>
-            <Button
-              variant='contained'
-              // endIcon={<SendIcon />}
-              onClick={() => setShowLoginModal(true)}
-            >
-              Login
-            </Button>
-          </Stack>
-        </>
-      );
-    }
-  };
+  // const renderSignupAndLogin = () => {
+  //   if (props.authState.currentUser) {
+  //     return null;
+  //   } else {
+  //     return (
+  //       <>
+  //         <Stack direction='row' spacing={2}>
+  //           <Button
+  //             variant='contained'
+  //             startIcon={<BorderColorIcon />}
+  //             onClick={() => {
+  //               setShowSignupModal(true);
+  //               setShowLoginModal(false);
+  //             }}
+  //           >
+  //             Signup
+  //           </Button>
+  //           <Button
+  //             variant='contained'
+  //             startIcon={<LoginIcon />}
+  //             onClick={() => {
+  //               setShowLoginModal(true);
+  //               setShowSignupModal(false);
+  //             }}
+  //           >
+  //             Login
+  //           </Button>
+  //         </Stack>
+  //       </>
+  //     );
+  //   }
+  // };
 
   const renderToolIconButtons = () => {
     // logged inの時にのみこれを表示する。
@@ -317,7 +325,7 @@ const Navbar = (props) => {
     if (props.authState.currentUser) {
       return (
         <>
-          <Tooltip title='So where to?'>
+          <Tooltip title='Where to?'>
             <IconButton
               size='large'
               aria-label='show 17 new notifications'
@@ -373,7 +381,7 @@ const Navbar = (props) => {
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: 'none', md: 'flex' }, color: 'white' }}>
-              {renderSignupAndLogin()}
+              {/* {renderSignupAndLogin()} */}
               {renderToolIconButtons()}
             </Box>
             {/* ここのBoxってなんだろな。。。 */}

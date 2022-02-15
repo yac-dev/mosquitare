@@ -113,12 +113,11 @@ const SignupWrapper = (props) => {
         show={props.showSignupModal}
         onHide={() => {
           props.setShowSignupModal(false);
-          // setAmIFillingBasic(true); これいらないかな。。。
         }}
         backdrop='static'
         keyboard={false}
       >
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Welcome to Lamppost!</Modal.Title>
         </Modal.Header>
         <Modal.Body>

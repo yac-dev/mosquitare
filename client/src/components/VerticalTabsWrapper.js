@@ -1,8 +1,13 @@
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+// import PropTypes from 'prop-types';
+// import Tabs from '@mui/material/Tabs';
+// import Tab from '@mui/material/Tab';
+// import Typography from '@mui/material/Typography';
+// import Box from '@mui/material/Box';
+import React, { useState } from 'react';
+import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import IconButton from '@mui/material/IconButton';
 import ChatIcon from '@mui/icons-material/Chat';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
@@ -10,9 +15,27 @@ import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import Chat from './Chat';
 import SubtitleWrapper from './Modal/SubtitleWrapper';
 
-import React, { useState } from 'react';
+const useStyles = makeStyles((theme) => ({
+  toggleButton: {
+    backgroundColor: '#808080!important',
+    color: 'white !important',
+    // border: [10, 'solid', 'black'],
+    // padding: 10,
+    // boxShadow: [[0, 0, 0, 1, 'blue']],
+  },
+}));
+
+// const StyledToggleButton = styled(({ className, ...props }) => (
+//   <ToggleButton {...props} classes={{ popper: className }} />
+// ))`
+//   & .MuiToggleButton-root {
+//     backgroundcolor: black;
+//   }
+// `;
 
 const VerticalTabsWrapper = (props) => {
+  const classes = useStyles(props);
+  const [alignment, setAlignment] = useState('chat');
   const [isActiveChatComponent, setIsActiveChatComponent] = useState(true);
   const [isActiveTranscriptComponent, setIsActiveTranscriptComponent] = useState(false);
 
@@ -26,9 +49,15 @@ const VerticalTabsWrapper = (props) => {
     setIsActiveTranscriptComponent(true);
   };
 
+  const handleChange = (event, newAlignment) => {
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
+  };
+
   return (
     <div className='vertical-tabs-wrapper'>
-      <div className='tabs' style={{ borderRight: '1px solid white' }}>
+      {/* <div className='tabs' style={{ borderRight: '1px solid white' }}>
         <div
           className={`chat-tab ${isActiveChatComponent ? 'active' : undefined}`}
           onClick={() => activateChatComponent(false)}
@@ -53,9 +82,36 @@ const VerticalTabsWrapper = (props) => {
             </IconButton>
           </p>
         </div>
-      </div>
-      <Chat isActiveChatComponent={isActiveChatComponent} />
-      <SubtitleWrapper socket={props.socket} isActiveTranscriptComponent={isActiveTranscriptComponent} />
+      </div> */}
+
+      <ToggleButtonGroup
+        color='primary'
+        orientation='vertical'
+        value={alignment}
+        exclusive
+        onChange={handleChange}
+        // sx={{ backgroundColor: 'black' }}
+      >
+        <ToggleButton
+          value='chat'
+          classes={{ selected: classes.toggleButton }}
+          sx={{ backgroundColor: 'black', color: 'white' }}
+        >
+          Chat&nbsp;
+          <ChatIcon />
+        </ToggleButton>
+        <ToggleButton
+          value='transcript'
+          classes={{ selected: classes.toggleButton }}
+          sx={{ backgroundColor: 'black', color: ' white' }}
+        >
+          Transcript&nbsp;
+          <RecordVoiceOverIcon />
+        </ToggleButton>
+      </ToggleButtonGroup>
+
+      <Chat socket={props.socket} isSelected={alignment} />
+      <SubtitleWrapper socket={props.socket} isSelected={alignment} />
     </div>
   );
 };

@@ -172,7 +172,7 @@ const SubtitleWrapper = (props) => {
 
   return (
     <div
-      className={`tab-content ${props.isActiveTranscriptComponent ? undefined : 'hidden'}`}
+      className={`tab-content ${props.isSelected === 'transcript' ? undefined : 'hidden'}`}
       style={{ color: 'white' }}
     >
       <div>

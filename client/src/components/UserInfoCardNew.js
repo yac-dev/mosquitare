@@ -18,7 +18,6 @@ import '../styles/userInfocardNew.css';
 
 // action creatores
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
-import { display } from '@mui/system';
 
 const UserInfoCardNew = (props) => {
   // const onCallClick = (event, oppositeSocketId) => {
@@ -122,8 +121,8 @@ const UserInfoCardNew = (props) => {
         </div>
         <div className='language-and-status' style={{ width: '300px', marginBottom: '10px' }}>
           <div
-            className='header'
-            // style={{ borderBottom: '1px solid black' }}
+
+          // style={{ borderBottom: '1px solid black' }}
           >
             <TranslateIcon />
             <BarChartIcon /> Languages &amp; Status{' '}
@@ -150,7 +149,7 @@ const UserInfoCardNew = (props) => {
         </div> */}
 
         <div className='user-message' style={{ marginBottom: '10px' }}>
-          <div className='header'>Self-Introduction</div>
+          <div>Self-Introduction</div>
           <hr style={{ width: '70%', textAlign: 'left', marginLleft: '0' }}></hr>
           {props.user.selfIntroduction}
         </div>

@@ -34,7 +34,7 @@ const Login = (props) => {
         backdrop='static'
         keyboard={false}
       >
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -66,6 +66,9 @@ const Login = (props) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
+          <Button variant='secondary' onClick={() => props.setShowLoginModal(false)}>
+            Close
+          </Button>
           <Button variant='primary' onClick={(event) => onSubmitClick(event)}>
             Login
           </Button>

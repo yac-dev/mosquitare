@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import LoginIcon from '@mui/icons-material/Login';
+import LanguageIcon from '@mui/icons-material/Language';
 
-import Paper from '@mui/material/Paper';
+//components
+import SignupWrapper from './Signup/SignupWrapper';
+import Login from './Signup/Login';
 
 const styles = {
   paperContainer: {
@@ -10,19 +16,63 @@ const styles = {
 };
 
 const LandingPage = () => {
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   return (
     <>
-      <img
-        src='https://source.unsplash.com/Q1p7bh3SHj8'
-        alt={'imag'}
-        style={{
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          width: '100vw',
-          height: '100vh',
-        }}
-      />
+      <div className='landing-page-wrapper' style={{ position: 'relative', textAlign: ' center', color: ' white' }}>
+        <img
+          src='https://source.unsplash.com/Q1p7bh3SHj8'
+          alt={'imag'}
+          style={{
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            width: '100vw',
+            height: '100vh',
+          }}
+        />
+        <div
+          className='centered-text'
+          style={{
+            position: ' absolute',
+            top: '50%',
+            left: ' 50%',
+            transform: 'translate(-50%, -50%)',
+            fontSize: '70px',
+          }}
+        >
+          Welcome to Lamppost
+          <p style={{ fontSize: '30px', fontWeight: 'lighter' }}>Completely new Language Excnahge platform.</p>
+          <Stack direction='row' spacing={2} justifyContent='center' alignItems='center'>
+            <Button
+              variant='contained'
+              startIcon={<LanguageIcon />}
+              size='large'
+              onClick={() => {
+                setShowSignupModal(true);
+                setShowLoginModal(false);
+              }}
+            >
+              Start Now
+            </Button>
+            <Button
+              variant='contained'
+              startIcon={<LoginIcon />}
+              size='large'
+              onClick={() => {
+                setShowLoginModal(true);
+                setShowSignupModal(false);
+              }}
+            >
+              Login
+            </Button>
+          </Stack>
+          <SignupWrapper showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
+          <Login showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />
+        </div>
+      </div>
 
       {/* <div className='welcome'>
         <div className='messages-wrapper'>
