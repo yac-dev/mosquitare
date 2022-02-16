@@ -41,9 +41,9 @@ const LogoutIconButton = styled(IconButton)(({ theme }) => ({
 
 const SwitchLangIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(35, 63, 105)',
+  backgroundColor: 'rgb(36, 106, 212)',
   '&:hover': {
-    backgroundColor: 'rgba(39, 78, 138)',
+    backgroundColor: 'rgba(17, 109, 247)',
   },
 }));
 

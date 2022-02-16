@@ -13,6 +13,8 @@ import Input from '@mui/material/Input';
 import InputUnstyled from '@mui/base/InputUnstyled';
 import { styled } from '@mui/system';
 
+import { I_SEND_CHAT_MESSAGE_TO_MY_PARTNER, MY_PARTNER_SEND_ME_A_CHAT_MESSAGE } from '../actionCreators/socketEvents';
+
 const ariaLabel = { 'aria-label': 'description' };
 
 // const styles = (theme) => ({
@@ -107,7 +109,7 @@ const Chat = (props) => {
   // const classes = styles(props);
 
   useEffect(() => {
-    props.socket.on('I_RECIEVE_CHAT_MESSAGE', (dataFromServer) => {
+    props.socket.on(MY_PARTNER_SEND_ME_A_CHAT_MESSAGE, (dataFromServer) => {
       setChats((previousState) => [...previousState, dataFromServer.messageObject]);
     });
   }, []);
@@ -120,21 +122,40 @@ const Chat = (props) => {
       const messageObject = { name: myName, message: inputText };
       setChats((previousState) => [...previousState, messageObject]);
       // socket使って、partnerに送る。
-      const partnerSocketId = store.getState().mediaState.partnerSocketId;
-      props.socket.emit('I_SEND_CHAT_MESSAGE', { to: partnerSocketId, messageObject });
+      const partnerSocketId = store.getState().mediaState.callingWith.socketId;
+      props.socket.emit(I_SEND_CHAT_MESSAGE_TO_MY_PARTNER, { to: partnerSocketId, messageObject });
+      setInputText('');
     }
   };
 
+  // &nbsp;
   const renderChats = () => {
     const renderedChats = chats.map((chat) => {
       return (
-        <div>
-          {chat.name}: &nbsp;{chat.message}
+        <div style={{ marginBottom: '5px' }}>
+          <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{chat.name}</p>
+          <div
+            style={{
+              borderRadius: '10px',
+              backgroundColor: 'rgb(35, 63, 105)',
+              border: '1px solid white',
+              padding: '5px',
+              display: 'inline',
+            }}
+          >
+            {chat.message}
+          </div>
         </div>
       );
     });
 
-    return <>{renderedChats}</>;
+    return (
+      <div
+        style={{ overflow: 'auto', height: '140px', border: '1px groove #6495ED', borderRadius: '5px', padding: '5px' }}
+      >
+        {renderedChats}
+      </div>
+    );
   };
 
   return (
@@ -145,10 +166,9 @@ const Chat = (props) => {
         backgroundColor: 'rgb(29, 49, 79)',
         position: 'relative',
         borderRadius: '5px',
-        overflow: 'auto',
       }}
     >
-      <p style={{ marginLeft: '5px' }}>
+      <p style={{ marginLeft: '5px', marginBottom: '0px' }}>
         chat in English...&nbsp;
         <Tooltip title='Switch current language'>
           <SwitchLanguageIconButton color='inherit'>
@@ -156,10 +176,12 @@ const Chat = (props) => {
           </SwitchLanguageIconButton>
         </Tooltip>
       </p>
-      <div className='chats'>{renderChats()}</div>
+      <div className='chats' style={{ padding: '5px' }}>
+        {renderChats()}
+      </div>
       {/*  ここら辺、smart phoneの場合でwidthを書くだけだな。*/}
       <div className='input-and-send' style={{ width: '100%', position: 'absolute', bottom: '0', padding: '5px' }}>
-        <hr style={{ color: 'white' }}></hr>
+        {/* <hr style={{ color: 'white' }}></hr> */}
         <Stack direction='row' spacing={1}>
           {/* <Box
             sx={{
@@ -180,6 +202,8 @@ const Chat = (props) => {
             InputLabelProps={{
               style: { color: 'white' },
             }}
+            value={inputText}
+            onChange={(event) => setInputText(event.target.value)}
           />
           {/* <CustomInput
             aria-label='Demo input'
@@ -204,6 +228,7 @@ const Chat = (props) => {
           <ColorButton
             variant='contained'
             endIcon={<SendIcon />}
+            onClick={() => sendChat()}
             // sx={{ border: '1px solid white' }}
           >
             Send

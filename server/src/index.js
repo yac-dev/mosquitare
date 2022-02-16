@@ -38,6 +38,9 @@ import {
   MY_CALLED_USER_CREATED_INTEGRATED_USER_MEDIA,
   I_WANNA_SWITCH_CURRENT_LANGUAGE,
   MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE,
+  // chats
+  I_SEND_CHAT_MESSAGE_TO_MY_PARTNER,
+  MY_PARTNER_SEND_ME_A_CHAT_MESSAGE,
 } from './socketEvents';
 
 // 上に全部移した。
@@ -181,6 +184,13 @@ io.on('connection', (socket) => {
   socket.on(I_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromSwitchingUser) => {
     io.to(dataFromSwitchingUser.to).emit(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, {
       switchingLanguage: dataFromSwitchingUser.switchingLanguage,
+    });
+  });
+
+  // chat
+  socket.on(I_SEND_CHAT_MESSAGE_TO_MY_PARTNER, (dataFromSender) => {
+    io.to(dataFromSender.to).emit(MY_PARTNER_SEND_ME_A_CHAT_MESSAGE, {
+      messageObject: dataFromSender.messageObject,
     });
   });
 });
