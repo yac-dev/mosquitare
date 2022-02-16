@@ -128,6 +128,23 @@ const Chat = (props) => {
     }
   };
 
+  const sendChatByKeyDownEnter = (event) => {
+    if (event.key === 'Enter') {
+      if (!inputText) {
+        console.log('type somthing.');
+        // errorをuiに見せるようにしよう。
+      } else {
+        const myName = store.getState().authState.currentUser.name;
+        const messageObject = { name: myName, message: inputText };
+        setChats((previousState) => [...previousState, messageObject]);
+        // socket使って、partnerに送る。
+        const partnerSocketId = store.getState().mediaState.callingWith.socketId;
+        props.socket.emit(I_SEND_CHAT_MESSAGE_TO_MY_PARTNER, { to: partnerSocketId, messageObject });
+        setInputText('');
+      }
+    }
+  };
+
   // &nbsp;
   const renderChats = () => {
     const renderedChats = chats.map((chat) => {
@@ -204,6 +221,7 @@ const Chat = (props) => {
             }}
             value={inputText}
             onChange={(event) => setInputText(event.target.value)}
+            onKeyDown={(event) => sendChatByKeyDownEnter(event)}
           />
           {/* <CustomInput
             aria-label='Demo input'
