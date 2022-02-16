@@ -6,6 +6,7 @@ import { Button } from 'semantic-ui-react';
 // components
 import CallingModal from './CallingModal';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
+import UserDetail from './UserDetail';
 // import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 // import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
 import UsersMarker from './UsersMarker';
@@ -52,6 +53,8 @@ const WorldMap = (props) => {
   // const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
   // vertically centered modal用
   // const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
+  const [isUserIconClicked, setIsUserIconClicked] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -127,7 +130,13 @@ const WorldMap = (props) => {
           mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
           onViewportChange={(viewport) => setViewport(viewport)}
         >
-          <UsersMarker socket={socket} setShowCallingModal={setShowCallingModal} />
+          <UsersMarker
+            socket={socket}
+            setShowCallingModal={setShowCallingModal}
+            setIsUserIconClicked={setIsUserIconClicked}
+            setUser={setUser}
+          />
+          <UserDetail isUserIconClicked={isUserIconClicked} user={user} />
           {/* <MeetingsList
             socket={socket}
             // onJoinClick={onJoinClick}

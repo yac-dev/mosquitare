@@ -25,13 +25,13 @@ const options = {
   plugins: {
     legend: {
       display: true,
-      position: 'top',
+      position: 'left',
     },
     tooltip: {
       enabled: false,
     },
     // responsive: true,
-    maintainAspectRatio: false,
+
     datalabels: {
       display: true,
       formatter: (val, ctx) => {
@@ -41,6 +41,7 @@ const options = {
       backgroundColor: '#404040',
     },
   },
+  maintainAspectRatio: false, // これだ。resizeな。pluginの外に出すとできたよ。
 };
 
 const LanguageChart = (props) => {
@@ -87,7 +88,7 @@ const LanguageChart = (props) => {
   }, []);
 
   const renderDoughnut = () => {
-    return <Doughnut data={data} options={options} />;
+    return <Doughnut data={data} options={options} width={150} height={150} />;
   };
 
   // 何がnativeかと何を勉強したいかの表示ね。
@@ -100,7 +101,7 @@ const LanguageChart = (props) => {
     if (statusSum === 0) {
       return <>{renderInitialData()}</>;
     } else if (data) {
-      return <>{renderDoughnut()}</>;
+      return <div style={{ width: '99%' }}>{renderDoughnut()}</div>;
     }
   };
 

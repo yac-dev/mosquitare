@@ -22,6 +22,8 @@ const UsersMarker = (props) => {
               socket={props.socket}
               user={user}
               setShowCallingModal={props.setShowCallingModal}
+              setIsUserIconClicked={props.setIsUserIconClicked}
+              setUser={props.setUser}
             />
           </>
         );

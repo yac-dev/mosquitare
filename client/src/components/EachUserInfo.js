@@ -21,8 +21,12 @@ const EachUserInfo = (props) => {
       latitude={props.user.location.coordinates[1]}
       offsetLeft={-3.5 * props.viewport.zoom}
       offsetTop={-7 * props.viewport.zoom}
+      onClick={() => {
+        props.setIsUserIconClicked(true);
+        props.setUser(props.user);
+      }}
     >
-      <Popup
+      {/* <Popup
         trigger={
           <Icon
             className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
@@ -43,7 +47,12 @@ const EachUserInfo = (props) => {
         onClose={() => setIsPopupOpen(false)} // 意味は、hoverが外れた時にisPopupOpen stateをfalseにします、ってこと。
         basic
         hoverable
-      ></Popup>
+      ></Popup> */}
+      <Icon
+        className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
+        size='large'
+        style={{ cursor: 'pointer' }}
+      />
     </Marker>
   );
 };
