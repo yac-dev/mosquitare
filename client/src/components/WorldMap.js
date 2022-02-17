@@ -54,7 +54,7 @@ const WorldMap = (props) => {
   // vertically centered modal用
   // const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
   const [isUserIconClicked, setIsUserIconClicked] = useState(false);
-  const [user, setUser] = useState(null);
+  const [userInfo, setUserInfo] = useState({ info: null });
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -134,9 +134,10 @@ const WorldMap = (props) => {
             socket={socket}
             setShowCallingModal={setShowCallingModal}
             setIsUserIconClicked={setIsUserIconClicked}
-            setUser={setUser}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
           />
-          <UserDetail isUserIconClicked={isUserIconClicked} user={user} />
+          <UserDetail isUserIconClicked={isUserIconClicked} userInfo={userInfo} />
           {/* <MeetingsList
             socket={socket}
             // onJoinClick={onJoinClick}

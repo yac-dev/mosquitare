@@ -23,7 +23,7 @@ const EachUserInfo = (props) => {
       offsetTop={-7 * props.viewport.zoom}
       onClick={() => {
         props.setIsUserIconClicked(true);
-        props.setUser(props.user);
+        props.setUserInfo({ ...props.userInfo, info: props.user });
       }}
     >
       {/* <Popup

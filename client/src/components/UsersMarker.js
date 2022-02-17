@@ -23,7 +23,8 @@ const UsersMarker = (props) => {
               user={user}
               setShowCallingModal={props.setShowCallingModal}
               setIsUserIconClicked={props.setIsUserIconClicked}
-              setUser={props.setUser}
+              userInfo={props.userInfo}
+              setUserInfo={props.setUserInfo}
             />
           </>
         );

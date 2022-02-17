@@ -24,8 +24,8 @@ export const colorOptions = [
 const options = {
   plugins: {
     legend: {
-      display: true,
-      position: 'left',
+      display: false,
+      // position: 'left',
     },
     tooltip: {
       enabled: false,
@@ -85,7 +85,8 @@ const LanguageChart = (props) => {
       ],
     };
     setData(d);
-  }, []);
+  }, [props.user]);
+  // ここのdependencyが足りなかったのよ。これだから怖い。programmingは。。。
 
   const renderDoughnut = () => {
     return <Doughnut data={data} options={options} width={150} height={150} />;
