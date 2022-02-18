@@ -19,6 +19,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 // components
 import LanguageChart from './LanguageChart';
+import CallButton from './CallButton';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -126,9 +127,10 @@ const UserDetail = (props) => {
               </CardContent>
 
               <CardActions>
+                <CallButton user={props.userInfo.info} />
                 {/* <Button size='small'>Share</Button> */}
                 {/* <Button size='small'>Learn More</Button> */}
-                <div>
+                {/* <div>
                   <Button
                     id='demo-customized-button'
                     aria-controls={open ? 'demo-customized-menu' : undefined}
@@ -163,7 +165,7 @@ const UserDetail = (props) => {
                       More
                     </MenuItem>
                   </StyledMenu>
-                </div>
+                </div> */}
               </CardActions>
             </Card>
           </div>
