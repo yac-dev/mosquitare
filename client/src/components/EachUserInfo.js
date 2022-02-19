@@ -60,7 +60,7 @@ const EachUserInfo = (props) => {
         onClose={handlePopoverClose}
         disableRestoreFocus
       >
-        <Typography sx={{ p: 1 }}>I use Popover.</Typography>
+        <UserInfoCardNew user={props.user} />
       </Popover>
       {/* <Popup
         trigger={
