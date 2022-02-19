@@ -107,26 +107,29 @@ export const getMediaActionCreator =  // ここのlearningLanguageとnativeLangu
   };
 
 // callする側、worldmapで実行されるやつら。
-export const callActionCreator = (socket, mySocketId, oppositeSocketId, startLanguage) => (dispatch, getState) => {
-  // startLanguageはobjectな。
-  const { myVideoStreamObject } = getState().mediaState;
-  console.log('Im calling...');
-  const callerUserInfo = getState().authState.currentUser;
-  // const startLanguage = callerUserInfo.learningLangs[0];
-  console.log(startLanguage);
-  const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
-  dispatch({
-    type: HOLD_MY_INITIATED_PEER,
-    payload: peerInitiator,
-  });
-  peerInitiator.on('signal', (signalData) => {
-    socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo, startLanguage }); // ここに、callerのdataを加えよう。
+export const callActionCreator =
+  (socket, mySocketId, oppositeSocketId, exchangingLanguages) => (dispatch, getState) => {
+    // startLanguageはobjectな。
+    const { myVideoStreamObject } = getState().mediaState;
+    console.log('Im calling...');
+    const callerUserInfo = getState().authState.currentUser;
+    // const startLanguage = callerUserInfo.learningLangs[0];
+    // console.log(startLanguage);
+    console.log(exchangingLanguages);
+
+    const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
     dispatch({
-      type: CALL,
-      payload: startLanguage,
+      type: HOLD_MY_INITIATED_PEER,
+      payload: peerInitiator,
     });
-  });
-};
+    peerInitiator.on('signal', (signalData) => {
+      socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo, exchangingLanguages }); // ここに、callerのdataを加えよう。
+      dispatch({
+        type: CALL,
+        payload: exchangingLanguages,
+      });
+    });
+  };
 
 // callする側、callingModalで実行されるやつら。
 export const myCallIsAcceptedActionCreator = (socket, setShowCallingModal) => (dispatch, getState) => {
@@ -167,11 +170,11 @@ export const completeConnectionWithMyPartnerActionCreator1 =
 export const listenCallActionCreator = (socket, setShowCallingModal) => (dispatch) => {
   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
     console.log('Somebody calls me.');
-    const { signalData, whoIsCalling, callerUserInfo, startLanguage } = dataFromServer;
+    const { signalData, whoIsCalling, callerUserInfo, exchangingLanguages } = dataFromServer;
     setShowCallingModal(true);
     dispatch({
       type: LISTEN_CALL,
-      payload: { signalData, whoIsCalling, callerUserInfo, startLanguage },
+      payload: { signalData, whoIsCalling, callerUserInfo, exchangingLanguages },
     });
   });
 };

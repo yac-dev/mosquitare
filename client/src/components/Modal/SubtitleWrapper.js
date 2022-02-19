@@ -41,6 +41,8 @@ const SubtitleWrapper = (props) => {
       setConversationTranscript((previouState) => [...previouState, transcriptObject]);
       const to = store.getState().mediaState.callingWith.socketId;
       props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
+      // if(props.mediaState.amICalling){ if(props.mediaState.currentLanguage._id === props.mediaState.exchanging[0]) }
+      // この状態の時は、learningを話しているということになる。
       if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
         setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]); //globalなstateに保存しておいた方がいいかも。
         // props.mediaState.currentLanguage._id: 67

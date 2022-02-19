@@ -26,6 +26,7 @@ const INITIAL_STATE = {
   oppositeIdToCall: null,
   callAccepted: false,
   callFinished: false,
+  exchangingLanguages: [],
   currentLanguage: null,
   partnerSignalData: null,
   partnerVideoStreamObject: null,
@@ -42,7 +43,8 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         amICalling: true,
-        currentLanguage: action.payload,
+        exchangingLanguages: action.payload,
+        currentLanguage: action.payload[0],
       };
     case GET_SOCKET_ID:
       return { ...state, mySocketId: action.payload };
@@ -53,7 +55,8 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         whoIsCalling: action.payload.whoIsCalling,
         callerSignal: action.payload.signalData,
         callingWith: action.payload.callerUserInfo,
-        currentLanguage: action.payload.startLanguage,
+        exchangingLanguages: action.payload.exchangingLanguages,
+        currentLanguage: action.payload.exchangingLanguages[0],
       };
     case ANSWER_CALL:
       return {

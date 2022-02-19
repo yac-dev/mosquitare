@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
       signalData: dataFromCaller.signalData,
       whoIsCalling: dataFromCaller.mySocketId,
       callerUserInfo: dataFromCaller.callerUserInfo,
-      startLanguage: dataFromCaller.startLanguage,
+      exchangingLanguages: dataFromCaller.exchangingLanguages,
     });
   });
 

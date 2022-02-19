@@ -36,9 +36,16 @@ const CallingModal = (props) => {
         </div>
       );
     } else if (props.mediaState.amIRecieving) {
+      const { exchangingLanguages } = props.mediaState;
       return (
         <>
-          <div>You got a video chat call from...</div>
+          <div>You got a exchange application.</div>
+          <div>
+            Lets exchange{' '}
+            {exchangingLanguages.map((language) => {
+              return <span>{language}</span>;
+            })}
+          </div>
           <UserInfoCardNew user={props.mediaState.callingWith} />
           <Button positive onClick={() => handleAnswerCall()} style={{ width: '70%' }}>
             <i className='handshake icon' />
