@@ -4,6 +4,13 @@ import { connect } from 'react-redux';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { Button } from 'semantic-ui-react';
 
+// mui
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import TranslateIcon from '@mui/icons-material/Translate';
+import { styled } from '@mui/system';
+
+// socket event
 import {
   MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE,
   I_SEND_MY_INTERIM_TRANSCRIPT_TO_MY_PARTNER,
@@ -14,10 +21,19 @@ import {
 
 import Subtitle from './Subtitle';
 
+// ac
 import { createUserScriptActionCreator } from '../../actionCreators/userScriptsActionCreators';
 import { updateConversationUserScriptActionCreator } from '../../actionCreators/conversationActionCreators';
 import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaActionCreator';
 import { recieveSwitchingLanguageRequestActionCreator1 } from '../../actionCreators/mediaActionCreator';
+
+const SwitchLanguageIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(35, 63, 105)',
+  '&:hover': {
+    backgroundColor: 'rgb(39, 78, 138)',
+  },
+}));
 
 const SubtitleWrapper = (props) => {
   const [conversationTranscript, setConversationTranscript] = useState([]);
@@ -43,15 +59,34 @@ const SubtitleWrapper = (props) => {
       props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
       // if(props.mediaState.amICalling){ if(props.mediaState.currentLanguage._id === props.mediaState.exchanging[0]) }
       // この状態の時は、learningを話しているということになる。
-      if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
-        setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]); //globalなstateに保存しておいた方がいいかも。
-        // props.mediaState.currentLanguage._id: 67
-        countTranscriptWords(finalTranscript, setCountLearningLangLength);
-      } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
-        setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
-        countTranscriptWords(finalTranscript, setCountNativeLangLength);
+      if (props.mediaState.amICalling) {
+        if (props.mediaState.currentLanguage.name === props.mediaState.exchangingLanguage[0].name) {
+          setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
+          countTranscriptWords(finalTranscript, setCountLearningLangLength);
+        } else {
+          setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
+          countTranscriptWords(finalTranscript, setCountNativeLangLength);
+        }
+      } else if (props.mediaState.amIRecieving) {
+        if (props.mediaState.currentLanguage.name === props.mediaState.exchangingLanguage[0].name) {
+          // 向こうがlearningな言語を喋っているのね、ってこと。
+          setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
+          countTranscriptWords(finalTranscript, setCountNativeLangLength);
+        } else {
+          setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
+          countTranscriptWords(finalTranscript, setCountLearningLangLength);
+        }
       }
+      // if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
+      //   setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]); //globalなstateに保存しておいた方がいいかも。
+      //   // props.mediaState.currentLanguage._id: 67
+      //   countTranscriptWords(finalTranscript, setCountLearningLangLength);
+      // } else if (props.mediaState.currentLanguage.name === props.authState.currentUser.nativeLangs[0].name) {
+      //   setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
+      //   countTranscriptWords(finalTranscript, setCountNativeLangLength);
+      // }
     }
+
     if (!finalTranscript) {
       // interimの時
       console.log('Im sending interim transcript to partner');
@@ -154,9 +189,14 @@ const SubtitleWrapper = (props) => {
       return null;
     } else {
       return (
-        <Button type='button' onClick={() => switchLanguage()}>
-          Switch to {learningLangName}
-        </Button>
+        // <Button type='button' onClick={() => switchLanguage()}>
+        //   Switch to {learningLangName}
+        // </Button>
+        <Tooltip title='Switch current language'>
+          <SwitchLanguageIconButton color='inherit' onClick={() => switchLanguage()}>
+            <TranslateIcon variant='contained' size='small' />
+          </SwitchLanguageIconButton>
+        </Tooltip>
       );
     }
   };

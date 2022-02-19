@@ -94,12 +94,13 @@ const CallButton = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const onCallClick = (event, oppositeSocketId, startLanguage) => {
+
+  const onCallClick = (event, oppositeSocketId, exchangingLanguages) => {
     event.preventDefault();
-    props.setIsPopupOpen(false);
+    // props.setIsPopupOpen(false);
     const mySocketId = props.authState.currentUser.socketId;
     props.setShowCallingModal(true);
-    props.callActionCreator(props.socket, mySocketId, oppositeSocketId, startLanguage);
+    props.callActionCreator(props.socket, mySocketId, oppositeSocketId, exchangingLanguages);
   };
 
   const renderExchangeableLangs = () => {
@@ -112,7 +113,7 @@ const CallButton = (props) => {
             <>
               <MenuItem
                 onClick={(event) => {
-                  // onCallClick(event, props.user.socketId, [exchangeableLearningLangs[i], exchangeableNativeLangs[j]]);
+                  onCallClick(event, props.user.socketId, [exchangeableLearningLangs[i], exchangeableNativeLangs[j]]);
                   handleClose();
                 }}
                 disableRipple

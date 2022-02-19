@@ -148,17 +148,18 @@ const UserInfoCardNew = (props) => {
           </div>
         </div> */}
 
-        <div className='user-message' style={{ marginBottom: '10px' }}>
+        {/* <div className='user-message' style={{ marginBottom: '10px' }}>
           <div>Self-Introduction</div>
           <hr style={{ width: '70%', textAlign: 'left', marginLleft: '0' }}></hr>
           {props.user.selfIntroduction}
-        </div>
-        <CallButton
+        </div> */}
+
+        {/* <CallButton
           user={props.user}
           socket={props.socket}
           setIsPopupOpen={props.setIsPopupOpen}
           setShowCallingModal={props.setShowCallingModal}
-        />
+        /> */}
         {/* <div className='languages-chart'>
           <LanguageChart user={props.user} />
         </div> */}

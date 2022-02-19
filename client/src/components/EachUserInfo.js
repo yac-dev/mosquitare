@@ -4,9 +4,25 @@ import { Marker } from 'react-map-gl';
 import { Icon, Popup, Button } from 'semantic-ui-react';
 import UserInfoCardNew from './UserInfoCardNew';
 
+// mui
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+
 // propsでは、"user"だけがくると思っていい。
 const EachUserInfo = (props) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
 
   // const handleOpen = () => {
   //   setIsPopupOpen(true);
@@ -26,6 +42,26 @@ const EachUserInfo = (props) => {
         props.setUserInfo({ ...props.userInfo, info: props.user });
       }}
     >
+      <Popover
+        id='mouse-over-popover'
+        sx={{
+          pointerEvents: 'none',
+        }}
+        open={open}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        onClose={handlePopoverClose}
+        disableRestoreFocus
+      >
+        <Typography sx={{ p: 1 }}>I use Popover.</Typography>
+      </Popover>
       {/* <Popup
         trigger={
           <Icon
@@ -52,6 +88,8 @@ const EachUserInfo = (props) => {
         className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
         size='large'
         style={{ cursor: 'pointer' }}
+        onMouseEnter={handlePopoverOpen}
+        onMouseLeave={handlePopoverClose}
       />
     </Marker>
   );

@@ -137,7 +137,12 @@ const WorldMap = (props) => {
             userInfo={userInfo}
             setUserInfo={setUserInfo}
           />
-          <UserDetail isUserIconClicked={isUserIconClicked} userInfo={userInfo} />
+          <UserDetail
+            socket={socket}
+            isUserIconClicked={isUserIconClicked}
+            userInfo={userInfo}
+            setShowCallingModal={setShowCallingModal}
+          />
           {/* <MeetingsList
             socket={socket}
             // onJoinClick={onJoinClick}

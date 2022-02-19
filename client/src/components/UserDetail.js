@@ -127,7 +127,11 @@ const UserDetail = (props) => {
               </CardContent>
 
               <CardActions>
-                <CallButton user={props.userInfo.info} />
+                <CallButton
+                  socket={props.socket}
+                  user={props.userInfo.info}
+                  setShowCallingModal={props.setShowCallingModal}
+                />
                 {/* <Button size='small'>Share</Button> */}
                 {/* <Button size='small'>Learn More</Button> */}
                 {/* <div>

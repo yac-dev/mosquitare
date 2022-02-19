@@ -171,6 +171,7 @@ export const listenCallActionCreator = (socket, setShowCallingModal) => (dispatc
   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
     console.log('Somebody calls me.');
     const { signalData, whoIsCalling, callerUserInfo, exchangingLanguages } = dataFromServer;
+    console.log(exchangingLanguages);
     setShowCallingModal(true);
     dispatch({
       type: LISTEN_CALL,
@@ -566,7 +567,16 @@ export const forChunks = (chunksData) => {
 };
 
 export const switchCurrentLanguageActionCreator1 = (socket) => (dispatch, getState) => {
-  const switchingLanguage = getState().authState.currentUser.learningLangs[0];
+  let switchingLanguage;
+  const { currentLanguage } = getState().mediaState;
+  const { exchangingLanguages } = getState().mediaState; // array
+  const [lang1, lang2] = exchangingLanguages;
+  if (currentLanguage.name === lang1.name) {
+    switchingLanguage = lang2;
+  } else if (currentLanguage.name === lang2.name) {
+    switchingLanguage = lang1;
+  }
+  // const switchingLanguage = getState().authState.currentUser.learningLangs[0];
   const partnerSocketId = getState().mediaState.callingWith.socketId;
   dispatch({
     type: SWITCH_CURRENT_LANGUAGE,
