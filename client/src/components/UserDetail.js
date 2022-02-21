@@ -82,8 +82,10 @@ const UserDetail = (props) => {
     if (props.isUserIconClicked) {
       if (props.userInfo.info) {
         return (
-          <div className='user-detail-wrapper' style={{ cursor: 'default' }}>
-            <Card sx={{ width: 450, height: '85vh', position: 'absolute', right: '50px', bottom: '50px' }}>
+          <>
+            <Card
+            // sx={{ width: 450, height: '85vh', position: 'absolute', right: '50px', bottom: '50px' }}
+            >
               <CardHeader
                 avatar={
                   // <Avatar sx={{ bgcolor: 'red' }} aria-label='recipe'>
@@ -172,7 +174,7 @@ const UserDetail = (props) => {
                 </div> */}
               </CardActions>
             </Card>
-          </div>
+          </>
         );
       } else {
         return null;

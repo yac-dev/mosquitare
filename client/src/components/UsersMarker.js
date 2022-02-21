@@ -23,6 +23,7 @@ const UsersMarker = (props) => {
               user={user}
               setShowCallingModal={props.setShowCallingModal}
               setIsUserIconClicked={props.setIsUserIconClicked}
+              setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
               userInfo={props.userInfo}
               setUserInfo={props.setUserInfo}
             />

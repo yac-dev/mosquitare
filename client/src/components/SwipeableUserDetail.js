@@ -10,7 +10,11 @@ import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 
-const drawerBleeding = 56;
+// components
+// cardの中身でひとつのcomponentをもっておくべきだ。そうすれば、reusableになる。
+import UserDetail from './UserDetail';
+
+const drawerBleeding = 54;
 
 const Root = styled('div')(({ theme }) => ({
   // height: '100%',
@@ -54,9 +58,9 @@ const SwipeableUserDetail = (props) => {
           },
         }}
       />
-      <Box sx={{ textAlign: 'center', pt: 1 }}>
+      {/* <Box sx={{ textAlign: 'center', pt: 1 }}>
         <Button onClick={toggleDrawer(true)}>Open</Button>
-      </Box>
+      </Box> */}
       <SwipeableDrawer
         container={container}
         anchor='bottom'
@@ -91,7 +95,7 @@ const SwipeableUserDetail = (props) => {
             overflow: 'auto',
           }}
         >
-          <Skeleton variant='rectangular' height='100%' />
+          <UserDetail socket={props.socket} userInfo={props.userInfo} isUserIconClicked={props.isUserIconClicked} />
         </StyledBox>
       </SwipeableDrawer>
     </Root>

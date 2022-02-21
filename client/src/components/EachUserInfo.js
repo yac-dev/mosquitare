@@ -40,6 +40,7 @@ const EachUserInfo = (props) => {
       // ここonClickは、今自分がどのcomponent内にいるかで実行するものが変わるようにしたいんだよな。
       onClick={() => {
         props.setIsUserIconClicked(true);
+        props.setOpenSwipeableDrawer(true);
         props.setUserInfo({ ...props.userInfo, info: props.user });
       }}
     >

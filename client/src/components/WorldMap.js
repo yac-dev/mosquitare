@@ -13,6 +13,7 @@ import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
 import UsersMarker from './UsersMarker';
 import MeetingsList from './Meeting/MeetingsList';
 
+import RightPositionedUserDetail from './RightPositionedUserDetail';
 import UserDetail from './UserDetail';
 import SwipeableUserDetail from './SwipeableUserDetail';
 // css
@@ -209,12 +210,18 @@ const WorldMap = (props) => {
               userInfo={userInfo}
               setUserInfo={setUserInfo}
             />
-            <UserDetail
+            <RightPositionedUserDetail
               socket={socket}
               isUserIconClicked={isUserIconClicked}
               userInfo={userInfo}
               setShowCallingModal={setShowCallingModal}
             />
+            {/* <UserDetail
+              socket={socket}
+              isUserIconClicked={isUserIconClicked}
+              userInfo={userInfo}
+              setShowCallingModal={setShowCallingModal}
+            /> */}
           </ReactMapGL>
         </Desktop>
         <Tablet>
@@ -230,10 +237,14 @@ const WorldMap = (props) => {
               socket={socket}
               setShowCallingModal={setShowCallingModal}
               setIsUserIconClicked={setIsUserIconClicked}
+              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
               userInfo={userInfo}
               setUserInfo={setUserInfo}
             />
             <SwipeableUserDetail
+              socket={socket}
+              userInfo={userInfo}
+              isUserIconClicked={isUserIconClicked}
               openSwipeableDrawer={openSwipeableDrawer}
               setOpenSwipeableDrawer={setOpenSwipeableDrawer}
             />
@@ -252,12 +263,16 @@ const WorldMap = (props) => {
               socket={socket}
               setShowCallingModal={setShowCallingModal}
               setIsUserIconClicked={setIsUserIconClicked}
+              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
               userInfo={userInfo}
               setUserInfo={setUserInfo}
             />
             <SwipeableUserDetail
-              openSwipeableDrawer={openSwipeableDrawer}
-              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+              socket={socket}
+              userInfo={userInfo}
+              isUserIconClicked={isUserIconClicked}
+              openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
+              setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
             />
           </ReactMapGL>
         </Mobile>
