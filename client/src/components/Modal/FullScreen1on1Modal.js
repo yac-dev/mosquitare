@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
+
+// mui
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 // components
 import MediaRecorder from '../MediaRecord';
@@ -11,8 +15,25 @@ import AppsWrapper from '../ConversationApps/AppsWrapper';
 // css
 import '../../styles/1on1.css';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
+});
+
 const FullScreen1on1Modal = (props) => {
   // これでも分かる通り、基本modalはdefaultでrenderされていることになるね。違うやり方だ。要は、このmodalがセットされたときに実行するって言うことをやりたいのよ。もう最初からこれ実行されている。
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+  };
+
   useEffect(() => {
     console.log('when mounted fullscreen');
   }, []);
@@ -32,6 +53,11 @@ const FullScreen1on1Modal = (props) => {
             <VerticalTabsWrapper socket={props.socket} />
             {/* <AppsWrapper /> */}
           </Modal.Body>
+          {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity='success' sx={{ width: '100%' }}>
+              This is a success message!
+            </Alert>
+          </Snackbar> ここ後でいいか。*/}
         </Modal>
       );
     } else {

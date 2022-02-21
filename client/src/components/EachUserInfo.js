@@ -37,6 +37,7 @@ const EachUserInfo = (props) => {
       latitude={props.user.location.coordinates[1]}
       offsetLeft={-3.5 * props.viewport.zoom}
       offsetTop={-7 * props.viewport.zoom}
+      // ここonClickは、今自分がどのcomponent内にいるかで実行するものが変わるようにしたいんだよな。
       onClick={() => {
         props.setIsUserIconClicked(true);
         props.setUserInfo({ ...props.userInfo, info: props.user });

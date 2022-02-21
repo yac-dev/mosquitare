@@ -140,7 +140,7 @@ const VideosWrapper = (props) => {
           <Tooltip title='Disconnect call'>
             {/* <LogoutButton variant='contained' onClick={() => onHangUpClick()}>
               <LogoutIcon /> */}
-            <LogoutIconButton>
+            <LogoutIconButton onClick={() => onHangUpClick()}>
               <LogoutIcon />
             </LogoutIconButton>
             {/* </LogoutButton> */}

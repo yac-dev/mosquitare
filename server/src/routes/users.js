@@ -12,6 +12,7 @@ import {
   updateUserConversationToFalse,
   logout,
   updateConversation,
+  updateLangsStatus,
 } from '../controllers/users';
 import { authorization } from '../middlewares/authorization';
 
@@ -29,5 +30,7 @@ router.patch('/loadmeandupdate', authorization, loadMeAndUpdate);
 router.get('/', getUsers);
 router.patch('/:id/logout', logout);
 router.patch('/:id', updateUsersSocketId); // ここも。
+
+router.patch('/:id/langsstatus', updateLangsStatus);
 
 export default router;

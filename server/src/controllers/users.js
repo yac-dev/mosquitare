@@ -293,3 +293,33 @@ export const updateConversation = async (request, response) => {
     console.log(error);
   }
 };
+
+export const updateLangsStatus = async (request, response) => {
+  try {
+    const { languageAndLengthTable } = request.body;
+    console.log(languageAndLengthTable);
+    // languageAndLengthTable {'言語のid': 34}となっている。この後に、myLangsのindexを出す。
+    // languageAndLengthTable {'learningLang': {'言語id': '7738489794', 'length': 34} , 'nativeLang' : {'言語id': '7895789', length: 56}}
+    const user = await User.findById(request.params.id);
+    // console.log(mongoose.Types.ObjectId(languageAndLengthTable.learningLang._id));
+    const learningLangId = languageAndLengthTable.learningLang._id;
+    console.log(user.myLangs);
+    console.log(learningLangId);
+    const learningLangIndex = user.myLangs.findIndex((obj) => obj._id.toString() === learningLangId);
+    // const learningLangIndex = user.myLangs.indexOf()
+    console.log(learningLangIndex);
+    user.myLangsStatus[learningLangIndex] += languageAndLengthTable.learningLang.length;
+
+    const nativeLangId = languageAndLengthTable.nativeLang._id;
+    console.log(nativeLangId);
+    const nativeLangIndex = user.myLangs.findIndex((obj) => obj._id.toString() === nativeLangId);
+    user.myLangsStatus[nativeLangIndex] += languageAndLengthTable.nativeLang.length;
+    console.log(nativeLangIndex);
+    await user.save();
+    response.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

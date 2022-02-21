@@ -24,6 +24,7 @@ import Subtitle from './Subtitle';
 // ac
 import { createUserScriptActionCreator } from '../../actionCreators/userScriptsActionCreators';
 import { updateConversationUserScriptActionCreator } from '../../actionCreators/conversationActionCreators';
+import { updateUserMyLangsStatusActionCreator } from '../../actionCreators/authActionCreators';
 import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaActionCreator';
 import { recieveSwitchingLanguageRequestActionCreator1 } from '../../actionCreators/mediaActionCreator';
 
@@ -59,16 +60,20 @@ const SubtitleWrapper = (props) => {
       props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
       // if(props.mediaState.amICalling){ if(props.mediaState.currentLanguage._id === props.mediaState.exchanging[0]) }
       // この状態の時は、learningを話しているということになる。
-      if (props.mediaState.amICalling) {
-        if (props.mediaState.currentLanguage.name === props.mediaState.exchangingLanguage[0].name) {
+      if (store.getState().mediaState.amICalling) {
+        if (
+          store.getState().mediaState.currentLanguage.name === store.getState().mediaState.exchangingLanguages[0].name
+        ) {
           setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
           countTranscriptWords(finalTranscript, setCountLearningLangLength);
         } else {
           setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
           countTranscriptWords(finalTranscript, setCountNativeLangLength);
         }
-      } else if (props.mediaState.amIRecieving) {
-        if (props.mediaState.currentLanguage.name === props.mediaState.exchangingLanguage[0].name) {
+      } else if (store.getState().mediaState.amIRecieving) {
+        if (
+          store.getState().mediaState.currentLanguage.name === store.getState().mediaState.exchangingLanguages[0].name
+        ) {
           // 向こうがlearningな言語を喋っているのね、ってこと。
           setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
           countTranscriptWords(finalTranscript, setCountNativeLangLength);
@@ -141,6 +146,9 @@ const SubtitleWrapper = (props) => {
         .createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript)
         .then((userScript) => {
           return props.updateConversationUserScriptActionCreator(userScript);
+        })
+        .then(() => {
+          return props.updateUserMyLangsStatusActionCreator(countLearningLangLength, countNativeLangLength);
         });
       // ここで、文字数をapiに送ることもする。
     }
@@ -153,13 +161,24 @@ const SubtitleWrapper = (props) => {
   };
 
   // render系
+  // chatと一緒。
   const renderTranscripts = () => {
     const transcripts = conversationTranscript.map((transcriptObject) => {
       return (
         <>
-          <p>{transcriptObject.name}</p>
-          <div style={{ borderRadius: '5px', backgroundColor: 'rgb(35, 63, 105)', border: '1px solid white' }}>
-            {transcriptObject.transcript}
+          <div style={{ marginBottom: '5px' }}>
+            <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{transcriptObject.name}</p>
+            <div
+              style={{
+                borderRadius: '10px',
+                backgroundColor: 'rgb(35, 63, 105)',
+                border: '1px solid white',
+                padding: '5px',
+                display: 'inline',
+              }}
+            >
+              {transcriptObject.transcript}
+            </div>
           </div>
         </>
       );
@@ -170,35 +189,69 @@ const SubtitleWrapper = (props) => {
   const renderPartnerInterimTranscript = () => {
     if (partnerInterimTranscript) {
       return (
-        <p>
-          {props.mediaState.callingWith.name}: {partnerInterimTranscript}
-        </p>
+        <>
+          <div style={{ marginBottom: '5px' }}>
+            <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{props.mediaState.callingWith.name}</p>
+            <div
+              style={{
+                borderRadius: '10px',
+                backgroundColor: 'rgb(35, 63, 105)',
+                border: '1px solid white',
+                padding: '5px',
+                display: 'inline',
+              }}
+            >
+              {partnerInterimTranscript}
+            </div>
+          </div>
+        </>
+        // <p>
+        //   {props.mediaState.callingWith.name}: {partnerInterimTranscript}
+        // </p>
       );
     }
   };
 
   const renderMyInterimTranscript = () => {
     if (transcript) {
-      return <p>You: {transcript}</p>;
+      return (
+        <>
+          <div style={{ marginBottom: '5px' }}>
+            <p style={{ marginLeft: '5px', marginBottom: '2px' }}>You</p>
+            <div
+              style={{
+                borderRadius: '10px',
+                backgroundColor: 'rgb(35, 63, 105)',
+                border: '1px solid white',
+                padding: '5px',
+                display: 'inline',
+              }}
+            >
+              {transcript}
+            </div>
+          </div>
+        </>
+      );
+      // <p>You: {transcript}</p>;
     }
   };
 
   const renderSwitchLangButton = () => {
-    const learningLangName = props.authState.currentUser.learningLangs[0].name;
-    if (props.authState.currentUser.learningLangs[0].name === props.mediaState.currentLanguage.name) {
-      return null;
-    } else {
-      return (
-        // <Button type='button' onClick={() => switchLanguage()}>
-        //   Switch to {learningLangName}
-        // </Button>
-        <Tooltip title='Switch current language'>
-          <SwitchLanguageIconButton color='inherit' onClick={() => switchLanguage()}>
-            <TranslateIcon variant='contained' size='small' />
-          </SwitchLanguageIconButton>
-        </Tooltip>
-      );
-    }
+    // const learningLangName = props.authState.currentUser.learningLangs[0].name;
+    // if (props.authState.currentUser.learningLangs[0].name === props.mediaState.currentLanguage.name) {
+    //   return null;
+    // } else {
+    return (
+      // <Button type='button' onClick={() => switchLanguage()}>
+      //   Switch to {learningLangName}
+      // </Button>
+      <Tooltip title='Switch current language'>
+        <SwitchLanguageIconButton color='inherit' onClick={() => switchLanguage()}>
+          <TranslateIcon size='small' />
+        </SwitchLanguageIconButton>
+      </Tooltip>
+    );
+    // }
   };
 
   const renderWordsLength = () => {
@@ -220,16 +273,18 @@ const SubtitleWrapper = (props) => {
       className={`tab-content ${props.isSelected === 'transcript' ? undefined : 'hidden'}`}
       style={{ color: 'white', backgroundColor: 'rgb(29, 49, 79)', borderRadius: '5px', overflow: 'auto' }}
     >
-      <div>
-        <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>
-        {renderSwitchLangButton()}
-      </div>
-      <div>
-        {renderTranscripts()}
-        {renderPartnerInterimTranscript()}
-        {renderMyInterimTranscript()}
-        {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
-        {renderWordsLength()}
+      <div className='transcript-wrapper'>
+        <div className='transcript-header' style={{ marginLeft: '5px', marginBottom: '0px' }}>
+          <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp;
+          {renderSwitchLangButton()}
+        </div>
+        <div className='transcripts' style={{ overflow: 'auto', height: '200px', padding: '5px' }}>
+          {renderTranscripts()}
+          {renderPartnerInterimTranscript()}
+          {renderMyInterimTranscript()}
+          {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
+          {/* {renderWordsLength()} */}
+        </div>
       </div>
     </div>
   );
@@ -323,6 +378,7 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   createUserScriptActionCreator,
   updateConversationUserScriptActionCreator,
+  updateUserMyLangsStatusActionCreator,
   switchCurrentLanguageActionCreator1,
   recieveSwitchingLanguageRequestActionCreator1,
 })(SubtitleWrapper);

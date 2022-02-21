@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import store from '../store';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -186,7 +187,7 @@ const Chat = (props) => {
       }}
     >
       <p style={{ marginLeft: '5px', marginBottom: '0px' }}>
-        chat in English...&nbsp;
+        chat in {props.mediaState.currentLanguage.name}...&nbsp;
         <Tooltip title='Switch current language'>
           <SwitchLanguageIconButton color='inherit'>
             <TranslateIcon variant='contained' size='small' />
@@ -257,4 +258,8 @@ const Chat = (props) => {
   );
 };
 
-export default Chat;
+const mapStateToProps = (state) => {
+  return { mediaState: state.mediaState };
+};
+
+export default connect(mapStateToProps)(Chat);

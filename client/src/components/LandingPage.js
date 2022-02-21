@@ -43,8 +43,8 @@ const LandingPage = () => {
             fontSize: '70px',
           }}
         >
-          Welcome to Lamppost
-          <p style={{ fontSize: '30px', fontWeight: 'lighter' }}>Completely new Language Excnahge platform.</p>
+          Welcome to Lampost
+          <p style={{ fontSize: '30px', fontWeight: 'lighter' }}>New Language Excnahge Platform</p>
           <Stack direction='row' spacing={2} justifyContent='center' alignItems='center'>
             <Button
               variant='contained'

@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { useMediaQuery } from 'react-responsive';
 import ReactMapGL from 'react-map-gl';
 
 import { Button } from 'semantic-ui-react';
 // components
 import CallingModal from './CallingModal';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
-import UserDetail from './UserDetail';
 // import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 // import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
+
 import UsersMarker from './UsersMarker';
 import MeetingsList from './Meeting/MeetingsList';
 
+import UserDetail from './UserDetail';
+import SwipeableUserDetail from './SwipeableUserDetail';
 // css
 import '../styles/worldmap.css';
 import '../styles/meeting.css';
@@ -39,6 +42,26 @@ import mapboxgl from 'mapbox-gl';
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 const socket = io(process.env.REACT_APP_WEBRTC); // こういう部分全てのcomponentで動いている。これなんかのバグ起こしそうだな。。。
 
+const Desktop = ({ children }) => {
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  return isDesktop ? children : null;
+};
+
+const Tablet = ({ children }) => {
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+  return isTablet ? children : null;
+};
+
+const Mobile = ({ children }) => {
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+  return isMobile ? children : null;
+};
+
+const Default = ({ children }) => {
+  const isNotMobile = useMediaQuery({ minWidth: 768 });
+  return isNotMobile ? children : null;
+};
+
 const WorldMap = (props) => {
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
@@ -55,6 +78,7 @@ const WorldMap = (props) => {
   // const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
   const [isUserIconClicked, setIsUserIconClicked] = useState(false);
   const [userInfo, setUserInfo] = useState({ info: null });
+  const [openSwipeableDrawer, setOpenSwipeableDrawer] = useState(false);
 
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -122,7 +146,7 @@ const WorldMap = (props) => {
       {/* modals */}
 
       <div style={{ height: '100vh', width: '100%' }}>
-        <ReactMapGL
+        {/* <ReactMapGL
           {...viewport}
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
           width='100%'
@@ -137,23 +161,106 @@ const WorldMap = (props) => {
             userInfo={userInfo}
             setUserInfo={setUserInfo}
           />
-          <UserDetail
-            socket={socket}
-            isUserIconClicked={isUserIconClicked}
-            userInfo={userInfo}
-            setShowCallingModal={setShowCallingModal}
-          />
+          <Desktop>
+            <UserDetail
+              socket={socket}
+              isUserIconClicked={isUserIconClicked}
+              userInfo={userInfo}
+              setShowCallingModal={setShowCallingModal}
+            />
+          </Desktop>
+          <Tablet>
+            <SwipeableUserDetail
+              openSwipeableDrawer={openSwipeableDrawer}
+              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+            />
+          </Tablet>
+          <Mobile>
+            <SwipeableUserDetail
+              openSwipeableDrawer={openSwipeableDrawer}
+              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+            />
+          </Mobile>
           {/* <MeetingsList
             socket={socket}
             // onJoinClick={onJoinClick}
           /> */}
-          {/* <Button
+        {/* <Button
             className='create-meeting-button'
             // onClick={() => setVerticallyCenteredModal(true)}
           >
             Create new meeting??
           </Button> */}
-        </ReactMapGL>
+        {/* </ReactMapGL> */}
+
+        <Desktop>
+          <ReactMapGL
+            {...viewport}
+            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+            width='100%'
+            height='100vh'
+            mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+            onViewportChange={(viewport) => setViewport(viewport)}
+          >
+            <UsersMarker
+              socket={socket}
+              setShowCallingModal={setShowCallingModal}
+              setIsUserIconClicked={setIsUserIconClicked}
+              userInfo={userInfo}
+              setUserInfo={setUserInfo}
+            />
+            <UserDetail
+              socket={socket}
+              isUserIconClicked={isUserIconClicked}
+              userInfo={userInfo}
+              setShowCallingModal={setShowCallingModal}
+            />
+          </ReactMapGL>
+        </Desktop>
+        <Tablet>
+          <ReactMapGL
+            {...viewport}
+            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+            width='100%'
+            height='100vh'
+            mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+            onViewportChange={(viewport) => setViewport(viewport)}
+          >
+            <UsersMarker
+              socket={socket}
+              setShowCallingModal={setShowCallingModal}
+              setIsUserIconClicked={setIsUserIconClicked}
+              userInfo={userInfo}
+              setUserInfo={setUserInfo}
+            />
+            <SwipeableUserDetail
+              openSwipeableDrawer={openSwipeableDrawer}
+              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+            />
+          </ReactMapGL>
+        </Tablet>
+        <Mobile>
+          <ReactMapGL
+            {...viewport}
+            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+            width='100%'
+            height='100vh'
+            mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+            onViewportChange={(viewport) => setViewport(viewport)}
+          >
+            <UsersMarker
+              socket={socket}
+              setShowCallingModal={setShowCallingModal}
+              setIsUserIconClicked={setIsUserIconClicked}
+              userInfo={userInfo}
+              setUserInfo={setUserInfo}
+            />
+            <SwipeableUserDetail
+              openSwipeableDrawer={openSwipeableDrawer}
+              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+            />
+          </ReactMapGL>
+        </Mobile>
       </div>
     </>
   );

@@ -147,3 +147,28 @@ export const updateUserConversationsActionCreator = () => async (dispatch, getSt
     console.log(error);
   }
 };
+
+export const updateUserMyLangsStatusActionCreator =
+  (learningLangLength, nativeLangLength) => async (dispatch, getState) => {
+    try {
+      const languageAndLengthTable = { learningLang: {}, nativeLang: {} };
+      const userId = getState().authState.currentUser._id;
+      const { exchangingLanguages } = getState().mediaState;
+      if (getState().mediaState.amICalling) {
+        languageAndLengthTable['learningLang']['_id'] = exchangingLanguages[0]._id;
+        languageAndLengthTable['learningLang']['length'] = learningLangLength;
+        languageAndLengthTable['nativeLang']['_id'] = exchangingLanguages[1]._id;
+        languageAndLengthTable['nativeLang']['length'] = nativeLangLength;
+      } else if (getState().mediaState.amIRecieving) {
+        languageAndLengthTable['nativeLang']['_id'] = exchangingLanguages[0]._id;
+        languageAndLengthTable['nativeLang']['length'] = nativeLangLength;
+        languageAndLengthTable['learningLang']['_id'] = exchangingLanguages[1]._id;
+        languageAndLengthTable['learningLang']['length'] = learningLangLength;
+      }
+      const result = await mosquitareAPI.patch(`/users/${userId}/langsstatus`, { languageAndLengthTable });
+      console.log(result);
+      return Promise.resolve();
+    } catch (error) {
+      console.log(error);
+    }
+  };
