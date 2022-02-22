@@ -11,7 +11,8 @@ import MuiAlert from '@mui/material/Alert';
 import MediaRecorder from '../MediaRecord';
 import VideosWrapper from '../VideosWrapper';
 import Chat from '../Chat';
-import VerticalTabsWrapper from '../VerticalTabsWrapper';
+import SubtitleWrapper from './SubtitleWrapper';
+// import VerticalTabsWrapper from '../VerticalTabsWrapper';
 import AppsWrapper from '../ConversationApps/AppsWrapper';
 
 // css
@@ -47,7 +48,7 @@ const FullScreen1on1Modal = (props) => {
   const [countLearningLangLength, setCountLearningLangLength] = useState(0);
   const [countNativeLangLength, setCountNativeLangLength] = useState(0);
   const [openChatComponent, setOpenChatComponent] = useState(false);
-  const [openTranscriptComponent, setOpenTranscriptOpen] = useState(false);
+  const [openTranscriptComponent, setOpenTranscriptComponent] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -83,9 +84,15 @@ const FullScreen1on1Modal = (props) => {
                   setShow1on1={props.setShow1on1}
                   socket={props.socket}
                   setOpenChatComponent={setOpenChatComponent}
+                  setOpenTranscriptComponent={setOpenTranscriptComponent}
                 />
                 <Chat socket={props.socket} openChatComponent={openChatComponent} />
-                {/* <VerticalTabsWrapper socket={props.socket} /> */}
+                <SubtitleWrapper
+                  socket={props.socket}
+                  openTranscriptComponent={openTranscriptComponent}
+                  setCountLearningLangLength={setCountLearningLangLength}
+                  setCountNativeLangLength={setCountNativeLangLength}
+                />
                 {/* <AppsWrapper /> */}
               </Modal.Body>
             </Modal>
@@ -101,7 +108,7 @@ const FullScreen1on1Modal = (props) => {
               <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
                 <MediaRecorder />
                 <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
-                <VerticalTabsWrapper socket={props.socket} />
+                {/* <VerticalTabsWrapper socket={props.socket} /> */}
                 {/* <AppsWrapper /> */}
               </Modal.Body>
             </Modal>
@@ -117,7 +124,7 @@ const FullScreen1on1Modal = (props) => {
               <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
                 <MediaRecorder />
                 <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
-                <VerticalTabsWrapper socket={props.socket} />
+                {/* <VerticalTabsWrapper socket={props.socket} /> */}
                 {/* <AppsWrapper /> */}
               </Modal.Body>
             </Modal>

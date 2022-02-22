@@ -159,45 +159,31 @@ const Chat = (props) => {
   const renderChats = () => {
     const renderedChats = chats.map((chat) => {
       return (
-        <div style={{ marginBottom: '5px' }}>
-          <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{chat.name}</p>
-          <div
-            style={{
-              borderRadius: '10px',
-              backgroundColor: 'rgb(35, 63, 105)',
-              border: '1px solid white',
-              padding: '5px',
-              display: 'inline',
-            }}
-          >
-            {chat.message}
-          </div>
-        </div>
+        // <div style={{ marginBottom: '5px' }}>
+        //   <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{chat.name}</p>
+        //   <div
+        //     style={{
+        //       borderRadius: '10px',
+        //       backgroundColor: 'rgb(35, 63, 105)',
+        //       border: '1px solid white',
+        //       padding: '5px',
+        //       display: 'inline',
+        //     }}
+        //   >
+
+        //   </div>
+        // </div>
+        <p>
+          {chat.name}: {chat.message}
+        </p>
       );
     });
 
-    return (
-      <div
-        style={{ overflow: 'auto', height: '140px', border: '1px groove #6495ED', borderRadius: '5px', padding: '5px' }}
-      >
-        {renderedChats}
-      </div>
-    );
+    return <div style={{ overflow: 'auto', height: '400px', border: '1px solod white' }}>{renderedChats}</div>;
   };
 
   return (
-    <Draggable
-      // axis='x'
-      // handle='.handle'
-      // defaultPosition={{ x: 0, y: 0 }}
-      // position={null}
-      // grid={[25, 25]}
-      // scale={1}
-      // onStart={this.handleStart}
-      // onDrag={this.handleDrag}
-      // onStop={this.handleStop}
-      onDrag={handleDrag}
-    >
+    <Draggable onDrag={handleDrag}>
       <div
         className={`chat-wrapper ${props.openChatComponent === true ? undefined : 'hidden'}`}
         style={{
@@ -209,8 +195,18 @@ const Chat = (props) => {
           zIndex: 10,
           // position: 'relative',
           borderRadius: '5px',
+          padding: '5px',
+          cursor: 'grab',
+          height: '500px',
+          width: '300px',
         }}
       >
+        <div className='chat' style={{ position: 'relative' }}>
+          <div className='chat-header'>Chat x</div>
+          <div className='chats' style={{ padding: '5px' }}>
+            {renderChats()}
+          </div>
+        </div>
         {/* <p style={{ marginLeft: '5px', marginBottom: '0px' }}>
         chat in {props.mediaState.currentLanguage.name}...&nbsp;
         <Tooltip title='Switch current language'>
@@ -222,13 +218,62 @@ const Chat = (props) => {
       <div className='chats' style={{ padding: '5px' }}>
         {renderChats()}
       </div> */}
-        <p>Hello world.</p>
-        <p>Hello world.</p>
-        <p>Hello world.</p>
-        <p>Hello world.</p>
-        <p>Hello world.</p>
-        <p>Hello world.</p>
-        <p>Hello world.</p>
+        <div className='input-and-send' style={{ width: '100%', position: 'absolute', bottom: '0', padding: '5px' }}>
+          {/* <hr style={{ color: 'white' }}></hr> */}
+          <Stack direction='row' spacing={1}>
+            {/* <Box
+      sx={{
+        width: 500,
+        maxWidth: '100%',
+      }}
+    > */}
+            <TextField
+              fullWidth
+              label='Type something...'
+              id='fullWidth'
+              // className={classes.textField}
+              // sx={{ color: 'white' }}
+              // InputProps={{
+              //   className: classes.input,
+              // }}rgb(186, 184, 184)
+              InputProps={{ style: { color: 'white', backgroundColor: 'rgb(35, 63, 105)' } }}
+              InputLabelProps={{
+                style: { color: 'white' },
+              }}
+              value={inputText}
+              onChange={(event) => setInputText(event.target.value)}
+              onKeyDown={(event) => sendChatByKeyDownEnter(event)}
+            />
+            {/* <CustomInput
+      aria-label='Demo input'
+      placeholder='Message...'
+      value={inputText}
+      onChange={(event) => setInputText(event.target.value)}
+    /> */}
+            {/* </Box> */}
+            {/* <Button variant='contained' startIcon={<SendIcon />} width='20%'>
+    Send
+  </Button> */}
+            {/* <IconButton
+      size='large'
+      edge='end'
+      aria-label='show 4 new mails'
+      // aria-controls={userMenuId}
+      // onClick={handleProfileMenuOpen}
+      color='inherit'
+    >
+      <SendIcon />
+    </IconButton> */}
+            <ColorButton
+              variant='contained'
+              endIcon={<SendIcon />}
+              onClick={() => sendChat()}
+              // sx={{ border: '1px solid white' }}
+            >
+              Send
+            </ColorButton>
+          </Stack>
+        </div>
       </div>
     </Draggable>
   );

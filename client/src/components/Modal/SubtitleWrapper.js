@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import store from '../../store';
 import { connect } from 'react-redux';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+
 import { Button } from 'semantic-ui-react';
 
 // mui
@@ -42,8 +44,9 @@ const SubtitleWrapper = (props) => {
   const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
   const [partnerInterimTranscript, setPartnerInterimTranscript] = useState();
   const [partnerFinalTranscript, setPartnerFinalTranscript] = useState();
-  const [countLearningLangLength, setCountLearningLangLength] = useState(0);
-  const [countNativeLangLength, setCountNativeLangLength] = useState(0);
+  // const [countLearningLangLength, setCountLearningLangLength] = useState(0);
+  // const [countNativeLangLength, setCountNativeLangLength] = useState(0);
+  const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
 
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
@@ -65,10 +68,10 @@ const SubtitleWrapper = (props) => {
           store.getState().mediaState.currentLanguage.name === store.getState().mediaState.exchangingLanguages[0].name
         ) {
           setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
-          countTranscriptWords(finalTranscript, setCountLearningLangLength);
+          countTranscriptWords(finalTranscript, props.setCountLearningLangLength);
         } else {
           setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
-          countTranscriptWords(finalTranscript, setCountNativeLangLength);
+          countTranscriptWords(finalTranscript, props.setCountNativeLangLength);
         }
       } else if (store.getState().mediaState.amIRecieving) {
         if (
@@ -76,10 +79,10 @@ const SubtitleWrapper = (props) => {
         ) {
           // 向こうがlearningな言語を喋っているのね、ってこと。
           setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
-          countTranscriptWords(finalTranscript, setCountNativeLangLength);
+          countTranscriptWords(finalTranscript, props.setCountNativeLangLength);
         } else {
           setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
-          countTranscriptWords(finalTranscript, setCountLearningLangLength);
+          countTranscriptWords(finalTranscript, props.setCountLearningLangLength);
         }
       }
       // if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
@@ -146,10 +149,10 @@ const SubtitleWrapper = (props) => {
         .createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript)
         .then((userScript) => {
           return props.updateConversationUserScriptActionCreator(userScript);
-        })
-        .then(() => {
-          return props.updateUserMyLangsStatusActionCreator(countLearningLangLength, countNativeLangLength);
         });
+      // .then(() => {
+      //   return props.updateUserMyLangsStatusActionCreator(countLearningLangLength, countNativeLangLength);
+      // });
       // ここで、文字数をapiに送ることもする。
     }
   }, [props.mediaState.callDisconnected]);
@@ -158,6 +161,11 @@ const SubtitleWrapper = (props) => {
   const countTranscriptWords = (transcript, setCountLangLength) => {
     const wordsLength = transcript.split(' ').length;
     setCountLangLength((previousState) => previousState + wordsLength);
+  };
+
+  const handleDrag = (e, ui) => {
+    const { x, y } = deltaPosition;
+    setDeltaPosition({ ...deltaPosition, x: x + ui.deltaX, y: y + ui.deltaY });
   };
 
   // render系
@@ -254,14 +262,14 @@ const SubtitleWrapper = (props) => {
     // }
   };
 
-  const renderWordsLength = () => {
-    return (
-      <>
-        <span>learning lang length: {countLearningLangLength}</span>
-        <span>native lang length: {countNativeLangLength}</span>
-      </>
-    );
-  };
+  // const renderWordsLength = () => {
+  //   return (
+  //     <>
+  //       <span>learning lang length: {countLearningLangLength}</span>
+  //       <span>native lang length: {countNativeLangLength}</span>
+  //     </>
+  //   );
+  // };
 
   const switchLanguage = () => {
     //言語を切り替えたら、自動でoffになる。
@@ -269,24 +277,37 @@ const SubtitleWrapper = (props) => {
   };
 
   return (
-    <div
-      className={`tab-content ${props.isSelected === 'transcript' ? undefined : 'hidden'}`}
-      style={{ color: 'white', backgroundColor: 'rgb(29, 49, 79)', borderRadius: '5px', overflow: 'auto' }}
-    >
-      <div className='transcript-wrapper'>
-        <div className='transcript-header' style={{ marginLeft: '5px', marginBottom: '0px' }}>
-          <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp;
-          {renderSwitchLangButton()}
-        </div>
-        <div className='transcripts' style={{ overflow: 'auto', height: '200px', padding: '5px' }}>
-          {renderTranscripts()}
-          {renderPartnerInterimTranscript()}
-          {renderMyInterimTranscript()}
-          {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
-          {/* {renderWordsLength()} */}
+    <Draggable onDrag={handleDrag}>
+      <div
+        className={`transcript-wrapper ${props.openTranscriptComponent === true ? undefined : 'hidden'}`}
+        style={{
+          color: 'white',
+          backgroundColor: 'rgb(29, 49, 79)',
+          borderRadius: '5px',
+          overflow: 'auto',
+          width: '500px',
+          height: '500px',
+          position: 'absolute',
+          top: '80px',
+          right: '50px',
+          zIndex: 10,
+        }}
+      >
+        <div className='transcript-wrapper'>
+          <div className='transcript-header' style={{ marginLeft: '5px', marginBottom: '0px' }}>
+            <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp;
+            {renderSwitchLangButton()}
+          </div>
+          <div className='transcripts' style={{ overflow: 'auto', height: '200px', padding: '5px' }}>
+            {renderTranscripts()}
+            {renderPartnerInterimTranscript()}
+            {renderMyInterimTranscript()}
+            {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
+            {/* {renderWordsLength()} */}
+          </div>
         </div>
       </div>
-    </div>
+    </Draggable>
   );
   // return <></>; // subtitle wrapperみたいな感じに変えるのかね。// これはどういう意図で残していたんだろう。。。
 };

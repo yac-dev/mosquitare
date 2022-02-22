@@ -84,6 +84,9 @@ const VideosWrapper = (props) => {
     if (operation === 'Chat') {
       props.setOpenChatComponent(true);
     }
+    if (operation === 'Transcript') {
+      props.setOpenTranscriptComponent(true);
+    }
     setOpen(!open);
   };
 
