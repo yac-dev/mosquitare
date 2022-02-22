@@ -290,6 +290,7 @@ const SubtitleWrapper = (props) => {
           position: 'absolute',
           top: '80px',
           right: '50px',
+          cursor: 'grab',
           zIndex: 10,
         }}
       >

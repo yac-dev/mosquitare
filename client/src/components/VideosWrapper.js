@@ -19,8 +19,13 @@ import WidgetsIcon from '@mui/icons-material/Widgets';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SendIcon from '@mui/icons-material/Send';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
-import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import ScreenShareIcon from '@mui/icons-material/ScreenShare';
+import GTranslateIcon from '@mui/icons-material/GTranslate';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import PortraitIcon from '@mui/icons-material/Portrait';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 
 // call recieve側
 import { answerCallActionCreator2 } from '../actionCreators/mediaActionCreator';
@@ -66,9 +71,72 @@ const MicIconButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
+const ColorButton = styled(Button)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(35, 63, 105)',
+  '&:hover': {
+    backgroundColor: 'rgb(39, 78, 138)',
+  },
+}));
+
 const actions = [
-  { icon: <SendIcon />, name: 'Chat', operation: 'Chat' },
-  { icon: <RecordVoiceOverIcon />, name: 'Transcript', operation: 'Transcript' },
+  { icon: <SendIcon />, name: 'Chat', operation: 'Chat', color: 'rgb(44, 165, 171)', hoverColor: 'rgb(41,199,207)' },
+  {
+    icon: <RecordVoiceOverIcon />,
+    name: 'Transcript',
+    operation: 'Transcript',
+    color: ' rgb(191,189,48)',
+    hoverColor: 'rgb(230,227,46)',
+  },
+  {
+    icon: <PortraitIcon />,
+    name: 'Your Screen',
+    operation: 'YourScreen',
+    color: 'rgb(184, 92, 115)',
+    hoverColor: 'rgb(219, 116, 142)',
+  },
+  {
+    icon: <ScreenShareIcon />,
+    name: 'Screen Share (Sorry, not available now.)',
+    operation: 'ScreenShare',
+    color: 'rgb(199, 86, 169)',
+    hoverColor: 'rgb(217, 108, 188)',
+  },
+  {
+    icon: <SupervisedUserCircleIcon />,
+    name: 'Partner Information',
+    operation: 'PartnerInfomation',
+    color: 'rgb(126, 87, 194)',
+    hoverColor: 'rgb(157, 115, 230)',
+  },
+  {
+    icon: <GTranslateIcon />,
+    name: 'Google Translate (Sorry, not available now.)',
+    operation: 'GTranslate',
+    color: 'rgb(126, 87, 194)',
+    hoverColor: 'rgb(157, 115, 230)',
+  },
+  {
+    icon: <TextSnippetIcon />,
+    name: 'Cheat Sheet (Sorry, not available now.)',
+    operation: 'CheatSheet',
+    color: 'rgb(173, 90, 64)',
+    hoverColor: 'rgb(207, 118, 91)',
+  },
+  {
+    icon: <BorderColorIcon />,
+    name: 'Whiteboard Share (Sorry, not available now.)',
+    operation: 'WhiteboardShare',
+    color: 'rgb(144, 85, 166)',
+    hoverColor: 'rgb(182, 109, 209)',
+  },
+  {
+    icon: <CurrencyExchangeIcon />,
+    name: 'Currency Calculator (Sorry, not available now.)',
+    operation: 'CurrencyCalculator',
+    color: 'rgb(184, 92, 115)',
+    hoverColor: 'rgb(219, 116, 142)',
+  },
 ];
 
 const VideosWrapper = (props) => {
@@ -173,6 +241,14 @@ const VideosWrapper = (props) => {
               key={action.name}
               icon={action.icon}
               tooltipTitle={action.name}
+              FabProps={{
+                sx: {
+                  bgcolor: action.color,
+                  '&:hover': {
+                    bgcolor: action.hoverColor,
+                  },
+                },
+              }}
               onClick={(event) => onWidgetIconClick(event, action.operation)}
             />
           ))}

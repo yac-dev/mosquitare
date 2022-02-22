@@ -352,61 +352,69 @@ const Navbar = (props) => {
     }
   };
 
-  return (
-    <>
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar
-          position='fixed'
-          color='transparent'
-          style={{ background: 'transparent !important', boxShadow: 'none' }}
-        >
-          <Toolbar>
-            <IconButton
-              size='large'
-              edge='start'
-              color='inherit'
-              aria-label='open drawer'
-              sx={{ mr: 2, color: 'white' }}
+  const renderNavbar = () => {
+    if (props.mediaState.callAccepted) {
+      return null;
+    } else {
+      return (
+        <>
+          <Box sx={{ flexGrow: 1 }}>
+            <AppBar
+              position='fixed'
+              color='transparent'
+              style={{ background: 'transparent !important', boxShadow: 'none' }}
             >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              variant='h6'
-              noWrap
-              component='div'
-              sx={{ display: { xs: 'none', sm: 'block' }, color: 'white' }}
-            >
-              Lampost&nbsp;
-              {renderExploreAndSearchIcon()}
-            </Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, color: 'white' }}>
-              {/* {renderSignupAndLogin()} */}
-              {renderToolIconButtons()}
-            </Box>
-            {/* ここのBoxってなんだろな。。。 */}
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size='large'
-                aria-label='show more'
-                aria-controls={mobileMenuId}
-                aria-haspopup='true'
-                onClick={handleMobileMenuOpen}
-                color='inherit'
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-        {renderUserMenu}
-        {renderGroupMenu}
-      </Box>
-      <SignupWrapper showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
-      <Login showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />
-    </>
-  );
+              <Toolbar>
+                <IconButton
+                  size='large'
+                  edge='start'
+                  color='inherit'
+                  aria-label='open drawer'
+                  sx={{ mr: 2, color: 'white' }}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Typography
+                  variant='h6'
+                  noWrap
+                  component='div'
+                  sx={{ display: { xs: 'none', sm: 'block' }, color: 'white' }}
+                >
+                  Lampost&nbsp;
+                  {renderExploreAndSearchIcon()}
+                </Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, color: 'white' }}>
+                  {/* {renderSignupAndLogin()} */}
+                  {renderToolIconButtons()}
+                </Box>
+                {/* ここのBoxってなんだろな。。。 */}
+                <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                  <IconButton
+                    size='large'
+                    aria-label='show more'
+                    aria-controls={mobileMenuId}
+                    aria-haspopup='true'
+                    onClick={handleMobileMenuOpen}
+                    color='inherit'
+                  >
+                    <MoreIcon />
+                  </IconButton>
+                </Box>
+              </Toolbar>
+            </AppBar>
+            {renderMobileMenu}
+            {renderUserMenu}
+            {renderGroupMenu}
+          </Box>
+          <SignupWrapper showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
+          <Login showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />
+        </>
+      );
+    }
+  };
+
+  return <>{renderNavbar()}</>;
   // const [visible, setVisible] = useState(false);
   // return (
   //   <>
@@ -541,7 +549,7 @@ const Navbar = (props) => {
 // };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState };
+  return { authState: state.authState, mediaState: state.mediaState };
 };
 
 export default connect(mapStateToProps, { logoutActionCreator })(Navbar);
