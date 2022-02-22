@@ -132,6 +132,7 @@ const UserDetail = (props) => {
                 <CallButton
                   socket={props.socket}
                   user={props.userInfo.info}
+                  setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
                   setShowCallingModal={props.setShowCallingModal}
                 />
                 {/* <Button size='small'>Share</Button> */}

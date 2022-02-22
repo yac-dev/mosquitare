@@ -79,6 +79,8 @@ const WorldMap = (props) => {
   // const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
   const [isUserIconClicked, setIsUserIconClicked] = useState(false);
   const [userInfo, setUserInfo] = useState({ info: null });
+  // for mobile and tablet
+  const [showSwipeable, setShowSwipeable] = useState(true);
   const [openSwipeableDrawer, setOpenSwipeableDrawer] = useState(false);
 
   useEffect(() => {
@@ -124,13 +126,13 @@ const WorldMap = (props) => {
   return (
     <>
       {/* modals */}
-      <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+      {/* <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
       <FullScreen1on1Modal
         socket={socket}
         show1on1={show1on1}
         setShow1on1={setShow1on1}
         fullscreen1on1Modal={fullscreen1on1Modal}
-      />
+      /> */}
       {/* <VerticallyCenteredModal
         show={verticallyCenteredModal}
         onHide={() => setVerticallyCenteredModal(false)}
@@ -146,8 +148,9 @@ const WorldMap = (props) => {
       /> */}
       {/* modals */}
 
-      <div style={{ height: '100vh', width: '100%' }}>
-        {/* <ReactMapGL
+      {/* <div style={{ height: '100vh', width: '100%' }}> */}
+
+      {/* <ReactMapGL
           {...viewport}
           mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
           width='100%'
@@ -186,15 +189,16 @@ const WorldMap = (props) => {
             socket={socket}
             // onJoinClick={onJoinClick}
           /> */}
-        {/* <Button
+      {/* <Button
             className='create-meeting-button'
             // onClick={() => setVerticallyCenteredModal(true)}
           >
             Create new meeting??
           </Button> */}
-        {/* </ReactMapGL> */}
+      {/* </ReactMapGL> */}
 
-        <Desktop>
+      <Desktop>
+        <div style={{ height: '100vh', width: '100%' }}>
           <ReactMapGL
             {...viewport}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -223,8 +227,18 @@ const WorldMap = (props) => {
               setShowCallingModal={setShowCallingModal}
             /> */}
           </ReactMapGL>
-        </Desktop>
-        <Tablet>
+          <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+          <FullScreen1on1Modal
+            socket={socket}
+            show1on1={show1on1}
+            setShow1on1={setShow1on1}
+            fullscreen1on1Modal={fullscreen1on1Modal}
+          />
+        </div>
+      </Desktop>
+
+      <Tablet>
+        <div style={{ height: '100vh', width: '100%' }}>
           <ReactMapGL
             {...viewport}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -240,17 +254,31 @@ const WorldMap = (props) => {
               setOpenSwipeableDrawer={setOpenSwipeableDrawer}
               userInfo={userInfo}
               setUserInfo={setUserInfo}
+              setShowSwipeable={setShowSwipeable}
             />
-            <SwipeableUserDetail
-              socket={socket}
-              userInfo={userInfo}
-              isUserIconClicked={isUserIconClicked}
-              openSwipeableDrawer={openSwipeableDrawer}
-              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-            />
+            {showSwipeable ? (
+              <SwipeableUserDetail
+                socket={socket}
+                userInfo={userInfo}
+                isUserIconClicked={isUserIconClicked}
+                openSwipeableDrawer={openSwipeableDrawer}
+                setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+                setShowCallingModal={setShowCallingModal}
+              />
+            ) : null}
           </ReactMapGL>
-        </Tablet>
-        <Mobile>
+          <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+          <FullScreen1on1Modal
+            socket={socket}
+            show1on1={show1on1}
+            setShow1on1={setShow1on1}
+            fullscreen1on1Modal={fullscreen1on1Modal}
+          />
+        </div>
+      </Tablet>
+
+      <Mobile>
+        <div style={{ height: '100vh', width: '100%' }}>
           <ReactMapGL
             {...viewport}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -266,17 +294,30 @@ const WorldMap = (props) => {
               setOpenSwipeableDrawer={setOpenSwipeableDrawer}
               userInfo={userInfo}
               setUserInfo={setUserInfo}
+              setShowSwipeable={setShowSwipeable}
             />
-            <SwipeableUserDetail
-              socket={socket}
-              userInfo={userInfo}
-              isUserIconClicked={isUserIconClicked}
-              openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
-              setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
-            />
+            {showSwipeable ? (
+              <SwipeableUserDetail
+                socket={socket}
+                userInfo={userInfo}
+                isUserIconClicked={isUserIconClicked}
+                openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
+                setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
+                setShowCallingModal={setShowCallingModal}
+              />
+            ) : null}
           </ReactMapGL>
-        </Mobile>
-      </div>
+          <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+          <FullScreen1on1Modal
+            socket={socket}
+            show1on1={show1on1}
+            setShow1on1={setShow1on1}
+            fullscreen1on1Modal={fullscreen1on1Modal}
+          />
+        </div>
+      </Mobile>
+
+      {/* </div> */}
     </>
   );
 };

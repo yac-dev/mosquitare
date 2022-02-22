@@ -95,7 +95,13 @@ const SwipeableUserDetail = (props) => {
             overflow: 'auto',
           }}
         >
-          <UserDetail socket={props.socket} userInfo={props.userInfo} isUserIconClicked={props.isUserIconClicked} />
+          <UserDetail
+            socket={props.socket}
+            userInfo={props.userInfo}
+            isUserIconClicked={props.isUserIconClicked}
+            setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
+            setShowCallingModal={props.setShowCallingModal}
+          />
         </StyledBox>
       </SwipeableDrawer>
     </Root>

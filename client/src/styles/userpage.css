@@ -32,7 +32,7 @@
   grid-template-areas: 'videos-wrapper resource-tab';
 }
 
-video {
+/* video { // このnamingが、1on1 modalの方にも影響を与えていた。。。
   width: 150px;
   height: 150px;
   object-fit: cover;
@@ -41,7 +41,7 @@ video {
 .videos-wrapper {
   grid-area: videos-wrapper;
   display: flex;
-}
+} */
 
 .displaying-video-1 {
   width: 450px;

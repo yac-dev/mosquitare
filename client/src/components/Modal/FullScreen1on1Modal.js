@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
@@ -18,6 +19,26 @@ import '../../styles/1on1.css';
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
 });
+
+const Desktop = ({ children }) => {
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  return isDesktop ? children : null;
+};
+
+const Tablet = ({ children }) => {
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+  return isTablet ? children : null;
+};
+
+const Mobile = ({ children }) => {
+  const isMobile = useMediaQuery({ minWidth: 320, maxWidth: 767 });
+  return isMobile ? children : null;
+};
+
+// const Default = ({ children }) => {
+//   const isNotMobile = useMediaQuery({ minWidth: 768 });
+//   return isNotMobile ? children : null;
+// };
 
 const FullScreen1on1Modal = (props) => {
   // これでも分かる通り、基本modalはdefaultでrenderされていることになるね。違うやり方だ。要は、このmodalがセットされたときに実行するって言うことをやりたいのよ。もう最初からこれ実行されている。
@@ -41,24 +62,56 @@ const FullScreen1on1Modal = (props) => {
   const screenRender = () => {
     if (props.mediaState.callAccepted) {
       return (
-        <Modal
-          show={props.show1on1}
-          fullscreen={props.fullscreen1on1Modal}
-          onHide={() => props.setShow1on1(false)}
-          // style={{ backgroundColor: 'black' }}
-        >
-          <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
-            <MediaRecorder />
-            <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
-            <VerticalTabsWrapper socket={props.socket} />
-            {/* <AppsWrapper /> */}
-          </Modal.Body>
-          {/* <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity='success' sx={{ width: '100%' }}>
-              This is a success message!
-            </Alert>
-          </Snackbar> ここ後でいいか。*/}
-        </Modal>
+        <>
+          <Desktop>
+            <Modal
+              show={props.show1on1}
+              fullscreen={props.fullscreen1on1Modal}
+              onHide={() => props.setShow1on1(false)}
+              // style={{ backgroundColor: 'black' }}
+            >
+              {/* 単純に、propsでstyling用のwidthをvideos wrapperとverticalTabsWrapperそれぞれに渡せばいいや。*/}
+              <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
+                {/* <MediaRecorder /> */}
+                <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
+                {/* <VerticalTabsWrapper socket={props.socket} /> */}
+                {/* <AppsWrapper /> */}
+              </Modal.Body>
+            </Modal>
+          </Desktop>
+
+          <Tablet>
+            <Modal
+              show={props.show1on1}
+              fullscreen={props.fullscreen1on1Modal}
+              onHide={() => props.setShow1on1(false)}
+              // style={{ backgroundColor: 'black' }}
+            >
+              <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
+                <MediaRecorder />
+                <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
+                <VerticalTabsWrapper socket={props.socket} />
+                {/* <AppsWrapper /> */}
+              </Modal.Body>
+            </Modal>
+          </Tablet>
+
+          <Mobile>
+            <Modal
+              show={props.show1on1}
+              fullscreen={props.fullscreen1on1Modal}
+              onHide={() => props.setShow1on1(false)}
+              // style={{ backgroundColor: 'black' }}
+            >
+              <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
+                <MediaRecorder />
+                <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
+                <VerticalTabsWrapper socket={props.socket} />
+                {/* <AppsWrapper /> */}
+              </Modal.Body>
+            </Modal>
+          </Mobile>
+        </>
       );
     } else {
       return null;

@@ -2,6 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 // import { Button } from 'semantic-ui-react';
 
+import '../styles/1on1.css';
+
 // mui
 import TranslateIcon from '@mui/icons-material/Translate';
 import Button from '@mui/material/Button';
@@ -125,17 +127,20 @@ const VideosWrapper = (props) => {
           playsInline
           ref={oppositeVideoRef}
           autoPlay
-          style={{ width: '960px', height: '540px' }} // これだとなんで真ん中に寄ってくれるの？？
+          // style={{ width: '960px', height: '540px' }} // これだとなんで真ん中に寄ってくれるの？？
           // style={{ width: '400px', height: '500px' }}
         />
-        <video
-          className='myvideo'
-          playsInline
-          muted
-          ref={myVideoRef}
-          autoPlay
-          style={{ width: '160px', height: '90px' }}
-        />
+        <div className='myvideo-wrapper'>
+          <video
+            className='myvideo'
+            playsInline
+            muted
+            ref={myVideoRef}
+            autoPlay
+            // style={{ width: '160px', height: '90px' }}
+          />
+        </div>
+
         <div className='button-wrapper'>
           <Tooltip title='Disconnect call'>
             {/* <LogoutButton variant='contained' onClick={() => onHangUpClick()}>
@@ -161,7 +166,8 @@ const VideosWrapper = (props) => {
               {/* &nbsp;{'lang'} */}
             </MicIconButton>
           </Tooltip>
-          {/* <Button
+
+          {/* <Button この上から。
             negative
             // disabled={!isMinimumTimePassed}
             className='hang-up-button'

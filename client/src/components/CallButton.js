@@ -99,6 +99,9 @@ const CallButton = (props) => {
     event.preventDefault();
     // props.setIsPopupOpen(false);
     const mySocketId = props.authState.currentUser.socketId;
+    if (props.setOpenSwipeableDrawer) {
+      props.setOpenSwipeableDrawer(false);
+    }
     props.setShowCallingModal(true);
     props.callActionCreator(props.socket, mySocketId, oppositeSocketId, exchangingLanguages);
   };
