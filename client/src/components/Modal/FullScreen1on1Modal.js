@@ -43,6 +43,8 @@ const Mobile = ({ children }) => {
 const FullScreen1on1Modal = (props) => {
   // これでも分かる通り、基本modalはdefaultでrenderされていることになるね。違うやり方だ。要は、このmodalがセットされたときに実行するって言うことをやりたいのよ。もう最初からこれ実行されている。
   const [open, setOpen] = useState(false);
+  const [countLearningLangLength, setCountLearningLangLength] = useState(0);
+  const [countNativeLangLength, setCountNativeLangLength] = useState(0);
 
   const handleClick = () => {
     setOpen(true);

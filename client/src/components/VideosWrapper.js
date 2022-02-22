@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 // import { Button } from 'semantic-ui-react';
 
@@ -12,6 +12,15 @@ import MicIcon from '@mui/icons-material/Mic';
 import IconButton from '@mui/material/IconButton';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { styled } from '@mui/system';
+import Box from '@mui/material/Box';
+import SpeedDial from '@mui/material/SpeedDial';
+// import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
+import ShareIcon from '@mui/icons-material/Share';
 
 // call recieve側
 import { answerCallActionCreator2 } from '../actionCreators/mediaActionCreator';
@@ -57,7 +66,20 @@ const MicIconButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
+const actions = [
+  { icon: <FileCopyIcon />, name: 'Copy' },
+  { icon: <SaveIcon />, name: 'Save' },
+  { icon: <PrintIcon />, name: 'Print' },
+  { icon: <ShareIcon />, name: 'Share' },
+];
+
 const VideosWrapper = (props) => {
+  const [open, setOpen] = useState(false);
+  const [direction, setDirection] = useState('left');
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const myVideoRef = useRef();
   const oppositeVideoRef = useRef();
   const connectionRef = useRef();
@@ -122,60 +144,39 @@ const VideosWrapper = (props) => {
     <>
       {/* <div></div> */}
       <div className='videos-wrapper'>
-        <video
-          className='partner-video'
-          playsInline
-          ref={oppositeVideoRef}
-          autoPlay
-          // style={{ width: '960px', height: '540px' }} // これだとなんで真ん中に寄ってくれるの？？
-          // style={{ width: '400px', height: '500px' }}
-        />
+        <video className='partner-video' playsInline ref={oppositeVideoRef} autoPlay />
         <div className='myvideo-wrapper'>
-          <video
-            className='myvideo'
-            playsInline
-            muted
-            ref={myVideoRef}
-            autoPlay
-            // style={{ width: '160px', height: '90px' }}
-          />
+          <video className='myvideo' playsInline muted ref={myVideoRef} autoPlay />
         </div>
+        {/* <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}> */}
+        <SpeedDial
+          ariaLabel='SpeedDial controlled open example'
+          sx={{ position: 'absolute', top: 16, right: 16 }}
+          icon={<WidgetsIcon />}
+          onClose={handleClose}
+          onOpen={handleOpen}
+          open={open}
+          direction={direction}
+        >
+          {actions.map((action) => (
+            <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} onClick={handleClose} />
+          ))}
+        </SpeedDial>
+        {/* </Box> */}
 
-        <div className='button-wrapper'>
+        {/* <div className='button-wrapper'>
+          <Tooltip title='Switch current language' variant='contained'>
+            <SwitchLangIconButton>
+              <TranslateIcon />
+            </SwitchLangIconButton>
+          </Tooltip>
           <Tooltip title='Disconnect call'>
-            {/* <LogoutButton variant='contained' onClick={() => onHangUpClick()}>
-              <LogoutIcon /> */}
+
             <LogoutIconButton onClick={() => onHangUpClick()}>
               <LogoutIcon />
             </LogoutIconButton>
-            {/* </LogoutButton> */}
           </Tooltip>
-          <Tooltip title='Switch current language' variant='contained'>
-            <SwitchLangIconButton sx={{ margin: '5px' }}>
-              {/* {'lang'}&nbsp; */}
-              {/* <SwitchRightIcon /> */}
-              <TranslateIcon />
-              {/* &nbsp;{'lang'} */}
-            </SwitchLangIconButton>
-          </Tooltip>
-          <Tooltip title='Volume change' variant='contained'>
-            <MicIconButton>
-              {/* {'lang'}&nbsp; */}
-              {/* <SwitchRightIcon /> */}
-              <MicIcon />
-              {/* &nbsp;{'lang'} */}
-            </MicIconButton>
-          </Tooltip>
-
-          {/* <Button この上から。
-            negative
-            // disabled={!isMinimumTimePassed}
-            className='hang-up-button'
-            circular
-            icon='sign out'
-            onClick={() => onHangUpClick()}
-          ></Button> */}
-        </div>
+        </div> */}
       </div>
     </>
   );
