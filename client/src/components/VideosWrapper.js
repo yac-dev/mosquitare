@@ -17,8 +17,8 @@ import SpeedDial from '@mui/material/SpeedDial';
 // import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
-import SaveIcon from '@mui/icons-material/Save';
+import SendIcon from '@mui/icons-material/Send';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
 
@@ -67,10 +67,8 @@ const MicIconButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const actions = [
-  { icon: <FileCopyIcon />, name: 'Copy' },
-  { icon: <SaveIcon />, name: 'Save' },
-  { icon: <PrintIcon />, name: 'Print' },
-  { icon: <ShareIcon />, name: 'Share' },
+  { icon: <SendIcon />, name: 'Chat', operation: 'Chat' },
+  { icon: <RecordVoiceOverIcon />, name: 'Transcript', operation: 'Transcript' },
 ];
 
 const VideosWrapper = (props) => {
@@ -79,6 +77,15 @@ const VideosWrapper = (props) => {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const onWidgetIconClick = (event, operation) => {
+    event.preventDefault();
+    // setOpen(false);
+    if (operation === 'Chat') {
+      props.setOpenChatComponent(true);
+    }
+    setOpen(!open);
+  };
 
   const myVideoRef = useRef();
   const oppositeVideoRef = useRef();
@@ -159,7 +166,12 @@ const VideosWrapper = (props) => {
           direction={direction}
         >
           {actions.map((action) => (
-            <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} onClick={handleClose} />
+            <SpeedDialAction
+              key={action.name}
+              icon={action.icon}
+              tooltipTitle={action.name}
+              onClick={(event) => onWidgetIconClick(event, action.operation)}
+            />
           ))}
         </SpeedDial>
         {/* </Box> */}

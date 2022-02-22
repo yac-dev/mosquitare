@@ -10,6 +10,7 @@ import MuiAlert from '@mui/material/Alert';
 // components
 import MediaRecorder from '../MediaRecord';
 import VideosWrapper from '../VideosWrapper';
+import Chat from '../Chat';
 import VerticalTabsWrapper from '../VerticalTabsWrapper';
 import AppsWrapper from '../ConversationApps/AppsWrapper';
 
@@ -45,6 +46,8 @@ const FullScreen1on1Modal = (props) => {
   const [open, setOpen] = useState(false);
   const [countLearningLangLength, setCountLearningLangLength] = useState(0);
   const [countNativeLangLength, setCountNativeLangLength] = useState(0);
+  const [openChatComponent, setOpenChatComponent] = useState(false);
+  const [openTranscriptComponent, setOpenTranscriptOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -75,7 +78,13 @@ const FullScreen1on1Modal = (props) => {
               {/* 単純に、propsでstyling用のwidthをvideos wrapperとverticalTabsWrapperそれぞれに渡せばいいや。*/}
               <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
                 {/* <MediaRecorder /> */}
-                <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
+                <VideosWrapper
+                  show1on1={props.show1on1}
+                  setShow1on1={props.setShow1on1}
+                  socket={props.socket}
+                  setOpenChatComponent={setOpenChatComponent}
+                />
+                <Chat socket={props.socket} openChatComponent={openChatComponent} />
                 {/* <VerticalTabsWrapper socket={props.socket} /> */}
                 {/* <AppsWrapper /> */}
               </Modal.Body>

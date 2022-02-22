@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import store from '../store';
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+
+// mui
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import TranslateIcon from '@mui/icons-material/Translate';
@@ -107,6 +110,7 @@ const SwitchLanguageIconButton = styled(IconButton)(({ theme }) => ({
 const Chat = (props) => {
   const [chats, setChats] = useState([]);
   const [inputText, setInputText] = useState('');
+  const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
   // const classes = styles(props);
 
   useEffect(() => {
@@ -114,6 +118,11 @@ const Chat = (props) => {
       setChats((previousState) => [...previousState, dataFromServer.messageObject]);
     });
   }, []);
+
+  const handleDrag = (e, ui) => {
+    const { x, y } = deltaPosition;
+    setDeltaPosition({ ...deltaPosition, x: x + ui.deltaX, y: y + ui.deltaY });
+  };
 
   const sendChat = () => {
     if (!inputText) {
@@ -177,16 +186,32 @@ const Chat = (props) => {
   };
 
   return (
-    <div
-      className={`tab-content ${props.isSelected === 'chat' ? undefined : 'hidden'}`}
-      style={{
-        color: 'white',
-        backgroundColor: 'rgb(29, 49, 79)',
-        position: 'relative',
-        borderRadius: '5px',
-      }}
+    <Draggable
+      // axis='x'
+      // handle='.handle'
+      // defaultPosition={{ x: 0, y: 0 }}
+      // position={null}
+      // grid={[25, 25]}
+      // scale={1}
+      // onStart={this.handleStart}
+      // onDrag={this.handleDrag}
+      // onStop={this.handleStop}
+      onDrag={handleDrag}
     >
-      <p style={{ marginLeft: '5px', marginBottom: '0px' }}>
+      <div
+        className={`chat-wrapper ${props.openChatComponent === true ? undefined : 'hidden'}`}
+        style={{
+          color: 'white',
+          backgroundColor: 'rgb(29, 49, 79)',
+          position: 'absolute',
+          top: '80px',
+          right: '50px',
+          zIndex: 10,
+          // position: 'relative',
+          borderRadius: '5px',
+        }}
+      >
+        {/* <p style={{ marginLeft: '5px', marginBottom: '0px' }}>
         chat in {props.mediaState.currentLanguage.name}...&nbsp;
         <Tooltip title='Switch current language'>
           <SwitchLanguageIconButton color='inherit'>
@@ -196,65 +221,16 @@ const Chat = (props) => {
       </p>
       <div className='chats' style={{ padding: '5px' }}>
         {renderChats()}
+      </div> */}
+        <p>Hello world.</p>
+        <p>Hello world.</p>
+        <p>Hello world.</p>
+        <p>Hello world.</p>
+        <p>Hello world.</p>
+        <p>Hello world.</p>
+        <p>Hello world.</p>
       </div>
-      {/*  ここら辺、smart phoneの場合でwidthを書くだけだな。*/}
-      <div className='input-and-send' style={{ width: '100%', position: 'absolute', bottom: '0', padding: '5px' }}>
-        {/* <hr style={{ color: 'white' }}></hr> */}
-        <Stack direction='row' spacing={1}>
-          {/* <Box
-            sx={{
-              width: 500,
-              maxWidth: '100%',
-            }}
-          > */}
-          <TextField
-            fullWidth
-            label='Type something...'
-            id='fullWidth'
-            // className={classes.textField}
-            // sx={{ color: 'white' }}
-            // InputProps={{
-            //   className: classes.input,
-            // }}rgb(186, 184, 184)
-            InputProps={{ style: { color: 'white', backgroundColor: 'rgb(35, 63, 105)' } }}
-            InputLabelProps={{
-              style: { color: 'white' },
-            }}
-            value={inputText}
-            onChange={(event) => setInputText(event.target.value)}
-            onKeyDown={(event) => sendChatByKeyDownEnter(event)}
-          />
-          {/* <CustomInput
-            aria-label='Demo input'
-            placeholder='Message...'
-            value={inputText}
-            onChange={(event) => setInputText(event.target.value)}
-          /> */}
-          {/* </Box> */}
-          {/* <Button variant='contained' startIcon={<SendIcon />} width='20%'>
-          Send
-        </Button> */}
-          {/* <IconButton
-            size='large'
-            edge='end'
-            aria-label='show 4 new mails'
-            // aria-controls={userMenuId}
-            // onClick={handleProfileMenuOpen}
-            color='inherit'
-          >
-            <SendIcon />
-          </IconButton> */}
-          <ColorButton
-            variant='contained'
-            endIcon={<SendIcon />}
-            onClick={() => sendChat()}
-            // sx={{ border: '1px solid white' }}
-          >
-            Send
-          </ColorButton>
-        </Stack>
-      </div>
-    </div>
+    </Draggable>
   );
 };
 

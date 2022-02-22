@@ -72,6 +72,7 @@
     '. vertical-tabs-wrapper .'; */
   display: flex;
   align-items: center;
+  /* z-index: 5; */
 }
 
 .videos-wrapper {
@@ -83,6 +84,7 @@
   width: 90%;
   margin: 0 auto;
   position: relative;
+  z-index: 1;
 }
 
 .partner-video {
@@ -117,6 +119,9 @@
   /* transform: translate(-50%, -50%); */
   /* width: 50%; */
   /* margin: 0 auto; */
+}
+
+.chat-wrapper {
 }
 
 .vertical-tabs-wrapper {
