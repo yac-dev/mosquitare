@@ -6,6 +6,7 @@ import '../styles/1on1.css';
 
 // mui
 import TranslateIcon from '@mui/icons-material/Translate';
+import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MicIcon from '@mui/icons-material/Mic';
@@ -57,17 +58,17 @@ const LogoutIconButton = styled(IconButton)(({ theme }) => ({
 
 const SwitchLangIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(36, 106, 212)',
+  backgroundColor: 'rgb(64, 184, 13)',
   '&:hover': {
-    backgroundColor: 'rgba(17, 109, 247)',
+    backgroundColor: 'rgba(68, 219, 4)',
   },
 }));
 
 const MicIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(36, 208, 145)',
+  backgroundColor: 'rgb(42, 198, 209)',
   '&:hover': {
-    backgroundColor: 'rgba(36, 208, 145,0.8)',
+    backgroundColor: 'rgba(17, 235, 250)',
   },
 }));
 
@@ -220,54 +221,61 @@ const VideosWrapper = (props) => {
 
   return (
     <>
-      {/* <div></div> */}
       <div className='videos-wrapper'>
         <video className='partner-video' playsInline ref={oppositeVideoRef} autoPlay />
         <div className='myvideo-wrapper'>
           <video className='myvideo' playsInline muted ref={myVideoRef} autoPlay />
         </div>
-        {/* <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1 }}> */}
-        <SpeedDial
-          ariaLabel='SpeedDial controlled open example'
-          sx={{ position: 'absolute', top: 16, right: 16 }}
-          icon={<WidgetsIcon />}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          open={open}
-          direction={direction}
+        <div className='buttons-wrapper' style={{ position: 'absolute', top: 20, right: 20 }}>
+          <Stack direction='row' spacing={3} alignItems='baseline'>
+            <SpeedDial
+              ariaLabel='SpeedDial controlled open example'
+              // sx={{ position: 'absolute', top: 16, right: 16 }}
+              icon={<WidgetsIcon />}
+              onClose={handleClose}
+              onOpen={handleOpen}
+              open={open}
+              direction={direction}
+            >
+              {actions.map((action) => (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                  FabProps={{
+                    sx: {
+                      bgcolor: action.color,
+                      '&:hover': {
+                        bgcolor: action.hoverColor,
+                      },
+                    },
+                  }}
+                  onClick={(event) => onWidgetIconClick(event, action.operation)}
+                />
+              ))}
+            </SpeedDial>
+            <Tooltip title='Volume'>
+              <MicIconButton>
+                <MicIcon size='large' />
+              </MicIconButton>
+            </Tooltip>
+            <Tooltip title='Disconnect call'>
+              <LogoutIconButton onClick={() => onHangUpClick()}>
+                <LogoutIcon size='large' />
+              </LogoutIconButton>
+            </Tooltip>
+          </Stack>
+        </div>
+        <div
+          className='switch-button'
+          style={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translate(-50%, -50%)' }}
         >
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              FabProps={{
-                sx: {
-                  bgcolor: action.color,
-                  '&:hover': {
-                    bgcolor: action.hoverColor,
-                  },
-                },
-              }}
-              onClick={(event) => onWidgetIconClick(event, action.operation)}
-            />
-          ))}
-        </SpeedDial>
-        {/* </Box> */}
-
-        {/* <div className='button-wrapper'>
-          <Tooltip title='Switch current language' variant='contained'>
+          <Tooltip title='Check Status!' variant='contained'>
             <SwitchLangIconButton>
               <TranslateIcon />
             </SwitchLangIconButton>
           </Tooltip>
-          <Tooltip title='Disconnect call'>
-
-            <LogoutIconButton onClick={() => onHangUpClick()}>
-              <LogoutIcon />
-            </LogoutIconButton>
-          </Tooltip>
-        </div> */}
+        </div>
       </div>
     </>
   );
