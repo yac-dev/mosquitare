@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 // import { Button } from 'semantic-ui-react';
 
 import '../styles/1on1.css';
@@ -12,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MicIcon from '@mui/icons-material/Mic';
 import IconButton from '@mui/material/IconButton';
 import LogoutIcon from '@mui/icons-material/Logout';
+import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/system';
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
@@ -80,28 +82,29 @@ const ColorButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const CloseIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(237, 85, 85)',
+  '&:hover': {
+    backgroundColor: 'rgb(245, 27, 27)',
+  },
+}));
+
 const actions = [
-  { icon: <SendIcon />, name: 'Chat', operation: 'Chat', color: 'rgb(44, 165, 171)', hoverColor: 'rgb(41,199,207)' },
+  { icon: <SendIcon />, name: 'Chat', operation: 'Chat', color: 'rgb(52, 173, 0)', hoverColor: 'rgb(66, 219, 0)' },
   {
     icon: <RecordVoiceOverIcon />,
     name: 'Transcript',
     operation: 'Transcript',
-    color: ' rgb(191,189,48)',
-    hoverColor: 'rgb(230,227,46)',
+    color: ' rgb(219, 219, 18)',
+    hoverColor: 'rgb(252, 252, 3)',
   },
   {
     icon: <PortraitIcon />,
     name: 'Your Screen',
     operation: 'YourScreen',
-    color: 'rgb(184, 92, 115)',
-    hoverColor: 'rgb(219, 116, 142)',
-  },
-  {
-    icon: <ScreenShareIcon />,
-    name: 'Screen Share (Sorry, not available now.)',
-    operation: 'ScreenShare',
-    color: 'rgb(199, 86, 169)',
-    hoverColor: 'rgb(217, 108, 188)',
+    color: 'rgb(16, 60, 235)',
+    hoverColor: 'rgb(16, 107, 235)',
   },
   {
     icon: <SupervisedUserCircleIcon />,
@@ -111,38 +114,51 @@ const actions = [
     hoverColor: 'rgb(157, 115, 230)',
   },
   {
+    icon: <ScreenShareIcon />,
+    name: 'Screen Share (Sorry, not available now.)',
+    operation: 'ScreenShare',
+    color: 'rgb(189, 8, 62)',
+    hoverColor: 'rgb(235, 38, 96)',
+  },
+  {
     icon: <GTranslateIcon />,
     name: 'Google Translate (Sorry, not available now.)',
     operation: 'GTranslate',
-    color: 'rgb(126, 87, 194)',
-    hoverColor: 'rgb(157, 115, 230)',
+    color: 'rgb(38, 189, 235)',
+    hoverColor: 'rgb(0, 195, 255)',
   },
   {
     icon: <TextSnippetIcon />,
     name: 'Cheat Sheet (Sorry, not available now.)',
     operation: 'CheatSheet',
-    color: 'rgb(173, 90, 64)',
-    hoverColor: 'rgb(207, 118, 91)',
+    color: 'rgb(225, 234, 237)',
+    hoverColor: 'rgb(255, 255, 255)',
   },
   {
     icon: <BorderColorIcon />,
     name: 'Whiteboard Share (Sorry, not available now.)',
     operation: 'WhiteboardShare',
-    color: 'rgb(144, 85, 166)',
-    hoverColor: 'rgb(182, 109, 209)',
+    color: 'rgb(196, 99, 39)',
+    hoverColor: 'rgb(237, 112, 33)',
   },
   {
     icon: <CurrencyExchangeIcon />,
     name: 'Currency Calculator (Sorry, not available now.)',
     operation: 'CurrencyCalculator',
-    color: 'rgb(184, 92, 115)',
-    hoverColor: 'rgb(219, 116, 142)',
+    color: 'rgb(106, 204, 27)',
+    hoverColor: 'rgb(119, 235, 26)',
   },
 ];
 
 const VideosWrapper = (props) => {
   const [open, setOpen] = useState(false);
   const [direction, setDirection] = useState('left');
+  const [openMyScreen, setOpenMyScreen] = useState(false);
+  const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
+
+  const myVideoRef = useRef();
+  const oppositeVideoRef = useRef();
+  const connectionRef = useRef();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -156,12 +172,11 @@ const VideosWrapper = (props) => {
     if (operation === 'Transcript') {
       props.setOpenTranscriptComponent(true);
     }
+    if (operation === 'YourScreen') {
+      setOpenMyScreen(true);
+    }
     setOpen(!open);
   };
-
-  const myVideoRef = useRef();
-  const oppositeVideoRef = useRef();
-  const connectionRef = useRef();
 
   useEffect(() => {
     if (props.show1on1) {
@@ -219,13 +234,23 @@ const VideosWrapper = (props) => {
     // props.updateUserConversationToFalseActionCreator();
   };
 
+  const handleDrag = (e, ui) => {
+    const { x, y } = deltaPosition;
+    setDeltaPosition({ ...deltaPosition, x: x + ui.deltaX, y: y + ui.deltaY });
+  };
+
   return (
     <>
       <div className='videos-wrapper'>
         <video className='partner-video' playsInline ref={oppositeVideoRef} autoPlay />
-        <div className='myvideo-wrapper'>
-          <video className='myvideo' playsInline muted ref={myVideoRef} autoPlay />
-        </div>
+        <Draggable onDrag={handleDrag}>
+          <div className={`myvideo-wrapper ${openMyScreen ? undefined : 'hidden'}`}>
+            <CloseIconButton onClick={() => setOpenMyScreen(false)}>
+              <CloseIcon size='large' />
+            </CloseIconButton>
+            <video className='myvideo' playsInline muted ref={myVideoRef} autoPlay />
+          </div>
+        </Draggable>
         <div className='buttons-wrapper' style={{ position: 'absolute', top: 20, right: 20 }}>
           <Stack direction='row' spacing={3} alignItems='baseline'>
             <SpeedDial
