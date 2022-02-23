@@ -10,6 +10,8 @@ import { Button } from 'semantic-ui-react';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import TranslateIcon from '@mui/icons-material/Translate';
+import Stack from '@mui/material/Stack';
+import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/system';
 
 // socket event
@@ -35,6 +37,14 @@ const SwitchLanguageIconButton = styled(IconButton)(({ theme }) => ({
   backgroundColor: 'rgb(35, 63, 105)',
   '&:hover': {
     backgroundColor: 'rgb(39, 78, 138)',
+  },
+}));
+
+const CloseIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(237, 85, 85)',
+  '&:hover': {
+    backgroundColor: 'rgb(245, 27, 27)',
   },
 }));
 
@@ -279,33 +289,41 @@ const SubtitleWrapper = (props) => {
   return (
     <Draggable onDrag={handleDrag}>
       <div
-        className={`transcript-wrapper ${props.openTranscriptComponent === true ? undefined : 'hidden'}`}
+        className={`transcript-component ${props.openTranscriptComponent === true ? undefined : 'hidden'}`}
         style={{
           color: 'white',
           backgroundColor: 'rgb(29, 49, 79)',
           borderRadius: '5px',
           overflow: 'auto',
-          width: '500px',
-          height: '500px',
+          height: '80vh',
+          width: '40vw',
           position: 'absolute',
           top: '80px',
           right: '50px',
           cursor: 'grab',
           zIndex: 10,
+          padding: '5px',
         }}
       >
-        <div className='transcript-wrapper'>
-          <div className='transcript-header' style={{ marginLeft: '5px', marginBottom: '0px' }}>
-            <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp;
-            {renderSwitchLangButton()}
-          </div>
-          <div className='transcripts' style={{ overflow: 'auto', height: '200px', padding: '5px' }}>
-            {renderTranscripts()}
-            {renderPartnerInterimTranscript()}
-            {renderMyInterimTranscript()}
-            {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
-            {/* {renderWordsLength()} */}
-          </div>
+        <div className='transcript-header' style={{ height: '10%' }}>
+          <Stack direction='row' justifyContent='space-between' alignItems='baseline'>
+            <h3 style={{ marginLeft: '15px' }}>Transcript</h3>
+            <CloseIconButton onClick={() => props.setOpenTranscriptComponent(false)}>
+              <CloseIcon />
+            </CloseIconButton>
+          </Stack>
+        </div>
+        <div
+          className='transcripts'
+          style={{ overflow: 'auto', height: '90%', padding: '5px', backgroundColor: 'rgb(37, 95, 184)' }}
+        >
+          <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp;
+          {renderSwitchLangButton()}
+          {renderTranscripts()}
+          {renderPartnerInterimTranscript()}
+          {renderMyInterimTranscript()}
+          {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
+          {/* {renderWordsLength()} */}
         </div>
       </div>
     </Draggable>

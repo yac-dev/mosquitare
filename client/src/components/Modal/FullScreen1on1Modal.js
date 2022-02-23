@@ -86,10 +86,15 @@ const FullScreen1on1Modal = (props) => {
                   setOpenChatComponent={setOpenChatComponent}
                   setOpenTranscriptComponent={setOpenTranscriptComponent}
                 />
-                <Chat socket={props.socket} openChatComponent={openChatComponent} />
+                <Chat
+                  socket={props.socket}
+                  openChatComponent={openChatComponent}
+                  setOpenChatComponent={setOpenChatComponent}
+                />
                 <SubtitleWrapper
                   socket={props.socket}
                   openTranscriptComponent={openTranscriptComponent}
+                  setOpenTranscriptComponent={setOpenTranscriptComponent}
                   setCountLearningLangLength={setCountLearningLangLength}
                   setCountNativeLangLength={setCountNativeLangLength}
                 />
@@ -106,7 +111,7 @@ const FullScreen1on1Modal = (props) => {
               // style={{ backgroundColor: 'black' }}
             >
               <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
-                <MediaRecorder />
+                {/* <MediaRecorder /> */}
                 <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
                 {/* <VerticalTabsWrapper socket={props.socket} /> */}
                 {/* <AppsWrapper /> */}
@@ -122,7 +127,7 @@ const FullScreen1on1Modal = (props) => {
               // style={{ backgroundColor: 'black' }}
             >
               <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
-                <MediaRecorder />
+                {/* <MediaRecorder /> */}
                 <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
                 {/* <VerticalTabsWrapper socket={props.socket} /> */}
                 {/* <AppsWrapper /> */}

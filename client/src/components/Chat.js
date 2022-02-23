@@ -6,6 +6,7 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 // mui
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import TranslateIcon from '@mui/icons-material/Translate';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -13,6 +14,7 @@ import { withStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import SendIcon from '@mui/icons-material/Send';
+import KeyboardIcon from '@mui/icons-material/Keyboard';
 import Input from '@mui/material/Input';
 import InputUnstyled from '@mui/base/InputUnstyled';
 import { styled } from '@mui/system';
@@ -101,6 +103,14 @@ const SwitchLanguageIconButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
+const CloseIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(237, 85, 85)',
+  '&:hover': {
+    backgroundColor: 'rgb(245, 27, 27)',
+  },
+}));
+
 // const styles = {
 //   floatingLabelFocusStyle: {
 //     color: 'somecolor',
@@ -179,13 +189,25 @@ const Chat = (props) => {
       );
     });
 
-    return <div style={{ overflow: 'auto', height: '400px', border: '1px solod white' }}>{renderedChats}</div>;
+    return (
+      <div
+        className='chats'
+        style={{
+          overflow: 'auto',
+          height: '80%',
+          // border: '1px solid white',
+          backgroundColor: 'rgb(37, 95, 184)',
+        }}
+      >
+        {renderedChats}
+      </div>
+    );
   };
 
   return (
     <Draggable onDrag={handleDrag}>
       <div
-        className={`chat-wrapper ${props.openChatComponent === true ? undefined : 'hidden'}`}
+        className={`chat-component ${props.openChatComponent === true ? undefined : 'hidden'}`}
         style={{
           color: 'white',
           backgroundColor: 'rgb(29, 49, 79)',
@@ -194,85 +216,54 @@ const Chat = (props) => {
           right: '50px',
           zIndex: 10,
           // position: 'relative',
-          borderRadius: '5px',
+          borderRadius: '15px',
           padding: '5px',
           cursor: 'grab',
-          height: '500px',
-          width: '300px',
         }}
       >
-        <div className='chat' style={{ position: 'relative' }}>
-          <div className='chat-header'>Chat x</div>
-          <div className='chats' style={{ padding: '5px' }}>
-            {renderChats()}
+        <div className='chat-wrapper' style={{ height: '80vh', width: '30vw' }}>
+          <div className='chat-header' style={{ height: '10%' }}>
+            <Stack direction='row' justifyContent='space-between' alignItems='baseline'>
+              <h3 style={{ marginLeft: '15px' }}>Chat</h3>
+              <CloseIconButton onClick={() => props.setOpenChatComponent(false)}>
+                <CloseIcon size='large' />
+              </CloseIconButton>
+            </Stack>
           </div>
-        </div>
-        {/* <p style={{ marginLeft: '5px', marginBottom: '0px' }}>
-        chat in {props.mediaState.currentLanguage.name}...&nbsp;
-        <Tooltip title='Switch current language'>
-          <SwitchLanguageIconButton color='inherit'>
-            <TranslateIcon variant='contained' size='small' />
-          </SwitchLanguageIconButton>
-        </Tooltip>
-      </p>
-      <div className='chats' style={{ padding: '5px' }}>
-        {renderChats()}
-      </div> */}
-        <div className='input-and-send' style={{ width: '100%', position: 'absolute', bottom: '0', padding: '5px' }}>
-          {/* <hr style={{ color: 'white' }}></hr> */}
-          <Stack direction='row' spacing={1}>
-            {/* <Box
-      sx={{
-        width: 500,
-        maxWidth: '100%',
-      }}
-    > */}
-            <TextField
-              fullWidth
-              label='Type something...'
-              id='fullWidth'
-              // className={classes.textField}
-              // sx={{ color: 'white' }}
-              // InputProps={{
-              //   className: classes.input,
-              // }}rgb(186, 184, 184)
-              InputProps={{ style: { color: 'white', backgroundColor: 'rgb(35, 63, 105)' } }}
-              InputLabelProps={{
-                style: { color: 'white' },
-              }}
-              value={inputText}
-              onChange={(event) => setInputText(event.target.value)}
-              onKeyDown={(event) => sendChatByKeyDownEnter(event)}
-            />
-            {/* <CustomInput
-      aria-label='Demo input'
-      placeholder='Message...'
-      value={inputText}
-      onChange={(event) => setInputText(event.target.value)}
-    /> */}
-            {/* </Box> */}
-            {/* <Button variant='contained' startIcon={<SendIcon />} width='20%'>
-    Send
-  </Button> */}
-            {/* <IconButton
-      size='large'
-      edge='end'
-      aria-label='show 4 new mails'
-      // aria-controls={userMenuId}
-      // onClick={handleProfileMenuOpen}
-      color='inherit'
-    >
-      <SendIcon />
-    </IconButton> */}
-            <ColorButton
-              variant='contained'
-              endIcon={<SendIcon />}
-              onClick={() => sendChat()}
-              // sx={{ border: '1px solid white' }}
-            >
-              Send
-            </ColorButton>
-          </Stack>
+          {renderChats()}
+          <div
+            className='input-and-send'
+            style={{
+              width: '100%',
+              padding: '5px',
+              height: '10%',
+            }}
+          >
+            {/* ここでalignmentでbasementを描くかな。真ん中寄せするために*/}
+            <Stack direction='row' spacing={1}>
+              <TextField
+                fullWidth
+                label='Type something...'
+                id='fullWidth'
+                // multiline
+                InputProps={{ style: { color: 'white', backgroundColor: 'rgb(35, 63, 105)' } }}
+                InputLabelProps={{
+                  style: { color: 'white' },
+                }}
+                value={inputText}
+                onChange={(event) => setInputText(event.target.value)}
+                onKeyDown={(event) => sendChatByKeyDownEnter(event)}
+              />
+              <ColorButton
+                variant='contained'
+                endIcon={<SendIcon />}
+                onClick={() => sendChat()}
+                // sx={{ border: '1px solid white' }}
+              >
+                Send
+              </ColorButton>
+            </Stack>
+          </div>
         </div>
       </div>
     </Draggable>
