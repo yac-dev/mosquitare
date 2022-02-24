@@ -360,9 +360,10 @@ const Navbar = (props) => {
         <>
           <Box sx={{ flexGrow: 1 }}>
             <AppBar
-              position='fixed'
+              // position='fixed'
+              position='static'
               color='transparent'
-              style={{ background: 'transparent !important', boxShadow: 'none' }}
+              style={{ background: 'transparent ', boxShadow: 'none' }}
             >
               <Toolbar>
                 <IconButton

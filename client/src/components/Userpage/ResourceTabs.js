@@ -22,7 +22,8 @@ const ResourceTabs = () => {
   return (
     // でかいwrapperとしてのclassnameをつけるべきだな。ここに。
     <div className='resource-tab'>
-      <Box sx={{ width: '100%', typography: 'body1' }}>
+      resource tab here
+      {/* <Box sx={{ width: '100%', typography: 'body1' }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label='lab API tabs example'>
@@ -41,7 +42,7 @@ const ResourceTabs = () => {
             <Comments />
           </TabPanel>
         </TabContext>
-      </Box>
+      </Box> */}
     </div>
   );
 };

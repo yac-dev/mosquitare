@@ -13,7 +13,9 @@ const VideoDisplayingModal = (props) => {
         keyboard={false}
         dialogClassName={'video-displaying-modal'}
       >
-        <Modal.Header closeButton>{/* <Modal.Title>With Jonh!!</Modal.Title> */}</Modal.Header>
+        <Modal.Header closeButton style={{ backgroundColor: 'rgb(0, 55, 110' }}>
+          {/* <Modal.Title>With Jonh!!</Modal.Title> */}
+        </Modal.Header>
         <Modal.Body bsPrefix='video-displaying-modal-body'>
           <DisplayVideo />
           <ResourceTabs />

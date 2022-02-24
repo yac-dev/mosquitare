@@ -116,6 +116,7 @@ const SignupWrapper = (props) => {
         }}
         backdrop='static'
         keyboard={false}
+        // bsPrefix='signup-modal'
       >
         <Modal.Header>
           <Modal.Title>Welcome to Lamppost!</Modal.Title>

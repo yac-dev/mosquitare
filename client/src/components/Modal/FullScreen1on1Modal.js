@@ -78,7 +78,7 @@ const FullScreen1on1Modal = (props) => {
             >
               {/* 単純に、propsでstyling用のwidthをvideos wrapperとverticalTabsWrapperそれぞれに渡せばいいや。*/}
               <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
-                {/* <MediaRecorder /> */}
+                <MediaRecorder />
                 <VideosWrapper
                   show1on1={props.show1on1}
                   setShow1on1={props.setShow1on1}

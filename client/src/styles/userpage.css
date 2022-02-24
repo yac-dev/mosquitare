@@ -1,35 +1,76 @@
+body {
+  height: 100%;
+  margin: 0;
+  background-color: rgb(0, 30, 60);
+  color: white; /* ここ、loginのheaderに影響を与える。気をつけよう。 */
+}
+
+.userpage-wrapper-wrapper {
+  margin: 60px;
+}
+
+.userpage-wrapper {
+  /* padding: 20px; */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 300px);
+  grid-gap: 15px;
+  justify-content: center;
+}
+
 .conversation-wrapper {
+  width: 100%; /* 300pxになっている。 */
   border-radius: 10px;
-  width: 300px;
+  border: 1px solid rgb(0, 97, 194);
+  cursor: pointer;
+  background-color: rgb(0, 55, 110);
 }
 
 .video-thumbnail {
+  width: 100%; /* ここも300px */
   display: flex;
   border-radius: 10px;
 }
 
+.conversation-video-wrapper {
+  width: 150px;
+}
+
+.thum {
+  width: 100%;
+  object-fit: contain;
+}
+
 .conversation-information {
   height: 150px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 
 .video-displaying-modal {
-  width: 90vw; /* Occupy the 90% of the screen width */
-  max-width: 90vw;
+  width: 80vw;
+  max-width: 80vw;
   /* height: 80vh;
   max-height: 80vh; */
   /* background-color: white; */
 }
 
+.video-displaying-modal-header {
+  /* background-color: rgb(0, 55, 110); */
+}
+
 .video-displaying-modal-body {
-  height: 70vh;
-  max-height: 70vh;
-  background-color: white;
-  display: grid;
-  grid-template-columns: 900px 1fr;
-  grid-template-areas: 'videos-wrapper resource-tab';
+  height: 80vh;
+  max-height: 80vh;
+  /* z-index: 20 !important; */
+  background-color: rgb(0, 55, 110);
+  /* display: grid; */
+  /* grid-template-columns: 900px 1fr;
+  grid-template-areas: 'videos-wrapper resource-tab'; */
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
 }
 
 /* video { // このnamingが、1on1 modalの方にも影響を与えていた。。。
@@ -43,18 +84,46 @@
   display: flex;
 } */
 
+.displaying-videos-wrapper-wrapper {
+  flex: 70%; /* width自体はこの70%で決まる。 */
+  background-color: rgb(0, 97, 194);
+  border: 1px solid white;
+  border-radius: 10px;
+}
+
+.displaying-videos-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.displaying-video-wrapper {
+  flex: 50%;
+}
+
 .displaying-video-1 {
-  width: 450px;
-  height: 400px;
-  object-fit: cover;
+  /* width: 450px;
+  height: 400px; */
+  width: 100%;
+  object-fit: contain;
+  border-top-left-radius: 10px;
 }
 
 .displaying-video-2 {
-  width: 450px;
-  height: 400px;
-  object-fit: cover;
+  /* width: 450px;
+  height: 400px; */
+  width: 100%;
+  object-fit: contain;
+  border-top-right-radius: 10px;
 }
 
 .resource-tab {
-  grid-area: resource-tab;
+  /* grid-area: resource-tab; */
+  flex: 30%;
+  background-color: rgb(0, 97, 194);
+}
+
+@media (max-width: 700px) {
+  .video-displaying-modal-body {
+    flex-direction: column;
+  }
 }

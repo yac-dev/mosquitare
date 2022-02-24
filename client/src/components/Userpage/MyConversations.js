@@ -45,27 +45,28 @@ const ConversationVideos = (props) => {
       const conversationList = props.authState.currentUser.conversations.map((conversation) => {
         return (
           <>
-            <div
-              className='conversation-wrapper'
-              style={{ cursor: 'pointer' }}
-              onClick={(event) => onConversationClick(event)}
-            >
+            <div className='conversation-wrapper' onClick={(event) => onConversationClick(event)}>
               <div className='video-thumbnail'>
-                <video style={{ borderTopLeftRadius: '10px' }}>
-                  <source
-                    src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${conversation.calledUserMedia.videoFileName}`}
-                    ref={videoRef1}
-                  />
-                </video>
-                <video style={{ borderTopRightRadius: '10px' }}>
-                  <source
-                    src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${conversation.recievedUserMedia.videoFileName}`}
-                    ref={videoRef2}
-                  />
-                </video>
+                <div className='conversation-video-wrapper'>
+                  <video className='thum' style={{ borderTopLeftRadius: '10px' }}>
+                    <source
+                      src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${conversation.calledUserMedia.videoFileName}`}
+                      ref={videoRef1}
+                    />
+                  </video>
+                </div>
+                <div className='conversation-video-wrapper'>
+                  <video className='thum' style={{ borderTopRightRadius: '10px' }}>
+                    <source
+                      src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${conversation.recievedUserMedia.videoFileName}`}
+                      ref={videoRef2}
+                    />
+                  </video>
+                </div>
               </div>
+
               <div className='conversation-information'>
-                information here!!
+                conversation info here!!
                 <p>{conversation.createdAt}</p>
               </div>
             </div>
