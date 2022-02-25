@@ -12,6 +12,7 @@ import MediaRecorder from '../MediaRecord';
 import VideosWrapper from '../VideosWrapper';
 import Chat from '../Chat';
 import SubtitleWrapper from './SubtitleWrapper';
+import MyClock from '../MyClock';
 // import VerticalTabsWrapper from '../VerticalTabsWrapper';
 import AppsWrapper from '../ConversationApps/AppsWrapper';
 
@@ -79,6 +80,7 @@ const FullScreen1on1Modal = (props) => {
               {/* 単純に、propsでstyling用のwidthをvideos wrapperとverticalTabsWrapperそれぞれに渡せばいいや。*/}
               <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
                 <MediaRecorder />
+                <MyClock />
                 <VideosWrapper
                   show1on1={props.show1on1}
                   setShow1on1={props.setShow1on1}

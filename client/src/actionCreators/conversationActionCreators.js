@@ -90,6 +90,16 @@ export const updateConversationUserScriptActionCreator = (userScript) => async (
   }
 };
 
+export const updateConversationDurationAndGenreActionCreator = (duration) => async (dispatch, getState) => {
+  try {
+    const userId = getState().authState.currentUser._id;
+    const genre = getState().mediaState.exchangingLanguages; // arrray;
+    const result = await mosquitareAPI.patch(`${userId}/durationandgenre`, { duration, genre });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const sendConversationIdActionCreator = (socket) => (dispatch, getState) => {
   try {
     const partnerSocketId = getState().mediaState.callingWith.socketId;

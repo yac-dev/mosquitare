@@ -7,6 +7,7 @@ import {
   updateConversationUserScript,
   getConversation,
   // updateConversationIntegratedUserMedia,
+  updateConversationDurationAndGenre,
 } from '../controllers/conversation';
 import multerParser from '../middlewares/multer';
 // import multer from 'multer';
@@ -16,6 +17,7 @@ router.route('/').post(createConversation);
 router.route('/:id').post(updateConversationRecievedUser).get(getConversation);
 router.route('/:id/usermedia').patch(updateConversationUserMedia);
 router.route('/:id/userscript').patch(updateConversationUserScript);
+router.route('/:id/durationandgenre').patch(updateConversationDurationAndGenre);
 // router.route('/integratedusermedia/:id').patch(updateConversationIntegratedUserMedia);
 
 // router.post('/upload/caller/:id', multerParser.single('videoFile'), storeVideoFileNames);

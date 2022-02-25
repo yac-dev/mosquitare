@@ -33,9 +33,12 @@ const conversationSchema = new mongoose.Schema({
     },
   ],
   duration: Number,
-  genre: {
-    type: String,
-  }, // これは、別でgenre用のmodelを作る必要があるかもしれない。
+  genre: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'language',
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now(),

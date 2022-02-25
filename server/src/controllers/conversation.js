@@ -91,3 +91,18 @@ export const getConversation = async (request, response) => {
     console.log(error);
   }
 };
+
+export const updateConversationDurationAndGenre = async (request, response) => {
+  try {
+    const { duration, genre } = request.body;
+    const conversation = await Conversation.findById(request.params.id);
+    conversation.duration = duration;
+    conversation.genre = genre;
+    await conversation.save();
+    response.status(200).json({
+      conversation,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
