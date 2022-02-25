@@ -38,6 +38,7 @@ const ConversationVideos = (props) => {
     // videoRef2.current
   };
 
+  // conversation一つ一つに関して、componentを作る必要があるわ。作り直そう。
   const renderConversationList = () => {
     if (!props.authState.currentUser) {
       return null;

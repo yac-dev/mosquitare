@@ -13,6 +13,7 @@ const MyClock = (props) => {
     }, 1000);
 
     return () => clearInterval(interval);
+    // uomountは一旦おいておこう。
   }, [seconds]);
 
   useEffect(() => {

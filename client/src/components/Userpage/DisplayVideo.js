@@ -61,7 +61,7 @@ const DisplayVideo = () => {
             controls
             // onTimeUpdate={() => timeUpdate()}
           >
-            {/* <source src={`${videos.videoRef1.src}#t=0,${minVideoLength}`} /> */}
+            <source src={`${videos.videoRef1.src}#t=0,${minVideoLength}`} />
             <source src={videos.videoRef1.src} />
           </video>
         </div>

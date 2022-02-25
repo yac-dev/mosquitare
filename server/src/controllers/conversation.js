@@ -96,8 +96,12 @@ export const updateConversationDurationAndGenre = async (request, response) => {
   try {
     const { duration, genre } = request.body;
     const conversation = await Conversation.findById(request.params.id);
-    conversation.duration = duration;
-    conversation.genre = genre;
+    if (!conversation.duration) {
+      conversation.duration = duration;
+    }
+    if (!conversation.genre.length) {
+      conversation.genre = genre;
+    }
     await conversation.save();
     response.status(200).json({
       conversation,

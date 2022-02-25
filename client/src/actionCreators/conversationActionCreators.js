@@ -92,9 +92,9 @@ export const updateConversationUserScriptActionCreator = (userScript) => async (
 
 export const updateConversationDurationAndGenreActionCreator = (duration) => async (dispatch, getState) => {
   try {
-    const userId = getState().authState.currentUser._id;
+    const { conversationId } = getState().conversationState;
     const genre = getState().mediaState.exchangingLanguages; // arrray;
-    const result = await mosquitareAPI.patch(`${userId}/durationandgenre`, { duration, genre });
+    const result = await mosquitareAPI.patch(`/conversations/${conversationId}/durationandgenre`, { duration, genre });
   } catch (error) {
     console.log(error);
   }
