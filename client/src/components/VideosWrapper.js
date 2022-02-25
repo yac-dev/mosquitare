@@ -7,6 +7,7 @@ import '../styles/1on1.css';
 
 // mui
 import TranslateIcon from '@mui/icons-material/Translate';
+import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
@@ -60,9 +61,9 @@ const LogoutIconButton = styled(IconButton)(({ theme }) => ({
 
 const SwitchLangIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(64, 184, 13)',
+  backgroundColor: 'rgb(34, 114, 230)',
   '&:hover': {
-    backgroundColor: 'rgba(68, 219, 4)',
+    backgroundColor: 'rgba(60, 130, 232)',
   },
 }));
 
@@ -267,6 +268,7 @@ const VideosWrapper = (props) => {
                   key={action.name}
                   icon={action.icon}
                   tooltipTitle={action.name}
+                  tooltipOpen
                   FabProps={{
                     sx: {
                       bgcolor: action.color,
@@ -279,25 +281,26 @@ const VideosWrapper = (props) => {
                 />
               ))}
             </SpeedDial>
-            <Tooltip title='Volume'>
+            {/* <Tooltip title='Volume'>
               <MicIconButton>
                 <MicIcon size='large' />
               </MicIconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title='Disconnect call'>
               <LogoutIconButton onClick={() => onHangUpClick()}>
-                <LogoutIcon size='large' />
+                <LogoutIcon size='large' style={{ color: 'white' }} />
               </LogoutIconButton>
             </Tooltip>
           </Stack>
         </div>
         <div
           className='switch-button'
-          style={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translate(-50%, -50%)' }}
+          style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translate(-50%, -50%)' }}
         >
-          <Tooltip title='Check Status!' variant='contained'>
+          <Tooltip title='Check Status!'>
+            {/* variant='contained' */}
             <SwitchLangIconButton>
-              <TranslateIcon />
+              <TranslateOutlinedIcon style={{ color: 'white' }} />
             </SwitchLangIconButton>
           </Tooltip>
         </div>
