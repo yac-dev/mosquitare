@@ -16,6 +16,7 @@ import IconButton from '@mui/material/IconButton';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/system';
+import { makeStyles } from '@mui/styles';
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
 // import SpeedDialIcon from '@mui/material/SpeedDialIcon';
@@ -61,9 +62,9 @@ const LogoutIconButton = styled(IconButton)(({ theme }) => ({
 
 const SwitchLangIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(34, 114, 230)',
+  backgroundColor: 'rgb(110, 209, 33)',
   '&:hover': {
-    backgroundColor: 'rgba(60, 130, 232)',
+    backgroundColor: 'rgba(145, 237, 74)',
   },
 }));
 
@@ -151,11 +152,18 @@ const actions = [
   },
 ];
 
+// const useStyles = makeStyles({
+//   tooltip: {
+//     fontSize: 30,
+//   },
+// });
+
 const VideosWrapper = (props) => {
   const [open, setOpen] = useState(false);
   const [direction, setDirection] = useState('left');
   const [openMyScreen, setOpenMyScreen] = useState(false);
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
+  // const classes = useStyles();
 
   const myVideoRef = useRef();
   const oppositeVideoRef = useRef();
@@ -253,7 +261,7 @@ const VideosWrapper = (props) => {
           </div>
         </Draggable>
         <div className='buttons-wrapper' style={{ position: 'absolute', top: 20, right: 20 }}>
-          <Stack direction='row' spacing={3} alignItems='baseline'>
+          <Stack direction={'row'} spacing={3} alignItems='baseline'>
             <SpeedDial
               ariaLabel='SpeedDial controlled open example'
               // sx={{ position: 'absolute', top: 16, right: 16 }}
@@ -262,13 +270,21 @@ const VideosWrapper = (props) => {
               onOpen={handleOpen}
               open={open}
               direction={direction}
+              // FabProps={{
+              //   sx: {
+              //     bgcolor: 'rgb(110, 209, 33)',
+              //     '&:hover': {
+              //       bgcolor: 'rgb(145, 237, 74)',
+              //     },
+              //   },
+              // }}
             >
               {actions.map((action) => (
                 <SpeedDialAction
                   key={action.name}
                   icon={action.icon}
                   tooltipTitle={action.name}
-                  tooltipOpen
+                  // tooltipOpen
                   FabProps={{
                     sx: {
                       bgcolor: action.color,
@@ -281,16 +297,16 @@ const VideosWrapper = (props) => {
                 />
               ))}
             </SpeedDial>
+            <Tooltip title='Finish Call'>
+              <LogoutIconButton onClick={() => onHangUpClick()}>
+                <LogoutIcon size='large' style={{ color: 'white' }} />
+              </LogoutIconButton>
+            </Tooltip>
             {/* <Tooltip title='Volume'>
               <MicIconButton>
                 <MicIcon size='large' />
               </MicIconButton>
             </Tooltip> */}
-            <Tooltip title='Disconnect call'>
-              <LogoutIconButton onClick={() => onHangUpClick()}>
-                <LogoutIcon size='large' style={{ color: 'white' }} />
-              </LogoutIconButton>
-            </Tooltip>
           </Stack>
         </div>
         <div
@@ -300,7 +316,7 @@ const VideosWrapper = (props) => {
           <Tooltip title='Check Status!'>
             {/* variant='contained' */}
             <SwitchLangIconButton>
-              <TranslateOutlinedIcon style={{ color: 'white' }} />
+              <TranslateOutlinedIcon style={{ color: 'white', fontSize: '30px' }} />
             </SwitchLangIconButton>
           </Tooltip>
         </div>
