@@ -6,6 +6,7 @@ import UserMedia from '../models/userMedia';
 import Conversation from '../models/conversation';
 // import ffmpeg from 'ffmpeg';
 import ffmpeg from 'fluent-ffmpeg';
+import { getVideoDurationInSeconds } from 'get-video-duration';
 import path from 'path';
 import S3 from 'aws-sdk/clients/s3';
 
@@ -35,8 +36,9 @@ const __dirname = dirname(__filename);
 
 import { uploadFile, getFileStream } from '../services/s3';
 
-const transcodeVideo = async (file, conversationDuration) => {
+const transcodeVideo = async (filename, conversationDuration) => {
   return new Promise((resolve, reject) => {
+    const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
     const pathOfScreenShots = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded');
     const transcodedFilename = `transcoded-${file.filename}`;
     const pathOfTranscodedMP4 = path.join(
@@ -48,16 +50,16 @@ const transcodeVideo = async (file, conversationDuration) => {
       transcodedFilename
     );
 
-    ffmpeg(file.path)
+    ffmpeg(pathBefore)
       .videoCodec('libx264')
       // .audioCodec('libmp3lame')
       .duration(conversationDuration)
       .on('end', (result) => {
-        ffmpeg(file.path)
+        ffmpeg(pathBefore)
           .screenshots({
             timestamps: ['30%'],
             folder: pathOfScreenShots,
-            filename: `transcoded-${file.filename}.png`,
+            filename: `transcoded-${filename}.png`,
             size: '720x?',
           })
           .on('error', (error) => {
@@ -74,46 +76,85 @@ const transcodeVideo = async (file, conversationDuration) => {
 
 export const createUserMedia = async (request, response) => {
   try {
-    const bodyObj = JSON.parse(JSON.stringify(request.body));
-    const { conversationId, conversationDuration } = bodyObj;
-    const files = request.files;
+    // const bodyObj = JSON.parse(JSON.stringify(request.body));
+    // const { conversationId, conversationDuration } = bodyObj;
+    const file = request.file;
     const userId = request.params.id;
-    // request.file.pathを使えば、postでdatabaseにfileを保村できるようになる.
-    // const result = await uploadFile(file); // ここ、けっこう時間かかる。もしかしたら、clientから直接やるっていう方がいいかもな。
-    // const p = path.join(__dirname, '..');
-    // console.log(p);
-
-    // videoとaudioが来るんだよね。とりあえず、videoだけでいんだよね。処理するのは。
-    // 一旦コメントアウト
-
-    // for (const file of files) {
-    //   await transcodeVideo(file, conversationDuration);
-    // }
-    const conversation = await Conversation.findById(conversationId);
-    console.log(conversation);
-    if (!conversation.duration) {
-      conversation.duration = conversationDuration;
+    // 既にここで、multerによりlocalにmp4はある。getVideoDurationInSecondsの引数にlocalのmp4を使うと。
+    const duration = await getVideoDurationInSeconds(file.path);
+    const conversation = await Conversation.findById(request.params.conversationId);
+    // 要は、最初についた人の方に実行される部分。
+    if (!conversation.duration.length) {
+      const userMedia = await UserMedia.create({
+        user: userId,
+        videoFileName: file.filename,
+        // audioFileName: files[1].filename,
+      });
+      conversation.userMedias.push(userMedia);
+      conversation.duration.push(duration);
       await conversation.save();
-      const result = await Promise.all(
-        files.map(async (file) => {
-          return await transcodeVideo(file, conversationDuration);
-        })
-      );
-      result.forEach((filename) => {
-        // uploadFile(file);
-        uploadFile(filename);
+      response.status(200).json({
+        userMedia,
       });
     } else {
-      const result = await Promise.all(
-        files.map(async (file) => {
-          return await transcodeVideo(file, conversation.duration);
-        })
-      );
-      result.forEach((filename) => {
+      // 既に片方の人が先に着いている状態。
+      const userMedia = await new UserMedia({
+        user: userId,
+        // videoFileName: file.filename,
+        // audioFileName: files[1].filename,
+      });
+      const minDuration = Math.min(...conversation.duration);
+      // こっからpartnerのuserMediaを引っ張ってくる。
+      const partnerUserMediaFileName = conversation.userMedias[0].videoFileName;
+      const transcodedFilename = await transcodeVideo(partnerUserMediaFileName, minDuration);
+      const partnerUserMedia = await UserMedia.findById(conversation.userMedias[0]._id);
+      partnerUserMedia.videoFileName = transcodedFilename;
+      await partnerUserMedia.save();
+      // partner側の変更、これで終わり。
+      // 次は自分
+      const myTranscodedFileName = await transcodeVideo(file.filename, minDuration);
+      userMedia.videoFileName = myTranscodedFileName;
+      await userMedia.save();
+      // こっからawsにあげる処理を書いていく。
+      const files = [transcodedFilename, myTranscodedFileName];
+      files.forEach((filename) => {
         // uploadFile(file);
         uploadFile(filename);
       });
+      response.status(200).json({
+        success: 'blah blah',
+      });
     }
+
+    // conversationがduration array [30, 34]というデータをもつとする。
+    // conversationのdurationのlengthが2になったら、数値比較して短い方のnumber使って二つのvideoのdurationをその数値で切る。
+    // だから、実際conversation documentでvideoをarrayで持っておいた方がいい。うん。そうだな。だからこっからまた設計を変えていかないといけない。設計の構造を根本的に変えていかないといけないね。。。
+
+    // const conversation = await Conversation.findById(conversationId);
+    // console.log(conversation);
+    // if (!conversation.duration) {
+    //   conversation.duration = conversationDuration;
+    //   await conversation.save();
+    //   const result = await Promise.all(
+    //     files.map(async (file) => {
+    //       return await transcodeVideo(file, conversationDuration);
+    //     })
+    //   );
+    //   result.forEach((filename) => {
+    //     // uploadFile(file);
+    //     uploadFile(filename);
+    //   });
+    // } else {
+    //   const result = await Promise.all(
+    //     files.map(async (file) => {
+    //       return await transcodeVideo(file, conversation.duration);
+    //     })
+    //   );
+    //   result.forEach((filename) => {
+    //     // uploadFile(file);
+    //     uploadFile(filename);
+    //   });
+    // }
 
     // ----------- これべーす。
     const result = await Promise.all(
@@ -122,10 +163,10 @@ export const createUserMedia = async (request, response) => {
       })
     );
 
-    result.forEach((filename) => {
-      // uploadFile(file);
-      uploadFile(filename);
-    });
+    // result.forEach((filename) => {
+    //   // uploadFile(file);
+    //   uploadFile(filename);
+    // });
     // ------------------
 
     // if (!conversation.duration) {

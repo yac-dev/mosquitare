@@ -1,48 +1,88 @@
 import mongoose from 'mongoose';
 
 const conversationSchema = new mongoose.Schema({
-  calledUser: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-  },
-  calledUserMedia: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'UserMedia',
-  },
-  calledUserScript: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'UserScript',
-  },
-  recievedUser: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-  },
-  recievedUserMedia: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'UserMedia',
-  },
-  recievedUserScript: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'UserScript',
-  },
-  isConversationPublic: Boolean,
-  reviews: [
+  users: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'review',
+      ref: 'User',
     },
   ],
-  duration: Number,
+  userMedias: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'UserMedia',
+    },
+  ],
+  userScripts: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'UserMedia',
+    },
+  ],
   genre: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'language',
     },
   ],
+  duration: [Number],
+  isPublic: Boolean,
   createdAt: {
     type: Date,
     default: Date.now(),
   },
+  reviews: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'review',
+    },
+  ],
+
+  // ------- previous design
+  // calledUser: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'User',
+  // },
+  // calledUserMedia: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'UserMedia',
+  // },
+  // calledUserScript: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'UserScript',
+  // },
+  // recievedUser: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'User',
+  // },
+  // recievedUserMedia: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'UserMedia',
+  // },
+  // recievedUserScript: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'UserScript',
+  // },
+  // isConversationPublic: Boolean,
+  // reviews: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     ref: 'review',
+  //   },
+  // ],
+  // duration: Number,
+  // genre: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     ref: 'language',
+  //   },
+  // ],
+  // createdAt: {
+  //   type: Date,
+  //   default: Date.now(),
+  // },
+  // ---------------------
+
   // textChats: {
   //   type: mongoose.Schema.ObjectId,
   //   ref: 'TextChats',
