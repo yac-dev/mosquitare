@@ -17,7 +17,7 @@ const VideoDisplayingModal = (props) => {
           {/* <Modal.Title>With Jonh!!</Modal.Title> */}
         </Modal.Header>
         <Modal.Body bsPrefix='video-displaying-modal-body'>
-          <DisplayVideo />
+          <DisplayVideo conversation={props.conversation} />
           <ResourceTabs />
         </Modal.Body>
       </Modal>

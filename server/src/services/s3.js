@@ -2,6 +2,11 @@ import fs from 'fs';
 import util from 'util';
 const unlinkFile = util.promisify(fs.unlink);
 import S3 from 'aws-sdk/clients/s3';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const s3 = new S3({
   region: process.env.AWS_S3BUCKET_REGION,
@@ -9,17 +14,18 @@ const s3 = new S3({
   secretAccessKey: process.env.AWS_S3BUCKET_SECRET_KEY,
 });
 
-export const uploadFile = async (file) => {
-  const fileStream = fs.createReadStream(file.path); // ここでbinary dataを全て読み込んでs3に保存する。
+export const uploadFile = async (filename) => {
+  const pathOfTranscodedMP4 = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded', filename);
+  const fileStream = fs.createReadStream(pathOfTranscodedMP4); // ここでbinary dataを全て読み込んでs3に保存する。
 
   const uploadParams = {
     Bucket: process.env.AWS_S3BUCKET_NAME,
     Body: fileStream,
-    Key: file.filename,
+    Key: filename,
   };
 
   await s3.upload(uploadParams).promise();
-  await unlinkFile(file.path); // これが急に動かなくなった理由は何だ？？？とにかく、これが動いてねーんだよな。。。急にどうした。。
+  await unlinkFile(pathOfTranscodedMP4);
 };
 
 // keyっていうか、単純にfile名のことね。

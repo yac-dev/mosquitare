@@ -12,6 +12,7 @@ import {
   SWITCH_CURRENT_LANGUAGE,
   RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
 } from './type';
+
 import {
   SOMEBODY_CALLS_ME,
   I_CALL_SOMEBODY,
@@ -21,6 +22,7 @@ import {
   I_SEND_MY_VOICE_TEXT_TO_MY_PARTNER,
   MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
   I_WANNA_SWITCH_CURRENT_LANGUAGE,
+  OUR_BLOB_SIZE_SHOULD_BE_THIS,
 } from './socketEvents';
 
 import Peer from 'simple-peer';
@@ -590,4 +592,27 @@ export const recieveSwitchingLanguageRequestActionCreator1 = (switchingLanguage)
     type: RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
     payload: switchingLanguage,
   };
+};
+
+export const sendBlobSizeToMyPartnerActionCreator = (socket, blobSize) => (dispatch, getState) => {
+  try {
+    // const blobSize = getState();
+    const partnerSocketId = getState().mediaState.callingWith.socketId;
+    socket.emit(OUR_BLOB_SIZE_SHOULD_BE_THIS, { to: partnerSocketId, blobSize });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getBlobSizeFromPartnerActionCreator = (socket) => (dispatch, getState) => {
+  try {
+    socket.on('I_GOT_BLOB_SIZE_FROM_MY_PARTNER', (dataFromServer) => {
+      dispatch({
+        type: 'GET_BLOBSIZE',
+        payload: dataFromServer.blobSize,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

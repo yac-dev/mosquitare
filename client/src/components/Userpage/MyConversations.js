@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 // components
 import DisplayVideoModal from './DisplayVideoModal';
+import Conversation from './Conversation';
 
 // context
 import VideoContext from './contexts/VideoContext';
@@ -46,7 +47,7 @@ const ConversationVideos = (props) => {
       const conversationList = props.authState.currentUser.conversations.map((conversation) => {
         return (
           <>
-            <div className='conversation-wrapper' onClick={(event) => onConversationClick(event)}>
+            {/* <div className='conversation-wrapper' onClick={(event) => onConversationClick(event)}>
               <div className='video-thumbnail'>
                 <div className='conversation-video-wrapper'>
                   <video className='thum' style={{ borderTopLeftRadius: '10px' }}>
@@ -65,12 +66,12 @@ const ConversationVideos = (props) => {
                   </video>
                 </div>
               </div>
-
               <div className='conversation-information'>
                 conversation info here!!
                 <p>{conversation.createdAt}</p>
               </div>
-            </div>
+            </div> */}
+            <Conversation conversation={conversation} />
           </>
         );
       });

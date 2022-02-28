@@ -2,7 +2,7 @@ import { mosquitareAPI } from '../apis/mosquitare';
 import { GET_CALLEDUSER_VIDEO_STREAM, GET_RECIEVEDUSER_VIDEO_STREAM } from './type';
 import { hangUpCallActionCreator } from './mediaActionCreator';
 
-export const createUserMedia = (blobForVideo, blobForAudio) => async (dispatch, getState) => {
+export const createUserMedia = (blobForVideo, blobForAudio, seconds, conversationId) => async (dispatch, getState) => {
   try {
     console.log(blobForVideo); // ここがなぜundefined？？
     console.log(blobForAudio);
@@ -10,6 +10,8 @@ export const createUserMedia = (blobForVideo, blobForAudio) => async (dispatch, 
     const formData = new FormData();
     formData.append('mediaFiles', blobForVideo);
     formData.append('mediaFiles', blobForAudio);
+    formData.append('conversationId', conversationId); // paramにいれてもいいかも。
+    formData.append('conversationDuration', seconds);
     // formData.append('mediaFiles', blobForLearningLanguage);
     // formData.append('mediaFiles', blobForNativeLanguage);
     const result = await mosquitareAPI.post(`/userMedias/upload/${userId}`, formData, {
