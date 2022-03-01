@@ -6,7 +6,8 @@ import UserMedia from '../models/userMedia';
 import Conversation from '../models/conversation';
 // import ffmpeg from 'ffmpeg';
 import ffmpeg from 'fluent-ffmpeg';
-import { getVideoDurationInSeconds } from 'get-video-duration';
+import VideoLib from 'node-video-lib';
+// import { getVideoDurationInSeconds } from 'get-video-duration'; // ここでerrorるな。
 import path from 'path';
 import S3 from 'aws-sdk/clients/s3';
 
@@ -40,7 +41,8 @@ const transcodeVideo = async (filename, conversationDuration) => {
   return new Promise((resolve, reject) => {
     const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
     const pathOfScreenShots = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded');
-    const transcodedFilename = `transcoded-${file.filename}`;
+    const transcodedFilename = `transcoded-${filename}`;
+    const screenShotFilename = `transcoded-${filename}.png`;
     const pathOfTranscodedMP4 = path.join(
       __dirname,
       '..',
@@ -59,7 +61,7 @@ const transcodeVideo = async (filename, conversationDuration) => {
           .screenshots({
             timestamps: ['30%'],
             folder: pathOfScreenShots,
-            filename: `transcoded-${filename}.png`,
+            filename: screenShotFilename,
             size: '720x?',
           })
           .on('error', (error) => {
@@ -67,10 +69,28 @@ const transcodeVideo = async (filename, conversationDuration) => {
           })
           .on('end', () => {
             // resolve();
-            resolve(transcodedFilename);
+            resolve({ transcodedFilename, screenShotFilename });
           });
       })
       .save(pathOfTranscodedMP4);
+  });
+};
+
+const getVideoDuration = async (filename) => {
+  const absPath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
+  return new Promise((resolve, reject) => {
+    fs.open(absPath, 'r', function (err, fd) {
+      try {
+        let movie = VideoLib.MovieParser.parse(fd);
+        // Work with movie
+        console.log('Duration:', movie.relativeDuration());
+        resolve(Math.floor(movie.relativeDuration()));
+      } catch (ex) {
+        console.error('Error:', ex);
+      } finally {
+        fs.closeSync(fd);
+      }
+    });
   });
 };
 
@@ -81,15 +101,17 @@ export const createUserMedia = async (request, response) => {
     const file = request.file;
     const userId = request.params.id;
     // 既にここで、multerによりlocalにmp4はある。getVideoDurationInSecondsの引数にlocalのmp4を使うと。
-    const duration = await getVideoDurationInSeconds(file.path);
+    // const duration = await getVideoDurationInSeconds(file.path);
+    const duration = await getVideoDuration(file.filename);
     const conversation = await Conversation.findById(request.params.conversationId);
+
     // 要は、最初についた人の方に実行される部分。
     if (!conversation.duration.length) {
       const userMedia = await UserMedia.create({
         user: userId,
         videoFileName: file.filename,
         // audioFileName: files[1].filename,
-      });
+      }); // databaseに「先についた側」のvideo file名を保存しておく。まずね。multerにより、video file自体がある状態。
       conversation.userMedias.push(userMedia);
       conversation.duration.push(duration);
       await conversation.save();
@@ -97,32 +119,42 @@ export const createUserMedia = async (request, response) => {
         userMedia,
       });
     } else {
-      // 既に片方の人が先に着いている状態。
-      const userMedia = await new UserMedia({
-        user: userId,
-        // videoFileName: file.filename,
-        // audioFileName: files[1].filename,
-      });
-      const minDuration = Math.min(...conversation.duration);
+      // 既に片方の人が先に着いている状態。だから、先に着いた側のuserMedia（まだlocalにある状況）、
+      const minDuration = Math.min(conversation.duration[0], duration);
+      conversation.duration[0] = minDuration;
       // こっからpartnerのuserMediaを引っ張ってくる。
-      const partnerUserMediaFileName = conversation.userMedias[0].videoFileName;
-      const transcodedFilename = await transcodeVideo(partnerUserMediaFileName, minDuration);
       const partnerUserMedia = await UserMedia.findById(conversation.userMedias[0]._id);
-      partnerUserMedia.videoFileName = transcodedFilename;
+      const transcodedFiles = await transcodeVideo(partnerUserMedia.videoFileName, minDuration);
+      partnerUserMedia.videoFileName = transcodedFiles.transcodedFilename;
+      partnerUserMedia.thumbnail = transcodedFiles.screenShotFilename;
+      // thumbnailのong fileも返して、userMediaの方に入れようか。
       await partnerUserMedia.save();
       // partner側の変更、これで終わり。
       // 次は自分
-      const myTranscodedFileName = await transcodeVideo(file.filename, minDuration);
-      userMedia.videoFileName = myTranscodedFileName;
-      await userMedia.save();
+      const myTranscodedFiles = await transcodeVideo(file.filename, minDuration);
+      const userMedia = await UserMedia.create({
+        user: userId,
+        videoFileName: myTranscodedFiles.transcodedFilename,
+        thumbnail: myTranscodedFiles.screenShotFilename,
+        // audioFileName: files[1].filename,
+      });
+      // ここでthumbnailを入れよう。
+      conversation.userMedias.push(userMedia);
+      await conversation.save();
       // こっからawsにあげる処理を書いていく。
-      const files = [transcodedFilename, myTranscodedFileName];
-      files.forEach((filename) => {
+      const filesToAWS = [
+        transcodedFiles.transcodedFilename,
+        transcodedFiles.screenShotFilename,
+        myTranscodedFiles.transcodedFilename,
+        myTranscodedFiles.screenShotFilename,
+      ];
+
+      filesToAWS.forEach((filename) => {
         // uploadFile(file);
         uploadFile(filename);
       });
       response.status(200).json({
-        success: 'blah blah',
+        success: userMedia,
       });
     }
 
@@ -157,11 +189,12 @@ export const createUserMedia = async (request, response) => {
     // }
 
     // ----------- これべーす。
-    const result = await Promise.all(
-      files.map(async (file) => {
-        return await transcodeVideo(file, conversationDuration);
-      })
-    );
+
+    // const result = await Promise.all(
+    //   files.map(async (file) => {
+    //     return await transcodeVideo(file, conversationDuration);
+    //   })
+    // );
 
     // result.forEach((filename) => {
     //   // uploadFile(file);
@@ -200,10 +233,6 @@ export const createUserMedia = async (request, response) => {
     //   videoFileName: files[0].filename,
     //   audioFileName: files[1].filename,
     // });
-    response.json({
-      // userMedia,
-      ok: 'ok',
-    });
   } catch (error) {
     console.log(error);
   }

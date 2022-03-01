@@ -26,6 +26,13 @@ export const uploadFile = async (filename) => {
 
   await s3.upload(uploadParams).promise();
   await unlinkFile(pathOfTranscodedMP4);
+  const beforeTranscodedFilename = filename.split('.');
+  // extensionがmp4なら、それはbufferにあるもの。それも消す。
+  if (beforeTranscodedFilename[beforeTranscodedFilename.length - 1] === 'mp4') {
+    const [transcoded, ...rest] = filename.split('-');
+    const deletingFilename = rest.join('-');
+    await unlinkFile(path.join(__dirname, '..', '..', 'uploadedFilesBuffer', deletingFilename));
+  }
 };
 
 // keyっていうか、単純にfile名のことね。

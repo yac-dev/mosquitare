@@ -6,7 +6,8 @@ const userMediaSchema = new mongoose.Schema({
     ref: 'User',
   },
   videoFileName: String,
-  audioFileName: String,
+  thumbnail: String,
+  // audioFileName: String,
 });
 
 const UserMedia = mongoose.model('UserMedia', userMediaSchema);
