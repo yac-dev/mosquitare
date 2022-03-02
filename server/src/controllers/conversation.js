@@ -3,24 +3,11 @@ import Conversation from '../models/conversation';
 export const createConversation = async (request, response) => {
   try {
     console.log(request.body);
-    const { calledUser } = request.body;
-    const conversation = await Conversation.create({
-      calledUser: request.body.calledUser,
-    });
-    response.json({
-      conversation,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const updateConversationRecievedUser = async (request, response) => {
-  try {
-    const { recievedUser } = request.body;
-    const conversation = await Conversation.findById(request.params.id);
-    console.log(conversation, 'updateRecieved working!');
-    conversation.recievedUser = recievedUser;
+    const { userId } = request.body;
+    const { genre } = request.body;
+    const conversation = await new Conversation();
+    conversation.users.push(userId);
+    conversation.genre = genre;
     await conversation.save();
     response.json({
       conversation,
@@ -30,6 +17,22 @@ export const updateConversationRecievedUser = async (request, response) => {
   }
 };
 
+export const updateConversationUsers = async (request, response) => {
+  try {
+    const { userId } = request.body;
+    const conversation = await Conversation.findById(request.params.id);
+    console.log(conversation, 'updateRecieved working!');
+    conversation.users.push(userId);
+    await conversation.save();
+    response.json({
+      conversation,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// こいつはもう使わない。
 export const updateConversationUserMedia = async (request, response) => {
   try {
     const conversation = await Conversation.findById(request.params.id);
@@ -92,21 +95,22 @@ export const getConversation = async (request, response) => {
   }
 };
 
-export const updateConversationDurationAndGenre = async (request, response) => {
-  try {
-    const { duration, genre } = request.body;
-    const conversation = await Conversation.findById(request.params.id);
-    if (!conversation.duration) {
-      conversation.duration = duration;
-    }
-    if (!conversation.genre.length) {
-      conversation.genre = genre;
-    }
-    await conversation.save();
-    response.status(200).json({
-      conversation,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+// 会話が始まった時点で、genreをもう入れるべき。
+// export const updateConversationDurationAndGenre = async (request, response) => {
+//   try {
+//     const { duration, genre } = request.body;
+//     const conversation = await Conversation.findById(request.params.id);
+//     if (!conversation.duration) {
+//       conversation.duration = duration;
+//     }
+//     if (!conversation.genre.length) {
+//       conversation.genre = genre;
+//     }
+//     await conversation.save();
+//     response.status(200).json({
+//       conversation,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

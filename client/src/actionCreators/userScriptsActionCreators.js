@@ -1,9 +1,11 @@
 import { mosquitareAPI } from '../apis/mosquitare';
+import { CREATE_USER_SCRIPT } from './type';
 
 export const createUserScriptActionCreator =
   (conversationTranscript, learningLanguageScript, nativeLanguageScript) => async (dispatch, getState) => {
     try {
       const userId = getState().authState.currentUser._id;
+      const { conversationId } = getState().conversationState;
       // const conversationTranscriptJSON = JSON.stringify(conversationTranscript);
       // console.log(conversationTranscriptJSON); // []を含めて、json化してしまっているな。これがerrorの原因になっている。
       const blobForConversationTranscript = new Blob(conversationTranscript, { type: 'text/plain' });
@@ -14,7 +16,7 @@ export const createUserScriptActionCreator =
       formData.append('scriptFiles', blobForConversationTranscript);
       formData.append('scriptFiles', blobForLearningLanguage);
       formData.append('scriptFiles', blobForNativeLanguage);
-      const result = await mosquitareAPI.post(`/userscripts/upload/${userId}`, formData, {
+      const result = await mosquitareAPI.post(`/userscripts/upload/${userId}/${conversationId}`, formData, {
         headers: {
           'Content-type': 'multipart/form-data',
           // 'Content-type': 'application/json',
@@ -22,6 +24,10 @@ export const createUserScriptActionCreator =
       });
       console.log(result);
       const { userScript } = result.data;
+      dispatch({
+        type: CREATE_USER_SCRIPT,
+        payload: '',
+      });
       return Promise.resolve(userScript);
     } catch (error) {
       console.log(error);

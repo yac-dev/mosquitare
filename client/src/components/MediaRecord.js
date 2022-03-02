@@ -13,20 +13,21 @@ const MediaRecorderComponent = (props) => {
   const mediaRecorder = useRef();
   const blobForVideo = useRef();
   const blobForAudio = useRef();
-  const [seconds, setSeconds] = useState(0);
-  const [isActive, setIsActive] = useState(true);
+  const [duration, setDuration] = useState(0);
+  const durationRef = useRef();
 
   useEffect(() => {
     let interval = null;
-    if (isActive) {
-      interval = setInterval(() => {
-        setSeconds((seconds) => seconds + 1);
-      }, 1000);
-    } else if (!isActive && seconds !== 0) {
-      clearInterval(interval);
-    }
+    interval = setInterval(() => {
+      setDuration((previous) => previous + 1);
+    }, 1000);
+
     return () => clearInterval(interval);
-  }, [isActive, seconds]);
+  }, [duration]);
+
+  useEffect(() => {
+    durationRef.current = duration;
+  }, [duration]);
 
   // callAcceptedが前提。
   useEffect(() => {
@@ -36,52 +37,33 @@ const MediaRecorderComponent = (props) => {
       props.forChunks(event.data);
     };
     mediaRecorder.current.onstop = (event) => {
-      setIsActive(false);
       const { chunks } = store.getState().mediaState;
       blobForVideo.current = new Blob(chunks, { type: 'video/mp4;' });
-      blobForAudio.current = new Blob(chunks, { type: 'audio/webm;codecs=opus' });
+      // blobForAudio.current = new Blob(chunks, { type: 'audio/webm;codecs=opus' });
       console.log('record stopped!!!');
-      Promise.resolve()
-        .then(() => {
-          return props.createUserMedia(blobForVideo.current, blobForAudio.current, seconds);
-        })
-        .then((userMedia) => {
-          return props.updateConversationUserMediaActionCreator(userMedia);
-        });
-      // blob sizeを持っているか否かで挙動を変える。
-      // 最初に電話を切った方で動く。
-      // if (!store.getState()) {
-      //   Promise.resolve()
-      //     .then(() => {
-      //       return props.createUserMedia(blobForVideo.current, blobForAudio.current);
-      //     })
-      //     .then((userMedia) => {
-      //       return props.updateConversationUserMediaActionCreator(userMedia);
-      //     })
-      //     .then(() => {
-      //       return props.sendBlobSizeToMyPartnerActionCreator(props.socket, blobForVideo.current.size);
-      //     });
-      // } else if (store.getState()) {
-      //   const slicedBlobForVideo = blobForVideo.current.slice(0, store.getState());
-      //   const slicedBlobForAudio = blobForAudio.current.slice(0, store.getState());
-      //   Promise.resolve()
-      //     .then(() => {
-      //       return props.createUserMedia(slicedBlobForVideo, slicedBlobForAudio);
-      //     })
-      //     .then((userMedia) => {
-      //       return props.updateConversationUserMediaActionCreator(userMedia);
-      //     });
-      // }
+      // console.log('duration time: ', duration)
+
+      Promise.resolve().then(() => {
+        return props.createUserMedia(blobForVideo.current, durationRef.current);
+      });
       // blobはglobalのstateで持っておいた方がいいかな。そういう考えも持っておこう。
     };
     mediaRecorder.current.start();
   }, []);
 
+  // hangup buttonを押すと、callDisconnectedがtrueになってここが動く
+  // useEffect(() => {
+  //   if (props.mediaState.callDisconnected) {
+  //     mediaRecorder.current.stop();
+  //   }
+  // }, [props.mediaState.callDisconnected]);
+
   useEffect(() => {
-    if (props.mediaState.callDisconnected) {
+    return () => {
+      // setIsActive(false);
       mediaRecorder.current.stop();
-    }
-  }, [props.mediaState.callDisconnected]);
+    };
+  }, []);
 
   return <></>;
 };

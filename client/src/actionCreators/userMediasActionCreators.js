@@ -1,24 +1,31 @@
 import { mosquitareAPI } from '../apis/mosquitare';
-import { GET_CALLEDUSER_VIDEO_STREAM, GET_RECIEVEDUSER_VIDEO_STREAM } from './type';
+import { GET_CALLEDUSER_VIDEO_STREAM, GET_RECIEVEDUSER_VIDEO_STREAM, CREATE_USER_MEDIA } from './type';
 import { hangUpCallActionCreator } from './mediaActionCreator';
 
-export const createUserMedia = (blobForVideo, blobForAudio, seconds, conversationId) => async (dispatch, getState) => {
+export const createUserMedia = (blobForVideo, duration) => async (dispatch, getState) => {
   try {
     console.log(blobForVideo); // ここがなぜundefined？？
-    console.log(blobForAudio);
+    // console.log(blobForAudio);
+    console.log(duration);
     const userId = getState().authState.currentUser._id;
+    const { conversationId } = getState().conversationState;
     const formData = new FormData();
-    formData.append('mediaFiles', blobForVideo);
-    formData.append('mediaFiles', blobForAudio);
-    formData.append('conversationId', conversationId); // paramにいれてもいいかも。
-    formData.append('conversationDuration', seconds);
+    formData.append('mediaFile', blobForVideo);
+    formData.append('duration', duration);
+    // formData.append('mediaFiles', blobForAudio);
+    // formData.append('conversationId', conversationId); // paramにいれてもいいかも。
+    // formData.append('conversationDuration', seconds);
     // formData.append('mediaFiles', blobForLearningLanguage);
     // formData.append('mediaFiles', blobForNativeLanguage);
-    const result = await mosquitareAPI.post(`/userMedias/upload/${userId}`, formData, {
+    const result = await mosquitareAPI.post(`/userMedias/upload/${userId}/${conversationId}`, formData, {
       headers: { 'Content-type': 'multipart/form-data' },
     });
     console.log(result);
     const { userMedia } = result.data;
+    dispatch({
+      type: CREATE_USER_MEDIA,
+      payload: '',
+    });
     return Promise.resolve(userMedia);
     // const callingState = getState().mediaState;
     // const { integratedUserMediaId } = getState().integratedUserMediaState;

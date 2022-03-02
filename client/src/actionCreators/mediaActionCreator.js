@@ -409,7 +409,7 @@ export const answerCallActionCreator =
 //   connectionRef.current = peerInitiator;
 // };
 
-export const hangUpCallActionCreator = () => (dispatch) => {
+export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
   console.log('hangup should be working!!');
   // dispatch(updateUserConversationToFalseActionCreator()); // ここpromisifyね。これだめ。
   // connectionRef.current.destroy();

@@ -35,7 +35,7 @@ import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 // call recieve側
 import { answerCallActionCreator2 } from '../actionCreators/mediaActionCreator';
 import { getConversationIdFromCalledUserActionCreator } from '../actionCreators/conversationActionCreators';
-import { updateConversationRecievedUserActionCreator } from '../actionCreators/conversationActionCreators';
+import { updateConversationUsersActionCreator } from '../actionCreators/conversationActionCreators';
 
 // call した側
 import { completeConnectionWithMyPartnerActionCreator1 } from '../actionCreators/mediaActionCreator';
@@ -220,27 +220,37 @@ const VideosWrapper = (props) => {
         return props.updateUserConversationsActionCreator();
       })
       .then(() => {
-        return props.updateConversationRecievedUserActionCreator();
+        return props.updateConversationUsersActionCreator();
       });
   }, []);
 
   useEffect(() => {
-    if (props.mediaState.apiCallResult === 1) {
-      props.hangUpCallActionCreator(); //これだけだと、下ですぐにmodalを閉じて、api callをさまたげることになる。
-      props.setShow1on1(false);
+    return () => {
       props.updateUserConversationToFalseActionCreator();
-    }
-  }, [props.mediaState.apiCallResult]); // これ、どういう目的で作った。。。？
+    };
+  }, []);
+
+  // ここの構造。に段階で面倒臭いんだよ。改善しよう。
+  // useEffect(() => {
+  //   if (props.mediaState.apiCallResult === 2) {
+  //     props.hangUpCallActionCreator(); //これだけだと、下ですぐにmodalを閉じて、api callをさまたげることになる。
+  //     props.setShow1on1(false);
+  //     props.updateUserConversationToFalseActionCreator();
+  //   }
+  // }, [props.mediaState.apiCallResult]); // これ、どういう目的で作った。。。？
 
   const onHangUpClick = () => {
     // 1, callacceptedを閉じるっていう具合かね。callacceptedがfalseを引き金に、mediarecorderとspeechrecognitionも停止する。
     // 2, modalを閉じる。
     // modalを閉じてからだと、そもそもsubtitleとmediaRecorder共に、useEffect効かんわ。まあ当然だな。callAcceptedを閉じてから、modalを閉じないとな。
-    props.disconnectCallActionCreator(connectionRef);
+    // props.disconnectCallActionCreator(connectionRef);
 
     // そうか、そもそもcallAcceptedをfalseにした時点で、もうmodalが表示されないようになっているんだ。
     // props.setShow1on1(false);
     // props.updateUserConversationToFalseActionCreator();
+    connectionRef.current.destroy();
+    props.setShow1on1(false);
+    // props.hangUpCallActionCreator(); //これだけだと、下ですぐにmodalを閉じて、api callをさまたげることになる。
   };
 
   const handleDrag = (e, ui) => {
@@ -332,7 +342,7 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   answerCallActionCreator2,
   getConversationIdFromCalledUserActionCreator,
-  updateConversationRecievedUserActionCreator,
+  updateConversationUsersActionCreator,
   completeConnectionWithMyPartnerActionCreator1,
   updateUserConversationStateActionCreator,
   createConversationActionCreator,

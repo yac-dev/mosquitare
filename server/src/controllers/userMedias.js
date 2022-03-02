@@ -6,7 +6,7 @@ import UserMedia from '../models/userMedia';
 import Conversation from '../models/conversation';
 // import ffmpeg from 'ffmpeg';
 import ffmpeg from 'fluent-ffmpeg';
-import VideoLib from 'node-video-lib';
+// import VideoLib from 'node-video-lib';
 // import { getVideoDurationInSeconds } from 'get-video-duration'; // ここでerrorるな。
 import path from 'path';
 import S3 from 'aws-sdk/clients/s3';
@@ -55,14 +55,14 @@ const transcodeVideo = async (filename, conversationDuration) => {
     ffmpeg(pathBefore)
       .videoCodec('libx264')
       // .audioCodec('libmp3lame')
-      .duration(conversationDuration)
+      .setDuration(conversationDuration)
       .on('end', (result) => {
         ffmpeg(pathBefore)
-          .screenshots({
-            timestamps: ['30%'],
+          .takeScreenshots({
+            timestamps: ['0.5'],
             folder: pathOfScreenShots,
             filename: screenShotFilename,
-            size: '720x?',
+            // size: '720x?',
           })
           .on('error', (error) => {
             reject(error);
@@ -100,9 +100,11 @@ export const createUserMedia = async (request, response) => {
     // const { conversationId, conversationDuration } = bodyObj;
     const file = request.file;
     const userId = request.params.id;
+    const { duration } = request.body;
+    console.log(duration);
     // 既にここで、multerによりlocalにmp4はある。getVideoDurationInSecondsの引数にlocalのmp4を使うと。
     // const duration = await getVideoDurationInSeconds(file.path);
-    const duration = await getVideoDuration(file.filename);
+    // const duration = await getVideoDuration(file.filename); // node-video-lib、実際はblobのデータをそのままparseすることはできんみたいだ。やっぱ、videosからtimeを送るようにするか。
     const conversation = await Conversation.findById(request.params.conversationId);
 
     // 要は、最初についた人の方に実行される部分。
@@ -118,6 +120,7 @@ export const createUserMedia = async (request, response) => {
       response.status(200).json({
         userMedia,
       });
+      // 最初のこっちはきちんと動いている。
     } else {
       // 既に片方の人が先に着いている状態。だから、先に着いた側のuserMedia（まだlocalにある状況）、
       const minDuration = Math.min(conversation.duration[0], duration);

@@ -35,6 +35,18 @@ export const uploadFile = async (filename) => {
   }
 };
 
+export const uploadScriptFile = async (file) => {
+  const fileStream = fs.createReadStream(file.path);
+  const uploadParams = {
+    Bucket: process.env.AWS_S3BUCKET_NAME,
+    Body: fileStream,
+    Key: file.filename,
+  };
+
+  await s3.upload(uploadParams).promise();
+  await unlinkFile(file.path);
+};
+
 // keyっていうか、単純にfile名のことね。
 export const getFileStream = async (fileKey) => {
   const downloadParams = {

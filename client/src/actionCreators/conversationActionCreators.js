@@ -14,7 +14,8 @@ import { hangUpCallActionCreator } from './mediaActionCreator';
 export const createConversationActionCreator = (socket) => async (dispatch, getState) => {
   try {
     const { currentUser } = getState().authState;
-    const result = await mosquitareAPI.post('/conversations', { calledUser: currentUser._id });
+    const { exchangingLanguages } = getState().mediaState;
+    const result = await mosquitareAPI.post('/conversations', { userId: currentUser._id, genre: exchangingLanguages });
     return new Promise((resolve, reject) => {
       const { conversation } = result.data; // ここでvideoChatのidを受け取ったら、すぐにpeerにあげないと。
       console.log(result);
@@ -33,6 +34,7 @@ export const createConversationActionCreator = (socket) => async (dispatch, getS
   }
 }; // 名前を変える。
 
+// これももう使わない。createUserのbackend側で全部やっちゃうから。
 export const updateConversationUserMediaActionCreator = (userMedia) => async (dispatch, getState) => {
   try {
     const callingState = getState().mediaState;
@@ -62,6 +64,7 @@ export const updateConversationUserMediaActionCreator = (userMedia) => async (di
   }
 };
 
+// これももう使わない。
 export const updateConversationUserScriptActionCreator = (userScript) => async (dispatch, getState) => {
   try {
     const callingState = getState().mediaState;
@@ -90,15 +93,16 @@ export const updateConversationUserScriptActionCreator = (userScript) => async (
   }
 };
 
-export const updateConversationDurationAndGenreActionCreator = (duration) => async (dispatch, getState) => {
-  try {
-    const { conversationId } = getState().conversationState;
-    const genre = getState().mediaState.exchangingLanguages; // arrray;
-    const result = await mosquitareAPI.patch(`/conversations/${conversationId}/durationandgenre`, { duration, genre });
-  } catch (error) {
-    console.log(error);
-  }
-};
+// これももう使わない。
+// export const updateConversationDurationAndGenreActionCreator = (duration) => async (dispatch, getState) => {
+//   try {
+//     const { conversationId } = getState().conversationState;
+//     const genre = getState().mediaState.exchangingLanguages; // arrray;
+//     const result = await mosquitareAPI.patch(`/conversations/${conversationId}/durationandgenre`, { duration, genre });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const sendConversationIdActionCreator = (socket) => (dispatch, getState) => {
   try {
@@ -132,14 +136,14 @@ export const getConversationIdFromCalledUserActionCreator = (socket) => (dispatc
 };
 
 // conversationIdをもらったらこれを実行する。上の続きだな。
-export const updateConversationRecievedUserActionCreator = () => async (dispatch, getState) => {
+export const updateConversationUsersActionCreator = () => async (dispatch, getState) => {
   try {
     const recievedUserId = getState().authState.currentUser._id;
     // const { conversationId } = getState().conversationState;
     // console.log(conversationId); // then chainしても、この段階で直前で更新したredux stateをここで使えないんだな。。。。
     const { conversationId } = getState().conversationState;
     // console.log(getState().conversationState);
-    const result = await mosquitareAPI.post(`/conversations/${conversationId}`, { recievedUser: recievedUserId });
+    const result = await mosquitareAPI.post(`/conversations/${conversationId}`, { userId: recievedUserId });
     // const { conversation } = result.data;
     // dispatch({
     //   type: UPDATE_CONVERSATION_RECIEVED_USER,

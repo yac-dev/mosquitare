@@ -149,23 +149,29 @@ const SubtitleWrapper = (props) => {
     });
   }, []);
 
-  // 電話切った時に発動。
+  // 電話切った時に発動。hang up buuton推して、callDisconnectedがtrueになる。
   useEffect(() => {
-    if (props.mediaState.callDisconnected) {
+    return () => {
       console.log('subtitle after finishing should work');
       SpeechRecognition.stopListening();
-      // ここで、promiseを分けて行うことできるかね。正直、calledUser側だけ送るのでいいよな。
-      props
-        .createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript)
-        .then((userScript) => {
-          return props.updateConversationUserScriptActionCreator(userScript);
-        });
-      // .then(() => {
-      //   return props.updateUserMyLangsStatusActionCreator(countLearningLangLength, countNativeLangLength);
-      // });
-      // ここで、文字数をapiに送ることもする。
-    }
-  }, [props.mediaState.callDisconnected]);
+      props.createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
+    };
+  }, []);
+  // useEffect(() => {
+  //   if (props.mediaState.callDisconnected) {
+  //     console.log('subtitle after finishing should work');
+  //     SpeechRecognition.stopListening();
+  //     // ここで、promiseを分けて行うことできるかね。正直、calledUser側だけ送るのでいいよな。
+  //     props.createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
+  //     // .then((userScript) => {
+  //     //   return props.updateConversationUserScriptActionCreator(userScript);
+  //     // });
+  //     // .then(() => {
+  //     //   return props.updateUserMyLangsStatusActionCreator(countLearningLangLength, countNativeLangLength);
+  //     // });
+  //     // ここで、文字数をapiに送ることもする。
+  //   }
+  // // }, [props.mediaState.callDisconnected]);
 
   // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
   const countTranscriptWords = (transcript, setCountLangLength) => {
