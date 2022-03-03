@@ -16,10 +16,18 @@ import { loadMeActionCreator } from '../../actionCreators/authActionCreators';
 import '../../styles/userpage.css';
 
 const UserPageWrapper = (props) => {
+  // const promisify = (jwtToken) => {
+  //   return new Promise((resolve, reject) => {
+  //     props.loadMeActionCreator(jwtToken);
+  //   });
+  // };
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
     if (jwtToken) {
       props.loadMeActionCreator(jwtToken);
+      // .then((user) => {
+      //   // props.getConversation(user.id)
+      // });
     }
   }, []); // このuserのviodeを全部s3から持ってくる。
   return (

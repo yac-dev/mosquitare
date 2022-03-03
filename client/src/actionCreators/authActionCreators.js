@@ -49,9 +49,12 @@ export const loadMeActionCreator = (jwtToken) => async (dispatch, getState) => {
       },
     });
     const { user } = result.data;
-    dispatch({
-      type: LOAD_ME,
-      payload: { user, jwtToken },
+    return new Promise((resolve, reject) => {
+      dispatch({
+        type: LOAD_ME,
+        payload: { user, jwtToken },
+      });
+      resolve(user);
     });
   } catch (error) {
     console.log(error);

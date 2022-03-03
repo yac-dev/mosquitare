@@ -18,35 +18,95 @@ const DisplayVideo = (props) => {
   const [minVideoLength, setMinVideoLength] = useState(0);
   const [seekBarValue, setSeekBarValue] = useState(0);
 
-  const calledUserVideoRef = useRef();
-  const recievedUserVideoRef = useRef();
+  const videoRef = useRef();
+  const videosRef = useRef([]);
+  const videoRef1 = useRef();
+  const videoRef2 = useRef();
+  const seekbarRef = useRef();
+  // const calledUserVideoRef = useRef();
+  // const recievedUserVideoRef = useRef();
 
   useEffect(() => {
     if (loaded === 2) {
-      calledUserVideoRef.current.play();
-      recievedUserVideoRef.current.play();
-      // 多分これで同時再生になってくれている。
+      videoRef1.current.play();
+      videoRef2.current.play();
     }
   }, [loaded]);
 
-  // useEffect(() => {
-  //   calledUserVideoRef.current.currentTime = seekBarValue;
-  //   recievedUserVideoRef.current.currentTime = seekBarValue;
-  // }, [seekBarValue]);
+  useEffect(() => {
+    seekbarRef.current.addEventListener('change', () => {
+      videoRef1.current.currentTime = (videoRef1.current.duration * seekbarRef.current.value) / seekbarRef.current.max;
+      videoRef2.current.currentTime = (videoRef2.current.duration * seekbarRef.current.value) / seekbarRef.current.max;
+    });
+    // videoRef1.addEventListener('timeupdate', () => {
+    //   seekbarRef.current.value = (videoRef1.current.currentTime / videoRef1.current.duration) * seekbarRef.current.max;
+    // });
+
+    // videoRef2.addEventListener('timeupdate', () => {
+    //   seekbarRef.current.value = (videoRef2.current.currentTime / videoRef2.current.duration) * seekbarRef.current.max;
+    // });
+  }, []);
 
   const loadMeta = (event) => {
     setLoaded((previousState) => previousState + 1);
     // console.log(event.currentTarget.duration);
   };
 
-  const handleChange = (event, newValue) => {
-    setSeekBarValue(newValue);
-    calledUserVideoRef.current.currentTime = seekBarValue;
-    // recievedUserVideoRef.current.currentTime = seekBarValue;
+  // const handleChange = (event, newValue) => {
+  //   setSeekBarValue(newValue);
+  //   videoRef1.current.currentTime = newValue;
+  //   videoRef2.current.currentTime = newValue;
+  //   // recievedUserVideoRef.current.currentTime = seekBarValue;
+  // };
+
+  const timeUpdateForVideo1 = () => {
+    // setSeekBarValue(videoRef1.current.currentTime);
+    seekbarRef.current.value = (videoRef1.current.currentTime / videoRef1.current.duration) * seekbarRef.current.max;
   };
 
-  const timeUpdate = () => {
-    setSeekBarValue(calledUserVideoRef.current.currentTime);
+  const timeUpdateForVideo2 = () => {
+    seekbarRef.current.value = (videoRef2.current.currentTime / videoRef2.current.duration) * seekbarRef.current.max;
+  };
+
+  // 2つのvideoに関して、さらにcomponentを作った方がいいかもね。。。このfile内でいいからさ。
+  // const renderVideos = (userMedias) => {
+  //   const videos = userMedias.map((userMedia, index) => {
+  //     return (
+  //       <div className='displaying-video-wrapper'>
+  //         <video
+  //           className='displaying-video-1'
+  //           // ref={videoRef}
+  //           ref={(ref) => (videosRef.current = [...videosRef.current, ref])}
+  //           // ref={refForPlayingVideo1}
+  //           onLoadedMetadata={(event) => loadMeta(event)}
+  //           controls
+  //           onTimeUpdate={() => timeUpdate()}
+  //         >
+  //           {/* <source src={`${videos.videoRef1.src}#t=0,${minVideoLength}`} /> */}
+  //           <source
+  //             src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${userMedia.videoFileName}`}
+  //           />
+  //         </video>
+  //       </div>
+  //     );
+  //   });
+
+  //   return <div className='displaying-videos-wrapper'>{videos}</div>;
+  // };
+
+  const handleChange = (event) => {
+    // this.setState({value: event.target.value});
+    setSeekBarValue(event.target.value);
+  };
+
+  const playOrPause = () => {
+    if (videoRef1.current.paused === true && videoRef2.current.paused === true) {
+      videoRef1.current.play();
+      videoRef2.current.play();
+    } else {
+      videoRef1.current.pause();
+      videoRef2.current.pause();
+    }
   };
 
   return (
@@ -56,43 +116,49 @@ const DisplayVideo = (props) => {
         <div className='displaying-video-wrapper'>
           <video
             className='displaying-video-1'
-            // ref={refForPlayingVideo1}
-            ref={calledUserVideoRef}
+            ref={videoRef1}
             onLoadedMetadata={(event) => loadMeta(event)}
-            // controls
-            onTimeUpdate={() => timeUpdate()}
+            onTimeUpdate={() => timeUpdateForVideo1()}
           >
-            {/* <source src={`${videos.videoRef1.src}#t=0,${minVideoLength}`} /> */}
             <source
-              src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.calledUserMedia.videoFileName}#t=0,${props.conversation.duration}`}
+              src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[0].videoFileName}`}
             />
           </video>
         </div>
         <div className='displaying-video-wrapper'>
           <video
             className='displaying-video-2'
-            // ref={refForPlayingVideo2}
-            ref={recievedUserVideoRef}
+            ref={videoRef2}
             onLoadedMetadata={(event) => loadMeta(event)}
-            // controls
-            onTimeUpdate={() => timeUpdate()}
+            onTimeUpdate={() => timeUpdateForVideo2()}
           >
-            {/* <source src={`${videos.videoRef1.src}#t=0,${minVideoLength}`} /> */}
             <source
-              src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.recievedUserMedia.videoFileName}#t=0,${props.conversation.duration}`}
+              src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[1].videoFileName}`}
             />
           </video>
         </div>
       </div>
+
       {/* ここにcanvasを埋め込むか。 */}
-      <canvas id='my-canvas' width='480' height='270'></canvas>
-      <Slider
+      {/* <canvas id='my-canvas' width='480' height='270'></canvas> */}
+      {/* <Slider
         value={seekBarValue}
         onChange={handleChange}
         valueLabelDisplay='auto'
         min={0}
         max={props.conversation.duration}
+      /> */}
+      <input
+        className='seekbar'
+        ref={seekbarRef}
+        type='range'
+        min='0'
+        max='6'
+        step='1'
+        value={seekBarValue}
+        onChange={handleChange}
       />
+      <button onClick={() => playOrPause()}>PlayOrPause</button>
     </div>
   );
 };
@@ -102,3 +168,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {})(DisplayVideo);
+
+const RenderVideo = (props) => {};

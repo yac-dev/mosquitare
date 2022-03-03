@@ -16,13 +16,13 @@ const conversationSchema = new mongoose.Schema({
   userScripts: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'UserMedia',
+      ref: 'UserScript',
     },
   ],
   genre: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'language',
+      ref: 'Language',
     },
   ],
   duration: [Number],
@@ -34,7 +34,7 @@ const conversationSchema = new mongoose.Schema({
   reviews: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'review',
+      ref: 'Review',
     },
   ],
 
@@ -101,13 +101,34 @@ const conversationSchema = new mongoose.Schema({
   // ] TextChatっていうschemaもおそらく作ることになるだろう。→こっちでもっておくことはやっぱやめよう。one to many
 });
 
-// conversationSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'calledUserMedia recievedUserMedia calledUserScript recievedUserScript',
-//   });
+conversationSchema.pre(/^find/, function (next) {
+  // this.populate({
+  //   path: 'users userMedias userScripts genre'
+  // }); // こういう複数選択、ダメね。動かない。
 
-//   next();
-// });
+  // this.populate({
+  //   path: 'users',
+  //   select: 'name email',
+  // });
+
+  this.populate({
+    path: 'genre',
+  });
+
+  this.populate({
+    path: 'userMedias',
+  });
+
+  this.populate({
+    path: 'userScripts',
+  });
+
+  // this.populate({
+  //   path: 'genre',
+  // });
+
+  next();
+});
 
 const Conversation = mongoose.model('Conversation', conversationSchema);
 export default Conversation;

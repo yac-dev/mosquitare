@@ -145,6 +145,9 @@ userSchema.pre(/^find/, function (next) {
 
   this.populate({
     path: 'conversations',
+    // populate: {
+    //   path: 'users userMedias userScripts genre',
+    // },
   });
   next();
 });

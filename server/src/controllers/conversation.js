@@ -75,16 +75,19 @@ export const getConversation = async (request, response) => {
   try {
     const conversation = await Conversation.findById(request.params.id)
       .populate({
-        path: 'calledUserMedia',
-        populate: {
-          path: 'videoFileName',
-        },
+        path: 'users',
+        // populate: {
+        //   path: 'videoFileName',
+        // },
       })
       .populate({
-        path: 'recievedUserMedia',
-        populate: {
-          path: 'videoFileName',
-        },
+        path: 'userMedias',
+        // populate: {
+        //   path: 'videoFileName',
+        // },
+      })
+      .populate({
+        path: 'userScripts',
       });
 
     response.status(200).json({
@@ -94,6 +97,15 @@ export const getConversation = async (request, response) => {
     console.log(error);
   }
 };
+
+// export const getConversations = async(request, response) => {
+//   try{
+//     // user idを使ってarrayをとってくる感じよ。
+//     const
+//   } catch(error){
+//     console.log(error)
+//   }
+// }
 
 // 会話が始まった時点で、genreをもう入れるべき。
 // export const updateConversationDurationAndGenre = async (request, response) => {
