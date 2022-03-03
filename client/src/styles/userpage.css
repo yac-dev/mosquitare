@@ -127,3 +127,7 @@ body {
     flex-direction: column;
   }
 }
+
+.seekbar {
+  width: 100%;
+}

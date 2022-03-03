@@ -5,6 +5,9 @@ import VideoContext from './contexts/VideoContext';
 
 // mui
 import Slider from '@mui/material/Slider';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import Button from '@mui/material/Button';
 
 // css
 import '../../styles/userpage.css';
@@ -23,6 +26,7 @@ const DisplayVideo = (props) => {
   const videoRef1 = useRef();
   const videoRef2 = useRef();
   const seekbarRef = useRef();
+  const [playOrPause, setPlayOrPause] = useState('pause');
   // const calledUserVideoRef = useRef();
   // const recievedUserVideoRef = useRef();
 
@@ -99,13 +103,15 @@ const DisplayVideo = (props) => {
     setSeekBarValue(event.target.value);
   };
 
-  const playOrPause = () => {
+  const playOrPauseHandler = () => {
     if (videoRef1.current.paused === true && videoRef2.current.paused === true) {
       videoRef1.current.play();
       videoRef2.current.play();
+      setPlayOrPause('pause');
     } else {
       videoRef1.current.pause();
       videoRef2.current.pause();
+      setPlayOrPause('play');
     }
   };
 
@@ -153,12 +159,16 @@ const DisplayVideo = (props) => {
         ref={seekbarRef}
         type='range'
         min='0'
-        max='6'
+        max='100'
         step='1'
         value={seekBarValue}
         onChange={handleChange}
+        // width='300px'
       />
-      <button onClick={() => playOrPause()}>PlayOrPause</button>
+      {/* <button onClick={() => playOrPauseHandler()}>{playOrPause}</button> */}
+      <Button variant='contained' size='large' onClick={() => playOrPauseHandler()}>
+        {playOrPause === 'pause' ? <PauseIcon /> : <PlayArrowIcon />}
+      </Button>
     </div>
   );
 };
