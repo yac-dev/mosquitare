@@ -71,12 +71,19 @@ const LanguageChart = (props) => {
         }
       }
     }
+    // 割合の計算
+    const data = [];
+    const statusSum = props.user.myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
+    props.user.myLangsStatus.forEach((langStatus) => {
+      const ratio = Math.floor((langStatus / statusSum) * 100);
+      data.push(ratio);
+    });
     const d = {
       labels: mappedLangLabels,
       datasets: [
         {
           label: 'Language Status',
-          data: props.user.myLangsStatus,
+          data: data,
           backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
           borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
           borderWidth: 1,

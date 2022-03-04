@@ -27,6 +27,7 @@ const DisplayVideo = (props) => {
   const videoRef2 = useRef();
   const seekbarRef = useRef();
   const [playOrPause, setPlayOrPause] = useState('pause');
+  const [currentVideoTime, setCurrentVideoTime] = useState();
   // const calledUserVideoRef = useRef();
   // const recievedUserVideoRef = useRef();
 
@@ -125,6 +126,8 @@ const DisplayVideo = (props) => {
             ref={videoRef1}
             onLoadedMetadata={(event) => loadMeta(event)}
             onTimeUpdate={() => timeUpdateForVideo1()}
+            playsInline
+            // controls
           >
             <source
               src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[0].videoFileName}`}
@@ -137,6 +140,8 @@ const DisplayVideo = (props) => {
             ref={videoRef2}
             onLoadedMetadata={(event) => loadMeta(event)}
             onTimeUpdate={() => timeUpdateForVideo2()}
+            playsInline
+            // controls
           >
             <source
               src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[1].videoFileName}`}
@@ -169,6 +174,7 @@ const DisplayVideo = (props) => {
       <Button variant='contained' size='large' onClick={() => playOrPauseHandler()}>
         {playOrPause === 'pause' ? <PauseIcon /> : <PlayArrowIcon />}
       </Button>
+      {/* <p>{Math.floor(currentVideoTime)}</p> */}
     </div>
   );
 };

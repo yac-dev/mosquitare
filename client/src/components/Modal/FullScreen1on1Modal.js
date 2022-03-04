@@ -12,6 +12,7 @@ import MediaRecorder from '../MediaRecord';
 import VideosWrapper from '../VideosWrapper';
 import Chat from '../Chat';
 import SubtitleWrapper from './SubtitleWrapper';
+import LanguageStatus from '../LanguageStatus';
 import MyClock from '../MyClock';
 // import VerticalTabsWrapper from '../VerticalTabsWrapper';
 import AppsWrapper from '../ConversationApps/AppsWrapper';
@@ -50,6 +51,7 @@ const FullScreen1on1Modal = (props) => {
   const [countNativeLangLength, setCountNativeLangLength] = useState(0);
   const [openChatComponent, setOpenChatComponent] = useState(false);
   const [openTranscriptComponent, setOpenTranscriptComponent] = useState(false);
+  const [openLanguageStatus, setOpenLanguageStatus] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -88,6 +90,7 @@ const FullScreen1on1Modal = (props) => {
                 socket={props.socket}
                 setOpenChatComponent={setOpenChatComponent}
                 setOpenTranscriptComponent={setOpenTranscriptComponent}
+                setOpenLanguageStatus={setOpenLanguageStatus}
               />
               <Chat
                 socket={props.socket}
@@ -100,6 +103,12 @@ const FullScreen1on1Modal = (props) => {
                 setOpenTranscriptComponent={setOpenTranscriptComponent}
                 setCountLearningLangLength={setCountLearningLangLength}
                 setCountNativeLangLength={setCountNativeLangLength}
+              />
+              <LanguageStatus
+                countLearningLangLength={countLearningLangLength}
+                countNativeLangLength={countNativeLangLength}
+                openLanguageStatus={openLanguageStatus}
+                setOpenLanguageStatus={setOpenLanguageStatus}
               />
               {/* <AppsWrapper /> */}
             </Modal.Body>

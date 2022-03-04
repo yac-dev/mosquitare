@@ -170,7 +170,6 @@ export const updateUserMyLangsStatusActionCreator =
       }
       const result = await mosquitareAPI.patch(`/users/${userId}/langsstatus`, { languageAndLengthTable });
       console.log(result);
-      return Promise.resolve();
     } catch (error) {
       console.log(error);
     }
