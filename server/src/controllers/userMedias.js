@@ -5,7 +5,14 @@ import { AWS_S3BUCKET_NAME, AWS_S3BUCKET_REGION, AWS_S3BUCKET_ACCESS_KEY, AWS_S3
 import UserMedia from '../models/userMedia';
 import Conversation from '../models/conversation';
 // import ffmpeg from 'ffmpeg';
+import { exec } from 'child_process';
 import ffmpeg from 'fluent-ffmpeg';
+// import mpegp from '@ffmpeg-installer/ffmpeg';
+// const ffmpegPath = mpegp.path;
+// import probep from '@ffprobe-installer/ffprobe';
+// const ffprobePath = probep.path;
+// ffmpeg.setFfmpegPath(ffmpegPath);
+// ffmpeg.setFfprobePath(ffprobePath);
 // import VideoLib from 'node-video-lib';
 // import { getVideoDurationInSeconds } from 'get-video-duration'; // ここでerrorるな。
 import path from 'path';
@@ -36,11 +43,13 @@ const __dirname = dirname(__filename);
 // };
 
 import { uploadFile, getFileStream } from '../services/s3';
-
+//   /app/uploadedFilesBuffer/1646369727524-becf32ac-6a2f-4908-ab74-2b73bd8f398c.mp4
 const transcodeVideo = async (filename, conversationDuration) => {
   return new Promise((resolve, reject) => {
     const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
+    // console.log(pathBefore);
     const pathOfScreenShots = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded');
+    // console.log(pathOfScreenShots);
     const transcodedFilename = `transcoded-${filename}`;
     const screenShotFilename = `transcoded-${filename}.png`;
     const pathOfTranscodedMP4 = path.join(
@@ -51,48 +60,109 @@ const transcodeVideo = async (filename, conversationDuration) => {
       'transcoded',
       transcodedFilename
     );
+    // console.log(pathOfTranscodedMP4);
 
     ffmpeg(pathBefore)
+      .output(pathOfTranscodedMP4)
       .videoCodec('libx264')
       // .audioCodec('libmp3lame')
       .setDuration(conversationDuration)
-      .on('end', (result) => {
-        ffmpeg(pathBefore)
-          .takeScreenshots({
-            timestamps: ['0.5'],
-            folder: pathOfScreenShots,
-            filename: screenShotFilename,
-            // size: '720x?',
-          })
-          .on('error', (error) => {
-            reject(error);
-          })
-          .on('end', () => {
-            // resolve();
-            resolve({ transcodedFilename, screenShotFilename });
-          });
+      .on('error', (error) => {
+        console.log('error after setVideoDuration', error);
+        reject(error);
       })
-      .save(pathOfTranscodedMP4);
+      .takeScreenshots({
+        timestamps: ['00:01'],
+        folder: pathOfScreenShots,
+        filename: screenShotFilename,
+        // size: '720x?',
+      })
+      .on('error', (error, stdout, stderr) => {
+        console.log(error.message);
+        console.log('stdout:\n' + stdout);
+        console.log('stderr:\n' + stderr);
+        reject(error);
+      })
+      .on('end', (result) => {
+        resolve({ transcodedFilename, screenShotFilename });
+      })
+      // .on('end', (result) => {
+      //   ffmpeg(pathBefore)
+      //     .takeScreenshots({
+      //       timestamps: ['0.5'],
+      //       folder: pathOfScreenShots,
+      //       filename: screenShotFilename,
+      //       // size: '720x?',
+      //     })
+      //     .on('error', (error, stdout, stderr) => {
+      //       console.log(error.message);
+      //       console.log('stdout:\n' + stdout);
+      //       console.log('stderr:\n' + stderr);
+      //       reject(error);
+      //     })
+      //     .on('end', () => {
+      //       resolve({ transcodedFilename, screenShotFilename });
+      //     });
+      // })
+      // .save(pathOfTranscodedMP4);
+      .run();
   });
 };
 
-const getVideoDuration = async (filename) => {
-  const absPath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
-  return new Promise((resolve, reject) => {
-    fs.open(absPath, 'r', function (err, fd) {
-      try {
-        let movie = VideoLib.MovieParser.parse(fd);
-        // Work with movie
-        console.log('Duration:', movie.relativeDuration());
-        resolve(Math.floor(movie.relativeDuration()));
-      } catch (ex) {
-        console.error('Error:', ex);
-      } finally {
-        fs.closeSync(fd);
-      }
-    });
-  });
-};
+// const transcodeNew = async (filename, conversationDuration) => {
+//   return new Promise((resolve, reject) => {
+//     const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
+//     console.log(pathBefore);
+//     const pathOfScreenShots = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded');
+//     console.log(pathOfScreenShots);
+//     const transcodedFilename = `transcoded-${filename}`;
+//     const screenShotFilename = `transcoded-${filename}.png`;
+//     const pathOfTranscodedMP4 = path.join(
+//       __dirname,
+//       '..',
+//       '..',
+//       'uploadedFilesBuffer',
+//       'transcoded',
+//       transcodedFilename
+//     );
+//     console.log(pathOfTranscodedMP4);
+
+//     ffmpeg.ffprobe(pathBefore, (error, data) => {
+//       ffmpeg(pathBefore)
+//         .screenshots({
+//           timestamps: ['00:01'],
+//           filename: screenShotFilename,
+//           folder: pathOfScreenShots,
+//           count: 1,
+//         })
+//         .setDuration(conversationDuration)
+//         .on('end', () => {
+//           //upload file in 'to/wherever/you/want'(thumbnail) to s3
+//           //upload the video as well to s3
+//           resolve({ transcodedFilename, screenShotFilename });
+//         })
+//         .save(pathOfTranscodedMP4);
+//     });
+//   });
+// };
+
+// const getVideoDuration = async (filename) => {
+//   const absPath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
+//   return new Promise((resolve, reject) => {
+//     fs.open(absPath, 'r', function (err, fd) {
+//       try {
+//         let movie = VideoLib.MovieParser.parse(fd);
+//         // Work with movie
+//         console.log('Duration:', movie.relativeDuration());
+//         resolve(Math.floor(movie.relativeDuration()));
+//       } catch (ex) {
+//         console.error('Error:', ex);
+//       } finally {
+//         fs.closeSync(fd);
+//       }
+//     });
+//   });
+// };
 
 export const createUserMedia = async (request, response) => {
   try {
@@ -131,7 +201,22 @@ export const createUserMedia = async (request, response) => {
       partnerUserMedia.videoFileName = transcodedFiles.transcodedFilename;
       partnerUserMedia.thumbnail = transcodedFiles.screenShotFilename;
       // thumbnailのong fileも返して、userMediaの方に入れようか。
+      // console.log(
+      //   fs.existsSync(
+      //     path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded', transcodedFiles.transcodedFilename)
+      //   ),
+      //   'partner transcoded mp4 file exists??'
+      // );
+      // console.log(
+      //   fs.existsSync(
+      //     path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded', transcodedFiles.screenShotFilename)
+      //   ),
+      //   'partner transcoded screenshot file exists??'
+      // );
       await partnerUserMedia.save();
+      console.log('heeey, is here working????');
+      // ここで、partnerのscreenshotとtranscodeされたmp4 fileがあるかの確認をしよう。
+
       // partner側の変更、これで終わり。
       // 次は自分
       const myTranscodedFiles = await transcodeVideo(file.filename, minDuration);

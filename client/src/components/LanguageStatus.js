@@ -21,11 +21,11 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
 const LanguageStatus = (props) => {
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
 
-  useEffect(() => {
-    return () => {
-      props.updateUserMyLangsStatusActionCreator(props.countLearningLangLength, props.countNativeLangLength);
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     props.updateUserMyLangsStatusActionCreator(props.countLearningLangLength, props.countNativeLangLength);
+  //   };
+  // }, []);
 
   const handleDrag = (e, ui) => {
     const { x, y } = deltaPosition;
