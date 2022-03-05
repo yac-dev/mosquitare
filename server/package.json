@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "server:development": "env-cmd -f ./config/.env.development nodemon --es-module-specifier-resolution=node src/index.js",
-    "production": "NODE_ENV=production node --es-module-specifier-resolution=node src/index.js"
+    "production": "NODE_ENV=production node --es-module-specifier-resolution=node src/index.js",
+    "server:production-aws-test": "env-cmd -f ./env.production-aws-test node --es-module-specifier-resolution=node src/index.js"
   },
   "author": "",
   "license": "ISC",
