@@ -5,10 +5,13 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 // mui
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import TranslateIcon from '@mui/icons-material/Translate';
 import { styled } from '@mui/system';
+import Button from '@mui/material/Button';
 
 // ac
 import { updateUserMyLangsStatusActionCreator } from '../actionCreators/authActionCreators';
+import { switchCurrentLanguageActionCreator1 } from '../actionCreators/mediaActionCreator';
 
 const CloseIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
@@ -71,10 +74,17 @@ const LanguageStatus = (props) => {
         <p>Learning: {props.countLearningLangLength} words</p>
         <p>Native: {props.countNativeLangLength} words</p>
         {renderStatus()}
-        <button>Switch language now!</button>
+        <Button
+          variant='contained'
+          size='medium'
+          startIcon={<TranslateIcon />}
+          onClick={() => props.switchCurrentLanguageActionCreator1()}
+        >
+          Switch Language!
+        </Button>
       </div>
     </Draggable>
   );
 };
 
-export default connect(null, updateUserMyLangsStatusActionCreator)(LanguageStatus);
+export default connect(null, updateUserMyLangsStatusActionCreator, switchCurrentLanguageActionCreator1)(LanguageStatus);

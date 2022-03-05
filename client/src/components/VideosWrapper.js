@@ -325,17 +325,16 @@ const VideosWrapper = (props) => {
             </Tooltip> */}
           </Stack>
         </div>
-        <div
+        {/* <div
           className='switch-button'
           style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translate(-50%, -50%)' }}
         >
           <Tooltip title='Check Status!'>
-            {/* variant='contained' */}
             <SwitchLangIconButton>
               <TranslateOutlinedIcon style={{ color: 'white', fontSize: '30px' }} />
             </SwitchLangIconButton>
           </Tooltip>
-        </div>
+        </div> */}
       </div>
     </>
   );
