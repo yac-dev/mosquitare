@@ -160,7 +160,7 @@ const actions = [
 
 const VideosWrapper = (props) => {
   const [open, setOpen] = useState(false);
-  const [direction, setDirection] = useState('left');
+  const [direction, setDirection] = useState('right');
   const [openMyScreen, setOpenMyScreen] = useState(false);
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
   // const classes = useStyles();
@@ -270,43 +270,43 @@ const VideosWrapper = (props) => {
             <video className='myvideo' playsInline muted ref={myVideoRef} autoPlay />
           </div>
         </Draggable>
+        <SpeedDial
+          ariaLabel='SpeedDial controlled open example'
+          sx={{ position: 'absolute', top: 20, left: 20 }}
+          icon={<WidgetsIcon />}
+          onClose={handleClose}
+          onOpen={handleOpen}
+          open={open}
+          direction={direction}
+          // FabProps={{
+          //   sx: {
+          //     bgcolor: 'rgb(110, 209, 33)',
+          //     '&:hover': {
+          //       bgcolor: 'rgb(145, 237, 74)',
+          //     },
+          //   },
+          // }}
+        >
+          {actions.map((action) => (
+            <SpeedDialAction
+              key={action.name}
+              icon={action.icon}
+              tooltipTitle={action.name}
+              // tooltipOpen
+              FabProps={{
+                sx: {
+                  bgcolor: action.color,
+                  '&:hover': {
+                    bgcolor: action.hoverColor,
+                  },
+                },
+              }}
+              onClick={(event) => onWidgetIconClick(event, action.operation)}
+            />
+          ))}
+        </SpeedDial>
         <div className='buttons-wrapper' style={{ position: 'absolute', top: 20, right: 20 }}>
           <Stack direction={'row'} spacing={3} alignItems='baseline'>
-            <SpeedDial
-              ariaLabel='SpeedDial controlled open example'
-              // sx={{ position: 'absolute', top: 16, right: 16 }}
-              icon={<WidgetsIcon />}
-              onClose={handleClose}
-              onOpen={handleOpen}
-              open={open}
-              direction={direction}
-              // FabProps={{
-              //   sx: {
-              //     bgcolor: 'rgb(110, 209, 33)',
-              //     '&:hover': {
-              //       bgcolor: 'rgb(145, 237, 74)',
-              //     },
-              //   },
-              // }}
-            >
-              {actions.map((action) => (
-                <SpeedDialAction
-                  key={action.name}
-                  icon={action.icon}
-                  tooltipTitle={action.name}
-                  // tooltipOpen
-                  FabProps={{
-                    sx: {
-                      bgcolor: action.color,
-                      '&:hover': {
-                        bgcolor: action.hoverColor,
-                      },
-                    },
-                  }}
-                  onClick={(event) => onWidgetIconClick(event, action.operation)}
-                />
-              ))}
-            </SpeedDial>
             <Tooltip title='Check Status!!'>
               {/* variant='contained' */}
               <SwitchLangIconButton onClick={() => props.setOpenLanguageStatus(true)}>
