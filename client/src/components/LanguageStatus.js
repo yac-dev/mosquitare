@@ -10,7 +10,7 @@ import { styled } from '@mui/system';
 import Button from '@mui/material/Button';
 
 // ac
-import { updateUserMyLangsStatusActionCreator } from '../actionCreators/authActionCreators';
+// import { updateUserMyLangsStatusActionCreator } from '../actionCreators/authActionCreators';
 import { switchCurrentLanguageActionCreator1 } from '../actionCreators/mediaActionCreator';
 
 const CloseIconButton = styled(IconButton)(({ theme }) => ({
@@ -73,12 +73,12 @@ const LanguageStatus = (props) => {
         <div>Your Language Status</div>
         <p>Learning: {props.countLearningLangLength} words</p>
         <p>Native: {props.countNativeLangLength} words</p>
-        {renderStatus()}
+        {/* {renderStatus()} */}
         <Button
           variant='contained'
           size='medium'
           startIcon={<TranslateIcon />}
-          onClick={() => props.switchCurrentLanguageActionCreator1()}
+          onClick={() => props.switchCurrentLanguageActionCreator1(props.socket)}
         >
           Switch Language!
         </Button>
@@ -87,4 +87,5 @@ const LanguageStatus = (props) => {
   );
 };
 
-export default connect(null, updateUserMyLangsStatusActionCreator, switchCurrentLanguageActionCreator1)(LanguageStatus);
+//
+export default connect(null, { switchCurrentLanguageActionCreator1 })(LanguageStatus);

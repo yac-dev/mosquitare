@@ -307,7 +307,7 @@ const VideosWrapper = (props) => {
                 />
               ))}
             </SpeedDial>
-            <Tooltip title='Check Status!'>
+            <Tooltip title='Check Status!!'>
               {/* variant='contained' */}
               <SwitchLangIconButton onClick={() => props.setOpenLanguageStatus(true)}>
                 <TranslateOutlinedIcon style={{ color: 'white' }} />

@@ -260,23 +260,23 @@ const SubtitleWrapper = (props) => {
     }
   };
 
-  const renderSwitchLangButton = () => {
-    // const learningLangName = props.authState.currentUser.learningLangs[0].name;
-    // if (props.authState.currentUser.learningLangs[0].name === props.mediaState.currentLanguage.name) {
-    //   return null;
-    // } else {
-    return (
-      // <Button type='button' onClick={() => switchLanguage()}>
-      //   Switch to {learningLangName}
-      // </Button>
-      <Tooltip title='Switch current language'>
-        <SwitchLanguageIconButton color='inherit' onClick={() => switchLanguage()}>
-          <TranslateIcon size='small' />
-        </SwitchLanguageIconButton>
-      </Tooltip>
-    );
-    // }
-  };
+  // const renderSwitchLangButton = () => {
+  //   // const learningLangName = props.authState.currentUser.learningLangs[0].name;
+  //   // if (props.authState.currentUser.learningLangs[0].name === props.mediaState.currentLanguage.name) {
+  //   //   return null;
+  //   // } else {
+  //   return (
+  //     // <Button type='button' onClick={() => switchLanguage()}>
+  //     //   Switch to {learningLangName}
+  //     // </Button>
+  //     <Tooltip title='Switch current language'>
+  //       <SwitchLanguageIconButton color='inherit' onClick={() => switchLanguage()}>
+  //         <TranslateIcon size='small' />
+  //       </SwitchLanguageIconButton>
+  //     </Tooltip>
+  //   );
+  //   // }
+  // };
 
   // const renderWordsLength = () => {
   //   return (
@@ -324,7 +324,7 @@ const SubtitleWrapper = (props) => {
           style={{ overflow: 'auto', height: '90%', padding: '5px', backgroundColor: 'rgb(37, 95, 184)' }}
         >
           <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp;
-          {renderSwitchLangButton()}
+          {/* {renderSwitchLangButton()} */}
           {renderTranscripts()}
           {renderPartnerInterimTranscript()}
           {renderMyInterimTranscript()}
