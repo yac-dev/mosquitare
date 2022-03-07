@@ -47,8 +47,9 @@
     "worker-loader": "^3.0.8"
   },
   "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
     "client:development": "env-cmd -f ./config/.env.development react-scripts start",
-    "client:production": "env-cmd -f ./config/.env.production react-scripts start",
     "build:production": "env-cmd -f ./config/.env.production react-scripts build",
     "build:production-aws-test": "env-cmd -f ./config/.env.production-aws-test react-scripts build",
     "test": "react-scripts test",
