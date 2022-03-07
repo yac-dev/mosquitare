@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { Marker } from 'react-map-gl';
+// import { Marker } from 'react-map-gl';
+import { Marker } from '@react-google-maps/api';
 import { Icon, Popup, Button } from 'semantic-ui-react';
 import UserInfoCardNew from './UserInfoCardNew';
 
@@ -33,10 +34,11 @@ const EachUserInfo = (props) => {
   // };
   return (
     <Marker
-      longitude={props.user.location.coordinates[0]}
-      latitude={props.user.location.coordinates[1]}
-      offsetLeft={-3.5 * props.viewport.zoom}
-      offsetTop={-7 * props.viewport.zoom}
+      position={{ lat: props.user.location.coordinates[1], lng: props.user.location.coordinates[0] }}
+      // longitude={props.user.location.coordinates[0]}
+      // latitude={props.user.location.coordinates[1]}
+      // offsetLeft={-3.5 * props.viewport.zoom}
+      // offsetTop={-7 * props.viewport.zoom}
       // ここonClickは、今自分がどのcomponent内にいるかで実行するものが変わるようにしたいんだよな。
       onClick={() => {
         props.setIsUserIconClicked(true);

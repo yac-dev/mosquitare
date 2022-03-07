@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 import ReactMapGL from 'react-map-gl';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 import { Button } from 'semantic-ui-react';
 // components
@@ -19,6 +20,7 @@ import SwipeableUserDetail from './SwipeableUserDetail';
 // css
 import '../styles/worldmap.css';
 import '../styles/meeting.css';
+// import 'mapbox-gl/dist/mapbox-gl.css';
 
 // socketio
 import { io } from 'socket.io-client';
@@ -34,13 +36,23 @@ import { callActionCreator } from '../actionCreators/mediaActionCreator';
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
 
-// mapbox設定。コメント含めて必要。
-import mapboxgl from 'mapbox-gl';
-// The following is required to stop "npm build" from transpiling mapbox code.
-// notice the exclamation point in the import.
-// @ts-ignore
-// eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
-mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+const containerStyle = {
+  height: '100vh',
+  width: '100%',
+};
+
+const mapOptions = {
+  fullscreenControl: false,
+  streetViewControl: false,
+  mapTypeControl: false,
+  scrollwheel: false,
+  // styles: modestStyle,
+};
+
+// // mapbox設定。コメント含めて必要。
+// import mapboxgl from 'mapbox-gl';
+// import MapboxWorker from 'mapbox-gl/dist/mapbox-gl-csp-worker';
+// mapboxgl.workerClass = MapboxWorker;
 const socket = io(process.env.REACT_APP_WEBRTC); // こういう部分全てのcomponentで動いている。これなんかのバグ起こしそうだな。。。
 
 const Desktop = ({ children }) => {
@@ -83,6 +95,24 @@ const WorldMap = (props) => {
   const [showSwipeable, setShowSwipeable] = useState(true);
   const [openSwipeableDrawer, setOpenSwipeableDrawer] = useState(false);
 
+  const mapRef = useRef(null);
+  const [position, setPosition] = useState({ lat: 51.477928, lng: -0.001545 });
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: process.env.REACT_APP_GOOGLEMAPAPIKEY,
+  });
+
+  const [map, setMap] = useState(null);
+
+  function handleLoad(map) {
+    mapRef.current = map;
+  }
+
+  const onUnmount = React.useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
     if (jwtToken) {
@@ -122,6 +152,37 @@ const WorldMap = (props) => {
   //     userInfo: props.authState.currentUser,
   //   });
   // };
+
+  const renderMap = () => {
+    if (isLoaded) {
+      return (
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={position}
+          zoom={3}
+          onLoad={handleLoad}
+          onUnmount={onUnmount}
+          options={mapOptions}
+        >
+          <UsersMarker
+            socket={socket}
+            setShowCallingModal={setShowCallingModal}
+            setIsUserIconClicked={setIsUserIconClicked}
+            userInfo={userInfo}
+            setUserInfo={setUserInfo}
+          />
+          <RightPositionedUserDetail
+            socket={socket}
+            isUserIconClicked={isUserIconClicked}
+            userInfo={userInfo}
+            setShowCallingModal={setShowCallingModal}
+          />
+        </GoogleMap>
+      );
+    } else {
+      return <></>;
+    }
+  };
 
   return (
     <>
@@ -198,8 +259,8 @@ const WorldMap = (props) => {
       {/* </ReactMapGL> */}
 
       <Desktop>
-        <div style={{ height: '100vh', width: '100%' }}>
-          <ReactMapGL
+        {/* <div style={{ height: '100vh', width: '100%' }}> */}
+        {/* <ReactMapGL
             {...viewport}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
             width='100%'
@@ -219,14 +280,16 @@ const WorldMap = (props) => {
               isUserIconClicked={isUserIconClicked}
               userInfo={userInfo}
               setShowCallingModal={setShowCallingModal}
-            />
-            {/* <UserDetail
+            /> */}
+        {/* <UserDetail
               socket={socket}
               isUserIconClicked={isUserIconClicked}
               userInfo={userInfo}
               setShowCallingModal={setShowCallingModal}
             /> */}
-          </ReactMapGL>
+        {/* </ReactMapGL> */}
+        <>
+          {renderMap()}
           <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
           <FullScreen1on1Modal
             socket={socket}
@@ -234,9 +297,10 @@ const WorldMap = (props) => {
             setShow1on1={setShow1on1}
             fullscreen1on1Modal={fullscreen1on1Modal}
           />
-        </div>
+        </>
+        {/* </div> */}
       </Desktop>
-
+      {/*
       <Tablet>
         <div style={{ height: '100vh', width: '100%' }}>
           <ReactMapGL
@@ -315,7 +379,7 @@ const WorldMap = (props) => {
             fullscreen1on1Modal={fullscreen1on1Modal}
           />
         </div>
-      </Mobile>
+      </Mobile> */}
 
       {/* </div> */}
     </>

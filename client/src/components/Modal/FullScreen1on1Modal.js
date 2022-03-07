@@ -3,6 +3,7 @@ import { useMediaQuery } from 'react-responsive';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
+// "build:production-aws-test": "env-cmd -f ./config/.env.production-aws-test react-scripts build",
 // mui
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
