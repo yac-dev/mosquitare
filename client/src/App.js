@@ -11,12 +11,12 @@ import Navbar from './components/Navbar';
 import Login from './components/Login';
 import SignupBasic from './components/Signup/SignupBasic';
 import SignupDetails from './components/Signup/SignupDetails';
-import Socket from './components/Socket';
 import WorldMap from './components/WorldMap';
 import ChatScreen from './components/ChatScreen';
 import UserPageWrapper from './components/UserPage/UserPageWrapper';
 // import ConversationVideo from './components/UserPage/ConversationVideo';
 import Review from './components/ReviewForm';
+// import MapEg from './MapEg';
 
 const App = () => {
   // useEffect(() => {
@@ -68,7 +68,7 @@ const App = () => {
         <Route path='/signup/basic' exact component={SignupBasic} />
         <Route path='/signup/details' exact component={SignupDetails} />
         <Route path='/login' exact component={Login} />
-        <Route path='/socket' exact component={Socket} />
+        {/* <Route path='/socket' exact component={Socket} /> */}
         <Route path='/worldmap' exact component={WorldMap} />
         {/* <Route path='/chatscreen' exact component={ChatScreen} /> */}
         <Route path='/about' exact component={About} />

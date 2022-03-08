@@ -68,6 +68,7 @@ const io = new Server(server, {
     origin: '*',
     methods: ['GET', 'POST'],
   },
+  path: '/mysocket',
 });
 
 // const io = socketio(server, {
@@ -81,6 +82,7 @@ const mapMeetingIdToUsers = {};
 const mapUserToMeetingId = {};
 
 io.on('connection', (socket) => {
+  console.log('connection came from client side');
   socket.emit(I_GOT_SOCKET_ID, socket.id);
 
   socket.on(I_CALL_SOMEBODY, (dataFromCaller) => {
