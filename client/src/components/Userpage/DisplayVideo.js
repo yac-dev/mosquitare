@@ -130,7 +130,7 @@ const DisplayVideo = (props) => {
             // controls
           >
             <source
-              src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[0].videoFileName}`}
+              src={`https://mosquitare-mediafiles-bucket-for-heroku.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[0].videoFileName}`}
             />
           </video>
         </div>
@@ -144,7 +144,7 @@ const DisplayVideo = (props) => {
             // controls
           >
             <source
-              src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[1].videoFileName}`}
+              src={`https://mosquitare-mediafiles-bucket-for-heroku.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[1].videoFileName}`}
             />
           </video>
         </div>

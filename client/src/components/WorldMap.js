@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 import ReactMapGL from 'react-map-gl';
-// import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 import { Button } from 'semantic-ui-react';
 // components
@@ -20,7 +20,7 @@ import SwipeableUserDetail from './SwipeableUserDetail';
 // css
 import '../styles/worldmap.css';
 import '../styles/meeting.css';
-// import 'mapbox-gl/dist/mapbox-gl.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 // socketio
 import { io } from 'socket.io-client';
@@ -104,7 +104,7 @@ const WorldMap = (props) => {
 
   // const { isLoaded } = useJsApiLoader({
   //   id: 'google-map-script',
-  //   googleMapsApiKey: process.env.,
+  //   googleMapsApiKey: process.env.GOOGLE_MAP_ACCESS_KEY,
   // });
 
   // const [map, setMap] = useState(null);
@@ -130,8 +130,8 @@ const WorldMap = (props) => {
         });
       });
     }
-    // props.getMediaActionCreator();
-    // props.listenCallActionCreator(socket, setShowCallingModal);
+    props.getMediaActionCreator();
+    props.listenCallActionCreator(socket, setShowCallingModal);
     // props.getMeetingsActionCreator();
   }, []);
 
@@ -295,6 +295,7 @@ const WorldMap = (props) => {
               setShowCallingModal={setShowCallingModal}
             /> */}
           </ReactMapGL>
+          {/* {renderMap()} */}
           <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
           <FullScreen1on1Modal
             socket={socket}
@@ -304,7 +305,7 @@ const WorldMap = (props) => {
           />
         </div>
       </Desktop>
-      {/*
+
       <Tablet>
         <div style={{ height: '100vh', width: '100%' }}>
           <ReactMapGL
@@ -383,7 +384,7 @@ const WorldMap = (props) => {
             fullscreen1on1Modal={fullscreen1on1Modal}
           />
         </div>
-      </Mobile> */}
+      </Mobile>
 
       {/* </div> */}
     </>

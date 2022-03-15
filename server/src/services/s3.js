@@ -15,8 +15,9 @@ const s3 = new S3({
 });
 
 export const uploadFile = async (filename) => {
-  const pathOfTranscodedMP4 = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded', filename);
-  const fileStream = fs.createReadStream(pathOfTranscodedMP4); // ここでbinary dataを全て読み込んでs3に保存する。
+  // const pathOfTranscodedMP4 = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded', filename);
+  const filePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
+  const fileStream = fs.createReadStream(filePath); // ここでbinary dataを全て読み込んでs3に保存する。
 
   const uploadParams = {
     Bucket: process.env.AWS_S3BUCKET_NAME,
@@ -25,14 +26,14 @@ export const uploadFile = async (filename) => {
   };
 
   await s3.upload(uploadParams).promise();
-  await unlinkFile(pathOfTranscodedMP4);
-  const beforeTranscodedFilename = filename.split('.');
-  // extensionがmp4なら、それはbufferにあるもの。それも消す。
-  if (beforeTranscodedFilename[beforeTranscodedFilename.length - 1] === 'mp4') {
-    const [transcoded, ...rest] = filename.split('-');
-    const deletingFilename = rest.join('-');
-    await unlinkFile(path.join(__dirname, '..', '..', 'uploadedFilesBuffer', deletingFilename));
-  }
+  // await unlinkFile(pathOfTranscodedMP4);
+  // const beforeTranscodedFilename = filename.split('.');
+  // // extensionがmp4なら、それはbufferにあるもの。それも消す。
+  // if (beforeTranscodedFilename[beforeTranscodedFilename.length - 1] === 'mp4') {
+  //   const [transcoded, ...rest] = filename.split('-');
+  //   const deletingFilename = rest.join('-');
+  //   await unlinkFile(path.join(__dirname, '..', '..', 'uploadedFilesBuffer', deletingFilename));
+  // }
 };
 
 export const uploadScriptFile = async (file) => {

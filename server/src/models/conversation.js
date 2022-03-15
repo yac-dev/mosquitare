@@ -7,6 +7,8 @@ const conversationSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
+  videoFilename: String,
+  thumbnail: String,
   userMedias: [
     {
       type: mongoose.Schema.ObjectId,

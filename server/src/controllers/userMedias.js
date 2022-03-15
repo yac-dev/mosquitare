@@ -4,7 +4,6 @@ const unlinkFile = util.promisify(fs.unlink);
 import { AWS_S3BUCKET_NAME, AWS_S3BUCKET_REGION, AWS_S3BUCKET_ACCESS_KEY, AWS_S3BUCKET_SECRET_KEY } from '../../config';
 import UserMedia from '../models/userMedia';
 import Conversation from '../models/conversation';
-// import ffmpeg from 'ffmpeg';
 import { exec } from 'child_process';
 import ffmpeg from 'fluent-ffmpeg';
 // import mpegp from '@ffmpeg-installer/ffmpeg';
@@ -44,67 +43,165 @@ const __dirname = dirname(__filename);
 
 import { uploadFile, getFileStream } from '../services/s3';
 //   /app/uploadedFilesBuffer/1646369727524-becf32ac-6a2f-4908-ab74-2b73bd8f398c.mp4
-const transcodeVideo = async (filename, conversationDuration) => {
-  return new Promise((resolve, reject) => {
-    const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
-    // console.log(pathBefore);
-    const pathOfScreenShots = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded');
-    // console.log(pathOfScreenShots);
-    const transcodedFilename = `transcoded-${filename}`;
-    const screenShotFilename = `transcoded-${filename}.png`;
-    const pathOfTranscodedMP4 = path.join(
-      __dirname,
-      '..',
-      '..',
-      'uploadedFilesBuffer',
-      'transcoded',
-      transcodedFilename
-    );
-    // console.log(pathOfTranscodedMP4);
+// const transcodeVideo = async (filename, conversationDuration) => {
+//   return new Promise((resolve, reject) => {
+//     const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
+//     // console.log(pathBefore);
+//     const pathOfScreenShots = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded');
+//     // console.log(pathOfScreenShots);
+//     const transcodedFilename = `transcoded-${filename}`;
+//     const screenShotFilename = `transcoded-${filename}.png`;
+//     const pathOfTranscodedMP4 = path.join(
+//       __dirname,
+//       '..',
+//       '..',
+//       'uploadedFilesBuffer',
+//       'transcoded',
+//       transcodedFilename
+//     );
+//     // console.log(pathOfTranscodedMP4);
 
-    ffmpeg(pathBefore)
-      .output(pathOfTranscodedMP4)
-      .videoCodec('libx264')
-      // .audioCodec('libmp3lame')
-      .setDuration(conversationDuration)
-      .on('error', (error) => {
-        console.log('error after setVideoDuration', error);
-        reject(error);
-      })
-      .takeScreenshots({
-        timestamps: ['00:01'],
-        folder: pathOfScreenShots,
-        filename: screenShotFilename,
-        // size: '720x?',
-      })
-      .on('error', (error, stdout, stderr) => {
-        console.log(error.message);
-        console.log('stdout:\n' + stdout);
-        console.log('stderr:\n' + stderr);
-        reject(error);
+//     ffmpeg(pathBefore)
+//       .output(pathOfTranscodedMP4)
+//       .videoCodec('libx264')
+//       // .audioCodec('libmp3lame')
+//       .setDuration(conversationDuration)
+//       .on('error', (error) => {
+//         console.log('error after setVideoDuration', error);
+//         reject(error);
+//       })
+//       .takeScreenshots({
+//         timestamps: ['00:01'],
+//         folder: pathOfScreenShots,
+//         filename: screenShotFilename,
+//         // size: '720x?',
+//       })
+//       .on('error', (error, stdout, stderr) => {
+//         console.log(error.message);
+//         console.log('stdout:\n' + stdout);
+//         console.log('stderr:\n' + stderr);
+//         reject(error);
+//       })
+//       .on('end', (result) => {
+//         resolve({ transcodedFilename, screenShotFilename });
+//       })
+//       // .on('end', (result) => {
+//       //   ffmpeg(pathBefore)
+//       //     .takeScreenshots({
+//       //       timestamps: ['0.5'],
+//       //       folder: pathOfScreenShots,
+//       //       filename: screenShotFilename,
+//       //       // size: '720x?',
+//       //     })
+//       //     .on('error', (error, stdout, stderr) => {
+//       //       console.log(error.message);
+//       //       console.log('stdout:\n' + stdout);
+//       //       console.log('stderr:\n' + stderr);
+//       //       reject(error);
+//       //     })
+//       //     .on('end', () => {
+//       //       resolve({ transcodedFilename, screenShotFilename });
+//       //     });
+//       // })
+//       // .save(pathOfTranscodedMP4);
+//       .run();
+//   });
+// };
+
+// saving....
+// const transcodeVideo = async (filename, conversationDuration) => {
+//   return new Promise((resolve, reject) => {
+//     const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
+//     const pathOfScreenShots = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded');
+//     const transcodedFilename = `transcoded-${filename}`;
+//     const screenShotFilename = `transcoded-${filename}.png`;
+//     const pathOfTranscodedMP4 = path.join(
+//       __dirname,
+//       '..',
+//       '..',
+//       'uploadedFilesBuffer',
+//       'transcoded',
+//       transcodedFilename
+//     );
+
+//     ffmpeg()
+//       .input(pathBefore)
+//       .videoCodec('libx264')
+//       .videoFilters('pad=640:480:0:40:black')
+//       // .size('640x480')
+//       // .autopad()
+//       // .audioCodec('libmp3lame')
+//       .setDuration(conversationDuration)
+//       .on('end', (result) => {
+//         ffmpeg(pathBefore)
+//           .takeScreenshots({
+//             timestamps: ['0.5'],
+//             folder: pathOfScreenShots,
+//             filename: screenShotFilename,
+//           })
+//           .on('error', (error) => {
+//             reject(error);
+//           })
+//           .on('end', () => {
+//             // resolve();
+//             resolve({ transcodedFilename, screenShotFilename });
+//           });
+//       })
+//       .save(pathOfTranscodedMP4);
+//   });
+// };
+
+// どっちでいいのか。。。
+// import ffmpeg from 'ffmpeg';
+// // 引数はfilenameね。
+// const transcodeVideo = async (file, conversationDuration) => {
+//   const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', file);
+//   const process = await new ffmpeg(pathBefore);
+//   // console.log(process);
+//   const transcodedFilename = `transcoded-${file}`;
+//   const pathOfTranscodedMP4 = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'transcoded', transcodedFilename);
+//   await process.setVideoDuration(conversationDuration).save(pathOfTranscodedMP4);
+//   return transcodedFilename;
+// };
+import { v4 as uuidv4 } from 'uuid';
+const transcodeVideo = (firstVideoFile, secondVideoFile, conversationId) => {
+  const firstVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', firstVideoFile);
+  const secondVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', secondVideoFile);
+  const outputVideoFilename = `${conversationId}-${uuidv4()}.mp4`;
+  const outoutVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', outputVideoFilename);
+  const screenShotFilename = `screenShot-${outputVideoFilename}.png`;
+  const screenShotFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer');
+  return new Promise((resolve, reject) => {
+    ffmpeg()
+      .input(firstVideoFilePath)
+      .input(secondVideoFilePath)
+      .complexFilter([
+        '[0:v]scale=320:160[0scaled]',
+        '[1:v]scale=320:160[1scaled]',
+        '[0scaled]pad=640:160[0padded]',
+        '[0padded][1scaled]overlay=shortest=1:x=320[output]',
+        'amix=inputs=2:duration=shortest:weights=11',
+      ])
+      .outputOptions(['-map [output]'])
+      .output(outoutVideoFilePath)
+      .on('error', (er) => {
+        console.log('error occured: ' + er.message);
       })
       .on('end', (result) => {
-        resolve({ transcodedFilename, screenShotFilename });
+        ffmpeg(outoutVideoFilePath)
+          .takeScreenshots({
+            timestamps: ['0.5'],
+            folder: screenShotFilePath,
+            filename: screenShotFilename,
+          })
+          .on('error', (error) => {
+            reject(error);
+          })
+          .on('end', () => {
+            resolve({ outputVideoFilename, screenShotFilename });
+            console.log('success!!');
+          });
       })
-      // .on('end', (result) => {
-      //   ffmpeg(pathBefore)
-      //     .takeScreenshots({
-      //       timestamps: ['0.5'],
-      //       folder: pathOfScreenShots,
-      //       filename: screenShotFilename,
-      //       // size: '720x?',
-      //     })
-      //     .on('error', (error, stdout, stderr) => {
-      //       console.log(error.message);
-      //       console.log('stdout:\n' + stdout);
-      //       console.log('stderr:\n' + stderr);
-      //       reject(error);
-      //     })
-      //     .on('end', () => {
-      //       resolve({ transcodedFilename, screenShotFilename });
-      //     });
-      // })
-      // .save(pathOfTranscodedMP4);
       .run();
   });
 };
@@ -193,13 +290,19 @@ export const createUserMedia = async (request, response) => {
       // 最初のこっちはきちんと動いている。
     } else {
       // 既に片方の人が先に着いている状態。だから、先に着いた側のuserMedia（まだlocalにある状況）、
-      const minDuration = Math.min(conversation.duration[0], duration);
-      conversation.duration[0] = minDuration;
+      // const minDuration = Math.min(conversation.duration[0], duration);
+      // conversation.duration[0] = minDuration;
       // こっからpartnerのuserMediaを引っ張ってくる。
+      const userMedia = await UserMedia.create({
+        user: userId,
+        videoFileName: file.filename,
+      });
+
       const partnerUserMedia = await UserMedia.findById(conversation.userMedias[0]._id);
-      const transcodedFiles = await transcodeVideo(partnerUserMedia.videoFileName, minDuration);
-      partnerUserMedia.videoFileName = transcodedFiles.transcodedFilename;
-      partnerUserMedia.thumbnail = transcodedFiles.screenShotFilename;
+      const files = await transcodeVideo(partnerUserMedia.videoFileName, file.filename, request.params.conversationId);
+      // partnerUserMedia.videoFileName = transcodedFilename;
+      // partnerUserMedia.videoFileName = transcodedFiles.transcodedFilename;
+      // partnerUserMedia.thumbnail = transcodedFiles.screenShotFilename; // 一旦コメントアウト
       // thumbnailのong fileも返して、userMediaの方に入れようか。
       // console.log(
       //   fs.existsSync(
@@ -213,28 +316,36 @@ export const createUserMedia = async (request, response) => {
       //   ),
       //   'partner transcoded screenshot file exists??'
       // );
-      await partnerUserMedia.save();
+      // await partnerUserMedia.save();
       console.log('heeey, is here working????');
       // ここで、partnerのscreenshotとtranscodeされたmp4 fileがあるかの確認をしよう。
+      conversation.videoFilename = files.outputVideoFilename;
+      conversation.thumbnail = files.screenShotFilename;
+      conversation.userMedias.push(userMedia);
+      await conversation.save();
 
       // partner側の変更、これで終わり。
       // 次は自分
-      const myTranscodedFiles = await transcodeVideo(file.filename, minDuration);
-      const userMedia = await UserMedia.create({
-        user: userId,
-        videoFileName: myTranscodedFiles.transcodedFilename,
-        thumbnail: myTranscodedFiles.screenShotFilename,
-        // audioFileName: files[1].filename,
-      });
+      // const myTranscodedFilename = await transcodeVideo(file.filename, minDuration);
+      // const userMedia = await UserMedia.create({
+      //   user: userId,
+      //   videoFileName: myTranscodedFilename,
+      //   // thumbnail: myTranscodedFiles.screenShotFilename,
+      //   // audioFileName: files[1].filename,
+      // });
       // ここでthumbnailを入れよう。
-      conversation.userMedias.push(userMedia);
-      await conversation.save();
+      // conversation.userMedias.push(userMedia);
+      // await conversation.save();
       // こっからawsにあげる処理を書いていく。
       const filesToAWS = [
-        transcodedFiles.transcodedFilename,
-        transcodedFiles.screenShotFilename,
-        myTranscodedFiles.transcodedFilename,
-        myTranscodedFiles.screenShotFilename,
+        files.outputVideoFilename,
+        files.screenShotFilename,
+        partnerUserMedia.videoFileName, //partnerのと自分のvideoもs3に保存しておく。
+        file.filename,
+        // transcodedFiles.transcodedFilename,
+        // transcodedFiles.screenShotFilename,
+        // myTranscodedFiles.transcodedFilename,
+        // myTranscodedFiles.screenShotFilename,
       ];
 
       filesToAWS.forEach((filename) => {
