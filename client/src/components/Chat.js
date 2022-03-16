@@ -21,6 +21,8 @@ import { styled } from '@mui/system';
 
 import { I_SEND_CHAT_MESSAGE_TO_MY_PARTNER, MY_PARTNER_SEND_ME_A_CHAT_MESSAGE } from '../actionCreators/socketEvents';
 
+import '../styles/chat.css';
+
 const ariaLabel = { 'aria-label': 'description' };
 
 // const styles = (theme) => ({
@@ -208,20 +210,23 @@ const Chat = (props) => {
     <Draggable onDrag={handleDrag}>
       <div
         className={`chat-component ${props.openChatComponent === true ? undefined : 'hidden'}`}
-        style={{
-          color: 'white',
-          backgroundColor: 'rgb(29, 49, 79)',
-          position: 'absolute',
-          top: '80px',
-          right: '50px',
-          zIndex: 10,
-          // position: 'relative',
-          borderRadius: '15px',
-          padding: '5px',
-          cursor: 'grab',
-        }}
+        // style={{
+        //   color: 'white',
+        //   backgroundColor: 'rgb(29, 49, 79)',
+        //   position: 'absolute',
+        //   top: '80px',
+        //   right: '50px',
+        //   zIndex: 10,
+        //   // position: 'relative',
+        //   borderRadius: '15px',
+        //   padding: '5px',
+        //   cursor: 'grab',
+        // }}
       >
-        <div className='chat-wrapper' style={{ height: '80vh', width: '30vw' }}>
+        <div
+          className='chat-wrapper'
+          //  style={{ height: '80vh', width: '30vw' }}
+        >
           <div className='chat-header' style={{ height: '10%' }}>
             <Stack direction='row' justifyContent='space-between' alignItems='baseline'>
               <h3 style={{ marginLeft: '15px' }}>Chat</h3>

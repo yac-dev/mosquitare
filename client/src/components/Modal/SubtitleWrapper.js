@@ -32,6 +32,9 @@ import { updateUserMyLangsStatusActionCreator } from '../../actionCreators/authA
 import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaActionCreator';
 import { recieveSwitchingLanguageRequestActionCreator1 } from '../../actionCreators/mediaActionCreator';
 
+// css
+import '../../styles/transcript.css';
+
 const SwitchLanguageIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
   backgroundColor: 'rgb(35, 63, 105)',
@@ -296,20 +299,20 @@ const SubtitleWrapper = (props) => {
     <Draggable onDrag={handleDrag}>
       <div
         className={`transcript-component ${props.openTranscriptComponent === true ? undefined : 'hidden'}`}
-        style={{
-          color: 'white',
-          backgroundColor: 'rgb(29, 49, 79)',
-          borderRadius: '5px',
-          overflow: 'auto',
-          height: '80vh',
-          width: '40vw',
-          position: 'absolute',
-          top: '80px',
-          right: '50px',
-          cursor: 'grab',
-          zIndex: 10,
-          padding: '5px',
-        }}
+        // style={{
+        //   color: 'white',
+        //   backgroundColor: 'rgb(29, 49, 79)',
+        //   borderRadius: '5px',
+        //   overflow: 'auto',
+        //   height: '80vh',
+        //   width: '40vw',
+        //   position: 'absolute',
+        //   top: '80px',
+        //   right: '50px',
+        //   cursor: 'grab',
+        //   zIndex: 10,
+        //   padding: '5px',
+        // }}
       >
         <div className='transcript-header' style={{ height: '10%' }}>
           <Stack direction='row' justifyContent='space-between' alignItems='baseline'>
