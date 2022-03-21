@@ -8,9 +8,44 @@
     bottom: 10px;
     right: 10px;
     z-index: 10;
-    border-radius: 15px;
+    border-radius: 5px;
+    border: 1px solid white;
     padding: 5px;
     cursor: grab;
+  }
+
+  .language-status-and-transcript-header {
+    height: 5%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .language-status-and-transcript {
+    height: 70vh;
+    width: 40vw;
+    color: white;
+    background-color: rgb(29, 49, 79);
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: grab;
+  }
+
+  .language-status-and-transcript-header {
+    height: 5%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
 
   .hidden {

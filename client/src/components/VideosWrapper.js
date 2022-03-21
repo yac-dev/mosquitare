@@ -350,8 +350,8 @@ const VideosWrapper = (props) => {
                 startIcon={<RecordVoiceOverIcon />}
                 onClick={() => props.setOpenLanguageStatusAndTranscript(true)}
                 sx={{
-                  height: { xxs: '30px', xs: '30px', sm: '60px', md: 'green', lg: '80px' },
-                  fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '14px', lg: '16px' },
+                  height: { xxs: '30px', xs: '30px', sm: '40px', md: '40px', lg: '40px' },
+                  fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '16px', lg: '16px' },
                 }}
               >
                 {`Speaking ${props.mediaState.currentLanguage.name} ...`}

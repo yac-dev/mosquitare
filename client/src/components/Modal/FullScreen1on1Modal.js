@@ -106,6 +106,7 @@ const FullScreen1on1Modal = (props) => {
               countNativeLangLength={countNativeLangLength}
               setCountLearningLangLength={setCountLearningLangLength}
               setCountNativeLangLength={setCountNativeLangLength}
+              setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
               openLanguageStatusAndTranscript={openLanguageStatusAndTranscript}
             />
             {/* <SubtitleWrapper

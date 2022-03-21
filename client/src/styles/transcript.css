@@ -21,11 +21,10 @@
   } */
 
   .transcript-component {
-    height: 60%;
+    height: 55%;
     width: 100%;
     color: white;
-    /* background-color: rgb(29, 49, 79); */
-    background-color: red;
+    background-color: rgb(37, 95, 184);
     border-radius: 5px;
     overflow: auto;
   }
@@ -69,7 +68,7 @@
 
 /* large devaice */
 @media only screen and (min-width: 1200px) {
-  .transcript-component {
+  /* .transcript-component {
     color: white;
     background-color: rgb(29, 49, 79);
     border-radius: 5px;
@@ -82,5 +81,14 @@
     cursor: grab;
     z-index: 10;
     padding: 5px;
+  } */
+
+  .transcript-component {
+    height: 55%;
+    width: 100%;
+    color: white;
+    background-color: rgb(37, 95, 184);
+    border-radius: 5px;
+    overflow: auto;
   }
 }

@@ -1,4 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+// ac
+import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaActionCreator';
 
 // mui
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -28,16 +32,12 @@ const LanguageStatus = (props) => {
   const renderLearningLanguageStatus = () => {
     return (
       <div>
-        <Card sx={{ height: '100%' }}>
-          <CardContent>
-            <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-              Learnning
-            </Typography>
-            <Typography variant='h6' component='div'>
-              {props.countLearningLangLength} words
-            </Typography>
-          </CardContent>
-        </Card>
+        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+          Learnning
+        </Typography>
+        <Typography variant='h6' component='div'>
+          {props.countLearningLangLength} words
+        </Typography>
       </div>
     );
   };
@@ -45,19 +45,21 @@ const LanguageStatus = (props) => {
   const renderNativeLanguageStatus = () => {
     return (
       <div>
-        <Card sx={{ height: '100%' }}>
-          <CardContent>
-            <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-              Native
-            </Typography>
-            <Typography variant='h6' component='div'>
-              {props.countNativeLangLength} words
-            </Typography>
-          </CardContent>
-        </Card>
+        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+          Native
+        </Typography>
+        <Typography variant='h6' component='div'>
+          {props.countNativeLangLength} words
+        </Typography>
       </div>
     );
   };
+
+  const switchLanguage = () => {
+    //言語を切り替えたら、自動でoffになる。
+    props.switchCurrentLanguageActionCreator1(props.socket);
+  };
+
   return (
     <div className='language-status-wrapper'>
       <div className='language-status'>
@@ -69,7 +71,7 @@ const LanguageStatus = (props) => {
           <Button
             variant='contained'
             startIcon={<TranslateOutlinedIcon />}
-            // onClick={() => props.setOpenLanguageStatusAndTranscript(true)}
+            onClick={() => switchLanguage()}
             sx={{
               height: { xxs: '20px', xs: '20px', sm: '30px', md: '30px', lg: '40px' },
               fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '14px', lg: '16px' },
@@ -83,4 +85,4 @@ const LanguageStatus = (props) => {
   );
 };
 
-export default LanguageStatus;
+export default connect(null, { switchCurrentLanguageActionCreator1 })(LanguageStatus);
