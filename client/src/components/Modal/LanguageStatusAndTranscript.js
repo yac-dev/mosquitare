@@ -35,15 +35,22 @@ const LanguageStatusAndTranscript = (props) => {
   };
 
   return (
-    <Draggable onDrag={handleDrag} cancel='.close-button'>
+    <Draggable
+      onDrag={handleDrag}
+      cancel='.language-status-and-transcript-close-button, .language-status-wrapper, .transcript-component '
+    >
       <div className={`language-status-and-transcript ${props.openLanguageStatusAndTranscript ? undefined : 'hidden'}`}>
         <div className='language-status-and-transcript-header'>
           <p>Status&#38;Transcript</p>
-          <div className='close-button' onClick={() => props.setOpenLanguageStatusAndTranscript(false)}>
+          <div
+            className='language-status-and-transcript-close-button'
+            onClick={() => props.setOpenLanguageStatusAndTranscript(false)}
+          >
             <i className='fa fa-close' style={{ fontSize: '12px', color: 'white' }}></i>
           </div>
         </div>
         <LanguageStatus
+          socket={props.socket}
           countLearningLangLength={props.countLearningLangLength}
           countNativeLangLength={props.countNativeLangLength}
         />

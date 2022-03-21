@@ -31,7 +31,7 @@ const theme = createTheme({
 const LanguageStatus = (props) => {
   const renderLearningLanguageStatus = () => {
     return (
-      <div>
+      <div className='learning-lang-wrapper'>
         <Typography sx={{ mb: 1.5 }} color='text.secondary'>
           Learnning
         </Typography>

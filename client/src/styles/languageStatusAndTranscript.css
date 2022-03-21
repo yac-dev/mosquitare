@@ -9,7 +9,6 @@
     right: 10px;
     z-index: 10;
     border-radius: 5px;
-    border: 1px solid white;
     padding: 5px;
     cursor: grab;
   }
@@ -17,6 +16,7 @@
   .language-status-and-transcript-header {
     height: 5%;
     width: 100%;
+    margin-bottom: 5px;
     display: flex;
     justify-content: space-between;
   }
@@ -44,6 +44,7 @@
   .language-status-and-transcript-header {
     height: 5%;
     width: 100%;
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
   }

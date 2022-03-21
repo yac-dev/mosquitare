@@ -16,7 +16,9 @@
   }
 
   .chat-header {
-    height: 10%;
+    height: 5%;
+    width: 100%;
+    margin-bottom: 5px;
     display: flex;
     justify-content: space-between;
   }
@@ -35,7 +37,9 @@
     overflow: auto;
     height: 80%;
     /* // border: 1px solid white; */
+    border-radius: 5px;
     background-color: rgb(37, 95, 184);
+    margin-bottom: 5px;
   }
 
   .input-and-send {
@@ -102,11 +106,24 @@
   }
 
   .chat-header {
-    height: 10%;
+    height: 5%;
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
   }
 
   .chat-title {
     margin-left: 15px;
+  }
+
+  .chats {
+    overflow: auto;
+    height: 80%;
+    /* // border: 1px solid white; */
+    border-radius: 5px;
+    background-color: rgb(37, 95, 184);
+    margin-bottom: 10px;
   }
 
   .input-and-send {

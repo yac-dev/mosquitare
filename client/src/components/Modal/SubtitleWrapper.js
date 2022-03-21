@@ -335,7 +335,7 @@ const SubtitleWrapper = (props) => {
           className='transcripts'
           style={{ overflow: 'auto', height: '90%', padding: '5px', backgroundColor: 'rgb(37, 95, 184)' }}
         > */}
-        <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp;
+        {/* <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp; */}
         {/* {renderSwitchLangButton()} */}
         {renderTranscripts()}
         {renderPartnerInterimTranscript()}

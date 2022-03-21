@@ -108,13 +108,13 @@ const theme = createTheme({
 
 const actions = [
   { icon: <SendIcon />, name: 'Chat', operation: 'Chat', color: 'rgb(52, 173, 0)', hoverColor: 'rgb(66, 219, 0)' },
-  {
-    icon: <RecordVoiceOverIcon />,
-    name: 'Transcript',
-    operation: 'Transcript',
-    color: ' rgb(219, 219, 18)',
-    hoverColor: 'rgb(252, 252, 3)',
-  },
+  // {
+  //   icon: <RecordVoiceOverIcon />,
+  //   name: 'Transcript',
+  //   operation: 'Transcript',
+  //   color: ' rgb(219, 219, 18)',
+  //   hoverColor: 'rgb(252, 252, 3)',
+  // },
   {
     icon: <PortraitIcon />,
     name: 'Your Screen',
@@ -136,34 +136,27 @@ const actions = [
     color: 'rgb(189, 8, 62)',
     hoverColor: 'rgb(235, 38, 96)',
   },
-  {
-    icon: <GTranslateIcon />,
-    name: 'Google Translate (Sorry, not available now.)',
-    operation: 'GTranslate',
-    color: 'rgb(38, 189, 235)',
-    hoverColor: 'rgb(0, 195, 255)',
-  },
-  {
-    icon: <TextSnippetIcon />,
-    name: 'Cheat Sheet (Sorry, not available now.)',
-    operation: 'CheatSheet',
-    color: 'rgb(225, 234, 237)',
-    hoverColor: 'rgb(255, 255, 255)',
-  },
-  {
-    icon: <BorderColorIcon />,
-    name: 'Whiteboard Share (Sorry, not available now.)',
-    operation: 'WhiteboardShare',
-    color: 'rgb(196, 99, 39)',
-    hoverColor: 'rgb(237, 112, 33)',
-  },
-  {
-    icon: <CurrencyExchangeIcon />,
-    name: 'Currency Calculator (Sorry, not available now.)',
-    operation: 'CurrencyCalculator',
-    color: 'rgb(106, 204, 27)',
-    hoverColor: 'rgb(119, 235, 26)',
-  },
+  // {
+  //   icon: <GTranslateIcon />,
+  //   name: 'Google Translate (Sorry, not available now.)',
+  //   operation: 'GTranslate',
+  //   color: 'rgb(38, 189, 235)',
+  //   hoverColor: 'rgb(0, 195, 255)',
+  // },
+  // {
+  //   icon: <TextSnippetIcon />,
+  //   name: 'Cheat Sheet (Sorry, not available now.)',
+  //   operation: 'CheatSheet',
+  //   color: 'rgb(225, 234, 237)',
+  //   hoverColor: 'rgb(255, 255, 255)',
+  // },
+  // {
+  //   icon: <BorderColorIcon />,
+  //   name: 'Whiteboard Share (Sorry, not available now.)',
+  //   operation: 'WhiteboardShare',
+  //   color: 'rgb(196, 99, 39)',
+  //   hoverColor: 'rgb(237, 112, 33)',
+  // },
 ];
 
 // const useStyles = makeStyles({
@@ -174,7 +167,7 @@ const actions = [
 
 const VideosWrapper = (props) => {
   const [open, setOpen] = useState(false);
-  const [direction, setDirection] = useState('left');
+  const [direction, setDirection] = useState('down');
   const [openMyScreen, setOpenMyScreen] = useState(false);
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
   // const classes = useStyles();
@@ -272,6 +265,7 @@ const VideosWrapper = (props) => {
     setDeltaPosition({ ...deltaPosition, x: x + ui.deltaX, y: y + ui.deltaY });
   };
 
+  // Are you absolutely sure you want to finish this conversation?
   return (
     <>
       <div className='videos-wrapper'>
@@ -284,54 +278,65 @@ const VideosWrapper = (props) => {
             <video className='myvideo' playsInline muted ref={myVideoRef} autoPlay />
           </div>
         </Draggable>
+        <ThemeProvider theme={theme}>
+          <SpeedDial
+            ariaLabel='SpeedDial controlled open example'
+            sx={{
+              position: 'absolute',
+              top: { xxs: '0px', xs: '5px', sm: '10px', md: '20px', lg: '20px' },
+              left: { xxs: '0px', xs: '5px', sm: '10px', md: '20px', lg: '20px' },
+            }}
+            icon={<WidgetsIcon />}
+            onClose={handleClose}
+            onOpen={handleOpen}
+            open={open}
+            direction={direction}
+            FabProps={{
+              // sx: {
+              //   bgcolor: 'rgb(110, 209, 33)',
+              //   '&:hover': {
+              //     bgcolor: 'rgb(145, 237, 74)',
+              //   },
+              // },
+              size: 'small',
+            }}
+          >
+            {actions.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                // tooltipOpen
+                FabProps={{
+                  sx: {
+                    bgcolor: action.color,
+                    '&:hover': {
+                      bgcolor: action.hoverColor,
+                    },
+                  },
+                }}
+                onClick={(event) => onWidgetIconClick(event, action.operation)}
+              />
+            ))}
+          </SpeedDial>
+        </ThemeProvider>
 
-        <div className='buttons-wrapper' style={{ position: 'absolute', top: 20, right: 20 }}>
+        <div className='buttons-wrapper'>
           <Stack direction={'row'} spacing={3} alignItems='baseline'>
             {/* <Tooltip title='Check Status!!'>
               <SwitchLangIconButton onClick={() => props.setOpenLanguageStatus(true)}>
                 <TranslateOutlinedIcon style={{ color: 'white' }} />
               </SwitchLangIconButton>
             </Tooltip> */}
-            <SpeedDial
-              ariaLabel='SpeedDial controlled open example'
-              // sx={{ position: 'absolute', top: 20, left: 20 }}
-              icon={<WidgetsIcon />}
-              onClose={handleClose}
-              onOpen={handleOpen}
-              open={open}
-              direction={direction}
-              // FabProps={{
-              //   sx: {
-              //     bgcolor: 'rgb(110, 209, 33)',
-              //     '&:hover': {
-              //       bgcolor: 'rgb(145, 237, 74)',
-              //     },
-              //   },
-              // }}
-            >
-              {actions.map((action) => (
-                <SpeedDialAction
-                  key={action.name}
-                  icon={action.icon}
-                  tooltipTitle={action.name}
-                  // tooltipOpen
-                  FabProps={{
-                    sx: {
-                      bgcolor: action.color,
-                      '&:hover': {
-                        bgcolor: action.hoverColor,
-                      },
-                    },
-                  }}
-                  onClick={(event) => onWidgetIconClick(event, action.operation)}
-                />
-              ))}
-            </SpeedDial>
-            <Tooltip title='Finish Call'>
-              <LogoutIconButton onClick={() => onHangUpClick()}>
-                <LogoutIcon size='large' style={{ color: 'white' }} />
-              </LogoutIconButton>
-            </Tooltip>
+            <ThemeProvider theme={theme}>
+              <Tooltip title='Finish Call'>
+                <LogoutIconButton onClick={() => onHangUpClick()}>
+                  <LogoutIcon
+                    sx={{ color: 'white', fontSize: { xxs: '15px', xs: '15px', sm: '20px', md: '20px', lg: '20px' } }}
+                  />
+                </LogoutIconButton>
+              </Tooltip>
+            </ThemeProvider>
             {/* <Tooltip title='Volume'>
               <MicIconButton>
                 <MicIcon size='large' />
@@ -349,12 +354,13 @@ const VideosWrapper = (props) => {
                 variant='contained'
                 startIcon={<RecordVoiceOverIcon />}
                 onClick={() => props.setOpenLanguageStatusAndTranscript(true)}
+                disableRipple
                 sx={{
                   height: { xxs: '30px', xs: '30px', sm: '40px', md: '40px', lg: '40px' },
                   fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '16px', lg: '16px' },
                 }}
               >
-                {`Speaking ${props.mediaState.currentLanguage.name} ...`}
+                {`Let&lsquo;s talk in ${props.mediaState.currentLanguage.name} ! `}
               </Button>
             </Tooltip>
           </ThemeProvider>

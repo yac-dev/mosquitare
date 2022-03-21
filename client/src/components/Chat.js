@@ -210,9 +210,9 @@ const Chat = (props) => {
   };
 
   return (
-    <Draggable onDrag={handleDrag} cancel='.input-and-send, .chat-close-button'>
+    <Draggable onDrag={handleDrag} cancel='.chat-close-button, .input-and-send .chats'>
       <div
-        className={`chat-component ${props.openChatComponent === true ? undefined : 'hidden'}`}
+        className={`chat-component ${props.openChatComponent ? undefined : 'hidden'}`}
         // style={{
         //   color: 'white',
         //   backgroundColor: 'rgb(29, 49, 79)',
@@ -228,18 +228,16 @@ const Chat = (props) => {
       >
         <div className='chat-header'>
           {/* <Stack direction='row' justifyContent='space-between' alignItems='baseline'> */}
-          <div className='chat-title'>Chat</div>
-          <div className='chat-close-button'>
-            <CloseIconButton onClick={() => props.setOpenChatComponent(false)}>
-              <CloseIcon size='large' />
-            </CloseIconButton>
+          <p>Chat</p>
+          <div className='chat-close-button' onClick={() => props.setOpenChatComponent(false)}>
+            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white', cursor: 'pointer' }}></i>
           </div>
           {/* </Stack> */}
         </div>
         {renderChats()}
         <div className='input-and-send'>
           <Input
-            icon={<Icon name='paper plane' onClick={() => sendChat()} />}
+            icon={<Icon name='paper plane' onClick={() => sendChat()} style={{ cursor: 'pointer' }} />}
             placeholder='Message...'
             onChange={(event) => setInputText(event.target.value)}
             onKeyDown={(event) => sendChatByKeyDownEnter(event)}
