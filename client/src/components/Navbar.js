@@ -54,6 +54,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
@@ -64,6 +65,19 @@ import Login from './Signup/Login';
 
 // components
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
+
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xxs: 0, // small phone
+      xs: 320, // phone
+      sm: 768, // tablets
+      md: 992, // small laptop
+      lg: 1200, // desktop
+      // xl: 1536, // large screens
+    },
+  },
+});
 
 const Navbar = (props) => {
   const [anchorElForUserMenu, setAnchorElForUserMenu] = useState(null);
@@ -358,56 +372,51 @@ const Navbar = (props) => {
     } else {
       return (
         <>
-          <Box sx={{ flexGrow: 1 }}>
-            <AppBar
-              // position='fixed'
-              position='static'
-              color='transparent'
-              style={{ background: 'transparent ', boxShadow: 'none' }}
-            >
-              <Toolbar>
-                <IconButton
-                  size='large'
-                  edge='start'
-                  color='inherit'
-                  aria-label='open drawer'
-                  sx={{ mr: 2, color: 'white' }}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography
-                  variant='h6'
-                  noWrap
-                  component='div'
-                  sx={{ display: { xs: 'none', sm: 'block' }, color: 'white' }}
-                >
-                  Lampost&nbsp;
-                  {renderExploreAndSearchIcon()}
-                </Typography>
-                <Box sx={{ flexGrow: 1 }} />
-                <Box sx={{ display: { xs: 'none', md: 'flex' }, color: 'white' }}>
-                  {/* {renderSignupAndLogin()} */}
-                  {renderToolIconButtons()}
-                </Box>
-                {/* ここのBoxってなんだろな。。。 */}
-                <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                  <IconButton
-                    size='large'
-                    aria-label='show more'
-                    aria-controls={mobileMenuId}
-                    aria-haspopup='true'
-                    onClick={handleMobileMenuOpen}
-                    color='inherit'
+          <ThemeProvider theme={theme}>
+            <Box sx={{ flexGrow: 1 }}>
+              <AppBar
+                // position='fixed'
+                position='static'
+                color='transparent'
+                style={{ background: 'rgb(0, 30, 60)', boxShadow: 'none' }}
+              >
+                <Toolbar>
+                  <Typography variant='h6' noWrap component='div' sx={{ display: 'block', color: 'white' }}>
+                    Lampost&nbsp;
+                  </Typography>
+                  <Box
+                    sx={{ display: { xxs: 'none', xs: 'none', sm: 'flex', md: 'flex', lg: 'flex' }, color: 'white' }}
                   >
-                    <MoreIcon />
-                  </IconButton>
-                </Box>
-              </Toolbar>
-            </AppBar>
-            {renderMobileMenu}
-            {renderUserMenu}
-            {renderGroupMenu}
-          </Box>
+                    {renderExploreAndSearchIcon()}
+                  </Box>
+                  <Box sx={{ flexGrow: 1 }} />
+                  <Box
+                    sx={{ display: { xxs: 'none', xs: 'none', sm: 'flex', md: 'flex', lg: 'flex' }, color: 'white' }}
+                  >
+                    {/* {renderSignupAndLogin()} */}
+                    {renderToolIconButtons()}
+                  </Box>
+                  {/* ここのBoxってなんだろな。。。 */}
+                  <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
+                    <IconButton
+                      size='large'
+                      aria-label='show more'
+                      aria-controls={mobileMenuId}
+                      aria-haspopup='true'
+                      onClick={handleMobileMenuOpen}
+                      color='inherit'
+                      sx={{ color: 'white' }}
+                    >
+                      <MenuIcon />
+                    </IconButton>
+                  </Box>
+                </Toolbar>
+              </AppBar>
+              {renderMobileMenu}
+              {renderUserMenu}
+              {renderGroupMenu}
+            </Box>
+          </ThemeProvider>
           <SignupWrapper showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
           <Login showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />
         </>

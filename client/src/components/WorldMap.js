@@ -325,7 +325,7 @@ const WorldMap = (props) => {
               setUserInfo={setUserInfo}
               setShowSwipeable={setShowSwipeable}
             />
-            {showSwipeable ? (
+            {showSwipeable && !props.mediaState.callAccepted ? (
               <SwipeableUserDetail
                 socket={socket}
                 userInfo={userInfo}
@@ -365,7 +365,7 @@ const WorldMap = (props) => {
               setUserInfo={setUserInfo}
               setShowSwipeable={setShowSwipeable}
             />
-            {showSwipeable ? (
+            {showSwipeable && !props.mediaState.callAccepted ? (
               <SwipeableUserDetail
                 socket={socket}
                 userInfo={userInfo}

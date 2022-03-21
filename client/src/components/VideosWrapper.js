@@ -360,7 +360,7 @@ const VideosWrapper = (props) => {
                   fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '16px', lg: '16px' },
                 }}
               >
-                {`Let&lsquo;s talk in ${props.mediaState.currentLanguage.name} ! `}
+                {`Let's talk in ${props.mediaState.currentLanguage.name} ! `}
               </Button>
             </Tooltip>
           </ThemeProvider>
