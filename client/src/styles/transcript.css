@@ -3,8 +3,9 @@
 } */
 
 /* iphone */
-@media only screen and (orientation: landscape) and (min-width: 320px) and (max-width: 767px) {
-  .transcript-component {
+/* and (orientation: landscape) */
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  /* .transcript-component {
     color: white;
     background-color: rgb(29, 49, 79);
     border-radius: 5px;
@@ -17,6 +18,16 @@
     cursor: grab;
     z-index: 10;
     padding: 5px;
+  } */
+
+  .transcript-component {
+    height: 60%;
+    width: 100%;
+    color: white;
+    /* background-color: rgb(29, 49, 79); */
+    background-color: red;
+    border-radius: 5px;
+    overflow: auto;
   }
 }
 

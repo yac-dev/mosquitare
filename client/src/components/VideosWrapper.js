@@ -17,6 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/system';
 import { makeStyles } from '@mui/styles';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
 // import SpeedDialIcon from '@mui/material/SpeedDialIcon';
@@ -92,6 +93,19 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xxs: 0, // small phone
+      xs: 320, // phone
+      sm: 768, // tablets
+      md: 992, // small laptop
+      lg: 1200, // desktop
+      // xl: 1536, // large screens
+    },
+  },
+});
+
 const actions = [
   { icon: <SendIcon />, name: 'Chat', operation: 'Chat', color: 'rgb(52, 173, 0)', hoverColor: 'rgb(66, 219, 0)' },
   {
@@ -160,7 +174,7 @@ const actions = [
 
 const VideosWrapper = (props) => {
   const [open, setOpen] = useState(false);
-  const [direction, setDirection] = useState('right');
+  const [direction, setDirection] = useState('left');
   const [openMyScreen, setOpenMyScreen] = useState(false);
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
   // const classes = useStyles();
@@ -262,7 +276,7 @@ const VideosWrapper = (props) => {
     <>
       <div className='videos-wrapper'>
         <video className='partner-video' playsInline ref={oppositeVideoRef} autoPlay />
-        <Draggable onDrag={handleDrag}>
+        <Draggable onDrag={handleDrag} cancel='.btn'>
           <div className={`myvideo-wrapper ${openMyScreen ? undefined : 'hidden'}`}>
             <CloseIconButton onClick={() => setOpenMyScreen(false)}>
               <CloseIcon size='large' />
@@ -270,49 +284,49 @@ const VideosWrapper = (props) => {
             <video className='myvideo' playsInline muted ref={myVideoRef} autoPlay />
           </div>
         </Draggable>
-        <SpeedDial
-          ariaLabel='SpeedDial controlled open example'
-          sx={{ position: 'absolute', top: 20, left: 20 }}
-          icon={<WidgetsIcon />}
-          onClose={handleClose}
-          onOpen={handleOpen}
-          open={open}
-          direction={direction}
-          // FabProps={{
-          //   sx: {
-          //     bgcolor: 'rgb(110, 209, 33)',
-          //     '&:hover': {
-          //       bgcolor: 'rgb(145, 237, 74)',
-          //     },
-          //   },
-          // }}
-        >
-          {actions.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              // tooltipOpen
-              FabProps={{
-                sx: {
-                  bgcolor: action.color,
-                  '&:hover': {
-                    bgcolor: action.hoverColor,
-                  },
-                },
-              }}
-              onClick={(event) => onWidgetIconClick(event, action.operation)}
-            />
-          ))}
-        </SpeedDial>
+
         <div className='buttons-wrapper' style={{ position: 'absolute', top: 20, right: 20 }}>
           <Stack direction={'row'} spacing={3} alignItems='baseline'>
-            <Tooltip title='Check Status!!'>
-              {/* variant='contained' */}
+            {/* <Tooltip title='Check Status!!'>
               <SwitchLangIconButton onClick={() => props.setOpenLanguageStatus(true)}>
                 <TranslateOutlinedIcon style={{ color: 'white' }} />
               </SwitchLangIconButton>
-            </Tooltip>
+            </Tooltip> */}
+            <SpeedDial
+              ariaLabel='SpeedDial controlled open example'
+              // sx={{ position: 'absolute', top: 20, left: 20 }}
+              icon={<WidgetsIcon />}
+              onClose={handleClose}
+              onOpen={handleOpen}
+              open={open}
+              direction={direction}
+              // FabProps={{
+              //   sx: {
+              //     bgcolor: 'rgb(110, 209, 33)',
+              //     '&:hover': {
+              //       bgcolor: 'rgb(145, 237, 74)',
+              //     },
+              //   },
+              // }}
+            >
+              {actions.map((action) => (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                  // tooltipOpen
+                  FabProps={{
+                    sx: {
+                      bgcolor: action.color,
+                      '&:hover': {
+                        bgcolor: action.hoverColor,
+                      },
+                    },
+                  }}
+                  onClick={(event) => onWidgetIconClick(event, action.operation)}
+                />
+              ))}
+            </SpeedDial>
             <Tooltip title='Finish Call'>
               <LogoutIconButton onClick={() => onHangUpClick()}>
                 <LogoutIcon size='large' style={{ color: 'white' }} />
@@ -325,16 +339,26 @@ const VideosWrapper = (props) => {
             </Tooltip> */}
           </Stack>
         </div>
-        {/* <div
-          className='switch-button'
-          style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translate(-50%, -50%)' }}
-        >
-          <Tooltip title='Check Status!'>
-            <SwitchLangIconButton>
+        <div className='switch-button'>
+          <ThemeProvider theme={theme}>
+            <Tooltip title='Status and Transcript'>
+              {/* <SwitchLangIconButton>
               <TranslateOutlinedIcon style={{ color: 'white', fontSize: '30px' }} />
-            </SwitchLangIconButton>
-          </Tooltip>
-        </div> */}
+            </SwitchLangIconButton> */}
+              <Button
+                variant='contained'
+                startIcon={<RecordVoiceOverIcon />}
+                onClick={() => props.setOpenLanguageStatusAndTranscript(true)}
+                sx={{
+                  height: { xxs: '30px', xs: '30px', sm: '60px', md: 'green', lg: '80px' },
+                  fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '14px', lg: '16px' },
+                }}
+              >
+                {`Speaking ${props.mediaState.currentLanguage.name} ...`}
+              </Button>
+            </Tooltip>
+          </ThemeProvider>
+        </div>
       </div>
     </>
   );

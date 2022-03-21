@@ -9,6 +9,8 @@ import TranslateIcon from '@mui/icons-material/Translate';
 import { styled } from '@mui/system';
 import Button from '@mui/material/Button';
 
+import '../styles/languageStatus.css';
+
 // ac
 // import { updateUserMyLangsStatusActionCreator } from '../actionCreators/authActionCreators';
 import { switchCurrentLanguageActionCreator1 } from '../actionCreators/mediaActionCreator';
@@ -50,24 +52,24 @@ const LanguageStatus = (props) => {
   };
 
   return (
-    <Draggable onDrag={handleDrag}>
+    <Draggable onDrag={handleDrag} cancel='.CloseButton'>
       <div
-        className={`language ${props.openLanguageStatus === true ? undefined : 'hidden'}`}
-        status
-        style={{
-          position: 'absolute',
-          color: 'white',
-          backgroundColor: 'rgb(29, 49, 79)',
-          height: '40vh',
-          width: '20vw',
-          borderRadius: '5px',
-          top: '80px',
-          right: '50px',
-          cursor: 'grab',
-          zIndex: 10,
-        }}
+        className={`language-status ${props.openLanguageStatus === true ? undefined : 'hidden'}`}
+
+        // style={{
+        //   position: 'absolute',
+        //   color: 'white',
+        //   backgroundColor: 'rgb(29, 49, 79)',
+        //   height: '40vh',
+        //   width: '20vw',
+        //   borderRadius: '5px',
+        //   top: '80px',
+        //   right: '50px',
+        //   cursor: 'grab',
+        //   zIndex: 10,
+        // }}
       >
-        <CloseIconButton onClick={() => props.setOpenLanguageStatus(false)}>
+        <CloseIconButton onClick={() => props.setOpenLanguageStatus(false)} className='CloseButton'>
           <CloseIcon />
         </CloseIconButton>
         <div>Your Language Status</div>

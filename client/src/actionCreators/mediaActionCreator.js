@@ -119,7 +119,25 @@ export const callActionCreator =
     // console.log(startLanguage);
     console.log(exchangingLanguages);
 
-    const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
+    const peerInitiator = new Peer({
+      initiator: true,
+      stream: myVideoStreamObject,
+      trickle: false,
+      config: {
+        iceServers: [
+          {
+            urls: 'stun:numb.viagenie.ca',
+            username: 'sultan1640@gmail.com',
+            credential: '98376683',
+          },
+          {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'sultan1640@gmail.com',
+            credential: '98376683',
+          },
+        ],
+      },
+    });
     dispatch({
       type: HOLD_MY_INITIATED_PEER,
       payload: peerInitiator,
@@ -200,7 +218,37 @@ export const answerCallActionCreator2 =
     const recieverUserInfo = getState().authState.currentUser;
 
     const { whoIsCalling } = getState().mediaState;
-    const peerReciever = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
+    const peerReciever = new Peer({
+      initiator: false,
+      stream: myVideoStreamObject,
+      trickle: false,
+      config: {
+        iceServers: [
+          {
+            urls: 'stun:numb.viagenie.ca',
+            username: 'sultan1640@gmail.com',
+            credential: '98376683',
+          },
+          {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'sultan1640@gmail.com',
+            credential: '98376683',
+          },
+        ],
+      },
+      // config: {
+      //   iceServers: [
+      //     {
+      //       url: 'stun:stun.l.google.com:19302',
+      //     },
+      //     {
+      //       url: 'turn:18.191.241.72:3478',
+      //       username: 'yosukekoji',
+      //       credential: '123456',
+      //     },
+      //   ],
+      // },
+    });
     dispatch({
       type: HOLD_MY_INITIATED_PEER,
       payload: peerReciever,

@@ -5,7 +5,10 @@ import { AWS_S3BUCKET_NAME, AWS_S3BUCKET_REGION, AWS_S3BUCKET_ACCESS_KEY, AWS_S3
 import UserMedia from '../models/userMedia';
 import Conversation from '../models/conversation';
 import { exec } from 'child_process';
+import ffmpegP from '@ffmpeg-installer/ffmpeg';
 import ffmpeg from 'fluent-ffmpeg';
+const ffmpegPath = ffmpegP.path;
+ffmpeg.setFfmpegPath(ffmpegPath);
 // import mpegp from '@ffmpeg-installer/ffmpeg';
 // const ffmpegPath = mpegp.path;
 // import probep from '@ffprobe-installer/ffprobe';

@@ -192,21 +192,26 @@ const SubtitleWrapper = (props) => {
   const renderTranscripts = () => {
     const transcripts = conversationTranscript.map((transcriptObject) => {
       return (
+        // <>
+        //   <div style={{ marginBottom: '5px' }}>
+        //     <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{transcriptObject.name}</p>
+        //     <div
+        //       style={{
+        //         borderRadius: '10px',
+        //         backgroundColor: 'rgb(35, 63, 105)',
+        //         border: '1px solid white',
+        //         padding: '5px',
+        //         display: 'inline',
+        //       }}
+        //     >
+        //       {transcriptObject.transcript}
+        //     </div>
+        //   </div>
+        // </>
         <>
-          <div style={{ marginBottom: '5px' }}>
-            <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{transcriptObject.name}</p>
-            <div
-              style={{
-                borderRadius: '10px',
-                backgroundColor: 'rgb(35, 63, 105)',
-                border: '1px solid white',
-                padding: '5px',
-                display: 'inline',
-              }}
-            >
-              {transcriptObject.transcript}
-            </div>
-          </div>
+          <p>
+            {transcriptObject.name}: {transcriptObject.transcript}
+          </p>
         </>
       );
     });
@@ -216,25 +221,27 @@ const SubtitleWrapper = (props) => {
   const renderPartnerInterimTranscript = () => {
     if (partnerInterimTranscript) {
       return (
+        // <>
+        //   <div style={{ marginBottom: '5px' }}>
+        //     <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{props.mediaState.callingWith.name}</p>
+        //     <div
+        //       style={{
+        //         borderRadius: '10px',
+        //         backgroundColor: 'rgb(35, 63, 105)',
+        //         border: '1px solid white',
+        //         padding: '5px',
+        //         display: 'inline',
+        //       }}
+        //     >
+        //       {partnerInterimTranscript}
+        //     </div>
+        //   </div>
+        // </>
         <>
-          <div style={{ marginBottom: '5px' }}>
-            <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{props.mediaState.callingWith.name}</p>
-            <div
-              style={{
-                borderRadius: '10px',
-                backgroundColor: 'rgb(35, 63, 105)',
-                border: '1px solid white',
-                padding: '5px',
-                display: 'inline',
-              }}
-            >
-              {partnerInterimTranscript}
-            </div>
-          </div>
+          <p>
+            {props.mediaState.callingWith.name}: {partnerInterimTranscript}
+          </p>
         </>
-        // <p>
-        //   {props.mediaState.callingWith.name}: {partnerInterimTranscript}
-        // </p>
       );
     }
   };
@@ -243,7 +250,7 @@ const SubtitleWrapper = (props) => {
     if (transcript) {
       return (
         <>
-          <div style={{ marginBottom: '5px' }}>
+          {/* <div style={{ marginBottom: '5px' }}>
             <p style={{ marginLeft: '5px', marginBottom: '2px' }}>You</p>
             <div
               style={{
@@ -256,7 +263,8 @@ const SubtitleWrapper = (props) => {
             >
               {transcript}
             </div>
-          </div>
+          </div> */}
+          <p>You: {transcript}</p>
         </>
       );
       // <p>You: {transcript}</p>;
@@ -298,7 +306,8 @@ const SubtitleWrapper = (props) => {
   return (
     <Draggable onDrag={handleDrag}>
       <div
-        className={`transcript-component ${props.openTranscriptComponent === true ? undefined : 'hidden'}`}
+        // className={`transcript-component ${props.openTranscriptComponent  ? undefined : 'hidden'}`}
+        className={'transcript-component'}
         // style={{
         //   color: 'white',
         //   backgroundColor: 'rgb(29, 49, 79)',
@@ -314,27 +323,27 @@ const SubtitleWrapper = (props) => {
         //   padding: '5px',
         // }}
       >
-        <div className='transcript-header' style={{ height: '10%' }}>
+        {/* <div className='transcript-header' style={{ height: '10%' }}>
           <Stack direction='row' justifyContent='space-between' alignItems='baseline'>
             <h3 style={{ marginLeft: '15px' }}>Transcript</h3>
             <CloseIconButton onClick={() => props.setOpenTranscriptComponent(false)}>
               <CloseIcon />
             </CloseIconButton>
           </Stack>
-        </div>
-        <div
+        </div> */}
+        {/* <div
           className='transcripts'
           style={{ overflow: 'auto', height: '90%', padding: '5px', backgroundColor: 'rgb(37, 95, 184)' }}
-        >
-          <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp;
-          {/* {renderSwitchLangButton()} */}
-          {renderTranscripts()}
-          {renderPartnerInterimTranscript()}
-          {renderMyInterimTranscript()}
-          {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
-          {/* {renderWordsLength()} */}
-        </div>
+        > */}
+        {/* <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp; */}
+        {/* {renderSwitchLangButton()} */}
+        {renderTranscripts()}
+        {renderPartnerInterimTranscript()}
+        {renderMyInterimTranscript()}
+        {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
+        {/* {renderWordsLength()} */}
       </div>
+      {/* </div> */}
     </Draggable>
   );
   // return <></>; // subtitle wrapperみたいな感じに変えるのかね。// これはどういう意図で残していたんだろう。。。

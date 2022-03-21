@@ -14,6 +14,7 @@ import VideosWrapper from '../VideosWrapper';
 import Chat from '../Chat';
 import SubtitleWrapper from './SubtitleWrapper';
 import LanguageStatus from '../LanguageStatus';
+import LanguageStatusAndTranscript from './LanguageStatusAndTranscript';
 import MyClock from '../MyClock';
 // import VerticalTabsWrapper from '../VerticalTabsWrapper';
 import AppsWrapper from '../ConversationApps/AppsWrapper';
@@ -53,6 +54,7 @@ const FullScreen1on1Modal = (props) => {
   const [openChatComponent, setOpenChatComponent] = useState(false);
   const [openTranscriptComponent, setOpenTranscriptComponent] = useState(false);
   const [openLanguageStatus, setOpenLanguageStatus] = useState(false);
+  const [openLanguageStatusAndTranscript, setOpenLanguageStatusAndTranscript] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -91,26 +93,35 @@ const FullScreen1on1Modal = (props) => {
               setOpenChatComponent={setOpenChatComponent}
               setOpenTranscriptComponent={setOpenTranscriptComponent}
               setOpenLanguageStatus={setOpenLanguageStatus}
+              setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
             />
             <Chat
               socket={props.socket}
               openChatComponent={openChatComponent}
               setOpenChatComponent={setOpenChatComponent}
             />
-            <SubtitleWrapper
+            <LanguageStatusAndTranscript
+              socket={props.socket}
+              countLearningLangLength={countLearningLangLength}
+              countNativeLangLength={countNativeLangLength}
+              setCountLearningLangLength={setCountLearningLangLength}
+              setCountNativeLangLength={setCountNativeLangLength}
+              openLanguageStatusAndTranscript={openLanguageStatusAndTranscript}
+            />
+            {/* <SubtitleWrapper
               socket={props.socket}
               openTranscriptComponent={openTranscriptComponent}
               setOpenTranscriptComponent={setOpenTranscriptComponent}
               setCountLearningLangLength={setCountLearningLangLength}
               setCountNativeLangLength={setCountNativeLangLength}
-            />
-            <LanguageStatus
+            /> */}
+            {/* <LanguageStatus
               socket={props.socket}
               countLearningLangLength={countLearningLangLength}
               countNativeLangLength={countNativeLangLength}
               openLanguageStatus={openLanguageStatus}
               setOpenLanguageStatus={setOpenLanguageStatus}
-            />
+            /> */}
             {/* <AppsWrapper /> */}
           </Modal.Body>
         </Modal>

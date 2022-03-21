@@ -30,26 +30,35 @@ const MediaRecorderComponent = (props) => {
   }, [duration]);
 
   // callAcceptedが前提。
-  useEffect(() => {
-    const stream = store.getState().mediaState.myVideoStreamObject;
-    mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
-    mediaRecorder.current.ondataavailable = (event) => {
-      props.forChunks(event.data);
-    };
-    mediaRecorder.current.onstop = (event) => {
-      const { chunks } = store.getState().mediaState;
-      blobForVideo.current = new Blob(chunks, { type: 'video/mp4;' });
-      // blobForAudio.current = new Blob(chunks, { type: 'audio/webm;codecs=opus' });
-      console.log('record stopped!!!');
-      // console.log('duration time: ', duration)
+  // useEffect(() => {
+  //   const stream = store.getState().mediaState.myVideoStreamObject;
+  //   try {
+  //     mediaRecorder.current = new MediaRecorder(
+  //       stream,
+  //       // { mimeType: 'audio/webm;codecs=opus' }
+  //       { mimeType: 'video/webm' }
+  //     );
+  //   } catch (error) {
+  //     // for iphone
+  //     mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'video/mp4' });
+  //   }
+  //   mediaRecorder.current.ondataavailable = (event) => {
+  //     props.forChunks(event.data);
+  //   };
+  //   mediaRecorder.current.onstop = (event) => {
+  //     const { chunks } = store.getState().mediaState;
+  //     blobForVideo.current = new Blob(chunks, { type: 'video/mp4;' });
+  //     // blobForAudio.current = new Blob(chunks, { type: 'audio/webm;codecs=opus' });
+  //     console.log('record stopped!!!');
+  //     // console.log('duration time: ', duration)
 
-      Promise.resolve().then(() => {
-        return props.createUserMedia(blobForVideo.current, durationRef.current);
-      });
-      // blobはglobalのstateで持っておいた方がいいかな。そういう考えも持っておこう。
-    };
-    mediaRecorder.current.start();
-  }, []);
+  //     Promise.resolve().then(() => {
+  //       return props.createUserMedia(blobForVideo.current, durationRef.current);
+  //     });
+  //     // blobはglobalのstateで持っておいた方がいいかな。そういう考えも持っておこう。
+  //   };
+  //   mediaRecorder.current.start();
+  // }, []);
 
   // hangup buttonを押すと、callDisconnectedがtrueになってここが動く
   // useEffect(() => {
@@ -58,12 +67,12 @@ const MediaRecorderComponent = (props) => {
   //   }
   // }, [props.mediaState.callDisconnected]);
 
-  useEffect(() => {
-    return () => {
-      // setIsActive(false);
-      mediaRecorder.current.stop();
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     // setIsActive(false);
+  //     mediaRecorder.current.stop();
+  //   };
+  // }, []);
 
   return <></>;
 };
