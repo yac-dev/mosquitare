@@ -7,6 +7,7 @@ import Conversation from '../models/conversation';
 import { exec } from 'child_process';
 import ffmpegP from '@ffmpeg-installer/ffmpeg';
 import ffmpeg from 'fluent-ffmpeg';
+// const { exec } = require('child_process');
 const ffmpegPath = ffmpegP.path;
 ffmpeg.setFfmpegPath(ffmpegPath);
 // import mpegp from '@ffmpeg-installer/ffmpeg';
@@ -209,6 +210,28 @@ const transcodeVideo = (firstVideoFile, secondVideoFile, conversationId) => {
   });
 };
 
+const execFFMPEG = (firstVideoFile, secondVideoFile, conversationId) => {
+  const firstVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', firstVideoFile);
+  const secondVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', secondVideoFile);
+  const blackBackImagePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'blackBack.png');
+  const outputVideoFilename = `${conversationId}-${uuidv4()}.mp4`;
+  const outoutVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', outputVideoFilename);
+  const screenShotFilename = `screenShot-${outputVideoFilename}.png`;
+  const screenShotFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer');
+  // ffmpeg -i sample.mp4 -i man.mp4 -i blackBack.png -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='© lampost.tech':x=200:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" fin2.mp4
+
+  let ffmpegCommand = `ffmpeg -i ${firstVideoFilePath} -i ${secondVideoFilePath} -i ${blackBackImagePath} -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='© lampost.tech':x=200:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" ${outoutVideoFilePath}`;
+
+  return new Promise((resolve, reject) => {
+    exec(ffmpegCommand, (err, stdout, stderr) => {
+      if (err) console.log('Error ', err);
+      else {
+        resolve(outputVideoFilename);
+      }
+    });
+  });
+};
+
 // const transcodeNew = async (filename, conversationDuration) => {
 //   return new Promise((resolve, reject) => {
 //     const pathBefore = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
@@ -293,8 +316,8 @@ export const createUserMedia = async (request, response) => {
       // 最初のこっちはきちんと動いている。
     } else {
       // 既に片方の人が先に着いている状態。だから、先に着いた側のuserMedia（まだlocalにある状況）、
-      // const minDuration = Math.min(conversation.duration[0], duration);
-      // conversation.duration[0] = minDuration;
+      const minDuration = Math.min(conversation.duration[0], duration);
+      conversation.duration[0] = minDuration; // min durationの方を格納する。まあ、ffmpegで使うわけではないけど。
       // こっからpartnerのuserMediaを引っ張ってくる。
       const userMedia = await UserMedia.create({
         user: userId,
@@ -302,7 +325,11 @@ export const createUserMedia = async (request, response) => {
       });
 
       const partnerUserMedia = await UserMedia.findById(conversation.userMedias[0]._id);
-      const files = await transcodeVideo(partnerUserMedia.videoFileName, file.filename, request.params.conversationId);
+      const outputFileName = await execFFMPEG(
+        partnerUserMedia.videoFileName,
+        file.filename,
+        request.params.conversationId
+      );
       // partnerUserMedia.videoFileName = transcodedFilename;
       // partnerUserMedia.videoFileName = transcodedFiles.transcodedFilename;
       // partnerUserMedia.thumbnail = transcodedFiles.screenShotFilename; // 一旦コメントアウト
@@ -322,8 +349,8 @@ export const createUserMedia = async (request, response) => {
       // await partnerUserMedia.save();
       console.log('heeey, is here working????');
       // ここで、partnerのscreenshotとtranscodeされたmp4 fileがあるかの確認をしよう。
-      conversation.videoFilename = files.outputVideoFilename;
-      conversation.thumbnail = files.screenShotFilename;
+      conversation.videoFilename = outputFileName;
+      // conversation.thumbnail = files.screenShotFilename;
       conversation.userMedias.push(userMedia);
       await conversation.save();
 
@@ -341,8 +368,9 @@ export const createUserMedia = async (request, response) => {
       // await conversation.save();
       // こっからawsにあげる処理を書いていく。
       const filesToAWS = [
-        files.outputVideoFilename,
-        files.screenShotFilename,
+        // files.outputVideoFilename,
+        // files.screenShotFilename,
+        outputFileName,
         partnerUserMedia.videoFileName, //partnerのと自分のvideoもs3に保存しておく。
         file.filename,
         // transcodedFiles.transcodedFilename,

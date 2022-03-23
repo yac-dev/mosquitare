@@ -70,14 +70,14 @@ const LanguageStatus = (props) => {
         <ThemeProvider theme={theme}>
           <Button
             variant='contained'
-            startIcon={<TranslateOutlinedIcon />}
+            // startIcon={<TranslateOutlinedIcon />}
             onClick={() => switchLanguage()}
             sx={{
               height: { xxs: '20px', xs: '20px', sm: '30px', md: '30px', lg: '40px' },
               fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '14px', lg: '16px' },
             }}
           >
-            Switch?
+            Switch Language?
           </Button>
         </ThemeProvider>
       </div>

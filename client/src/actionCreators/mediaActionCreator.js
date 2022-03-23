@@ -643,25 +643,25 @@ export const recieveSwitchingLanguageRequestActionCreator1 = (switchingLanguage)
 };
 
 // もう使わない。
-// export const sendBlobSizeToMyPartnerActionCreator = (socket, blobSize) => (dispatch, getState) => {
-//   try {
-//     // const blobSize = getState();
-//     const partnerSocketId = getState().mediaState.callingWith.socketId;
-//     socket.emit(OUR_BLOB_SIZE_SHOULD_BE_THIS, { to: partnerSocketId, blobSize });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+export const sendBlobSizeToMyPartnerActionCreator = (socket, blobSize) => (dispatch, getState) => {
+  try {
+    // const blobSize = getState();
+    const partnerSocketId = getState().mediaState.callingWith.socketId;
+    socket.emit(OUR_BLOB_SIZE_SHOULD_BE_THIS, { to: partnerSocketId, blobSize });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-// export const getBlobSizeFromPartnerActionCreator = (socket) => (dispatch, getState) => {
-//   try {
-//     socket.on('I_GOT_BLOB_SIZE_FROM_MY_PARTNER', (dataFromServer) => {
-//       dispatch({
-//         type: 'GET_BLOBSIZE',
-//         payload: dataFromServer.blobSize,
-//       });
-//     });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
+export const getBlobSizeFromPartnerActionCreator = (socket) => (dispatch, getState) => {
+  try {
+    socket.on('I_GOT_BLOB_SIZE_FROM_MY_PARTNER', (dataFromServer) => {
+      dispatch({
+        type: 'GET_BLOBSIZE',
+        payload: dataFromServer.blobSize,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
