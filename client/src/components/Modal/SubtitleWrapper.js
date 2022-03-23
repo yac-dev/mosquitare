@@ -160,7 +160,7 @@ const SubtitleWrapper = (props) => {
     return () => {
       console.log('subtitle after finishing should work');
       SpeechRecognition.stopListening();
-      // props.createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
+      props.createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
     };
   }, []);
   // useEffect(() => {

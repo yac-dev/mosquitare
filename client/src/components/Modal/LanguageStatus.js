@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
 // ac
 import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaActionCreator';
+import { updateUserMyLangsStatusActionCreator } from '../../actionCreators/authActionCreators';
 
 // mui
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -29,6 +30,12 @@ const theme = createTheme({
 });
 
 const LanguageStatus = (props) => {
+  useEffect(() => {
+    return () => {
+      props.updateUserMyLangsStatusActionCreator(props.countLearningLangLength, props.countNativeLangLength);
+    };
+  }, []);
+
   const renderLearningLanguageStatus = () => {
     return (
       <div className='learning-lang-wrapper'>

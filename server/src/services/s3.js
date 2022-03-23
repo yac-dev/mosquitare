@@ -45,7 +45,7 @@ export const uploadScriptFile = async (file) => {
   };
 
   await s3.upload(uploadParams).promise();
-  // await unlinkFile(file.path);
+  await unlinkFile(file.path);
 };
 
 // keyっていうか、単純にfile名のことね。
