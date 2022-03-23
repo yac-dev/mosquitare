@@ -47,6 +47,7 @@ const userSchema = new mongoose.Schema({
     },
   ],
   myLangsStatus: [Number],
+  langsStatusHistory: [[Number]],
   nationalities: [
     {
       type: mongoose.Schema.ObjectId,

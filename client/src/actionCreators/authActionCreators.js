@@ -154,21 +154,40 @@ export const updateUserConversationsActionCreator = () => async (dispatch, getSt
 export const updateUserMyLangsStatusActionCreator =
   (learningLangLength, nativeLangLength) => async (dispatch, getState) => {
     try {
-      const languageAndLengthTable = { learningLang: {}, nativeLang: {} };
+      // const languageAndLengthTable = { learningLang: {}, nativeLang: {} };
+      // let countTable = {};
+      // 基本、index0にlearning langのidが来るようにする。
+      let countDatas = [{}, {}];
       const userId = getState().authState.currentUser._id;
       const { exchangingLanguages } = getState().mediaState;
       if (getState().mediaState.amICalling) {
-        languageAndLengthTable['learningLang']['_id'] = exchangingLanguages[0]._id;
-        languageAndLengthTable['learningLang']['length'] = learningLangLength;
-        languageAndLengthTable['nativeLang']['_id'] = exchangingLanguages[1]._id;
-        languageAndLengthTable['nativeLang']['length'] = nativeLangLength;
+        // const learningLanguageId = exchangingLanguages[0]._id;
+        // const nativeLanguageId = exchangingLanguages[1]._id;
+        // countTable[learningLanguageId] = learningLangLength;
+        // countTable[nativeLanguageId] = nativeLangLength;
+        countDatas[0]['id'] = exchangingLanguages[0]._id;
+        countDatas[0]['length'] = learningLangLength;
+        countDatas[1]['id'] = exchangingLanguages[1]._id;
+        countDatas[1]['length'] = nativeLangLength;
+        // languageAndLengthTable['learningLang']['_id'] = exchangingLanguages[0]._id;
+        // languageAndLengthTable['learningLang']['length'] = learningLangLength;
+        // languageAndLengthTable['nativeLang']['_id'] = exchangingLanguages[1]._id;
+        // languageAndLengthTable['nativeLang']['length'] = nativeLangLength;
       } else if (getState().mediaState.amIRecieving) {
-        languageAndLengthTable['nativeLang']['_id'] = exchangingLanguages[0]._id;
-        languageAndLengthTable['nativeLang']['length'] = nativeLangLength;
-        languageAndLengthTable['learningLang']['_id'] = exchangingLanguages[1]._id;
-        languageAndLengthTable['learningLang']['length'] = learningLangLength;
+        // languageAndLengthTable['nativeLang']['_id'] = exchangingLanguages[0]._id;
+        // languageAndLengthTable['nativeLang']['length'] = nativeLangLength;
+        // languageAndLengthTable['learningLang']['_id'] = exchangingLanguages[1]._id;
+        // languageAndLengthTable['learningLang']['length'] = learningLangLength;
+        // const nativeLanguageId = exchangingLanguages[0]._id;
+        // const learningLanguageId = exchangingLanguages[1]._id;
+        // countTable[learningLanguageId] = learningLangLength;
+        // countTable[nativeLanguageId] = nativeLangLength;
+        countDatas[0]['id'] = exchangingLanguages[1]._id;
+        countDatas[0]['length'] = learningLangLength;
+        countDatas[1]['id'] = exchangingLanguages[0]._id;
+        countDatas[1]['length'] = nativeLangLength;
       }
-      const result = await mosquitareAPI.patch(`/users/${userId}/langsstatus`, { languageAndLengthTable });
+      const result = await mosquitareAPI.patch(`/users/${userId}/langsstatus`, { countDatas });
       console.log(result);
     } catch (error) {
       console.log(error);
