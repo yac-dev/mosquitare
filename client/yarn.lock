@@ -2059,6 +2059,21 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.0.0.tgz#8863915676f837d9dad7b76f50cb500c1e9422e9"
   integrity sha512-2pTGuibAXJswAPJjaKisthqS/NOK5ypG4LYT6tEAV0S/mxW0zOIvYvGK0V8w8+SHxAm6vRMSjqSalFXeBAqs+Q==
 
+"@speechly/browser-client@^1.0.11":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@speechly/browser-client/-/browser-client-1.4.0.tgz#c69a12b313b77c8cf19c59b7b84be5fd677db2e3"
+  integrity sha512-5t45qGyUeedVnD+80IPC2uv5Bhd37MgCXUjpUDpDYL436RBVef3IlW8+GpWkDolV3RMpyuNrKvH/gtU6oOZHDA==
+  dependencies:
+    base-64 "^0.1.0"
+    uuid "^8.0.0"
+
+"@speechly/speech-recognition-polyfill@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@speechly/speech-recognition-polyfill/-/speech-recognition-polyfill-1.1.0.tgz#f0add2e7d19dd874c3a63119e86294e33f7624a4"
+  integrity sha512-GFzyDcqn0y0bOlo3Z8bq+lwR1GxLk3pta2hrXs6z20rV0mXxlvQDOEY3SGq1IgfvInL7CILVINCFUopl5oGozg==
+  dependencies:
+    "@speechly/browser-client" "^1.0.11"
+
 "@surma/rollup-plugin-off-main-thread@^1.1.1":
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/@surma/rollup-plugin-off-main-thread/-/rollup-plugin-off-main-thread-1.4.2.tgz#e6786b6af5799f82f7ab3a82e53f6182d2b91a58"
@@ -3432,6 +3447,11 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
+
+base-64@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
+  integrity sha1-eAqZyE59YAJgNhURxId2E78k9rs=
 
 base64-arraybuffer@~1.0.1:
   version "1.0.1"
@@ -12534,7 +12554,7 @@ uuid@^3.3.2, uuid@^3.4.0:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
 
-uuid@^8.3.0:
+uuid@^8.0.0, uuid@^8.3.0:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import store from '../../store';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { createSpeechlySpeechRecognition } from '@speechly/speech-recognition-polyfill';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 
@@ -52,6 +53,11 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
     backgroundColor: 'rgb(245, 27, 27)',
   },
 }));
+
+// const appId = '<INSERT_SPEECHLY_APP_ID_HERE>';
+const appId = process.env.REACT_APP_POLYFILL_ID_FOR_SPEECH_RECOGNITION;
+const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
+SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
 
 const SubtitleWrapper = (props) => {
   const [conversationTranscript, setConversationTranscript] = useState([]);
