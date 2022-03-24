@@ -6,7 +6,8 @@ import { createSpeechlySpeechRecognition } from '@speechly/speech-recognition-po
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 
-import { Button } from 'semantic-ui-react';
+// ac
+import TranslateTranscript from '../TranslateTranscript';
 
 // mui
 import Tooltip from '@mui/material/Tooltip';
@@ -65,7 +66,6 @@ const SubtitleWrapper = (props) => {
   const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
   const [partnerInterimTranscript, setPartnerInterimTranscript] = useState();
   const [partnerFinalTranscript, setPartnerFinalTranscript] = useState();
-  const [translated, setTranslated] = useState('');
   // const [countLearningLangLength, setCountLearningLangLength] = useState(0);
   // const [countNativeLangLength, setCountNativeLangLength] = useState(0);
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
@@ -214,33 +214,7 @@ const SubtitleWrapper = (props) => {
     setCountLangLength((previousState) => previousState + wordsLength);
   };
 
-  //AIzaSyCf0Xy0OnhxlduyEt3K8zP-sOuu-l_u6uA
-  const googleTranslate = async (input) => {
-    let targetLanguage;
-    const { currentLanguage } = props.mediaState;
-    const { exchangingLanguages } = props.mediaState; // array
-    const [lang1, lang2] = exchangingLanguages;
-    if (currentLanguage.name === lang1.name) {
-      targetLanguage = lang2;
-    } else if (currentLanguage.name === lang2.name) {
-      targetLanguage = lang1;
-    }
-
-    try {
-      const { data } = await axios.post(
-        `https://translation.googleapis.com/language/translate/v2?key=${process.env.REACT_APP_GOOGLE_TRANSLATE_KEY}`,
-        {
-          q: input,
-          target: targetLanguage.code,
-        }
-        // { cancelToken: cancelToken.token }
-      );
-      setTranslated(data.data.translations[0].translatedText);
-      // return data.data.translations[0].translatedText;
-    } catch (err) {
-      return '';
-    }
-  };
+  // steventのapi key AIzaSyCf0Xy0OnhxlduyEt3K8zP-sOuu-l_u6uA
 
   const handleDrag = (e, ui) => {
     const { x, y } = deltaPosition;
@@ -271,10 +245,7 @@ const SubtitleWrapper = (props) => {
         <>
           <p>
             {transcriptObject.name}: {transcriptObject.transcript}&nbsp;
-            <IconButton onClick={() => googleTranslate(transcriptObject.transcript)}>
-              <GTranslateIcon />
-            </IconButton>
-            {translated}
+            <TranslateTranscript translateInput={transcriptObject.transcript} />
           </p>
         </>
       );
