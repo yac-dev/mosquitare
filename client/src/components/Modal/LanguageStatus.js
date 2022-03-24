@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 
 // ac
@@ -30,11 +30,30 @@ const theme = createTheme({
 });
 
 const LanguageStatus = (props) => {
+  const countLearningLangLengthRef = useRef();
+  const countNativeLangLengthRef = useRef();
+
+  useEffect(() => {
+    countLearningLangLengthRef.current = props.countLearningLangLength;
+  }, [props.countLearningLangLength]);
+
+  useEffect(() => {
+    countNativeLangLengthRef.current = props.countNativeLangLength;
+  }, [props.countNativeLangLength]);
+
   useEffect(() => {
     return () => {
-      props.updateUserMyLangsStatusActionCreator(props.countLearningLangLength, props.countNativeLangLength);
+      console.log('language count logged!!!', props.countLearningLangLength, props.countNativeLangLength);
+      props.updateUserMyLangsStatusActionCreator(countLearningLangLengthRef.current, countNativeLangLengthRef.current);
     };
   }, []);
+
+  // useEffect(() => {
+  //   if (props.mediaState.callDisconnected) {
+  //     // ここで、promiseを分けて行うことできるかね。正直、calledUser側だけ送るのでいいよな。
+  //     props.updateUserMyLangsStatusActionCreator(props.countLearningLangLength, props.countNativeLangLength);
+  //   }
+  // }, [props.mediaState.callDisconnected]);
 
   const renderLearningLanguageStatus = () => {
     return (
@@ -92,4 +111,10 @@ const LanguageStatus = (props) => {
   );
 };
 
-export default connect(null, { switchCurrentLanguageActionCreator1 })(LanguageStatus);
+const mapStateToProps = (state) => {
+  return { mediaState: state.mediaState };
+};
+
+export default connect(mapStateToProps, { switchCurrentLanguageActionCreator1, updateUserMyLangsStatusActionCreator })(
+  LanguageStatus
+);

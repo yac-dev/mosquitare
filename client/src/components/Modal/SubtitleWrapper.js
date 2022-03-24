@@ -64,7 +64,23 @@ const SubtitleWrapper = (props) => {
   // const [countNativeLangLength, setCountNativeLangLength] = useState(0);
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
 
+  const conversationTranscriptRef = useRef();
+  const myLearningLangTranscriptRef = useRef();
+  const myNativeLangTranscriptRef = useRef();
+
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
+
+  useEffect(() => {
+    conversationTranscriptRef.current = conversationTranscript;
+  }, [conversationTranscript]);
+
+  useEffect(() => {
+    myLearningLangTranscriptRef.current = myLearningLangTranscript;
+  }, [myLearningLangTranscript]);
+
+  useEffect(() => {
+    myNativeLangTranscriptRef.current = myNativeLangTranscript;
+  }, [myNativeLangTranscript]);
 
   useEffect(() => {
     if (finalTranscript !== '') {
@@ -160,9 +176,16 @@ const SubtitleWrapper = (props) => {
     return () => {
       console.log('subtitle after finishing should work');
       SpeechRecognition.stopListening();
-      props.createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
+      console.log('transcription logged', conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
+      // props.createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
+      props.createUserScriptActionCreator(
+        conversationTranscriptRef.current,
+        myLearningLangTranscriptRef.current,
+        myNativeLangTranscriptRef.current
+      );
     };
   }, []);
+
   // useEffect(() => {
   //   if (props.mediaState.callDisconnected) {
   //     console.log('subtitle after finishing should work');
@@ -177,7 +200,7 @@ const SubtitleWrapper = (props) => {
   //     // });
   //     // ここで、文字数をapiに送ることもする。
   //   }
-  // // }, [props.mediaState.callDisconnected]);
+  // }, [props.mediaState.callDisconnected]);
 
   // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
   const countTranscriptWords = (transcript, setCountLangLength) => {
