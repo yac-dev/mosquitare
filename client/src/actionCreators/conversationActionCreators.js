@@ -6,6 +6,7 @@ import {
   GET_CONVERSATION,
   CREATE_USER_MEDIA,
   CREATE_USER_SCRIPT,
+  GET_ALL_CONVERSATIONS,
 } from './type';
 import { I_SEND_CONVERSATION_ID_TO_MY_PARTNER, MY_CALLED_USER_CREATED_CONVERSATION } from './socketEvents';
 import { hangUpCallActionCreator } from './mediaActionCreator';
@@ -204,3 +205,18 @@ export const getConversationActionCreator = (conversationId) => async (dispatch,
 //     console.log(error);
 //   }
 // };
+
+export const getAllConversationsActionCreator = () => async (dispatch, getState) => {
+  try {
+    const result = await mosquitareAPI.get('/conversations');
+
+    console.log(result.data);
+    const { allConversations } = result.data;
+    dispatch({
+      type: GET_ALL_CONVERSATIONS,
+      payload: allConversations,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -6,11 +6,6 @@
   },
   "description": "",
   "main": "index.js",
-  "nodemonConfig": {
-    "ignore": [
-      "uploadedFilesBuffer/*.json"
-    ]
-  },
   "scripts": {
     "server:development": "env-cmd -f ./config/.env.development nodemon --ignore ./uploadedFilesBuffer/ --es-module-specifier-resolution=node src/index.js",
     "production": "NODE_ENV=production node --es-module-specifier-resolution=node src/index.js",
@@ -40,7 +35,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.14"
+    "nodemon": "^2.0.15"
   },
   "type": "module"
 }

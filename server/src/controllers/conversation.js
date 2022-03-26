@@ -98,6 +98,17 @@ export const getConversation = async (request, response) => {
   }
 };
 
+export const getAllConversations = async (request, response) => {
+  try {
+    const allConversations = await Conversation.find();
+    response.status(200).json({
+      allConversations,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // export const getConversations = async(request, response) => {
 //   try{
 //     // user idを使ってarrayをとってくる感じよ。
