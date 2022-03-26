@@ -13,6 +13,7 @@ import {
   DISCONNECT_CALL,
   SWITCH_CURRENT_LANGUAGE,
   RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
+  GOT_REJECTED,
 } from '../actionCreators/type';
 
 const INITIAL_STATE = {
@@ -33,6 +34,7 @@ const INITIAL_STATE = {
   chunks: [],
   apiCallResult: 0,
   callDisconnected: false,
+  gotRejected: false,
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
@@ -110,9 +112,12 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
       };
     case CREATE_USER_MEDIA:
     case CREATE_USER_SCRIPT:
+    case 'SEND_LANGUAGE_STATUS':
       return { ...state, apiCallResult: state.apiCallResult + 1 };
     case DISCONNECT_CALL:
       return { ...state, callDisconnected: true };
+    case GOT_REJECTED:
+      return { ...state, gotRejected: true, amICalling: false };
     default:
       return state;
   }

@@ -12,6 +12,9 @@ import DoNotDisturbIcon from '@mui/icons-material/DoNotDisturb';
 import MoodBadIcon from '@mui/icons-material/MoodBad';
 import { styled } from '@mui/system';
 import HailIcon from '@mui/icons-material/Hail';
+import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 // components
 import Dimer from './Dimer';
@@ -24,6 +27,9 @@ import '../styles/userInfocardNew.css';
 
 import { answerCallActionCreator1 } from '../actionCreators/mediaActionCreator';
 import { myCallIsAcceptedActionCreator } from '../actionCreators/mediaActionCreator';
+import { rejectCallActionCreator } from '../actionCreators/mediaActionCreator';
+import { gotRejectedMyCallActionCreator } from '../actionCreators/mediaActionCreator';
+import history from '../history';
 
 const CancelButton = styled(Button)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
@@ -49,17 +55,32 @@ const CallingModal = (props) => {
     props.myCallIsAcceptedActionCreator(props.socket, props.setShowCallingModal);
   }, []);
 
+  useEffect(() => {
+    props.gotRejectedMyCallActionCreator(props.socket);
+  }, []);
+
   const handleAnswerCall = () => {
     props.setShowCallingModal(false);
     props.answerCallActionCreator1(); // これを閉じて、fullscreenまでは出た。
   };
 
+  const handleRejectCall = () => {
+    props.rejectCallActionCreator(props.socket);
+    props.setShowCallingModal(false);
+  };
+
   const switchRender = () => {
     if (props.mediaState.amICalling) {
       return (
-        <div className='dimmer-wrapper'>
-          <Dimer />
-        </div>
+        <>
+          <div className='dimmer-wrapper'>
+            <Dimer />
+            {/* <Box sx={{ display: 'flex' }}>
+              <p>Please wait till your call accepted....</p>
+              <CircularProgress />
+            </Box> */}
+          </div>
+        </>
       );
     } else if (props.mediaState.amIRecieving) {
       const { exchangingLanguages } = props.mediaState;
@@ -131,15 +152,32 @@ const CallingModal = (props) => {
     }
   };
 
+  const renderRejectedMessage = () => {
+    if (props.mediaState.gotRejected) {
+      return (
+        <>
+          <NoAccountsIcon />
+          <div style={{ color: 'black' }}>Sorry, your partner is not available now...</div>
+        </>
+      );
+    }
+  };
+
   // ここのfooterはcallingかrecievingかで分けよう。
   const renderFooter = () => {
-    if (props.mediaState.amICalling) {
+    if (props.mediaState.gotRejected) {
       return (
         <>
           <Stack direction='row' spacing={2}>
-            <CancelButton variant='contained' startIcon={<DoNotDisturbIcon />}>
-              Cancel right now
-            </CancelButton>
+            <Button
+              variant='contained'
+              onClick={() => {
+                props.setShowCallingModal(false);
+                window.location = '/worldmap'; // まあこれでいいのかね。
+              }}
+            >
+              Got it
+            </Button>
           </Stack>
         </>
       );
@@ -150,7 +188,7 @@ const CallingModal = (props) => {
             <YesButton variant='contained' startIcon={<MoodIcon />} onClick={() => handleAnswerCall()}>
               Yes, lets talk!
             </YesButton>
-            <CancelButton variant='contained' startIcon={<MoodBadIcon />}>
+            <CancelButton variant='contained' startIcon={<MoodBadIcon />} onClick={() => handleRejectCall()}>
               Sorry
             </CancelButton>
           </Stack>
@@ -158,10 +196,14 @@ const CallingModal = (props) => {
       );
     }
   };
+
   return (
     <>
       <Modal show={props.show} onHide={() => props.setShowCallingModal(false)} backdrop='static' keyboard={false}>
-        <Modal.Body bsPrefix='calling-modal-body'>{switchRender()}</Modal.Body>
+        <Modal.Body bsPrefix='calling-modal-body'>
+          {switchRender()}
+          {renderRejectedMessage()}
+        </Modal.Body>
         <Modal.Footer>{renderFooter()}</Modal.Footer>
       </Modal>
     </>
@@ -172,4 +214,9 @@ const mapStateToProps = (state) => {
   return { mediaState: state.mediaState };
 };
 
-export default connect(mapStateToProps, { answerCallActionCreator1, myCallIsAcceptedActionCreator })(CallingModal);
+export default connect(mapStateToProps, {
+  answerCallActionCreator1,
+  myCallIsAcceptedActionCreator,
+  rejectCallActionCreator,
+  gotRejectedMyCallActionCreator,
+})(CallingModal);

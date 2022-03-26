@@ -56,9 +56,9 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
 }));
 
 // const appId = '<INSERT_SPEECHLY_APP_ID_HERE>';
-const appId = process.env.REACT_APP_POLYFILL_ID_FOR_SPEECH_RECOGNITION;
-const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
-SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
+// const appId = process.env.REACT_APP_POLYFILL_ID_FOR_SPEECH_RECOGNITION;
+// const SpeechlySpeechRecognition = createSpeechlySpeechRecognition(appId);
+// SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
 
 const SubtitleWrapper = (props) => {
   const [conversationTranscript, setConversationTranscript] = useState([]);
@@ -73,6 +73,16 @@ const SubtitleWrapper = (props) => {
   const conversationTranscriptRef = useRef();
   const myLearningLangTranscriptRef = useRef();
   const myNativeLangTranscriptRef = useRef();
+
+  const transcriptsEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    transcriptsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []); // ここのdependencyね。あとで。
 
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
@@ -210,9 +220,15 @@ const SubtitleWrapper = (props) => {
 
   // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
   const countTranscriptWords = (transcript, setCountLangLength) => {
-    const wordsLength = transcript.split(' ').length;
-    setCountLangLength((previousState) => previousState + wordsLength);
+    if (store.getState().mediaState.exchangingLanguages[0].name === 'English' || 'Spanish' || 'French' || 'German') {
+      const wordsLength = transcript.split(' ').length;
+      setCountLangLength((previousState) => previousState + wordsLength);
+    } else if (store.getState().mediaState.exchangingLanguages[0].name === 'Japanese' || 'Korean' || 'Chinese') {
+      setCountLangLength((previousState) => previousState + transcript.length);
+    }
   };
+
+  const countAsianTranscriptWords = (transcript, setCountLangLength) => {};
 
   // steventのapi key AIzaSyCf0Xy0OnhxlduyEt3K8zP-sOuu-l_u6uA
 
@@ -339,26 +355,26 @@ const SubtitleWrapper = (props) => {
   };
 
   return (
-    <Draggable onDrag={handleDrag}>
-      <div
-        // className={`transcript-component ${props.openTranscriptComponent  ? undefined : 'hidden'}`}
-        className={'transcript-component'}
-        // style={{
-        //   color: 'white',
-        //   backgroundColor: 'rgb(29, 49, 79)',
-        //   borderRadius: '5px',
-        //   overflow: 'auto',
-        //   height: '80vh',
-        //   width: '40vw',
-        //   position: 'absolute',
-        //   top: '80px',
-        //   right: '50px',
-        //   cursor: 'grab',
-        //   zIndex: 10,
-        //   padding: '5px',
-        // }}
-      >
-        {/* <div className='transcript-header' style={{ height: '10%' }}>
+    // <Draggable onDrag={handleDrag}>
+    <div
+      // className={`transcript-component ${props.openTranscriptComponent  ? undefined : 'hidden'}`}
+      className={'transcript-component'}
+      // style={{
+      //   color: 'white',
+      //   backgroundColor: 'rgb(29, 49, 79)',
+      //   borderRadius: '5px',
+      //   overflow: 'auto',
+      //   height: '80vh',
+      //   width: '40vw',
+      //   position: 'absolute',
+      //   top: '80px',
+      //   right: '50px',
+      //   cursor: 'grab',
+      //   zIndex: 10,
+      //   padding: '5px',
+      // }}
+    >
+      {/* <div className='transcript-header' style={{ height: '10%' }}>
           <Stack direction='row' justifyContent='space-between' alignItems='baseline'>
             <h3 style={{ marginLeft: '15px' }}>Transcript</h3>
             <CloseIconButton onClick={() => props.setOpenTranscriptComponent(false)}>
@@ -366,20 +382,19 @@ const SubtitleWrapper = (props) => {
             </CloseIconButton>
           </Stack>
         </div> */}
-        {/* <div
+      {/* <div
           className='transcripts'
           style={{ overflow: 'auto', height: '90%', padding: '5px', backgroundColor: 'rgb(37, 95, 184)' }}
         > */}
-        {/* <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp; */}
-        {/* {renderSwitchLangButton()} */}
-        {renderTranscripts()}
-        {renderPartnerInterimTranscript()}
-        {renderMyInterimTranscript()}
-        {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
-        {/* {renderWordsLength()} */}
-      </div>
-      {/* </div> */}
-    </Draggable>
+      {/* <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp; */}
+      {/* {renderSwitchLangButton()} */}
+      {renderTranscripts()}
+      {renderPartnerInterimTranscript()}
+      {renderMyInterimTranscript()}
+      {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}
+      {/* {renderWordsLength()} */}
+      <div ref={transcriptsEndRef} />
+    </div>
   );
   // return <></>; // subtitle wrapperみたいな感じに変えるのかね。// これはどういう意図で残していたんだろう。。。
 };

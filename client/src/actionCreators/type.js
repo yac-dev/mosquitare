@@ -22,6 +22,7 @@ export const CREATE_USER_SCRIPT = 'CREATE_USER_SCRIPT';
 export const CALL_ACCEPTED = 'CALL_ACCEPTED';
 export const HANG_UP_CALL = 'HANG_UP_CALL';
 export const DISCONNECT_CALL = 'DISCONNECT_CALL';
+export const GOT_REJECTED = 'GOT_REJECTED';
 
 // 次↓
 // conversation 始まり

@@ -107,7 +107,12 @@ const LanguageChart = (props) => {
   const render = () => {
     const statusSum = props.user.myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
     // for (let i = 0; i < props.user.myLangsStatus.length; i++) {}　あとでこっちに書き換えよう。シンプルにfor loopで、全部0なら　No dataってrenderする方が分かりやすい。
-    if (statusSum === 0) {
+    // if (statusSum === 0) {
+    //   return <>{renderInitialData()}</>;
+    // } else if (data) {
+    //   return <div style={{ width: '99%' }}>{renderDoughnut()}</div>;
+    // }
+    if (props.user.myLangsStatus.every((element) => element === 0)) {
       return <>{renderInitialData()}</>;
     } else if (data) {
       return <div style={{ width: '99%' }}>{renderDoughnut()}</div>;

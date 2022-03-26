@@ -187,8 +187,12 @@ export const updateUserMyLangsStatusActionCreator =
         countDatas[1]['id'] = exchangingLanguages[0]._id;
         countDatas[1]['length'] = nativeLangLength;
       }
-      const result = await mosquitareAPI.patch(`/users/${userId}/langsstatus`, { countDatas });
-      console.log(result);
+      mosquitareAPI.patch(`/users/${userId}/langsstatus`, { countDatas });
+      // ここやろう。
+      dispatch({
+        type: 'SEND_LANGUAGE_STATUS',
+        payload: '',
+      });
     } catch (error) {
       console.log(error);
     }

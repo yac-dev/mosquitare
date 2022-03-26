@@ -11,6 +11,7 @@ import {
   HOLD_MY_INITIATED_PEER,
   SWITCH_CURRENT_LANGUAGE,
   RECIEVE_SWITCH_CURRENT_LANGUAGE_REQUEST,
+  GOT_REJECTED,
 } from './type';
 
 import {
@@ -23,6 +24,8 @@ import {
   MY_PARTNER_SEND_VOICE_TEXT_TO_ME,
   I_WANNA_SWITCH_CURRENT_LANGUAGE,
   OUR_BLOB_SIZE_SHOULD_BE_THIS,
+  SORRY_I_DONT_WANNA_CHAT_WITH_YOU,
+  MY_CALL_IS_REJECTED,
 } from './socketEvents';
 
 import Peer from 'simple-peer';
@@ -42,71 +45,72 @@ import { updateConversationUserMediaActionCreator } from './conversationActionCr
 import { updateIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 
-export const getMediaActionCreator =  // ここのlearningLanguageとnativeLanguage、最初からこれ入れていいかね。空の文字烈で終わりそうだな。。。まあ実験だ。
-  (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
-  (dispatch) => {
-    const videoConstrains = {
-      width: { ideal: 480 },
-      height: { ideal: 270 },
-    };
-    const audioConstraints = {
-      autoGainControl: false,
-      channelCount: 2,
-      echoCancellation: true,
-      latency: 0,
-      noiseSuppression: false, // これあると聞こえづらくなるわ。
-      // sampleRate: 48000,
-      // sampleSize: 16,
-      // volume: 1.0,
-    };
-    navigator.mediaDevices.getUserMedia({ video: videoConstrains, audio: audioConstraints }).then((stream) => {
-      dispatch({
-        type: GET_MEDIA,
-        payload: stream,
-      });
-      // 以下record用のsetting。ただそれだけ。
-      // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
-      // ----------------------
-      // mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
-      // mediaRecorder.current.ondataavailable = function (event) {
-      //   // setChunksForVideo((prevState) => [...prevState, event.data]);
-      //   // setChunksForAudio((prevState) => [...prevState, event.data]);
-      //   chunksForVideo.push(event.data);
-      //   chunksForAudio.push(event.data);
-      //   console.log(chunksForVideo);
-      //   console.log(chunksForAudio);
-      // };
-      // mediaRecorder.current.onstop = (event) => {
-      //   let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
-      //   let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
-      //   // let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
-      //   // let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+export const getMediaActionCreator = // ここのlearningLanguageとnativeLanguage、最初からこれ入れていいかね。空の文字烈で終わりそうだな。。。まあ実験だ。
 
-      //   console.log('record stopped!!!');
-      //   chunksForVideo = [];
-      //   chunksForAudio = [];
-      //   Promise.resolve()
-      //     .then(() => {
-      //       return dispatch(createUserMedia(blobForVideo, blobForAudio));
-      //     }) // ここでconversatonのupdateだね。
-      //     .then((userMedia) => {
-      //       return dispatch(updateConversationUserMediaActionCreator(userMedia));
-      //     })
-      //     // .then((userMedia) => {
-      //     //   return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
-      //     // })
-      //     .then(() => {
-      //       return dispatch(hangUpCallActionCreator(connectionRef));
-      //     })
-      //     .then(() => {
-      //       return dispatch(updateUserConversationToFalseActionCreator());
-      //     });
-      //   // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
-      //   // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
-      //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-      // };
-    });
-  };
+    (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
+    (dispatch) => {
+      const videoConstrains = {
+        width: { ideal: 480 },
+        height: { ideal: 270 },
+      };
+      const audioConstraints = {
+        autoGainControl: false,
+        channelCount: 2,
+        echoCancellation: true,
+        latency: 0,
+        noiseSuppression: false, // これあると聞こえづらくなるわ。
+        // sampleRate: 48000,
+        // sampleSize: 16,
+        // volume: 1.0,
+      };
+      navigator.mediaDevices.getUserMedia({ video: videoConstrains, audio: audioConstraints }).then((stream) => {
+        dispatch({
+          type: GET_MEDIA,
+          payload: stream,
+        });
+        // 以下record用のsetting。ただそれだけ。
+        // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
+        // ----------------------
+        // mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
+        // mediaRecorder.current.ondataavailable = function (event) {
+        //   // setChunksForVideo((prevState) => [...prevState, event.data]);
+        //   // setChunksForAudio((prevState) => [...prevState, event.data]);
+        //   chunksForVideo.push(event.data);
+        //   chunksForAudio.push(event.data);
+        //   console.log(chunksForVideo);
+        //   console.log(chunksForAudio);
+        // };
+        // mediaRecorder.current.onstop = (event) => {
+        //   let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
+        //   let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
+        //   // let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
+        //   // let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+
+        //   console.log('record stopped!!!');
+        //   chunksForVideo = [];
+        //   chunksForAudio = [];
+        //   Promise.resolve()
+        //     .then(() => {
+        //       return dispatch(createUserMedia(blobForVideo, blobForAudio));
+        //     }) // ここでconversatonのupdateだね。
+        //     .then((userMedia) => {
+        //       return dispatch(updateConversationUserMediaActionCreator(userMedia));
+        //     })
+        //     // .then((userMedia) => {
+        //     //   return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
+        //     // })
+        //     .then(() => {
+        //       return dispatch(hangUpCallActionCreator(connectionRef));
+        //     })
+        //     .then(() => {
+        //       return dispatch(updateUserConversationToFalseActionCreator());
+        //     });
+        //   // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
+        //   // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
+        //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
+        // };
+      });
+    };
 
 // callする側、worldmapで実行されるやつら。
 export const callActionCreator =
@@ -659,6 +663,33 @@ export const getBlobSizeFromPartnerActionCreator = (socket) => (dispatch, getSta
       dispatch({
         type: 'GET_BLOBSIZE',
         payload: dataFromServer.blobSize,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const rejectCallActionCreator = (socket) => (dispatch, getState) => {
+  try {
+    const partnerSocketId = getState().mediaState.callingWith.socketId;
+    const mySocketId = getState().authState.socketId;
+    socket.emit(SORRY_I_DONT_WANNA_CHAT_WITH_YOU, {
+      to: partnerSocketId,
+      from: mySocketId,
+      message: "Sorry. I can't chat with you now.", // まあこれいらないかな。。。
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const gotRejectedMyCallActionCreator = (socket) => (dispatch, getState) => {
+  try {
+    socket.on(MY_CALL_IS_REJECTED, (dataFromServer) => {
+      dispatch({
+        type: GOT_REJECTED,
+        payload: '',
       });
     });
   } catch (error) {

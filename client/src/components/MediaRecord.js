@@ -53,7 +53,7 @@ const MediaRecorderComponent = (props) => {
       // console.log('duration time: ', duration)
 
       Promise.resolve().then(() => {
-        return props.createUserMedia(blobForVideo.current, durationRef.current);
+        props.createUserMedia(blobForVideo.current, durationRef.current);
       });
       // blobはglobalのstateで持っておいた方がいいかな。そういう考えも持っておこう。
     };

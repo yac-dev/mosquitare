@@ -49,8 +49,12 @@ const Conversation = (props) => {
             </video>
           </div>
         </div> */}
-        {renderThumbnails(props.conversation.userMedias)}
-
+        {/* {renderThumbnails(props.conversation.userMedias)} */}
+        <video>
+          <source
+            src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.videoFilename}`}
+          />
+        </video>
         <div className='conversation-information'>
           conversation info here!!
           <p>{props.conversation.createdAt}</p>

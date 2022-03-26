@@ -55,7 +55,7 @@ const LandingPage = () => {
                 setShowLoginModal(false);
               }}
             >
-              Start Now
+              Signup
             </Button>
             <Button
               variant='contained'

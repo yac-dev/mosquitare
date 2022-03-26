@@ -12,6 +12,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 // css
 import '../../styles/languageStatus.css';
@@ -43,7 +44,7 @@ const LanguageStatus = (props) => {
 
   useEffect(() => {
     return () => {
-      console.log('language count logged!!!', props.countLearningLangLength, props.countNativeLangLength);
+      // console.log('language count logged!!!', props.countLearningLangLength, props.countNativeLangLength);
       props.updateUserMyLangsStatusActionCreator(countLearningLangLengthRef.current, countNativeLangLengthRef.current);
     };
   }, []);
@@ -96,7 +97,7 @@ const LanguageStatus = (props) => {
         <ThemeProvider theme={theme}>
           <Button
             variant='contained'
-            // startIcon={<TranslateOutlinedIcon />}
+            startIcon={<SwapHorizIcon />}
             onClick={() => switchLanguage()}
             sx={{
               height: { xxs: '20px', xs: '20px', sm: '30px', md: '30px', lg: '40px' },

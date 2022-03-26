@@ -71,6 +71,12 @@ const FullScreen1on1Modal = (props) => {
     console.log('when mounted fullscreen');
   }, []);
 
+  useEffect(() => {
+    return () => {
+      // logutのapi callをここで実施するようにしましょう。
+    };
+  }, []);
+
   // callAcceptedの時だけ、これをrenderするっていう感じだ。
   const screenRender = () => {
     // if (props.mediaState.callAccepted) {

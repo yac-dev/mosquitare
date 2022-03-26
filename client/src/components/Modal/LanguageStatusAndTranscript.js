@@ -37,7 +37,7 @@ const LanguageStatusAndTranscript = (props) => {
   return (
     <Draggable
       onDrag={handleDrag}
-      cancel='.language-status-and-transcript-close-button, .language-status-wrapper, .transcript-component '
+      cancel='.language-status-and-transcript-close-button, .language-status-wrapper, .transcript-component, .fa, .fa-close'
     >
       <div className={`language-status-and-transcript ${props.openLanguageStatusAndTranscript ? undefined : 'hidden'}`}>
         <div className='language-status-and-transcript-header'>

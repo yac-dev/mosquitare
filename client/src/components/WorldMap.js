@@ -136,6 +136,17 @@ const WorldMap = (props) => {
   }, []);
 
   useEffect(() => {
+    if (props.mediaState.apiCallResult === 3) {
+      window.location = '/worldmap';
+    }
+  }, [props.mediaState.apiCallResult]);
+
+  // こんな感じか？？？とりあえず、7秒ごとにgetUsersのapiを実行する。
+  useEffect(() => {
+    setInterval(() => props.getUsersActionCreator(), 7000);
+  }, []);
+
+  useEffect(() => {
     // CallingModal componentでmodalを閉じてから、callAcceptedをonにしてこれが動く。
     if (props.mediaState.callAccepted) {
       setFullscreen1on1Modal(true);

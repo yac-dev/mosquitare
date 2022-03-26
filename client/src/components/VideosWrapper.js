@@ -5,6 +5,8 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 
 import '../styles/1on1.css';
 
+// react bootstrap
+import { Modal } from 'react-bootstrap';
 // mui
 import TranslateIcon from '@mui/icons-material/Translate';
 import TranslateOutlinedIcon from '@mui/icons-material/TranslateOutlined';
@@ -171,6 +173,10 @@ const VideosWrapper = (props) => {
   const [openMyScreen, setOpenMyScreen] = useState(false);
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
   // const classes = useStyles();
+  const [show, setShow] = useState(false);
+
+  const handleCloseModal = () => setShow(false);
+  const handleShowModal = () => setShow(true);
 
   const myVideoRef = useRef();
   const oppositeVideoRef = useRef();
@@ -255,9 +261,11 @@ const VideosWrapper = (props) => {
     // そうか、そもそもcallAcceptedをfalseにした時点で、もうmodalが表示されないようになっているんだ。
     // props.setShow1on1(false);
     // props.updateUserConversationToFalseActionCreator();
+    setShow(false);
     connectionRef.current.destroy();
     props.setShow1on1(false);
     // props.hangUpCallActionCreator(); //これだけだと、下ですぐにmodalを閉じて、api callをさまたげることになる。
+    // window.location = '/worldmap'; // まあこれでいいのかね。
   };
 
   const handleDrag = (e, ui) => {
@@ -330,7 +338,7 @@ const VideosWrapper = (props) => {
             </Tooltip> */}
             <ThemeProvider theme={theme}>
               <Tooltip title='Finish Call'>
-                <LogoutIconButton onClick={() => onHangUpClick()}>
+                <LogoutIconButton onClick={() => setShow(true)}>
                   <LogoutIcon
                     sx={{ color: 'white', fontSize: { xxs: '15px', xs: '15px', sm: '20px', md: '20px', lg: '20px' } }}
                   />
@@ -365,6 +373,15 @@ const VideosWrapper = (props) => {
           </ThemeProvider>
         </div>
       </div>
+      <Modal show={show} onHide={() => setShow(false)} backdrop='static' keyboard={false}>
+        <Modal.Body>
+          <div style={{ color: 'black' }}>Are you sure you want to finish this conversation?</div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setShow(false)}>Cancel</Button>
+          <Button onClick={() => onHangUpClick()}>Finish</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

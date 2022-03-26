@@ -301,9 +301,13 @@ const Navbar = (props) => {
             </Tooltip>
 
             <Tooltip title='Everybody videos'>
-              <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+              <IconButton size='large' color='inherit'>
                 {/* <Badge badgeContent={17} color='error'> */}
-                <VideoLibraryIcon />
+                <VideoLibraryIcon
+                  onClick={() => {
+                    window.location = '/allvideos';
+                  }}
+                />
                 {/* </Badge> */}
               </IconButton>
             </Tooltip>

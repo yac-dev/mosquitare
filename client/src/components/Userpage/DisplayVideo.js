@@ -120,7 +120,7 @@ const DisplayVideo = (props) => {
     // <>{renderVideoSrc()}</>
     <div className='displaying-videos-wrapper-wrapper'>
       <div className='displaying-videos-wrapper'>
-        <div className='displaying-video-wrapper'>
+        {/* <div className='displaying-video-wrapper'>
           <video
             className='displaying-video-1'
             ref={videoRef1}
@@ -147,7 +147,18 @@ const DisplayVideo = (props) => {
               src={`https://mosquitare-mediafiles-bucket-for-heroku.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[1].videoFileName}`}
             />
           </video>
-        </div>
+        </div> */}
+        <video
+          className='displaying-video-1'
+          // onLoadedMetadata={(event) => loadMeta(event)}
+          // onTimeUpdate={() => timeUpdateForVideo1()}
+          playsInline
+          controls
+          // width='640px'
+          // height='320px'
+        >
+          <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
+        </video>
       </div>
 
       {/* ここにcanvasを埋め込むか。 */}

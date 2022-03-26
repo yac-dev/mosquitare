@@ -17,16 +17,16 @@ export const createUserMedia = (blobForVideo, duration) => async (dispatch, getS
     // formData.append('conversationDuration', seconds);
     // formData.append('mediaFiles', blobForLearningLanguage);
     // formData.append('mediaFiles', blobForNativeLanguage);
-    const result = await mosquitareAPI.post(`/userMedias/upload/${userId}/${conversationId}`, formData, {
+    await mosquitareAPI.post(`/userMedias/upload/${userId}/${conversationId}`, formData, {
       headers: { 'Content-type': 'multipart/form-data' },
     });
-    console.log(result);
-    const { userMedia } = result.data;
+    // console.log(result);
+    // const { userMedia } = result.data;
     dispatch({
       type: CREATE_USER_MEDIA,
       payload: '',
     });
-    return Promise.resolve(userMedia);
+    // return Promise.resolve(userMedia);
     // const callingState = getState().mediaState;
     // const { integratedUserMediaId } = getState().integratedUserMediaState;
     // if (callingState.amICalling) {

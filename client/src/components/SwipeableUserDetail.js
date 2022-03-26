@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
 
 // components
 // cardの中身でひとつのcomponentをもっておくべきだ。そうすれば、reusableになる。
@@ -85,7 +86,10 @@ const SwipeableUserDetail = (props) => {
           }}
         >
           <Puller />
-          <Typography sx={{ p: 2, color: 'text.secondary' }}>Tap icons to see user's information!</Typography>
+          <Typography sx={{ p: 2, color: 'text.secondary' }}>
+            <TouchAppIcon />
+            Tap icons to see user's information!
+          </Typography>
         </StyledBox>
         <StyledBox
           sx={{

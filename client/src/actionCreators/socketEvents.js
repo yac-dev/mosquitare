@@ -3,6 +3,8 @@ export const I_CALL_SOMEBODY = 'I CALL SOMEBODY.';
 export const SOMEBODY_CALLS_ME = 'SOMEBODY CALLS ME.';
 export const I_ANSWER_THE_CALL = 'I ANSWER THE CALL.';
 export const MY_CALL_IS_ACCEPTED = 'MY CALL IS ACCEPTED.';
+export const SORRY_I_DONT_WANNA_CHAT_WITH_YOU = 'SORRY_I_DONT_WANNA_CHAT_WITH_YOU';
+export const MY_CALL_IS_REJECTED = 'MY_CALL_WAS_REJECTED';
 export const JOIN_MEETING = 'JOIN_MEETING';
 // こっから下は、client側でのみsocket eventを作っている。
 export const I_GOT_OTHER_USERS_INFO = 'I_GOT_OTHER_USERS_INFO';

@@ -46,7 +46,12 @@ const userSchema = new mongoose.Schema({
       ref: 'Language',
     },
   ],
-  myLangsStatus: [Number],
+  myLangsStatus: [
+    {
+      type: Number,
+      default: [0, 0],
+    },
+  ],
   langsStatusHistory: [[Number]],
   nationalities: [
     {

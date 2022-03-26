@@ -17,6 +17,8 @@ import {
   SOMEBODY_CALLS_ME,
   I_ANSWER_THE_CALL,
   MY_CALL_IS_ACCEPTED,
+  SORRY_I_DONT_WANNA_CHAT_WITH_YOU,
+  MY_CALL_IS_REJECTED,
   JOIN_MEETING,
   I_GOT_OTHER_USERS_INFO,
   PARTICIPANT_IS_SENDING_SIGNAL_TO_OTHER_USERS,
@@ -82,7 +84,6 @@ const mapMeetingIdToUsers = {};
 const mapUserToMeetingId = {};
 
 io.on('connection', (socket) => {
-  console.log('connection came from client side');
   socket.emit(I_GOT_SOCKET_ID, socket.id);
 
   socket.on(I_CALL_SOMEBODY, (dataFromCaller) => {
@@ -106,6 +107,11 @@ io.on('connection', (socket) => {
     });
   });
 
+  socket.on(SORRY_I_DONT_WANNA_CHAT_WITH_YOU, (dataFromReject) => {
+    io.to(dataFromReject.to).emit(MY_CALL_IS_REJECTED, {
+      message: dataFromReject.message,
+    });
+  });
   // 以下、meetingに関するsocket events
   socket.on(JOIN_MEETING, (joinData) => {
     // (joinData)に、joinに関するroomとcallbackが入っている。

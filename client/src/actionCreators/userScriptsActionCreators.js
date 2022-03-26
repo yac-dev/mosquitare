@@ -6,9 +6,10 @@ export const createUserScriptActionCreator =
     try {
       const userId = getState().authState.currentUser._id;
       const { conversationId } = getState().conversationState;
-      // const conversationTranscriptJSON = JSON.stringify(conversationTranscript);
+      const conversationTranscriptJSON = JSON.stringify(conversationTranscript); // "[{....}. {....}]"っていう具合になるはず。
       // console.log(conversationTranscriptJSON); // []を含めて、json化してしまっているな。これがerrorの原因になっている。
-      const blobForConversationTranscript = new Blob(conversationTranscript, { type: 'text/plain' });
+      // const blobForConversationTranscript = new Blob(conversationTranscript, { type: 'text/plain' });
+      const blobForConversationTranscript = new Blob([conversationTranscriptJSON], { type: 'application/json' });
       const blobForLearningLanguage = new Blob(learningLanguageScript, { type: 'text/plain' });
       const blobForNativeLanguage = new Blob(nativeLanguageScript, { type: 'text/plain' });
       //本当は、全部のscriptをjsonで送りたい。その方が楽、後々ね。ただ、今はとりあえず、text fileで送ろう。
@@ -16,19 +17,19 @@ export const createUserScriptActionCreator =
       formData.append('scriptFiles', blobForConversationTranscript);
       formData.append('scriptFiles', blobForLearningLanguage);
       formData.append('scriptFiles', blobForNativeLanguage);
-      const result = await mosquitareAPI.post(`/userscripts/upload/${userId}/${conversationId}`, formData, {
+      await mosquitareAPI.post(`/userscripts/upload/${userId}/${conversationId}`, formData, {
         headers: {
           'Content-type': 'multipart/form-data',
           // 'Content-type': 'application/json',
         },
       });
-      console.log(result);
-      const { userScript } = result.data;
+      // console.log(result);
+      // const { userScript } = result.data;
       dispatch({
         type: CREATE_USER_SCRIPT,
         payload: '',
       });
-      return Promise.resolve(userScript);
+      // return Promise.resolve(userScript);
     } catch (error) {
       console.log(error);
     }
