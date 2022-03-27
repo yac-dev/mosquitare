@@ -18,6 +18,9 @@ import GTranslateIcon from '@mui/icons-material/GTranslate';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+// components
+import Comments from '../Comments';
+
 // css
 import '../../styles/userpage.css';
 
@@ -208,7 +211,7 @@ const DisplayVideo = (props) => {
             </Tooltip>
           </ThemeProvider>
           <ThemeProvider theme={theme}>
-            <Tooltip title='Comments, Feedbacks' arrow>
+            <Tooltip title='Comments' arrow>
               <CommentIconButton onClick={() => setOpenComments(true)}>
                 <CommentIcon
                   sx={{
@@ -219,18 +222,7 @@ const DisplayVideo = (props) => {
               </CommentIconButton>
             </Tooltip>
           </ThemeProvider>
-          <ThemeProvider theme={theme}>
-            <Tooltip title='Translate' arrow>
-              <GTranslateIconButton>
-                <GTranslateIcon
-                  sx={{
-                    width: { md: '30px', lg: '40px' },
-                    height: { md: '30px', lg: '40px' },
-                  }}
-                />
-              </GTranslateIconButton>
-            </Tooltip>
-          </ThemeProvider>
+          <Comments openComments={openComments} setOpenComments={setOpenComments} />
           <ThemeProvider theme={theme}>
             <Tooltip title='Shared note' arrow>
               <NoteIconButton>
@@ -241,6 +233,18 @@ const DisplayVideo = (props) => {
                   }}
                 />
               </NoteIconButton>
+            </Tooltip>
+          </ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <Tooltip title='Translate (Sorry, not available now 🙅🏻)' arrow>
+              <GTranslateIconButton>
+                <GTranslateIcon
+                  sx={{
+                    width: { md: '30px', lg: '40px' },
+                    height: { md: '30px', lg: '40px' },
+                  }}
+                />
+              </GTranslateIconButton>
             </Tooltip>
           </ThemeProvider>
         </Stack>

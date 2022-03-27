@@ -103,7 +103,7 @@ const conversationSchema = new mongoose.Schema({
   // ] TextChatっていうschemaもおそらく作ることになるだろう。→こっちでもっておくことはやっぱやめよう。one to many
 });
 
-conversationSchema.virtual('reviews', {
+conversationSchema.virtual('comments', {
   ref: 'Comment',
   foreignField: 'Conversation',
   localField: '_id', // 俺の何を参照してきてんの？ってこと。
