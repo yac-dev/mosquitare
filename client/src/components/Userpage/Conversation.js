@@ -39,16 +39,15 @@ const Conversation = (props) => {
 
   const renderPeople = (users) => {
     return (
-      <p>
-        <PeopleIcon />
+      <h2>
         {users[0].name} &amp; {users[1].name}
-      </p>
+      </h2>
     );
   };
 
   const renderGenre = (genre) => {
     return (
-      <p>
+      <p style={{ margin: '0px' }}>
         <LanguageIcon />
         &nbsp;{genre[0].name} &amp; {genre[1].name}
       </p>

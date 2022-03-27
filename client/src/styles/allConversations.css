@@ -1,0 +1,16 @@
+@media only screen and (min-width: 1200px) {
+  .all-conversations-wrapper {
+    margin: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 15px;
+  }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  .all-conversations-wrapper {
+    margin: 30px;
+    display: flex;
+    flex-direction: column;
+  }
+}

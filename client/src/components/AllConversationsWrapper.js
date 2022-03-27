@@ -8,6 +8,9 @@ import Conversation from './UserPage/Conversation';
 import { loadMeActionCreator } from '../actionCreators/authActionCreators';
 import { getAllConversationsActionCreator } from '../actionCreators/conversationActionCreators';
 
+// css
+import '../styles/allConversations.css';
+
 const AllConversationsWrapper = (props) => {
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
@@ -33,9 +36,9 @@ const AllConversationsWrapper = (props) => {
   };
 
   return (
-    <div>
-      <div>All Videos</div>
-      {renderConversations()}
+    <div className='all-conversations-wrapper-wrapper'>
+      <h2 style={{ margin: '20px' }}>Everybody's video</h2>
+      <div className='all-conversations-wrapper'>{renderConversations()}</div>
     </div>
   );
 };

@@ -272,7 +272,7 @@ const Navbar = (props) => {
       return (
         <>
           <Stack direction='row' spacing={2}>
-            <Tooltip title='World Clock ( Sorry, not available now 😐 )'>
+            {/* <Tooltip title='World Clock ( Sorry, not available now 😐 )'>
               <IconButton
                 size='large'
                 edge='end'
@@ -283,7 +283,7 @@ const Navbar = (props) => {
               >
                 <AccessTimeFilledIcon />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title='Group Chat ( Sorry, not available now 😐 )'>
               <IconButton
                 size='large'
