@@ -84,6 +84,7 @@ const DisplayVideo = (props) => {
   const [currentVideoTime, setCurrentVideoTime] = useState();
   // const calledUserVideoRef = useRef();
   // const recievedUserVideoRef = useRef();
+  const [openComments, setOpenComments] = useState(false);
 
   useEffect(() => {
     if (loaded === 2) {
@@ -208,7 +209,7 @@ const DisplayVideo = (props) => {
           </ThemeProvider>
           <ThemeProvider theme={theme}>
             <Tooltip title='Comments, Feedbacks' arrow>
-              <CommentIconButton>
+              <CommentIconButton onClick={() => setOpenComments(true)}>
                 <CommentIcon
                   sx={{
                     width: { md: '30px', lg: '40px' },

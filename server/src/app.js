@@ -12,6 +12,7 @@ import userMediasRouter from './routes/userMedias';
 // import integratedUserMediasRouter from './routes/integratedUserMedias';
 import conversationsRouter from './routes/conversations';
 import userScriptsRouter from './routes/userScripts';
+import commentsRouter from './routes/comments';
 
 app.use(express.json());
 app.use(cors());
@@ -28,6 +29,7 @@ app.use('/api/userMedias', userMediasRouter);
 app.use('/api/conversations', conversationsRouter);
 // app.use('/api/integratedusermedias', integratedUserMediasRouter);
 app.use('/api/userscripts', userScriptsRouter);
+app.use('/api/comments', commentsRouter);
 
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
