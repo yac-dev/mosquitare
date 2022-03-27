@@ -50,7 +50,7 @@ const Conversation = (props) => {
     return (
       <p>
         <LanguageIcon />
-        &nbsp;Exchanging {genre[0].name} &amp; {genre[1].name}
+        &nbsp;{genre[0].name} &amp; {genre[1].name}
       </p>
     );
   };

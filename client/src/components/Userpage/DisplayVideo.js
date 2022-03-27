@@ -16,6 +16,7 @@ import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import CommentIcon from '@mui/icons-material/Comment';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // css
 import '../../styles/userpage.css';
@@ -26,39 +27,44 @@ const TranscriptIconButton = styled(IconButton)(({ theme }) => ({
   '&:hover': {
     backgroundColor: 'rgba(145, 237, 74)',
   },
-  width: '60px',
-  height: '60px',
 }));
 
 const CommentIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(110, 209, 33)',
+  backgroundColor: 'rgb(230, 222, 0)',
   '&:hover': {
-    backgroundColor: 'rgba(145, 237, 74)',
+    backgroundColor: 'rgba(255, 247, 25)',
   },
-  width: '60px',
-  height: '60px',
 }));
 
 const GTranslateIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(110, 209, 33)',
+  backgroundColor: 'rgb(2, 204, 227)',
   '&:hover': {
-    backgroundColor: 'rgba(145, 237, 74)',
+    backgroundColor: 'rgba(23, 231, 255)',
   },
-  width: '60px',
-  height: '60px',
 }));
 
 const NoteIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(110, 209, 33)',
+  backgroundColor: 'rgb(201, 0, 0)',
   '&:hover': {
-    backgroundColor: 'rgba(145, 237, 74)',
+    backgroundColor: 'rgba(245, 22, 22)',
   },
-  width: '60px',
-  height: '60px',
 }));
+
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xxs: 0, // small phone
+      xs: 320, // phone
+      sm: 768, // tablets
+      md: 992, // small laptop
+      lg: 1200, // desktop
+      // xl: 1536, // large screens
+    },
+  },
+});
 
 // propsでconversationが来る。
 const DisplayVideo = (props) => {
@@ -188,26 +194,54 @@ const DisplayVideo = (props) => {
       </div>
       <div className='button-stack-wrapper'>
         <Stack direction='row' spacing={2}>
-          <Tooltip title='Transcript' arrow>
-            <TranscriptIconButton>
-              <RecordVoiceOverIcon />
-            </TranscriptIconButton>
-          </Tooltip>
-          <Tooltip title='Comments, Feedbacks' arrow>
-            <CommentIconButton>
-              <CommentIcon />
-            </CommentIconButton>
-          </Tooltip>
-          <Tooltip title='Translate' arrow>
-            <GTranslateIconButton>
-              <GTranslateIcon />
-            </GTranslateIconButton>
-          </Tooltip>
-          <Tooltip title='Shared note' arrow>
-            <NoteIconButton>
-              <InsertDriveFileIcon />
-            </NoteIconButton>
-          </Tooltip>
+          <ThemeProvider theme={theme}>
+            <Tooltip title='Transcript' arrow>
+              <TranscriptIconButton>
+                <RecordVoiceOverIcon
+                  sx={{
+                    width: { md: '30px', lg: '40px' },
+                    height: { md: '30px', lg: '40px' },
+                  }}
+                />
+              </TranscriptIconButton>
+            </Tooltip>
+          </ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <Tooltip title='Comments, Feedbacks' arrow>
+              <CommentIconButton>
+                <CommentIcon
+                  sx={{
+                    width: { md: '30px', lg: '40px' },
+                    height: { md: '30px', lg: '40px' },
+                  }}
+                />
+              </CommentIconButton>
+            </Tooltip>
+          </ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <Tooltip title='Translate' arrow>
+              <GTranslateIconButton>
+                <GTranslateIcon
+                  sx={{
+                    width: { md: '30px', lg: '40px' },
+                    height: { md: '30px', lg: '40px' },
+                  }}
+                />
+              </GTranslateIconButton>
+            </Tooltip>
+          </ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <Tooltip title='Shared note' arrow>
+              <NoteIconButton>
+                <InsertDriveFileIcon
+                  sx={{
+                    width: { md: '30px', lg: '40px' },
+                    height: { md: '30px', lg: '40px' },
+                  }}
+                />
+              </NoteIconButton>
+            </Tooltip>
+          </ThemeProvider>
         </Stack>
       </div>
     </>

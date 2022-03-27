@@ -16,6 +16,7 @@ const VideoDisplayingModal = (props) => {
         backdrop='static'
         keyboard={false}
         dialogClassName={'video-displaying-modal'}
+        centered
       >
         {/* <Modal.Header closeButton style={{ backgroundColor: 'rgb(0, 55, 110' }}>
           <Modal.Title>With Jonh!!</Modal.Title>
