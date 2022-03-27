@@ -19,15 +19,17 @@
 }
 
 .userpage-wrapper-wrapper {
-  margin: 60px;
 }
 
 .userpage-wrapper {
-  /* padding: 20px; */
+  /* border: 1px solid white; */
+  margin: 30px;
+}
+
+.userpage-wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 300px);
+  grid-template-columns: repeat(4, 400px);
   grid-gap: 15px;
-  justify-content: center;
 }
 
 .conversation-wrapper {
@@ -75,15 +77,21 @@
 .video-displaying-modal-body {
   height: 80vh;
   max-height: 80vh;
+  /* border-radius: 20px; */
   /* z-index: 20 !important; */
-  background-color: rgb(0, 55, 110);
+  /* background-color: rgb(0, 97, 194); */
+  background-color: #0061c2;
   /* display: grid; */
   /* grid-template-columns: 900px 1fr;
   grid-template-areas: 'videos-wrapper resource-tab'; */
   width: 100%;
+  /* display: flex; */
+  /* gap: 20px; */
+  /* flex-direction: row; */
+  position: relative;
+  padding: 20px;
   display: flex;
-  gap: 20px;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 /* video { // このnamingが、1on1 modalの方にも影響を与えていた。。。
@@ -98,19 +106,29 @@
 } */
 
 .displaying-videos-wrapper-wrapper {
-  flex: 70%; /* width自体はこの70%で決まる。 */
+  /* flex: 70%;  */
   background-color: rgb(0, 97, 194);
   border: 1px solid white;
   border-radius: 10px;
 }
 
-.displaying-videos-wrapper {
+/* .modal-inner-wrapper {
+  width: 100%;
+  height: 100%;
+
+} */
+
+.conversation-video-header {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
 }
 
 .displaying-video-wrapper {
-  flex: 50%;
+  width: 100%;
+  margin: 0 auto;
+  /* position: absolute;
+  top: 50%;
+  transform: translateY(-50%); */
 }
 
 .displaying-video-1 {
@@ -118,22 +136,31 @@
   height: 400px; */
   width: 100%;
   object-fit: contain;
-  border-top-left-radius: 10px;
+  border-radius: 10px;
 }
 
-.displaying-video-2 {
-  /* width: 450px;
-  height: 400px; */
+.video-seekbar {
+  width: 60%;
+}
+
+.button-stack-wrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* .displaying-video-2 {
+
   width: 100%;
   object-fit: contain;
   border-top-right-radius: 10px;
-}
+} */
 
-.resource-tab {
-  /* grid-area: resource-tab; */
+/* .resource-tab {
   flex: 30%;
   background-color: rgb(0, 97, 194);
-}
+} */
 
 @media (max-width: 700px) {
   .video-displaying-modal-body {

@@ -32,7 +32,7 @@ const UserPageWrapper = (props) => {
   }, []); // このuserのviodeを全部s3から持ってくる。
   return (
     <div className='userpage-wrapper-wrapper'>
-      <h2 style={{ marginBottom: '30px' }}>
+      <h2 style={{ margin: '20px' }}>
         <VideoLibraryIcon size='large' /> &nbsp; Library
       </h2>
       <div className='userpage-wrapper'>

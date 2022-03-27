@@ -8,9 +8,57 @@ import Slider from '@mui/material/Slider';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/system';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
+import CommentIcon from '@mui/icons-material/Comment';
+import GTranslateIcon from '@mui/icons-material/GTranslate';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 // css
 import '../../styles/userpage.css';
+
+const TranscriptIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(110, 209, 33)',
+  '&:hover': {
+    backgroundColor: 'rgba(145, 237, 74)',
+  },
+  width: '60px',
+  height: '60px',
+}));
+
+const CommentIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(110, 209, 33)',
+  '&:hover': {
+    backgroundColor: 'rgba(145, 237, 74)',
+  },
+  width: '60px',
+  height: '60px',
+}));
+
+const GTranslateIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(110, 209, 33)',
+  '&:hover': {
+    backgroundColor: 'rgba(145, 237, 74)',
+  },
+  width: '60px',
+  height: '60px',
+}));
+
+const NoteIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(110, 209, 33)',
+  '&:hover': {
+    backgroundColor: 'rgba(145, 237, 74)',
+  },
+  width: '60px',
+  height: '60px',
+}));
 
 // propsでconversationが来る。
 const DisplayVideo = (props) => {
@@ -38,19 +86,12 @@ const DisplayVideo = (props) => {
     }
   }, [loaded]);
 
-  useEffect(() => {
-    seekbarRef.current.addEventListener('change', () => {
-      videoRef1.current.currentTime = (videoRef1.current.duration * seekbarRef.current.value) / seekbarRef.current.max;
-      videoRef2.current.currentTime = (videoRef2.current.duration * seekbarRef.current.value) / seekbarRef.current.max;
-    });
-    // videoRef1.addEventListener('timeupdate', () => {
-    //   seekbarRef.current.value = (videoRef1.current.currentTime / videoRef1.current.duration) * seekbarRef.current.max;
-    // });
-
-    // videoRef2.addEventListener('timeupdate', () => {
-    //   seekbarRef.current.value = (videoRef2.current.currentTime / videoRef2.current.duration) * seekbarRef.current.max;
-    // });
-  }, []);
+  // useEffect(() => {
+  //   seekbarRef.current.addEventListener('change', () => {
+  //     videoRef1.current.currentTime = (videoRef1.current.duration * seekbarRef.current.value) / seekbarRef.current.max;
+  //     videoRef2.current.currentTime = (videoRef2.current.duration * seekbarRef.current.value) / seekbarRef.current.max;
+  //   });
+  // }, []);
 
   const loadMeta = (event) => {
     setLoaded((previousState) => previousState + 1);
@@ -99,55 +140,27 @@ const DisplayVideo = (props) => {
   //   return <div className='displaying-videos-wrapper'>{videos}</div>;
   // };
 
-  const handleChange = (event) => {
-    // this.setState({value: event.target.value});
-    setSeekBarValue(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   // this.setState({value: event.target.value});
+  //   setSeekBarValue(event.target.value);
+  // };
 
-  const playOrPauseHandler = () => {
-    if (videoRef1.current.paused === true && videoRef2.current.paused === true) {
-      videoRef1.current.play();
-      videoRef2.current.play();
-      setPlayOrPause('pause');
-    } else {
-      videoRef1.current.pause();
-      videoRef2.current.pause();
-      setPlayOrPause('play');
-    }
-  };
+  // const playOrPauseHandler = () => {
+  //   if (videoRef1.current.paused === true && videoRef2.current.paused === true) {
+  //     videoRef1.current.play();
+  //     videoRef2.current.play();
+  //     setPlayOrPause('pause');
+  //   } else {
+  //     videoRef1.current.pause();
+  //     videoRef2.current.pause();
+  //     setPlayOrPause('play');
+  //   }
+  // };
 
   return (
     // <>{renderVideoSrc()}</>
-    <div className='displaying-videos-wrapper-wrapper'>
-      <div className='displaying-videos-wrapper'>
-        {/* <div className='displaying-video-wrapper'>
-          <video
-            className='displaying-video-1'
-            ref={videoRef1}
-            onLoadedMetadata={(event) => loadMeta(event)}
-            onTimeUpdate={() => timeUpdateForVideo1()}
-            playsInline
-            // controls
-          >
-            <source
-              src={`https://mosquitare-mediafiles-bucket-for-heroku.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[0].videoFileName}`}
-            />
-          </video>
-        </div>
-        <div className='displaying-video-wrapper'>
-          <video
-            className='displaying-video-2'
-            ref={videoRef2}
-            onLoadedMetadata={(event) => loadMeta(event)}
-            onTimeUpdate={() => timeUpdateForVideo2()}
-            playsInline
-            // controls
-          >
-            <source
-              src={`https://mosquitare-mediafiles-bucket-for-heroku.s3.us-east-2.amazonaws.com/${props.conversation.userMedias[1].videoFileName}`}
-            />
-          </video>
-        </div> */}
+    <>
+      <div className='displaying-video-wrapper'>
         <video
           className='displaying-video-1'
           // onLoadedMetadata={(event) => loadMeta(event)}
@@ -159,34 +172,45 @@ const DisplayVideo = (props) => {
         >
           <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
         </video>
+        {/* <div className='video-seekbar'>
+          <input
+            className='seekbar'
+            ref={seekbarRef}
+            type='range'
+            min='0'
+            max='100'
+            step='1'
+            value={seekBarValue}
+            // onChange={handleChange}
+            // width='300px'
+          />
+        </div> */}
       </div>
-
-      {/* ここにcanvasを埋め込むか。 */}
-      {/* <canvas id='my-canvas' width='480' height='270'></canvas> */}
-      {/* <Slider
-        value={seekBarValue}
-        onChange={handleChange}
-        valueLabelDisplay='auto'
-        min={0}
-        max={props.conversation.duration}
-      /> */}
-      <input
-        className='seekbar'
-        ref={seekbarRef}
-        type='range'
-        min='0'
-        max='100'
-        step='1'
-        value={seekBarValue}
-        onChange={handleChange}
-        // width='300px'
-      />
-      {/* <button onClick={() => playOrPauseHandler()}>{playOrPause}</button> */}
-      <Button variant='contained' size='large' onClick={() => playOrPauseHandler()}>
-        {playOrPause === 'pause' ? <PauseIcon /> : <PlayArrowIcon />}
-      </Button>
-      {/* <p>{Math.floor(currentVideoTime)}</p> */}
-    </div>
+      <div className='button-stack-wrapper'>
+        <Stack direction='row' spacing={2}>
+          <Tooltip title='Transcript' arrow>
+            <TranscriptIconButton>
+              <RecordVoiceOverIcon />
+            </TranscriptIconButton>
+          </Tooltip>
+          <Tooltip title='Comments, Feedbacks' arrow>
+            <CommentIconButton>
+              <CommentIcon />
+            </CommentIconButton>
+          </Tooltip>
+          <Tooltip title='Translate' arrow>
+            <GTranslateIconButton>
+              <GTranslateIcon />
+            </GTranslateIconButton>
+          </Tooltip>
+          <Tooltip title='Shared note' arrow>
+            <NoteIconButton>
+              <InsertDriveFileIcon />
+            </NoteIconButton>
+          </Tooltip>
+        </Stack>
+      </div>
+    </>
   );
 };
 
