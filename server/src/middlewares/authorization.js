@@ -11,6 +11,23 @@ export const authorization = async (request, response, next) => {
       } // signup後、token自体があることは確認できる。
       const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY); // {id: _id}っていう形。
       const user = await User.findById(decoded.id);
+
+      // this.populate({
+      //   path: 'genre',
+      // });
+
+      // this.populate({
+      //   path: 'userMedias',
+      // });
+
+      // this.populate({
+      //   path: 'userScripts',
+      // });
+
+      // this.populate({
+      //   path: 'comments',
+      // });
+
       if (!user) {
         throw new Error('Cant find that user');
       }

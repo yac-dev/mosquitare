@@ -7,6 +7,7 @@ import {
   updateConversationUserScript,
   getConversation,
   getAllConversations,
+  getMyConversations,
   // updateConversationIntegratedUserMedia,
   // updateConversationDurationAndGenre,
 } from '../controllers/conversation';
@@ -14,6 +15,7 @@ import multerParser from '../middlewares/multer';
 // import multer from 'multer';
 // const multerParser = multer({ dest: 'uploadedFiles/' });
 
+router.route('/mine').post(getMyConversations);
 router.route('/').get(getAllConversations).post(createConversation);
 router.route('/:id').post(updateConversationUsers).get(getConversation);
 router.route('/:id/usermedia').patch(updateConversationUserMedia);

@@ -16,3 +16,15 @@ export const createComment = async (request, response) => {
     console.log(error);
   }
 };
+
+export const getComments = async (request, response) => {
+  try {
+    const { conversationId } = request.params;
+    const comments = await Comment.findById(conversationId);
+    response.status(200).json({
+      comments,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

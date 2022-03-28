@@ -7,7 +7,10 @@ const commentSchema = new mongoose.Schema({
   genre: {
     type: String,
     default: 'message',
-    enum: ['messgae', 'advice'],
+    enum: {
+      values: ['message', 'advice'],
+      massgae: 'Please select either message or advice.',
+    },
   },
   conversation: {
     type: mongoose.Schema.ObjectId,
@@ -22,6 +25,16 @@ const commentSchema = new mongoose.Schema({
     default: Date.now(),
   },
 });
+
+// commentSchema.set('toJSON', { virtuals: true });
+// commentSchema.set('toObject', { virtuals: true });
+// commentSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: 'user',
+//   });
+
+//   next();
+// });
 
 const Comment = mongoose.model('Comment', commentSchema);
 export default Comment;

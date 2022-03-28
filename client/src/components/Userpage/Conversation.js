@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 
 // mui
 import LanguageIcon from '@mui/icons-material/Language';
@@ -10,11 +11,15 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PeopleIcon from '@mui/icons-material/People';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
+// ac
+import { selectConversation } from '../../actionCreators/conversationActionCreators';
+
 const Conversation = (props) => {
   const [showVideoDisplayingModal, setShowVideoDisplayingModal] = useState(false);
 
-  const onConversationClick = (event) => {
+  const onConversationClick = (event, conversation) => {
     event.preventDefault();
+    props.selectConversation(conversation);
     setShowVideoDisplayingModal(true);
     // どのvideoがclickされたか、event.targetとかで検知できないかね。そのurlのvideoをそのまま再生する的な感じでいいんだよな。
     // videoRef.current
@@ -125,7 +130,7 @@ const Conversation = (props) => {
 
   return (
     <>
-      <div className='conversation-wrapper' onClick={(event) => onConversationClick(event)}>
+      <div className='conversation-wrapper' onClick={(event) => onConversationClick(event, props.conversation)}>
         {/* <div className='video-thumbnail'>
           <div className='conversation-video-wrapper'>
             <video className='thum' style={{ borderTopLeftRadius: '10px' }}>
@@ -166,4 +171,4 @@ const Conversation = (props) => {
   );
 };
 
-export default Conversation;
+export default connect(null, { selectConversation })(Conversation);

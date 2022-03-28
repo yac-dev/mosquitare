@@ -149,13 +149,11 @@ userSchema.pre(/^find/, function (next) {
     select: 'name flagPic',
   });
 
-  this.populate({
-    path: 'conversations',
-    // populate: {
-    //   path: 'users userMedias userScripts genre',
-    // },
-  });
-  next();
+  // this.populate({
+  //   path: 'conversations',
+  // });
+
+  next(); // これを全てfind側に入れるべきかな。。。
 });
 
 userSchema.methods.isPasswordCorrect = async (enteredPassword, actualPassword) => {

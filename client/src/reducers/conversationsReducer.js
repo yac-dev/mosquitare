@@ -1,4 +1,4 @@
-import { GET_ALL_CONVERSATIONS } from '../actionCreators/type';
+import { GET_ALL_CONVERSATIONS, GET_MY_CONVERSATIONS } from '../actionCreators/type';
 
 const conversationsReducer = (state = {}, action) => {
   switch (action.type) {
@@ -8,6 +8,12 @@ const conversationsReducer = (state = {}, action) => {
         conversations[conversation._id] = conversation;
       });
       return { ...state, ...conversations };
+    case GET_MY_CONVERSATIONS:
+      const myConversations = {};
+      action.payload.forEach((myConversation) => {
+        myConversations[myConversation._id] = myConversation;
+      });
+      return { ...state, ...myConversations };
     default:
       return { ...state };
   }

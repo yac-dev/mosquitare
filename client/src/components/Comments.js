@@ -13,8 +13,13 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { TextField, InputAdornment } from '@mui/material';
 import { Icon, Input } from 'semantic-ui-react';
+
 // css
 import '../styles/comments.css';
+
+// ac
+import { createCommentActionCreator } from '../actionCreators/commentsActionCreator';
+import { connect } from 'react-redux';
 
 const myStyle = {
   '& .MuiInputBase-input': {
@@ -216,16 +221,22 @@ const Comments = (props) => {
         <div className='comments'>{renderComments()}</div>
         <div className='input-and-send'>
           <Input
-            icon={<Icon name='paper plane' style={{ cursor: 'pointer' }} />}
+            icon={<Icon name='edit' style={{ cursor: 'pointer' }} />}
             placeholder='Add a message or feedback...'
             // onChange={(event) => setInputText(event.target.value)}
             // onKeyDown={(event) => sendChatByKeyDownEnter(event)}
             style={{ width: '100%', height: '100%' }}
           />
         </div>
+        <button onClick={() => props.createCommentActionCreator()}></button>
       </div>
     </Draggable>
   );
 };
 
-export default Comments;
+// まあ、基本はこのconversationIdに関連したcommentだけを引っ張ってくる感じよ。mapStateToPropsで。
+const mapStateToProps = (state) => {
+  return { conversationState: state.conversationState };
+};
+
+export default connect(mapStateToProps, { createCommentActionCreator })(Comments);

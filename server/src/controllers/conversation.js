@@ -88,7 +88,8 @@ export const getConversation = async (request, response) => {
       })
       .populate({
         path: 'userScripts',
-      });
+      })
+      .populate('comments');
 
     response.status(200).json({
       conversation,
@@ -103,6 +104,26 @@ export const getAllConversations = async (request, response) => {
     const allConversations = await Conversation.find();
     response.status(200).json({
       allConversations,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getMyConversations = async (request, response) => {
+  try {
+    const { conversationIds } = request.body;
+    console.log(conversationIds);
+    const myConversations = await Conversation.find({ _id: { $in: conversationIds } })
+      .populate({
+        path: 'users',
+        select: 'name photo nationalities',
+      })
+      .populate({
+        path: 'genre',
+      });
+    response.status(200).json({
+      myConversations,
     });
   } catch (error) {
     console.log(error);

@@ -44,7 +44,7 @@ const ConversationVideos = (props) => {
     if (!props.authState.currentUser) {
       return null;
     } else {
-      const conversationList = props.authState.currentUser.conversations.map((conversation) => {
+      const conversationList = props.myConversations.map((myConversation) => {
         return (
           <>
             {/* <div className='conversation-wrapper' onClick={(event) => onConversationClick(event)}>
@@ -71,7 +71,7 @@ const ConversationVideos = (props) => {
                 <p>{conversation.createdAt}</p>
               </div>
             </div> */}
-            <Conversation conversation={conversation} />
+            <Conversation conversation={myConversation} />
           </>
         );
       });

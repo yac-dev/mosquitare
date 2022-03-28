@@ -103,40 +103,31 @@ const conversationSchema = new mongoose.Schema({
   // ] TextChatっていうschemaもおそらく作ることになるだろう。→こっちでもっておくことはやっぱやめよう。one to many
 });
 
+conversationSchema.set('toJSON', { virtuals: true });
+conversationSchema.set('toObject', { virtuals: true });
+
 conversationSchema.virtual('comments', {
   ref: 'Comment',
-  foreignField: 'Conversation',
+  foreignField: 'conversation',
   localField: '_id', // 俺の何を参照してきてんの？ってこと。
 });
 
-conversationSchema.pre(/^find/, function (next) {
-  // this.populate({
-  //   path: 'users userMedias userScripts genre'
-  // }); // こういう複数選択、ダメね。動かない。
+// conversationSchema.pre(/^find/, function (next) {
+//   // this.populate({
+//   //   path: 'users userMedias userScripts genre'
+//   // }); // こういう複数選択、ダメね。動かない。
 
-  // this.populate({
-  //   path: 'users',
-  //   select: 'name email',
-  // });
+//   // this.populate({
+//   //   path: 'users',
+//   //   select: 'name email',
+//   // });
 
-  this.populate({
-    path: 'genre',
-  });
+//   // this.populate({
+//   //   path: 'genre',
+//   // });
 
-  this.populate({
-    path: 'userMedias',
-  });
-
-  this.populate({
-    path: 'userScripts',
-  });
-
-  // this.populate({
-  //   path: 'genre',
-  // });
-
-  next();
-});
+//   // next();
+// });
 
 const Conversation = mongoose.model('Conversation', conversationSchema);
 export default Conversation;
