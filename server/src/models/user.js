@@ -141,12 +141,12 @@ userSchema.pre(/^find/, function (next) {
 
   this.populate({
     path: 'nationalities',
-    select: 'name flagPic',
+    select: 'name flagPics',
   });
 
   this.populate({
     path: 'myLangs',
-    select: 'name flagPic',
+    select: 'name',
   });
 
   // this.populate({

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 
 // mui
@@ -19,7 +20,7 @@ import '../styles/comments.css';
 
 // ac
 import { createCommentActionCreator } from '../actionCreators/commentsActionCreator';
-import { connect } from 'react-redux';
+import { getConversationCommentsActionCreator } from '../actionCreators/commentsActionCreator';
 
 const myStyle = {
   '& .MuiInputBase-input': {
@@ -54,159 +55,206 @@ const MyTextField = styled(TextField)(myStyle);
 
 const Comments = (props) => {
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
-  const [value, setValue] = React.useState('Controlled');
+  const [content, setContent] = useState('');
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
+  useEffect(() => {
+    props.getConversationCommentsActionCreator();
+  }, []);
 
   const handleDrag = (e, ui) => {
     const { x, y } = deltaPosition;
     setDeltaPosition({ ...deltaPosition, x: x + ui.deltaX, y: y + ui.deltaY });
   };
 
-  const renderComments = (comments) => {
-    // if (comments) {
-    //   const commentsList = comments.map((comment) => {
-    //     return (
-    //       <ListItem alignItems='flex-start'>
-    //         <ListItemAvatar>
-    //           <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-    //         </ListItemAvatar>
-    //         <ListItemText
-    //           primary='Brunch this weekend?'
-    //           secondary={
-    //             <React.Fragment>
-    //               <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-    //                 Ali Connors
-    //               </Typography>
-    //               {" — I'll be in your neighborhood doing errands this…"}
-    //             </React.Fragment>
-    //           }
-    //         />
-    //       </ListItem>
-    //     );
-    //   });
+  const renderNationalities = (nationalities) => {
+    const nationalitiesList = nationalities.map((nationality) => {
+      return (
+        <>
+          <span className='small-flag'>
+            <img src={nationality.flagPics[0]} style={{ width: '15px', height: '10px' }} />
+          </span>
+          &nbsp;
+          <span className='small-flag' style={{ width: '10px', height: '10px' }}>
+            <img src={nationality.flagPics[0]} style={{ width: '15px', height: '10px' }} />
+          </span>
+          &nbsp;
+          <span className='small-flag' style={{ width: '10px', height: '10px' }}>
+            <img src={nationality.flagPics[0]} style={{ width: '15px', height: '10px' }} />
+          </span>
+        </>
+      );
+    });
+    return <>{nationalitiesList}</>;
+  };
 
-    //   return <>{commentsList}</>;
-    // } else {
-    //   return <div>No comments yet. Send a message or feedback if you have!!!</div>;
-    // }
+  const renderComments = () => {
+    if (props.commentsState) {
+      const commentsList = props.commentsState.map((comment) => {
+        return (
+          <ListItem alignItems='flex-start'>
+            <ListItemAvatar>
+              <Avatar alt={`${comment.user.name}`} src='/static/images/avatar/1.jpg' />
+            </ListItemAvatar>
+            <ListItemText
+              primary={`${comment.user.name}`}
+              secondary={
+                <React.Fragment>
+                  <Typography component='div' variant='body2' sx={{ color: 'white' }}>
+                    {comment.content}
+                  </Typography>
+                  <Typography component='div' variant='body2' sx={{ color: 'white' }}>
+                    From {renderNationalities(comment.user.nationalities)}
+                  </Typography>
 
-    return (
-      <>
+                  {/* {" — I'll be in your neighborhood doing errands this…"} */}
+                </React.Fragment>
+              }
+            />
+          </ListItem>
+        );
+      });
+
+      return (
         <div
           style={{
             width: '100%',
             height: '450px',
-            backgroundColor: 'red',
+            backgroundColor: 'rgb(0, 85, 212)',
             overflow: 'auto',
             borderRadius: '10px',
           }}
         >
-          <List>
-            <ListItem alignItems='flex-start'>
-              <ListItemAvatar>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-              </ListItemAvatar>
-              <ListItemText
-                primary='Brunch this weekend?'
-                secondary={
-                  <React.Fragment>
-                    <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-                      Ali Connors
-                    </Typography>
-                    {" — I'll be in your neighborhood doing errands this…"}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            {/* <Divider variant='inset' component='li' /> */}
-            <ListItem alignItems='flex-start'>
-              <ListItemAvatar>
-                <Avatar alt='Travis Howard' src='/static/images/avatar/2.jpg' />
-              </ListItemAvatar>
-              <ListItemText
-                primary='Summer BBQ'
-                secondary={
-                  <React.Fragment>
-                    <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-                      to Scott, Alex, Jennifer
-                    </Typography>
-                    {" — Wish I could come, but I'm out of town this…"}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            {/* <Divider variant='inset' component='li' /> */}
-            <ListItem alignItems='flex-start'>
-              <ListItemAvatar>
-                <Avatar alt='Cindy Baker' src='/static/images/avatar/3.jpg' />
-              </ListItemAvatar>
-              <ListItemText
-                primary='Oui Oui'
-                secondary={
-                  <React.Fragment>
-                    <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-                      Sandra Adams
-                    </Typography>
-                    {' — Do you have Paris recommendations? Have you ever…'}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            <ListItem alignItems='flex-start'>
-              <ListItemAvatar>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-              </ListItemAvatar>
-              <ListItemText
-                primary='Brunch this weekend?'
-                secondary={
-                  <React.Fragment>
-                    <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-                      Ali Connors
-                    </Typography>
-                    {" — I'll be in your neighborhood doing errands this…"}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            <ListItem alignItems='flex-start'>
-              <ListItemAvatar>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-              </ListItemAvatar>
-              <ListItemText
-                primary='Brunch this weekend?'
-                secondary={
-                  <React.Fragment>
-                    <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-                      Ali Connors
-                    </Typography>
-                    {" — I'll be in your neighborhood doing errands this…"}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            <ListItem alignItems='flex-start'>
-              <ListItemAvatar>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-              </ListItemAvatar>
-              <ListItemText
-                primary='Brunch this weekend?'
-                secondary={
-                  <React.Fragment>
-                    <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-                      Ali Connors
-                    </Typography>
-                    {" — I'll be in your neighborhood doing errands this…"}
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-          </List>
+          <List>{commentsList}</List>
         </div>
-      </>
-    );
+      );
+    } else {
+      return <div>No comments yet. Add a message or feedback if you have!!!</div>;
+    }
+
+    //   return (
+    //     <>
+    //       <div
+    //         style={{
+    //           width: '100%',
+    //           height: '450px',
+    //           backgroundColor: 'red',
+    //           overflow: 'auto',
+    //           borderRadius: '10px',
+    //         }}
+    //       >
+    //         <List>
+    //           <ListItem alignItems='flex-start'>
+    //             <ListItemAvatar>
+    //               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
+    //             </ListItemAvatar>
+    //             <ListItemText
+    //               primary='Brunch this weekend?'
+    //               secondary={
+    //                 <React.Fragment>
+    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
+    //                     Ali Connors
+    //                   </Typography>
+    //                   {" — I'll be in your neighborhood doing errands this…"}
+    //                 </React.Fragment>
+    //               }
+    //             />
+    //           </ListItem>
+    //           {/* <Divider variant='inset' component='li' /> */}
+    //           <ListItem alignItems='flex-start'>
+    //             <ListItemAvatar>
+    //               <Avatar alt='Travis Howard' src='/static/images/avatar/2.jpg' />
+    //             </ListItemAvatar>
+    //             <ListItemText
+    //               primary='Summer BBQ'
+    //               secondary={
+    //                 <React.Fragment>
+    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
+    //                     to Scott, Alex, Jennifer
+    //                   </Typography>
+    //                   {" — Wish I could come, but I'm out of town this…"}
+    //                 </React.Fragment>
+    //               }
+    //             />
+    //           </ListItem>
+    //           {/* <Divider variant='inset' component='li' /> */}
+    //           <ListItem alignItems='flex-start'>
+    //             <ListItemAvatar>
+    //               <Avatar alt='Cindy Baker' src='/static/images/avatar/3.jpg' />
+    //             </ListItemAvatar>
+    //             <ListItemText
+    //               primary='Oui Oui'
+    //               secondary={
+    //                 <React.Fragment>
+    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
+    //                     Sandra Adams
+    //                   </Typography>
+    //                   {' — Do you have Paris recommendations? Have you ever…'}
+    //                 </React.Fragment>
+    //               }
+    //             />
+    //           </ListItem>
+    //           <ListItem alignItems='flex-start'>
+    //             <ListItemAvatar>
+    //               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
+    //             </ListItemAvatar>
+    //             <ListItemText
+    //               primary='Brunch this weekend?'
+    //               secondary={
+    //                 <React.Fragment>
+    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
+    //                     Ali Connors
+    //                   </Typography>
+    //                   {" — I'll be in your neighborhood doing errands this…"}
+    //                 </React.Fragment>
+    //               }
+    //             />
+    //           </ListItem>
+    //           <ListItem alignItems='flex-start'>
+    //             <ListItemAvatar>
+    //               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
+    //             </ListItemAvatar>
+    //             <ListItemText
+    //               primary='Brunch this weekend?'
+    //               secondary={
+    //                 <React.Fragment>
+    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
+    //                     Ali Connors
+    //                   </Typography>
+    //                   {" — I'll be in your neighborhood doing errands this…"}
+    //                 </React.Fragment>
+    //               }
+    //             />
+    //           </ListItem>
+    //           <ListItem alignItems='flex-start'>
+    //             <ListItemAvatar>
+    //               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
+    //             </ListItemAvatar>
+    //             <ListItemText
+    //               primary='Brunch this weekend?'
+    //               secondary={
+    //                 <React.Fragment>
+    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
+    //                     Ali Connors
+    //                   </Typography>
+    //                   {" — I'll be in your neighborhood doing errands this…"}
+    //                 </React.Fragment>
+    //               }
+    //             />
+    //           </ListItem>
+    //         </List>
+    //       </div>
+    //     </>
+    //   );
+  };
+
+  const handleSendComment = (content) => {
+    if (content) {
+      props.createCommentActionCreator(content);
+      setContent('');
+    }
+    // else{
+    // errorを表示する。これ必要ね。
+    // }
   };
 
   return (
@@ -226,9 +274,11 @@ const Comments = (props) => {
             // onChange={(event) => setInputText(event.target.value)}
             // onKeyDown={(event) => sendChatByKeyDownEnter(event)}
             style={{ width: '100%', height: '100%' }}
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
           />
         </div>
-        <button onClick={() => props.createCommentActionCreator()}></button>
+        <button onClick={() => props.handleSendComment(content)}>Send Message</button>
       </div>
     </Draggable>
   );
@@ -236,7 +286,7 @@ const Comments = (props) => {
 
 // まあ、基本はこのconversationIdに関連したcommentだけを引っ張ってくる感じよ。mapStateToPropsで。
 const mapStateToProps = (state) => {
-  return { conversationState: state.conversationState };
+  return { conversationState: state.conversationState, commentsState: Object.values(state.commentsState) };
 };
 
-export default connect(mapStateToProps, { createCommentActionCreator })(Comments);
+export default connect(mapStateToProps, { createCommentActionCreator, getConversationCommentsActionCreator })(Comments);
