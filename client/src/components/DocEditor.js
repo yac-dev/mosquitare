@@ -96,15 +96,16 @@ const DocEditor = (props) => {
   }, [quill]);
 
   useEffect(() => {
-    if (quill) {
+    if (quill && props.docState.id) {
       const interval = setInterval(() => {
-        props.socket.emit('SAVE_OUR_DOC', { docId: props.docState._id, docData: quill.getContents() });
+        props.socket.emit('SAVE_OUR_DOC', { docId: props.docState.id, docData: quill.getContents() });
       }, 3000);
+
       return () => {
         clearInterval(interval);
       };
     }
-  }, [quill]);
+  }, [quill, props.docState.id]);
 
   // useEffect(() => {
   //   if (props.docState._id) {

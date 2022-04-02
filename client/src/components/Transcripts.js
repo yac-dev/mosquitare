@@ -23,15 +23,15 @@ const Transcripts = (props) => {
         );
       });
 
-      return (
-        <div className={`rendered-transcripts ${props.openTranscripts ? undefined : 'hidden'}`}>{transcriptsList}</div>
-      );
+      return <>{transcriptsList}</>;
     } else {
-      return null;
+      return <div>No transcripts.</div>;
     }
   };
 
-  return <>{renderTranscripts()}</>;
+  return (
+    <div className={`rendered-transcripts ${props.openTranscripts ? undefined : 'hidden'}`}>{renderTranscripts()}</div>
+  );
 };
 
 const mapStateToProps = (state) => {

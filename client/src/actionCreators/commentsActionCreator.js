@@ -31,3 +31,10 @@ export const getConversationCommentsActionCreator = () => async (dispatch, getSt
     console.log(error);
   }
 };
+
+export const cleanUpComments = () => {
+  return {
+    type: 'CLEAN_UP_COMMENTS',
+    payload: '',
+  };
+};

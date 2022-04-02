@@ -1,4 +1,5 @@
 import Transcript from '../models/transcript';
+import mongoose from 'mongoose';
 
 export const createTranscript = async (request, response) => {
   // ここでresponseをsendする必要ない。clientからrouterを通ってくる必要もなし。socketに行くからね。
@@ -8,7 +9,7 @@ export const createTranscript = async (request, response) => {
 export const getTranscriptsByConversationId = async (request, response) => {
   try {
     const { conversationId } = request.params;
-    const transcripts = await Transcript.find({ _id: conversationId }).populate({
+    const transcripts = await Transcript.find({ conversation: mongoose.Types.ObjectId(conversationId) }).populate({
       path: 'user',
       model: 'User',
       select: 'name',

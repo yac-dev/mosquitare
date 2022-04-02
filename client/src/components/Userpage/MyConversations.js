@@ -47,41 +47,20 @@ const ConversationVideos = (props) => {
       const conversationList = props.myConversations.map((myConversation) => {
         return (
           <>
-            {/* <div className='conversation-wrapper' onClick={(event) => onConversationClick(event)}>
-              <div className='video-thumbnail'>
-                <div className='conversation-video-wrapper'>
-                  <video className='thum' style={{ borderTopLeftRadius: '10px' }}>
-                    <source
-                      src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${conversation.calledUserMedia.videoFileName}`}
-                      ref={videoRef1}
-                    />
-                  </video>
-                </div>
-                <div className='conversation-video-wrapper'>
-                  <video className='thum' style={{ borderTopRightRadius: '10px' }}>
-                    <source
-                      src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${conversation.recievedUserMedia.videoFileName}`}
-                      ref={videoRef2}
-                    />
-                  </video>
-                </div>
-              </div>
-              <div className='conversation-information'>
-                conversation info here!!
-                <p>{conversation.createdAt}</p>
-              </div>
-            </div> */}
             <Conversation conversation={myConversation} />
           </>
         );
       });
-      return <div className='conversation-list'>{conversationList}</div>;
+      return (
+        // <div className='conversation-list'>{conversationList}</div>
+        <>{conversationList}</>
+      );
     }
   };
 
   return (
     <>
-      {renderConversationList()}
+      <div className='my-conversations'>{renderConversationList()}</div>
       <VideoContext.Provider value={{ videoRef1: videoRef1.current, videoRef2: videoRef2.current }}>
         <DisplayVideoModal
           showVideoDisplayingModal={showVideoDisplayingModal}

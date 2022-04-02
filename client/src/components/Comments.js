@@ -278,7 +278,7 @@ const Comments = (props) => {
             onChange={(event) => setContent(event.target.value)}
           />
         </div>
-        <button onClick={() => props.handleSendComment(content)}>Send Message</button>
+        <button onClick={() => handleSendComment(content)}>Send Message</button>
       </div>
     </Draggable>
   );

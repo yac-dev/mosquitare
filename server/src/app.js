@@ -14,6 +14,7 @@ import conversationsRouter from './routes/conversations';
 import userScriptsRouter from './routes/userScripts';
 import commentsRouter from './routes/comments';
 import transcriptsRouter from './routes/transcripts';
+import docsRouter from './routes/docs';
 
 app.use(express.json());
 app.use(cors());
@@ -32,6 +33,7 @@ app.use('/api/conversations', conversationsRouter);
 app.use('/api/userscripts', userScriptsRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/transcripts', transcriptsRouter);
+app.use('/api/docs', docsRouter);
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 

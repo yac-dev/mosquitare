@@ -1,7 +1,7 @@
 @media only screen and (min-width: 320px) and (max-width: 767px) {
   .language-status-and-transcript {
     height: 70vh;
-    width: 80vw;
+    width: 40vw;
     color: white;
     background-color: rgb(29, 49, 79);
     position: absolute;
@@ -26,7 +26,8 @@
   }
 }
 
-@media only screen and (min-width: 1200px) {
+/*細かいmediaqueryは一旦おいておこう。*/
+@media only screen and (min-width: 768px) {
   .language-status-and-transcript {
     height: 70vh;
     width: 40vw;

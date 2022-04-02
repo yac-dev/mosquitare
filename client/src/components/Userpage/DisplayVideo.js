@@ -21,6 +21,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 // components
 import Comments from '../Comments';
 import Transcripts from '../Transcripts';
+import FetchedDocEditor from '../FetchedDocEditor';
 
 // css
 import '../../styles/userpage.css';
@@ -90,6 +91,7 @@ const DisplayVideo = (props) => {
   // const recievedUserVideoRef = useRef();
   const [openTranscripts, setOpenTranscripts] = useState(false);
   const [openComments, setOpenComments] = useState(false);
+  const [openFetchedDocEditor, setOpenFetchedDocEditor] = useState(false);
 
   useEffect(() => {
     if (loaded === 2) {
@@ -186,14 +188,26 @@ const DisplayVideo = (props) => {
         </video>
         <div className='users-information'>
           <div className='user-info-at-video'>
-            <img src={props.conversation.users[0].flagPics[0]} />
+            <img
+              src={props.conversation.users[0].nationalities[0].flagPics[0]}
+              style={{ width: '16px', height: '10px' }}
+            />
             &nbsp;{props.conversation.users[0].name}&nbsp;
-            <img src={props.conversation.users[0].flagPics[0]} />
+            <img
+              src={props.conversation.users[0].nationalities[0].flagPics[0]}
+              style={{ width: '16px', height: '10px' }}
+            />
           </div>
           <div className='user-info-at-video'>
-            <img src={props.conversation.users[1].flagPics[0]} />
+            <img
+              src={props.conversation.users[1].nationalities[0].flagPics[0]}
+              style={{ width: '16px', height: '10px' }}
+            />
             &nbsp;{props.conversation.users[1].name}&nbsp;
-            <img src={props.conversation.users[1].flagPics[0]} />
+            <img
+              src={props.conversation.users[1].nationalities[0].flagPics[0]}
+              style={{ width: '16px', height: '10px' }}
+            />
           </div>
         </div>
         {/* <div className='video-seekbar'>
@@ -225,6 +239,7 @@ const DisplayVideo = (props) => {
             </Tooltip>
           </ThemeProvider>
           <Transcripts openTranscripts={openTranscripts} setOpenTranscripts={setOpenTranscripts} />
+
           <ThemeProvider theme={theme}>
             <Tooltip title='Comments' arrow>
               <CommentIconButton onClick={() => setOpenComments(true)}>
@@ -238,9 +253,10 @@ const DisplayVideo = (props) => {
             </Tooltip>
           </ThemeProvider>
           <Comments openComments={openComments} setOpenComments={setOpenComments} />
+
           <ThemeProvider theme={theme}>
             <Tooltip title='Shared note' arrow>
-              <NoteIconButton>
+              <NoteIconButton onClick={() => setOpenFetchedDocEditor(true)}>
                 <InsertDriveFileIcon
                   sx={{
                     width: { md: '30px', lg: '40px' },
@@ -250,6 +266,11 @@ const DisplayVideo = (props) => {
               </NoteIconButton>
             </Tooltip>
           </ThemeProvider>
+          <FetchedDocEditor
+            openFetchedDocEditor={openFetchedDocEditor}
+            setOpenFetchedDocEditor={setOpenFetchedDocEditor}
+          />
+
           <ThemeProvider theme={theme}>
             <Tooltip title='Translate (Sorry, not available now 🙅🏻)' arrow>
               <GTranslateIconButton>

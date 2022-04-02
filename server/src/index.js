@@ -86,6 +86,8 @@ const io = new Server(server, {
 const mapMeetingIdToUsers = {};
 const mapUserToMeetingId = {};
 
+const docDefaultValue = '';
+
 io.on('connection', (socket) => {
   socket.emit(I_GOT_SOCKET_ID, socket.id);
 
@@ -215,7 +217,7 @@ io.on('connection', (socket) => {
 
   // doc
   socket.on('LETS_START_OUR_DOC', async (dataFromCaller) => {
-    const doc = await Doc.create({ data: '', conversation: dataFromCaller.conversation });
+    const doc = await Doc.create({ data: docDefaultValue, conversation: dataFromCaller.conversation });
     io.to(dataFromCaller.me).emit('STARTED_YOUR_DOC', { docId: doc._id, docData: doc.data });
     io.to(dataFromCaller.to).emit('STARTED_YOUR_DOC', { docId: doc._id, docData: doc.data });
   });
@@ -231,7 +233,11 @@ io.on('connection', (socket) => {
   });
 
   socket.on('SAVE_OUR_DOC', async (dataFromClient) => {
-    await Doc.findByIdAndUpdate(dataFromClient.docId, { data: dataFromClient.docData });
+    console.log(dataFromClient);
+    const docu = await Doc.findById(dataFromClient.docId);
+    docu.data = dataFromClient.docData;
+    console.log(docu);
+    await docu.save();
   });
 
   socket.on('OUR_DOC_IS_OPENED', (dataFromClient) => {

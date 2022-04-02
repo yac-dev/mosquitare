@@ -281,7 +281,7 @@ const WorldMap = (props) => {
           </Button> */}
       {/* </ReactMapGL> */}
 
-      <Desktop>
+      <Default>
         <div style={{ height: '100vh', width: '100%' }}>
           <ReactMapGL
             {...viewport}
@@ -323,9 +323,9 @@ const WorldMap = (props) => {
             fullscreen1on1Modal={fullscreen1on1Modal}
           />
         </div>
-      </Desktop>
+      </Default>
 
-      <Tablet>
+      {/* <Tablet>
         <div style={{ height: '100vh', width: '100%' }}>
           <ReactMapGL
             {...viewport}
@@ -363,7 +363,7 @@ const WorldMap = (props) => {
             fullscreen1on1Modal={fullscreen1on1Modal}
           />
         </div>
-      </Tablet>
+      </Tablet> */}
 
       <Mobile>
         <div style={{ height: '100vh', width: '100%' }}>
