@@ -20,6 +20,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // components
 import Comments from '../Comments';
+import Transcripts from '../Transcripts';
 
 // css
 import '../../styles/userpage.css';
@@ -87,6 +88,7 @@ const DisplayVideo = (props) => {
   const [currentVideoTime, setCurrentVideoTime] = useState();
   // const calledUserVideoRef = useRef();
   // const recievedUserVideoRef = useRef();
+  const [openTranscripts, setOpenTranscripts] = useState(false);
   const [openComments, setOpenComments] = useState(false);
 
   useEffect(() => {
@@ -182,6 +184,18 @@ const DisplayVideo = (props) => {
         >
           <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
         </video>
+        <div className='users-information'>
+          <div className='user-info-at-video'>
+            <img src={props.conversation.users[0].flagPics[0]} />
+            &nbsp;{props.conversation.users[0].name}&nbsp;
+            <img src={props.conversation.users[0].flagPics[0]} />
+          </div>
+          <div className='user-info-at-video'>
+            <img src={props.conversation.users[1].flagPics[0]} />
+            &nbsp;{props.conversation.users[1].name}&nbsp;
+            <img src={props.conversation.users[1].flagPics[0]} />
+          </div>
+        </div>
         {/* <div className='video-seekbar'>
           <input
             className='seekbar'
@@ -200,7 +214,7 @@ const DisplayVideo = (props) => {
         <Stack direction='row' spacing={2}>
           <ThemeProvider theme={theme}>
             <Tooltip title='Transcript' arrow>
-              <TranscriptIconButton>
+              <TranscriptIconButton onClick={() => setOpenTranscripts(true)}>
                 <RecordVoiceOverIcon
                   sx={{
                     width: { md: '30px', lg: '40px' },
@@ -210,6 +224,7 @@ const DisplayVideo = (props) => {
               </TranscriptIconButton>
             </Tooltip>
           </ThemeProvider>
+          <Transcripts openTranscripts={openTranscripts} setOpenTranscripts={setOpenTranscripts} />
           <ThemeProvider theme={theme}>
             <Tooltip title='Comments' arrow>
               <CommentIconButton onClick={() => setOpenComments(true)}>

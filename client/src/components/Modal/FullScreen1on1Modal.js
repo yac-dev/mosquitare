@@ -15,6 +15,7 @@ import Chat from '../Chat';
 import SubtitleWrapper from './SubtitleWrapper';
 import LanguageStatus from '../LanguageStatus';
 import LanguageStatusAndTranscript from './LanguageStatusAndTranscript';
+import DocEditor from '../DocEditor';
 import MyClock from '../MyClock';
 // import VerticalTabsWrapper from '../VerticalTabsWrapper';
 import AppsWrapper from '../ConversationApps/AppsWrapper';
@@ -55,6 +56,7 @@ const FullScreen1on1Modal = (props) => {
   const [openTranscriptComponent, setOpenTranscriptComponent] = useState(false);
   const [openLanguageStatus, setOpenLanguageStatus] = useState(false);
   const [openLanguageStatusAndTranscript, setOpenLanguageStatusAndTranscript] = useState(false);
+  const [openDoc, setOpenDoc] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -100,6 +102,7 @@ const FullScreen1on1Modal = (props) => {
               setOpenTranscriptComponent={setOpenTranscriptComponent}
               setOpenLanguageStatus={setOpenLanguageStatus}
               setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
+              setOpenDoc={setOpenDoc}
             />
             <Chat
               socket={props.socket}
@@ -115,6 +118,7 @@ const FullScreen1on1Modal = (props) => {
               setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
               openLanguageStatusAndTranscript={openLanguageStatusAndTranscript}
             />
+            <DocEditor socket={props.socket} openDoc={openDoc} setOpenDoc={setOpenDoc} />
             {/* <SubtitleWrapper
               socket={props.socket}
               openTranscriptComponent={openTranscriptComponent}

@@ -65,6 +65,9 @@ import {
 //   MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE,
 // } from '../client/src/actionCreators/socketEvents';
 
+import Transcript from './models/transcript';
+import Doc from './models/doc';
+
 const io = new Server(server, {
   cors: {
     origin: '*',
@@ -162,9 +165,17 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, (dataFromSpeaker) => {
+  socket.on(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, async (dataFromSpeaker) => {
+    //  ここで、databaseにobjectを作ることをする。
+    const transcript = await Transcript.create({
+      transcript: dataFromSpeaker.transcriptObject.transcript,
+      user: dataFromSpeaker.transcriptObject.user,
+      conversation: dataFromSpeaker.transcriptObject.conversation,
+      language: dataFromSpeaker.transcriptObject.language,
+    });
+
     io.to(dataFromSpeaker.to).emit(MY_PARTNER_SEND_ME_FINAL_TRANSCRIPT, {
-      finalTranscript: dataFromSpeaker.finalTranscript,
+      transcriptObject: dataFromSpeaker.transcriptObject,
     });
   });
 
@@ -200,6 +211,31 @@ io.on('connection', (socket) => {
     io.to(dataFromSender.to).emit(MY_PARTNER_SEND_ME_A_CHAT_MESSAGE, {
       messageObject: dataFromSender.messageObject,
     });
+  });
+
+  // doc
+  socket.on('LETS_START_OUR_DOC', async (dataFromCaller) => {
+    const doc = await Doc.create({ data: '', conversation: dataFromCaller.conversation });
+    io.to(dataFromCaller.me).emit('STARTED_YOUR_DOC', { docId: doc._id, docData: doc.data });
+    io.to(dataFromCaller.to).emit('STARTED_YOUR_DOC', { docId: doc._id, docData: doc.data });
+  });
+
+  // socket.on('GET_OUR_DOC', async (dataFromClient) => {
+  //   const doc = await Document.findById(dataFromClient.docId);
+  //   io.to(dataFromClient.me).emit('ITS_YOUR_DOC_DATA', doc.data);
+  // });
+
+  socket.on('SEND_DOC_CHANGE', (dataFromClient) => {
+    io.to(dataFromClient.me).emit('DOC_DATA_CHANGED', { deltaData: dataFromClient.delta });
+    io.to(dataFromClient.to).emit('DOC_DATA_CHANGED', { deltaData: dataFromClient.delta });
+  });
+
+  socket.on('SAVE_OUR_DOC', async (dataFromClient) => {
+    await Doc.findByIdAndUpdate(dataFromClient.docId, { data: dataFromClient.docData });
+  });
+
+  socket.on('OUR_DOC_IS_OPENED', (dataFromClient) => {
+    io.to(dataFromClient.to).emit('OPEN_MY_DOC');
   });
 });
 

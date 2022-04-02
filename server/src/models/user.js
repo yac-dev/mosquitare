@@ -118,6 +118,13 @@ const userSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
+  visited: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Country',
+    },
+  ],
+  // visitedPhoto: [[{ type: String }]],いずれ、ここにも足していくことになる。
 });
 
 userSchema.index({ location: '2dsphere' });
@@ -149,6 +156,10 @@ userSchema.pre(/^find/, function (next) {
     select: 'name',
   });
 
+  this.populate({
+    path: 'visited',
+    select: 'name location flagPics',
+  });
   // this.populate({
   //   path: 'conversations',
   // });

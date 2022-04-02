@@ -101,24 +101,28 @@ const SubtitleWrapper = (props) => {
   useEffect(() => {
     if (finalTranscript !== '') {
       // finalTranscriptの時
-      console.log('Got final result:', finalTranscript);
-      const myName = store.getState().authState.currentUser.name;
+      console.log('Final result:', finalTranscript);
+      // const userId = store.getState().authState.currentUser._id;
       const transcriptObject = {};
-      transcriptObject['name'] = myName;
       transcriptObject['transcript'] = finalTranscript;
+      transcriptObject['user'] = store.getState().authState.currentUser._id;
+      transcriptObject['language'] = store.getState().mediaState.currentLanguage._id;
+      transcriptObject['conversation'] = store.getState().conversationState._id;
       setConversationTranscript((previouState) => [...previouState, transcriptObject]);
       const to = store.getState().mediaState.callingWith.socketId;
-      props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
+      // props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
+      props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, transcriptObject });
+
       // if(props.mediaState.amICalling){ if(props.mediaState.currentLanguage._id === props.mediaState.exchanging[0]) }
       // この状態の時は、learningを話しているということになる。
       if (store.getState().mediaState.amICalling) {
         if (
           store.getState().mediaState.currentLanguage.name === store.getState().mediaState.exchangingLanguages[0].name
         ) {
-          setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
+          // setMyLearningLangTranscript((previouState) => [...previouState, transcriptObject]);
           countTranscriptWords(finalTranscript, props.setCountLearningLangLength);
         } else {
-          setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
+          // setMyNativeLangTranscript((previouState) => [...previouState, transcriptObject]);
           countTranscriptWords(finalTranscript, props.setCountNativeLangLength);
         }
       } else if (store.getState().mediaState.amIRecieving) {
@@ -126,10 +130,10 @@ const SubtitleWrapper = (props) => {
           store.getState().mediaState.currentLanguage.name === store.getState().mediaState.exchangingLanguages[0].name
         ) {
           // 向こうがlearningな言語を喋っているのね、ってこと。
-          setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
+          // setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
           countTranscriptWords(finalTranscript, props.setCountNativeLangLength);
         } else {
-          setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
+          // setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
           countTranscriptWords(finalTranscript, props.setCountLearningLangLength);
         }
       }
@@ -165,11 +169,11 @@ const SubtitleWrapper = (props) => {
   useEffect(() => {
     props.socket.on(MY_PARTNER_SEND_ME_FINAL_TRANSCRIPT, (dataFromServer) => {
       console.log('I got final transcript from partner');
-      const transcriptObject = {};
-      transcriptObject['name'] = props.mediaState.callingWith.name;
-      transcriptObject['transcript'] = dataFromServer.finalTranscript;
+      // const transcriptObject = {};
+      // transcriptObject['name'] = props.mediaState.callingWith.name;
+      // transcriptObject['transcript'] = dataFromServer.finalTranscript;
       setPartnerInterimTranscript('');
-      setConversationTranscript((previousState) => [...previousState, transcriptObject]);
+      setConversationTranscript((previousState) => [...previousState, dataFromServer.transcriptObject]);
     });
   }, []);
 
@@ -188,19 +192,20 @@ const SubtitleWrapper = (props) => {
   }, []);
 
   // 電話切った時に発動。hang up buuton推して、callDisconnectedがtrueになる。
-  useEffect(() => {
-    return () => {
-      console.log('subtitle after finishing should work');
-      SpeechRecognition.stopListening();
-      console.log('transcription logged', conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
-      // props.createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
-      props.createUserScriptActionCreator(
-        conversationTranscriptRef.current,
-        myLearningLangTranscriptRef.current,
-        myNativeLangTranscriptRef.current
-      );
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     console.log('subtitle after finishing should work');
+  //     SpeechRecognition.stopListening();
+  //     console.log('transcription logged', conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
+  //     // props.createUserScriptActionCreator(conversationTranscript, myLearningLangTranscript, myNativeLangTranscript);
+  //     props.createUserScriptActionCreator(
+  //       conversationTranscriptRef.current,
+  //       myLearningLangTranscriptRef.current,
+  //       myNativeLangTranscriptRef.current
+  //     );
+  //   };
+  // }, []);
+  // ここはもう必要ない。socket使って、逐次databaseにtranscript objectを保存していく。
 
   // useEffect(() => {
   //   if (props.mediaState.callDisconnected) {
@@ -220,18 +225,43 @@ const SubtitleWrapper = (props) => {
 
   // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
   const countTranscriptWords = (transcript, setCountLangLength) => {
-    if (store.getState().mediaState.exchangingLanguages[0].name === 'English' || 'Spanish' || 'French' || 'German') {
+    if (store.getState().mediaState.currentLanguage.name === 'English' || 'Spanish' || 'French' || 'German') {
       const wordsLength = transcript.split(' ').length;
       setCountLangLength((previousState) => previousState + wordsLength);
-    } else if (store.getState().mediaState.exchangingLanguages[0].name === 'Japanese' || 'Korean' || 'Chinese') {
+    } else if (store.getState().mediaState.currentLanguage.name === 'Japanese' || 'Korean' || 'Chinese') {
       setCountLangLength((previousState) => previousState + transcript.length);
     }
   };
 
-  const countAsianTranscriptWords = (transcript, setCountLangLength) => {};
+  const renderTranscripts = () => {
+    const transcriptList = conversationTranscript.map((conversationTranscript) => {
+      if (conversationTranscript.user === store.getState().authState.currentUser._id) {
+        return (
+          <>
+            <span>You: {conversationTranscript.transcript}</span>&nbsp;
+            <Tooltip title='translate'>
+              <TranslateTranscript translateInput={conversationTranscript.transcript} />
+            </Tooltip>
+          </>
+        );
+      } else if (conversationTranscript.user === store.getState().mediaState.callingWith._id) {
+        return (
+          <>
+            <span>
+              {store.getState().mediaState.callingWith.name}: {conversationTranscript.transcript}
+            </span>
+            &nbsp;
+            <Tooltip title='translate'>
+              <TranslateTranscript translateInput={conversationTranscript.transcript} />
+            </Tooltip>
+          </>
+        );
+      }
+    });
 
+    return <>{transcriptList}</>;
+  };
   // steventのapi key AIzaSyCf0Xy0OnhxlduyEt3K8zP-sOuu-l_u6uA
-
   const handleDrag = (e, ui) => {
     const { x, y } = deltaPosition;
     setDeltaPosition({ ...deltaPosition, x: x + ui.deltaX, y: y + ui.deltaY });
@@ -239,35 +269,35 @@ const SubtitleWrapper = (props) => {
 
   // render系
   // chatと一緒。
-  const renderTranscripts = () => {
-    const transcripts = conversationTranscript.map((transcriptObject) => {
-      return (
-        // <>
-        //   <div style={{ marginBottom: '5px' }}>
-        //     <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{transcriptObject.name}</p>
-        //     <div
-        //       style={{
-        //         borderRadius: '10px',
-        //         backgroundColor: 'rgb(35, 63, 105)',
-        //         border: '1px solid white',
-        //         padding: '5px',
-        //         display: 'inline',
-        //       }}
-        //     >
-        //       {transcriptObject.transcript}
-        //     </div>
-        //   </div>
-        // </>
-        <>
-          <p>
-            {transcriptObject.name}: {transcriptObject.transcript}&nbsp;
-            <TranslateTranscript translateInput={transcriptObject.transcript} />
-          </p>
-        </>
-      );
-    });
-    return <>{transcripts}</>;
-  };
+  // const renderTranscripts = () => {
+  //   const transcripts = conversationTranscript.map((transcriptObject) => {
+  //     return (
+  //       // <>
+  //       //   <div style={{ marginBottom: '5px' }}>
+  //       //     <p style={{ marginLeft: '5px', marginBottom: '2px' }}>{transcriptObject.name}</p>
+  //       //     <div
+  //       //       style={{
+  //       //         borderRadius: '10px',
+  //       //         backgroundColor: 'rgb(35, 63, 105)',
+  //       //         border: '1px solid white',
+  //       //         padding: '5px',
+  //       //         display: 'inline',
+  //       //       }}
+  //       //     >
+  //       //       {transcriptObject.transcript}
+  //       //     </div>
+  //       //   </div>
+  //       // </>
+  //       <>
+  //         <p>
+  //           {transcriptObject.name}: {transcriptObject.transcript}&nbsp;
+  //           <TranslateTranscript translateInput={transcriptObject.transcript} />
+  //         </p>
+  //       </>
+  //     );
+  //   });
+  //   return <>{transcripts}</>;
+  // };
 
   const renderPartnerInterimTranscript = () => {
     if (partnerInterimTranscript) {

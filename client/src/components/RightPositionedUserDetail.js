@@ -5,9 +5,13 @@ const RightPositionedUserDetail = (props) => {
   return (
     <div
       className='user-detail-wrapper'
+      // onMouseOver={() => {
+      //   props.setWorldMapSetting({ ...props.worldMapSettings, dragPan: false, scrollZoom: false });
+      // なんで急に効かなくなった？？？
+      // }}
       style={{
         cursor: 'default',
-        width: 450,
+        width: '35vw',
         height: '85vh',
         position: 'absolute',
         right: '50px',
@@ -19,6 +23,8 @@ const RightPositionedUserDetail = (props) => {
         isUserIconClicked={props.isUserIconClicked}
         userInfo={props.userInfo}
         setShowCallingModal={props.setShowCallingModal}
+        worldMapSettings={props.worldMapSettings}
+        setWorldMapSetting={props.setWorldMapSetting}
       />
     </div>
   );

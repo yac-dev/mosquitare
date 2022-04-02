@@ -9,23 +9,45 @@ export const createUserMedia = (blobForVideo, duration) => async (dispatch, getS
     console.log(duration);
     const userId = getState().authState.currentUser._id;
     const { conversationId } = getState().conversationState;
-    const formData = new FormData();
-    formData.append('mediaFile', blobForVideo);
-    formData.append('duration', duration);
-    // formData.append('mediaFiles', blobForAudio);
-    // formData.append('conversationId', conversationId); // paramにいれてもいいかも。
-    // formData.append('conversationDuration', seconds);
-    // formData.append('mediaFiles', blobForLearningLanguage);
-    // formData.append('mediaFiles', blobForNativeLanguage);
-    await mosquitareAPI.post(`/userMedias/upload/${userId}/${conversationId}`, formData, {
-      headers: { 'Content-type': 'multipart/form-data' },
-    });
-    // console.log(result);
-    // const { userMedia } = result.data;
-    dispatch({
-      type: CREATE_USER_MEDIA,
-      payload: '',
-    });
+    if (getState().mediaState.amICalling) {
+      const formData = new FormData();
+      formData.append('calledOrRecieved', 'called');
+      formData.append('mediaFile', blobForVideo);
+      formData.append('duration', duration);
+      // formData.append('mediaFiles', blobForAudio);
+      // formData.append('conversationId', conversationId); // paramにいれてもいいかも。
+      // formData.append('conversationDuration', seconds);
+      // formData.append('mediaFiles', blobForLearningLanguage);
+      // formData.append('mediaFiles', blobForNativeLanguage);
+      await mosquitareAPI.post(`/userMedias/upload/${userId}/${conversationId}`, formData, {
+        headers: { 'Content-type': 'multipart/form-data' },
+      });
+      // console.log(result);
+      // const { userMedia } = result.data;
+      dispatch({
+        type: CREATE_USER_MEDIA,
+        payload: '',
+      });
+    } else if (getState().mediaState.amIRecieving) {
+      const formData = new FormData();
+      formData.append('calledOrRecieved', 'recieved');
+      formData.append('mediaFile', blobForVideo);
+      formData.append('duration', duration);
+      // formData.append('mediaFiles', blobForAudio);
+      // formData.append('conversationId', conversationId); // paramにいれてもいいかも。
+      // formData.append('conversationDuration', seconds);
+      // formData.append('mediaFiles', blobForLearningLanguage);
+      // formData.append('mediaFiles', blobForNativeLanguage);
+      await mosquitareAPI.post(`/userMedias/upload/${userId}/${conversationId}`, formData, {
+        headers: { 'Content-type': 'multipart/form-data' },
+      });
+      // console.log(result);
+      // const { userMedia } = result.data;
+      dispatch({
+        type: CREATE_USER_MEDIA,
+        payload: '',
+      });
+    }
     // return Promise.resolve(userMedia);
     // const callingState = getState().mediaState;
     // const { integratedUserMediaId } = getState().integratedUserMediaState;

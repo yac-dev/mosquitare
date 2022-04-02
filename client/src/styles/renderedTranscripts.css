@@ -1,0 +1,18 @@
+.rendered-transcripts {
+  height: 70vh;
+  width: 40vw;
+  color: white;
+  background-color: rgb(29, 49, 79);
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 10;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: grab;
+  overflow: auto;
+}
+
+.hidden {
+  display: none;
+}

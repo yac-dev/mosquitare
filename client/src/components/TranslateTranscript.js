@@ -3,8 +3,18 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 // mui
+import { styled } from '@mui/system';
+import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
+
+const TranslateIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(37, 95, 184)',
+  '&:hover': {
+    backgroundColor: 'rgb(50, 124, 237)',
+  },
+}));
 
 const TranslateTranscript = (props) => {
   const [translated, setTranslated] = useState('');
@@ -46,9 +56,11 @@ const TranslateTranscript = (props) => {
   return (
     <>
       <span>
-        <IconButton onClick={() => googleTranslate(props.translateInput)}>
-          <GTranslateIcon />
-        </IconButton>
+        <Tooltip title='Translate'>
+          <TranslateIconButton onClick={() => googleTranslate(props.translateInput)}>
+            <GTranslateIcon sx={{ color: 'white' }} />
+          </TranslateIconButton>
+        </Tooltip>
       </span>
       <br></br>
       {renderTranslated()}

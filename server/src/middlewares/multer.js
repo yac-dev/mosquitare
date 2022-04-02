@@ -26,9 +26,10 @@ const storage = multer.diskStorage({
   },
   // './uploadedFilesBuffer/'
   filename: function (request, file, callback) {
+    const { calledOrRecieved } = request.body;
     const extension = file.mimetype.split('/')[1];
     // ここでjsonに直そうとしてもだめだ。
-    const finalFileName = Date.now() + '-' + uuidv4() + '.' + extension;
+    const finalFileName = calledOrRecieved + '-' + Date.now() + '-' + uuidv4() + '.' + extension;
     callback(null, finalFileName);
   },
 }); // 後で、ffmpegを使った方法に直すことになる。ちゃんとしたmp3に直す。file名に関してはこのやり方でいい。

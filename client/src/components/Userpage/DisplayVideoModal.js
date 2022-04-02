@@ -25,8 +25,8 @@ const VideoDisplayingModal = (props) => {
           {/* <div className='modal-inner-wrapper'> */}
           <div className='conversation-video-header'>
             <Stack direction='row' spacing={1}>
-              <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-              <Avatar alt='Travis Howard' src='/static/images/avatar/2.jpg' />
+              <Avatar alt={props.conversation.users[0]} />
+              <Avatar alt={props.conversation.users[1]} />
             </Stack>
             <div className='conversation-video-close-button' onClick={() => props.setShowVideoDisplayingModal(false)}>
               <i className='fa fa-close' style={{ fontSize: '20px', color: 'white', cursor: 'pointer' }}></i>

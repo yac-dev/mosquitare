@@ -1,0 +1,32 @@
+@media only screen and (min-width: 1200px) {
+  .doc-editor-component {
+    height: 70vh;
+    width: 40vw;
+    color: white;
+    background-color: rgb(37, 95, 184);
+    position: absolute;
+    top: 80px;
+    right: 10px;
+    z-index: 10;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: grab;
+  }
+
+  .doc-editor-header {
+    height: 5%;
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .doc-editor {
+    width: 100%;
+    height: 85%;
+  }
+
+  .hidden {
+    display: none;
+  }
+}

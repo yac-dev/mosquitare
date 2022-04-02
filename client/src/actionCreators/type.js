@@ -59,3 +59,9 @@ export const HOLD_MY_INITIATED_PEER = 'HOLD_MY_INITIATED_PEER';
 // comments
 export const CREATE_COMMENT = 'CREATE_COMMENT';
 export const GET_CONVERSATION_COMMENTS = 'GET_CONVERSATION_COMMENTS';
+
+// doc
+export const GET_DOC_ID = 'GET_DOC_ID';
+
+// transcripts
+export const GET_TRANSCRIPTS = 'GET_TRANSCRIPTS';

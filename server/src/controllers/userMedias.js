@@ -211,8 +211,19 @@ const transcodeVideo = (firstVideoFile, secondVideoFile, conversationId) => {
 };
 
 const execFFMPEG = (firstVideoFile, secondVideoFile, conversationId) => {
-  const firstVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', firstVideoFile);
-  const secondVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', secondVideoFile);
+  let calledVideoFilePath;
+  let recievedVideoFilePath;
+  const calledOrRecieved = firstVideoFile.split('-')[0]; // calledかrecievedどっちかになっている。
+  // const j = secondVideoFile.split('-')[0]; // calledかrecievedどっちかになっている。
+  if (calledOrRecieved === 'called') {
+    calledVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', firstVideoFile);
+    recievedVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', secondVideoFile);
+  } else if (calledOrRecieved === 'recieved') {
+    calledVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', secondVideoFile);
+    recievedVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', firstVideoFile);
+  }
+  // const firstVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', firstVideoFile);
+  // const secondVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', secondVideoFile);
   const blackBackImagePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', 'blackBack.png');
   const outputVideoFilename = `${conversationId}-${uuidv4()}.mp4`;
   const outoutVideoFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', outputVideoFilename);
@@ -220,7 +231,7 @@ const execFFMPEG = (firstVideoFile, secondVideoFile, conversationId) => {
   const screenShotFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer');
   // ffmpeg -i sample.mp4 -i man.mp4 -i blackBack.png -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='© lampost.tech':x=200:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" fin2.mp4
 
-  let ffmpegCommand = `ffmpeg -i ${firstVideoFilePath} -i ${secondVideoFilePath} -i ${blackBackImagePath} -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='© lampost.tech':x=200:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" ${outoutVideoFilePath}`;
+  let ffmpegCommand = `ffmpeg -i ${calledVideoFilePath} -i ${recievedVideoFilePath} -i ${blackBackImagePath} -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='© https://wwww.lampost.tech':x=240:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" ${outoutVideoFilePath}`;
 
   return new Promise((resolve, reject) => {
     exec(ffmpegCommand, (err, stdout, stderr) => {

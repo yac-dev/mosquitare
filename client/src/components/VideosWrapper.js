@@ -26,6 +26,7 @@ import SpeedDial from '@mui/material/SpeedDial';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SendIcon from '@mui/icons-material/Send';
+import NoteIcon from '@mui/icons-material/Note';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
@@ -109,7 +110,7 @@ const theme = createTheme({
 });
 
 const actions = [
-  { icon: <SendIcon />, name: 'Chat', operation: 'Chat', color: 'rgb(52, 173, 0)', hoverColor: 'rgb(66, 219, 0)' },
+  // { icon: <SendIcon />, name: 'Chat', operation: 'Chat', color: 'rgb(52, 173, 0)', hoverColor: 'rgb(66, 219, 0)' },
   // {
   //   icon: <RecordVoiceOverIcon />,
   //   name: 'Transcript',
@@ -118,6 +119,13 @@ const actions = [
   //   hoverColor: 'rgb(252, 252, 3)',
   // },
   {
+    icon: <NoteIcon />,
+    name: 'Shared Doc',
+    operation: 'SharedDoc',
+    color: 'rgb(52, 173, 0)',
+    hoverColor: 'rgb(66, 219, 0)',
+  },
+  {
     icon: <PortraitIcon />,
     name: 'Your Screen',
     operation: 'YourScreen',
@@ -125,26 +133,27 @@ const actions = [
     hoverColor: 'rgb(16, 107, 235)',
   },
   {
-    icon: <SupervisedUserCircleIcon />,
-    name: 'Partner Information',
-    operation: 'PartnerInfomation',
-    color: 'rgb(126, 87, 194)',
-    hoverColor: 'rgb(157, 115, 230)',
-  },
-  {
-    icon: <ScreenShareIcon />,
-    name: 'Screen Share (Sorry, not available now.)',
-    operation: 'ScreenShare',
-    color: 'rgb(189, 8, 62)',
-    hoverColor: 'rgb(235, 38, 96)',
+    icon: <GTranslateIcon />,
+    name: 'Google Translate (Sorry, not available now.)',
+    operation: 'GTranslate',
+    color: 'rgb(38, 189, 235)',
+    hoverColor: 'rgb(0, 195, 255)',
   },
   // {
-  //   icon: <GTranslateIcon />,
-  //   name: 'Google Translate (Sorry, not available now.)',
-  //   operation: 'GTranslate',
-  //   color: 'rgb(38, 189, 235)',
-  //   hoverColor: 'rgb(0, 195, 255)',
+  //   icon: <SupervisedUserCircleIcon />,
+  //   name: 'Partner Information',
+  //   operation: 'PartnerInfomation',
+  //   color: 'rgb(126, 87, 194)',
+  //   hoverColor: 'rgb(157, 115, 230)',
   // },
+  // {
+  //   icon: <ScreenShareIcon />,
+  //   name: 'Screen Share (Sorry, not available now.)',
+  //   operation: 'ScreenShare',
+  //   color: 'rgb(189, 8, 62)',
+  //   hoverColor: 'rgb(235, 38, 96)',
+  // },
+
   // {
   //   icon: <TextSnippetIcon />,
   //   name: 'Cheat Sheet (Sorry, not available now.)',
@@ -196,6 +205,10 @@ const VideosWrapper = (props) => {
     }
     if (operation === 'YourScreen') {
       setOpenMyScreen(true);
+    }
+    if (operation === 'SharedDoc') {
+      props.setOpenDoc(true);
+      props.socket.emit('OUR_DOC_IS_OPENED', { to: props.mediaState.callingWith.socketId });
     }
     setOpen(!open);
   };

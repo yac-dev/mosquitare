@@ -99,6 +99,11 @@ const WorldMap = (props) => {
   const [showSwipeable, setShowSwipeable] = useState(true);
   const [openSwipeableDrawer, setOpenSwipeableDrawer] = useState(false);
 
+  const [worldMapSettings, setWorldMapSetting] = useState({
+    dragPan: true,
+    scrollZoom: true,
+  });
+
   // const mapRef = useRef(null);
   // const [position, setPosition] = useState({ lat: 51.477928, lng: -0.001545 });
 
@@ -136,7 +141,7 @@ const WorldMap = (props) => {
   }, []);
 
   useEffect(() => {
-    if (props.mediaState.apiCallResult === 3) {
+    if (props.mediaState.apiCallResult === 2) {
       window.location = '/worldmap';
     }
   }, [props.mediaState.apiCallResult]);
@@ -280,6 +285,7 @@ const WorldMap = (props) => {
         <div style={{ height: '100vh', width: '100%' }}>
           <ReactMapGL
             {...viewport}
+            // {...worldMapSettings}
             mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
             width='100%'
             height='100vh'
@@ -298,6 +304,8 @@ const WorldMap = (props) => {
               isUserIconClicked={isUserIconClicked}
               userInfo={userInfo}
               setShowCallingModal={setShowCallingModal}
+              worldMapSettings={worldMapSettings}
+              setWorldMapSetting={setWorldMapSetting}
             />
             {/* <UserDetail
               socket={socket}

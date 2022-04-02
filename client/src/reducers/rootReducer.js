@@ -10,6 +10,8 @@ import conversationsReducer from './conversationsReducer';
 import commentsReducer from './commentsReducer';
 // import integratedUserMediasReducer from './integratedUserMediasReducer';
 import currentWatchingConversationReducer from './currentWatchingConversationReducer';
+import docReducer from './docReducer';
+import transcriptsReducer from './transcriptsReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -23,6 +25,8 @@ const rootReducer = combineReducers({
   currentWatchingConversationState: currentWatchingConversationReducer,
   conversationsState: conversationsReducer,
   commentsState: commentsReducer,
+  docState: docReducer,
+  transcriptsState: transcriptsReducer,
 });
 
 export default rootReducer;

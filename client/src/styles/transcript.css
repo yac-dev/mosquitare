@@ -86,8 +86,9 @@
   .transcript-component {
     height: 55%;
     width: 100%;
-    color: white;
-    background-color: rgb(37, 95, 184);
+    color: black;
+    /* background-color: rgb(37, 95, 184); */
+    background-color: white;
     border-radius: 5px;
     overflow: auto;
   }

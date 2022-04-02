@@ -20,6 +20,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 // components
 import LanguageChart from './LanguageChart';
 import CallButton from './CallButton';
+import VisitedMap from './VisitedMap';
+import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -78,6 +80,29 @@ const UserDetail = (props) => {
 
     return <>{statuses}</>;
   };
+
+  const renderVisitedCountries = () => {
+    const visitedCountriesList = props.userInfo.info.visited.map((country) => {
+      return (
+        <>
+          <img src={country.flagPics[0]} style={{ width: '16px', height: '10px' }} />
+          &nbsp;
+        </>
+      );
+    });
+
+    return <>{visitedCountriesList}</>;
+  };
+
+  const howMuchCompleted = (countriesLength) => {
+    const percent = Math.floor((countriesLength / 198) * 100);
+    return (
+      <>
+        <span>Completed {percent}&#37;</span>&nbsp;
+      </>
+    );
+  };
+
   const renderUserDetail = () => {
     if (props.isUserIconClicked) {
       if (props.userInfo.info) {
@@ -88,27 +113,15 @@ const UserDetail = (props) => {
             >
               <CardHeader
                 avatar={
-                  // <Avatar sx={{ bgcolor: 'red' }} aria-label='recipe'>
-                  //   R
-                  // </Avatar>
-                  <img src={`${props.userInfo.info.photo}`} />
+                  <Avatar alt={props.userInfo.info.name} />
+                  // <img src={`${props.userInfo.info.photo}`} />
                 }
+                action={<Button>send</Button>}
                 title={`${props.userInfo.info.name}`}
-                subheader={`${props.userInfo.info.email}`}
+                subheader={`${props.userInfo.info.selfIntroduction}`}
               />
               <CardContent>
-                <Typography gutterBottom variant='h5' component='div'>
-                  Personality Status{' '}
-                  <Tooltip title="This status is determined based on user's activity.">
-                    <HelpIcon />
-                  </Tooltip>
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {renderPersonalStatus()}
-                </Typography>
-              </CardContent>
-              <CardContent>
-                <Typography gutterBottom variant='h5' component='div'>
+                <Typography gutterBottom variant='h6' component='div'>
                   Language Status{' '}
                   <Tooltip title='This chart shows what language and how much the user speaks.'>
                     <HelpIcon />
@@ -119,14 +132,29 @@ const UserDetail = (props) => {
                 </Typography>
               </CardContent>
               <CardContent>
-                <Typography gutterBottom variant='h5' component='div'>
-                  Self-Introduction
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {/* <LanguageChart user={props.user} /> */}
-                  {props.userInfo.info.selfIntroduction}
+                <Typography gutterBottom variant='h6' component='div'>
+                  Visited Country&nbsp;
+                  {renderVisitedCountries()}
+                  {howMuchCompleted(props.userInfo.info.visited.length)}
+                  <VisitedMap
+                    worldMapSettings={props.worldMapSettings}
+                    setWorldMapSetting={props.setWorldMapSetting}
+                    visitedCountries={props.userInfo.info.visited}
+                  />
                 </Typography>
               </CardContent>
+
+              {/* <CardContent>
+                <Typography gutterBottom variant='h6' component='div'>
+                  Personality Status{' '}
+                  <Tooltip title="This status is determined based on user's activity.">
+                    <HelpIcon />
+                  </Tooltip>
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  {renderPersonalStatus()}
+                </Typography>
+              </CardContent> */}
 
               <CardActions>
                 <CallButton
