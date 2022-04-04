@@ -41,6 +41,8 @@ const BasicUserInfo = (props) => {
   const renderActionButtons = () => {
     if (props.user._id === props.authState.currentUser._id) {
       return null;
+    } else if (props.mediaState.amIRecieving) {
+      return null;
     } else if (props.mediaState.callAccepted) {
       return null;
     } else {
@@ -52,11 +54,6 @@ const BasicUserInfo = (props) => {
             setShowCallingModal={props.setShowCallingModal}
             setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
           />
-          {/* <Tooltip title='Not available now 🙅🏻'>
-              <Button variant='contained' disabled>
-                Apply Exchange!
-              </Button>
-            </Tooltip> */}
         </div>
       );
     }

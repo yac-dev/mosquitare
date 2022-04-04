@@ -4,6 +4,8 @@ import { Dropdown, Form } from 'semantic-ui-react';
 import TranslateIcon from '@mui/icons-material/Translate';
 import LanguageIcon from '@mui/icons-material/Language';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
 // ac
 import { loginActionCreator } from '../../actionCreators/authActionCreators';
@@ -304,11 +306,12 @@ const DetailInfo = (props) => {
     // <Form>
     <>
       {/* <Form.Field style={{ marginBottom: '40px' }}> */}
-      <label>
-        <TranslateIcon />
-        &nbsp;Learning Language
-      </label>
-      {/* <Dropdown
+      <div className='signup-learning-lang' style={{ marginBottom: '20px', color: 'black' }}>
+        <label>
+          <TranslateIcon />
+          &nbsp;Learning Language
+        </label>
+        {/* <Dropdown
           placeholder='Which languages are you learning?'
           fluid
           multiple
@@ -317,33 +320,39 @@ const DetailInfo = (props) => {
           onChange={(event, data) => props.setLearningLanguages(data.value)}
           value={props.learningLanguages}
         /> */}
-      <Autocomplete
-        multiple
-        id='tags-outlined'
-        options={languageOptions}
-        getOptionLabel={(option) => option.text}
-        // defaultValue={[top100Films[13]]}
-        onChange={(event, value) => props.setLearningLanguages(value)}
-        filterSelectedOptions
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='Choose language (You can choose multiple languages!)'
-            inputProps={{
-              ...params.inputProps,
-              autoComplete: 'new-password', // disable autocomplete and autofill
-            }}
-          />
-        )}
-      />
+        <Autocomplete
+          multiple
+          id='tags-outlined'
+          options={languageOptions}
+          getOptionLabel={(option) => option.text}
+          // defaultValue={[top100Films[13]]}
+          onChange={(event, value) => props.setLearningLanguages(value)}
+          filterSelectedOptions
+          renderInput={(params) => {
+            const inputProps = params.inputProps;
+            inputProps.autoComplete = 'off';
+            return (
+              <TextField
+                {...params}
+                label='What language are you learning?'
+                disabled
+                // inputProps={{
+                //   ...params.inputProps,
+                //   autoComplete: 'new-password', // disable autocomplete and autofill
+                // }}
+                inputProps={inputProps}
+              />
+            );
+          }}
+        />
+      </div>
       {/* </Form.Field> */}
-
-      {/* <Form.Field style={{ marginBottom: '40px' }}> */}
-      <label>
-        <TranslateIcon />
-        &nbsp;Native Language
-      </label>
-      {/* <Dropdown
+      <div className='signup-native-lang' style={{ marginBottom: '20px', color: 'black' }}>
+        <label>
+          <TranslateIcon />
+          &nbsp;Native Language
+        </label>
+        {/* <Dropdown
           placeholder='Which languages do you speak fluently?'
           fluid
           multiple
@@ -352,33 +361,40 @@ const DetailInfo = (props) => {
           onChange={(event, data) => props.setNativeLanguages(data.value)}
           value={props.nativeLanguages}
         /> */}
-      <Autocomplete
-        multiple
-        id='tags-outlined'
-        options={languageOptions}
-        getOptionLabel={(option) => option.text}
-        // defaultValue={[top100Films[13]]}
-        onChange={(event, value) => props.setNativeLanguages(value)}
-        filterSelectedOptions
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='Choose language (You can choose multiple languages!)'
-            inputProps={{
-              ...params.inputProps,
-              autoComplete: 'new-password', // disable autocomplete and autofill
-            }}
-          />
-        )}
-      />
-      {/* </Form.Field> */}
-
+        <Autocomplete
+          multiple
+          id='tags-outlined'
+          options={languageOptions}
+          getOptionLabel={(option) => option.text}
+          // defaultValue={[top100Films[13]]}
+          onChange={(event, value) => props.setNativeLanguages(value)}
+          filterSelectedOptions
+          renderInput={(params) => {
+            const inputProps = params.inputProps;
+            inputProps.autoComplete = 'off';
+            return (
+              <TextField
+                {...params}
+                label='What language do you speak fluently?'
+                disabled
+                // inputProps={{
+                //   ...params.inputProps,
+                //   autoComplete: 'new-password', // disable autocomplete and autofill
+                // }}
+                inputProps={inputProps}
+              />
+            );
+          }}
+        />
+      </div>
       {/* <Form.Field style={{ marginBottom: '40px' }}> */}
-      <label>
-        <LanguageIcon />
-        &nbsp;Nationality
-      </label>
-      {/* <Dropdown
+      {/* </Form.Field> */}
+      <div className='signup-nationality' style={{ marginBottom: '20px', color: 'black' }}>
+        <label>
+          <LanguageIcon />
+          &nbsp;Nationality
+        </label>
+        {/* <Dropdown
           placeholder='What is your nationality?'
           fluid
           multiple
@@ -387,52 +403,105 @@ const DetailInfo = (props) => {
           onChange={(event, data) => props.setNationalities(data.value)}
           value={props.nationalities}
         /> */}
-      <Autocomplete
-        multiple
-        id='tags-outlined'
-        options={countryOptions}
-        getOptionLabel={(option) => option.text}
-        // defaultValue={[top100Films[13]]}
-        filterSelectedOptions
-        onChange={(event, value) => props.setNationalities(value)}
-        renderOption={(props, option) => (
-          <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-            <img
-              loading='lazy'
-              width='20'
-              src={`https://flagcdn.com/w20/${option.key}.png`}
-              srcSet={`https://flagcdn.com/w40/${option.key}.png 2x`}
-              alt=''
-            />
-            {option.text}
-          </Box>
-        )}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label='Choose country(You can choose multiple country!)'
-            inputProps={{
-              ...params.inputProps,
-              autoComplete: 'new-password', // disable autocomplete and autofill
-            }}
-          />
-        )}
-      />
-      {/* </Form.Field> */}
-
+        <Autocomplete
+          multiple
+          id='tags-outlined'
+          options={countryOptions}
+          getOptionLabel={(option) => option.text}
+          // defaultValue={[top100Films[13]]}
+          filterSelectedOptions
+          onChange={(event, value) => props.setNationalities(value)}
+          renderOption={(props, option) => (
+            <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+              <img
+                loading='lazy'
+                width='20'
+                src={`https://flagcdn.com/w20/${option.key}.png`}
+                srcSet={`https://flagcdn.com/w40/${option.key}.png 2x`}
+                alt=''
+              />
+              {option.text}
+            </Box>
+          )}
+          renderInput={(params) => {
+            const inputProps = params.inputProps;
+            inputProps.autoComplete = 'off';
+            return (
+              <TextField
+                {...params}
+                label='What is your nationality?'
+                disabled
+                // inputProps={{
+                //   ...params.inputProps,
+                //   autoComplete: 'new-password', // disable autocomplete and autofill
+                // }}
+                inputProps={inputProps}
+              />
+            );
+          }}
+        />
+      </div>
       {/* <Form.Field style={{ marginBottom: '40px' }}> */}
-      <label>
-        <LanguageIcon />
-        &nbsp; Place
-      </label>
-      <Dropdown
-        placeholder='Which country are you living in?'
-        fluid
-        selection
-        options={countryOptions}
-        onChange={(event, data) => props.setLocation(data.value)}
-        value={props.location}
-      />
+      {/* </Form.Field> */}
+      <div className='signup-place' style={{ marginBottom: '20px', color: 'black' }}>
+        {/* <Form.Field style={{ marginBottom: '40px' }}> */}
+        <label>
+          <LocationOnIcon />
+          &nbsp; Place
+        </label>
+        <Dropdown
+          placeholder='Which country are you living in?'
+          fluid
+          selection
+          options={countryOptions}
+          onChange={(event, data) => props.setLocation(data.value)}
+          value={props.location}
+        />
+      </div>
+
+      <div className='signup-visited' style={{ marginBottom: '20px', color: 'black' }}>
+        <label>
+          <ConnectingAirportsIcon />
+          &nbsp;Travel History
+        </label>
+        <Autocomplete
+          multiple
+          id='tags-outlined'
+          options={countryOptions}
+          getOptionLabel={(option) => option.text}
+          // defaultValue={[top100Films[13]]}
+          filterSelectedOptions
+          onChange={(event, value) => props.setVisited(value)}
+          renderOption={(props, option) => (
+            <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+              <img
+                loading='lazy'
+                width='20'
+                src={`https://flagcdn.com/w20/${option.key}.png`}
+                srcSet={`https://flagcdn.com/w40/${option.key}.png 2x`}
+                alt=''
+              />
+              {option.text}
+            </Box>
+          )}
+          renderInput={(params) => {
+            const inputProps = params.inputProps;
+            inputProps.autoComplete = 'off';
+            return (
+              <TextField
+                {...params}
+                label='Which country have you ever been to ?'
+                disabled
+                // inputProps={{
+                //   ...params.inputProps,
+                //   autoComplete: 'new-password', // disable autocomplete and autofill
+                // }}
+                inputProps={inputProps}
+              />
+            );
+          }}
+        />
+      </div>
       {/* <Autocomplete
         // multiple
         id='tags-outlined'

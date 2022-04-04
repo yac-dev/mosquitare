@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, TextArea } from 'semantic-ui-react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 import PasswordIcon from '@mui/icons-material/Password';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
 const BasicInfo = (props) => {
   return (
@@ -35,7 +36,7 @@ const BasicInfo = (props) => {
       <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <PasswordIcon />
-          &nbsp;Password
+          &nbsp;Password (At least 8 characters)
         </label>
         <input
           type='password'
@@ -47,7 +48,7 @@ const BasicInfo = (props) => {
       <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <PasswordIcon />
-          &nbsp;Password Confirmation
+          &nbsp;Password Confirmation (At least 8 characters)
         </label>
         <input
           type='password'
@@ -57,11 +58,21 @@ const BasicInfo = (props) => {
         />
       </Form.Field>
       <Form.Field style={{ marginBottom: '20px' }}>
-        <label>
+        {/* <label>
           <CloudUploadIcon />
           &nbsp; Profile Image (Not required)
         </label>
-        <input type='file' onChange={() => props.setPhoto()} />
+        <input type='file' onChange={() => props.setPhoto()} /> */}
+        <label>
+          <EmojiPeopleIcon />
+          &nbsp; Self-Introduction
+        </label>
+        <TextArea
+          placeholder='e.g. why you are learning, how log have you been learning, your job etc'
+          onChange={(event) => props.setSelfIntroduction(event.target.value)}
+          value={props.selfIntroduction}
+        />
+        {/* <input type='' placeholder='Please enter some messages.' onChange={() => props.setPhoto()} /> */}
       </Form.Field>
       {/* <Button type='submit'>Submit</Button> */}
     </Form>

@@ -12,6 +12,7 @@ import commentsReducer from './commentsReducer';
 import currentWatchingConversationReducer from './currentWatchingConversationReducer';
 import docReducer from './docReducer';
 import transcriptsReducer from './transcriptsReducer';
+import alertsReducer from './alertsReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   commentsState: commentsReducer,
   docState: docReducer,
   transcriptsState: transcriptsReducer,
+  alertsState: alertsReducer,
 });
 
 export default rootReducer;

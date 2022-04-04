@@ -19,6 +19,7 @@ import Box from '@mui/material/Box';
 // components
 import Dimer from './Dimer';
 import UserInfoCardNew from './UserInfoCardNew';
+import UserInfoWrapper from './UserInfoWrapper';
 // import UserInfoCard from './UserInfoCard';
 
 // css
@@ -75,25 +76,28 @@ const CallingModal = (props) => {
         <>
           <div className='dimmer-wrapper'>
             <Dimer />
-            {/* <Box sx={{ display: 'flex' }}>
-              <p>Please wait till your call accepted....</p>
-              <CircularProgress />
-            </Box> */}
           </div>
         </>
       );
     } else if (props.mediaState.amIRecieving) {
       const { exchangingLanguages } = props.mediaState;
       return (
-        <>
-          <div>You got a exchange application.</div>
-          <div>
-            Lets exchange{' '}
-            {/* {exchangingLanguages.map((language) => {
-              return <span>{language}</span>;
-            })} */}
-          </div>
-          <UserInfoCardNew user={props.mediaState.callingWith} />
+        <div
+          className='calling-modal'
+          style={{
+            width: '100%',
+            maxHeight: '85vh',
+            backgroundColor: 'rgb(0, 96, 191)',
+            padding: '10px',
+          }}
+        >
+          <h3 style={{ textAlign: 'center' }}>
+            Let's exchange {exchangingLanguages[0].name} and {exchangingLanguages[1].name}!!
+          </h3>
+          <p style={{ textAlign: 'center' }}>You got an application from ...</p>
+          <UserInfoWrapper user={props.mediaState.callingWith} />
+          <h4 style={{ textAlign: 'center' }}>Accept or not?</h4>
+          {/* <UserInfoCardNew user={props.mediaState.callingWith} /> */}
           {/* <Button positive onClick={() => handleAnswerCall()} style={{ width: '70%' }}>
             <i className='handshake icon' />
             Yes
@@ -147,7 +151,7 @@ const CallingModal = (props) => {
               No
             </Button>
           </div> */}
-        </>
+        </div>
       );
     }
   };

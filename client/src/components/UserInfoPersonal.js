@@ -4,6 +4,7 @@ import React from 'react';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import HelpIcon from '@mui/icons-material/Help';
 import HailIcon from '@mui/icons-material/Hail';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
@@ -49,7 +50,7 @@ const UserInfoPersonal = (props) => {
 
       <div className='self-introduction' style={{ marginBottom: '20px' }}>
         <h6 style={{ borderBottom: '1px solid black' }}>
-          <HailIcon />
+          <EmojiPeopleIcon />
           Self-Introduction&nbsp;
         </h6>
         <p>{props.user.selfIntroduction}</p>
