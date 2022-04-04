@@ -115,7 +115,14 @@ const LanguageChart = (props) => {
     if (props.user.myLangsStatus.every((element) => element === 0)) {
       return <>{renderInitialData()}</>;
     } else if (data) {
-      return <div style={{ width: '99%' }}>{renderDoughnut()}</div>;
+      return (
+        <div
+          // style={{ width: '99%' }}
+          style={{ width: '100%' }}
+        >
+          {renderDoughnut()}
+        </div>
+      );
     }
   };
 

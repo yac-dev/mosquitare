@@ -9,6 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import HelpIcon from '@mui/icons-material/Help';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+import LanguageIcon from '@mui/icons-material/Language';
 
 // mui for options
 import { styled, alpha } from '@mui/material/styles';
@@ -22,6 +23,8 @@ import LanguageChart from './LanguageChart';
 import CallButton from './CallButton';
 import VisitedMap from './VisitedMap';
 import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
+import BasicUserInfo from './UserInfoHeader';
+import UserInfoWrapper from './UserInfoWrapper';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -108,18 +111,29 @@ const UserDetail = (props) => {
       if (props.userInfo.info) {
         return (
           <>
-            <Card
-            // sx={{ width: 450, height: '85vh', position: 'absolute', right: '50px', bottom: '50px' }}
+            <div
+              // sx={{ width: 450, height: '85vh', position: 'absolute', right: '50px', bottom: '50px' }}
+              style={{ width: '100%', height: '100%', backgroundColor: 'rgb(0, 96, 191)' }}
             >
-              <CardHeader
-                avatar={
-                  <Avatar alt={props.userInfo.info.name} />
-                  // <img src={`${props.userInfo.info.photo}`} />
-                }
+              {/* <CardHeader
+                avatar={<Avatar alt={props.userInfo.info.name} />}
                 action={<Button>send</Button>}
                 title={`${props.userInfo.info.name}`}
                 subheader={`${props.userInfo.info.selfIntroduction}`}
               />
+
+              <CardContent>
+                <Typography gutterBottom variant='h6' component='div'>
+                  Personality Status{' '}
+                  <Tooltip title="This status is determined based on user's activity.">
+                    <HelpIcon />
+                  </Tooltip>
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  {renderPersonalStatus()}
+                </Typography>
+              </CardContent>
+
               <CardContent>
                 <Typography gutterBottom variant='h6' component='div'>
                   Language Status{' '}
@@ -130,8 +144,18 @@ const UserDetail = (props) => {
                 <Typography variant='body2' color='text.secondary'>
                   <LanguageChart user={props.userInfo.info} />
                 </Typography>
-              </CardContent>
-              <CardContent>
+              </CardContent> */}
+
+              <UserInfoWrapper
+                user={props.userInfo.info}
+                worldMapSettings={props.worldMapSettings}
+                setWorldMapSetting={props.setWorldMapSetting}
+                visitedCountries={props.userInfo.info.visited}
+              />
+
+              {/* <BasicUserInfo user={props.userInfo.info} /> */}
+
+              {/* <CardContent>
                 <Typography gutterBottom variant='h6' component='div'>
                   Visited Country&nbsp;
                   {renderVisitedCountries()}
@@ -142,67 +166,32 @@ const UserDetail = (props) => {
                     visitedCountries={props.userInfo.info.visited}
                   />
                 </Typography>
-              </CardContent>
-
-              {/* <CardContent>
-                <Typography gutterBottom variant='h6' component='div'>
-                  Personality Status{' '}
-                  <Tooltip title="This status is determined based on user's activity.">
-                    <HelpIcon />
-                  </Tooltip>
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {renderPersonalStatus()}
-                </Typography>
               </CardContent> */}
 
-              <CardActions>
+              {/* <div
+                className='visited-country'
+                style={{ backgroundColor: 'white', padding: '10px', borderRadius: '5px' }}
+              >
+                <LanguageIcon />
+                Visited Country&nbsp;
+                {renderVisitedCountries()}
+                {howMuchCompleted(props.userInfo.info.visited.length)}
+                <VisitedMap
+                  worldMapSettings={props.worldMapSettings}
+                  setWorldMapSetting={props.setWorldMapSetting}
+                  visitedCountries={props.userInfo.info.visited}
+                />
+              </div> */}
+
+              <div className='call-button-wrapper' style={{ margin: 'auto' }}>
                 <CallButton
                   socket={props.socket}
                   user={props.userInfo.info}
                   setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
                   setShowCallingModal={props.setShowCallingModal}
                 />
-                {/* <Button size='small'>Share</Button> */}
-                {/* <Button size='small'>Learn More</Button> */}
-                {/* <div>
-                  <Button
-                    id='demo-customized-button'
-                    aria-controls={open ? 'demo-customized-menu' : undefined}
-                    aria-haspopup='true'
-                    aria-expanded={open ? 'true' : undefined}
-                    variant='contained'
-                    disableElevation
-                    onClick={handleClick}
-                    endIcon={<KeyboardArrowDownIcon />}
-                  >
-                    Exchange
-                  </Button>
-                  <StyledMenu
-                    id='demo-customized-menu'
-                    MenuListProps={{
-                      'aria-labelledby': 'demo-customized-button',
-                    }}
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={handleClose}
-                  >
-                    <MenuItem onClick={handleClose} disableRipple>
-                      Edit
-                    </MenuItem>
-                    <MenuItem onClick={handleClose} disableRipple>
-                      Duplicate
-                    </MenuItem>
-                    <MenuItem onClick={handleClose} disableRipple>
-                      Archive
-                    </MenuItem>
-                    <MenuItem onClick={handleClose} disableRipple>
-                      More
-                    </MenuItem>
-                  </StyledMenu>
-                </div> */}
-              </CardActions>
-            </Card>
+              </div>
+            </div>
           </>
         );
       } else {

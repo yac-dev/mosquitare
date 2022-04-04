@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+import Avatar from '@mui/material/Avatar';
 
 // ac
 import { getTranscriptsByConversationIdActionCreator } from '../actionCreators/transcriptsActionCreator';
@@ -9,6 +10,7 @@ import { getTranscriptsByConversationIdActionCreator } from '../actionCreators/t
 import '../styles/renderedTranscripts.css';
 
 const Transcripts = (props) => {
+  const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
   useEffect(() => {
     props.getTranscriptsByConversationIdActionCreator();
   }, []);
@@ -23,14 +25,29 @@ const Transcripts = (props) => {
         );
       });
 
-      return <>{transcriptsList}</>;
+      return <div className='transcripts-list'>{transcriptsList}</div>;
     } else {
       return <div>No transcripts.</div>;
     }
   };
 
+  const handleDrag = (e, ui) => {
+    const { x, y } = deltaPosition;
+    setDeltaPosition({ ...deltaPosition, x: x + ui.deltaX, y: y + ui.deltaY });
+  };
+
   return (
-    <div className={`rendered-transcripts ${props.openTranscripts ? undefined : 'hidden'}`}>{renderTranscripts()}</div>
+    <Draggable onDrag={handleDrag} cancel='.shared-doc-close-button, .doc-editor'>
+      <div className={`rendered-transcripts ${props.openTranscripts ? undefined : 'hidden'}`}>
+        <div className='rendered-transcripts-header'>
+          <p>Shared Doc</p>
+          <div className='rendered-transcripts-close-button' onClick={() => props.setOpenTranscripts(false)}>
+            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white', cursor: 'pointer' }}></i>
+          </div>
+        </div>
+        {renderTranscripts()}
+      </div>
+    </Draggable>
   );
 };
 

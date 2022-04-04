@@ -43,7 +43,7 @@ const VideoDisplayingModal = (props) => {
                   <Avatar alt={props.conversationState.currentConversation.users[1].name} />
                 </Stack>
                 <div className='conversation-video-close-button' onClick={() => handleCloseModal()}>
-                  <i className='fa fa-close' style={{ fontSize: '20px', color: 'white', cursor: 'pointer' }}></i>
+                  <i className='fa fa-close' style={{ fontSize: '20px', color: 'red', cursor: 'pointer' }}></i>
                 </div>
               </div>
               <DisplayVideo conversation={props.conversation} />

@@ -130,35 +130,41 @@ const CallButton = (props) => {
       }
 
       return (
-        <>
-          <Button
-            id='demo-customized-button'
-            aria-controls={open ? 'demo-customized-menu' : undefined}
-            aria-haspopup='true'
-            aria-expanded={open ? 'true' : undefined}
-            variant='contained'
-            disableElevation
-            onClick={handleClick}
-            endIcon={<KeyboardArrowDownIcon />}
-          >
-            Exchange&nbsp;
-            <VideoCallIcon size='large' />
+        <div className='action-button-flexbox' style={{ display: 'flex' }}>
+          <div className='call-button'>
+            <Button
+              id='demo-customized-button'
+              aria-controls={open ? 'demo-customized-menu' : undefined}
+              aria-haspopup='true'
+              aria-expanded={open ? 'true' : undefined}
+              variant='contained'
+              disableElevation
+              onClick={handleClick}
+              endIcon={<KeyboardArrowDownIcon />}
+              // sx={{ backgroundColor: 'white', color: 'black' }}
+            >
+              Exchange&nbsp;
+              <VideoCallIcon size='large' />
+            </Button>
+            <StyledMenu
+              id='demo-customized-menu'
+              MenuListProps={{
+                'aria-labelledby': 'demo-customized-button',
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+            >
+              {menuItemDOMs}
+            </StyledMenu>
+          </div>
+          <Button variant='contained' disabled>
+            Apply Exchange!
           </Button>
-          <StyledMenu
-            id='demo-customized-menu'
-            MenuListProps={{
-              'aria-labelledby': 'demo-customized-button',
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-          >
-            {menuItemDOMs}
-          </StyledMenu>
-        </>
+        </div>
       );
     } else {
-      return <div>You cannot call this user.</div>;
+      return <div>You cannot have a conversation with this user</div>;
     }
   };
 

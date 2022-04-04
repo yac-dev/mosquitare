@@ -1,4 +1,5 @@
 import Conversation from '../models/conversation';
+import ConversationState from '../models/conversationState';
 
 export const createConversation = async (request, response) => {
   try {
@@ -8,6 +9,11 @@ export const createConversation = async (request, response) => {
     const conversation = await new Conversation();
     conversation.users.push(userId);
     conversation.genre = genre;
+    conversation.isPublic = true;
+    const conversationState = await ConversationState.create({
+      conversation: conversation._id,
+      state: [true, true],
+    });
     await conversation.save();
     response.json({
       conversation,

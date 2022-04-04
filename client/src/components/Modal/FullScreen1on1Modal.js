@@ -16,6 +16,7 @@ import SubtitleWrapper from './SubtitleWrapper';
 import LanguageStatus from '../LanguageStatus';
 import LanguageStatusAndTranscript from './LanguageStatusAndTranscript';
 import DocEditor from '../DocEditor';
+import PartnerUserInfo from '../PartnerUserInfo';
 import MyClock from '../MyClock';
 // import VerticalTabsWrapper from '../VerticalTabsWrapper';
 import AppsWrapper from '../ConversationApps/AppsWrapper';
@@ -57,6 +58,7 @@ const FullScreen1on1Modal = (props) => {
   const [openLanguageStatus, setOpenLanguageStatus] = useState(false);
   const [openLanguageStatusAndTranscript, setOpenLanguageStatusAndTranscript] = useState(false);
   const [openDoc, setOpenDoc] = useState(false);
+  const [openPartnerUserInfo, setOpenPartnerUserInfo] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -104,11 +106,6 @@ const FullScreen1on1Modal = (props) => {
               setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
               setOpenDoc={setOpenDoc}
             />
-            <Chat
-              socket={props.socket}
-              openChatComponent={openChatComponent}
-              setOpenChatComponent={setOpenChatComponent}
-            />
             <LanguageStatusAndTranscript
               socket={props.socket}
               countLearningLangLength={countLearningLangLength}
@@ -119,6 +116,15 @@ const FullScreen1on1Modal = (props) => {
               openLanguageStatusAndTranscript={openLanguageStatusAndTranscript}
             />
             <DocEditor socket={props.socket} openDoc={openDoc} setOpenDoc={setOpenDoc} />
+            <PartnerUserInfo
+              openPartnerUserInfo={openPartnerUserInfo}
+              setOpenPartnerUserInfo={setOpenPartnerUserInfo}
+            />
+            {/* <Chat
+              socket={props.socket}
+              openChatComponent={openChatComponent}
+              setOpenChatComponent={setOpenChatComponent}
+            /> */}
             {/* <SubtitleWrapper
               socket={props.socket}
               openTranscriptComponent={openTranscriptComponent}
