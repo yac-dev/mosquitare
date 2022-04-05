@@ -1,6 +1,8 @@
 import { GET_ALL_CONVERSATIONS, GET_MY_CONVERSATIONS } from '../actionCreators/type';
 
-const conversationsReducer = (state = {}, action) => {
+const INITAIL_STATE = {};
+
+const conversationsReducer = (state = INITAIL_STATE, action) => {
   switch (action.type) {
     case GET_ALL_CONVERSATIONS:
       const conversations = {};
@@ -14,6 +16,8 @@ const conversationsReducer = (state = {}, action) => {
         myConversations[myConversation._id] = myConversation;
       });
       return { ...state, ...myConversations };
+    case 'CLEAN_UP_CONVERSATIONS':
+      return { ...INITAIL_STATE };
     default:
       return { ...state };
   }

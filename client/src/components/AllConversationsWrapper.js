@@ -37,7 +37,7 @@ const AllConversationsWrapper = (props) => {
 
   return (
     <div className='all-conversations-wrapper-wrapper'>
-      <h2 style={{ margin: '20px' }}>Everybody's video</h2>
+      <h2 style={{ margin: '20px' }}>Public Library</h2>
       <div className='all-conversations-wrapper'>{renderConversations()}</div>
     </div>
   );

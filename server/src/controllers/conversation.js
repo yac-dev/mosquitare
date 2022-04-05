@@ -107,7 +107,23 @@ export const getConversation = async (request, response) => {
 
 export const getAllConversations = async (request, response) => {
   try {
-    const allConversations = await Conversation.find();
+    const allConversations = await Conversation.find()
+      .populate({
+        path: 'users',
+        // populate: {
+        //   path: 'videoFileName',
+        // },
+      })
+      .populate({
+        path: 'userMedias',
+        // populate: {
+        //   path: 'videoFileName',
+        // },
+      })
+      .populate({
+        path: 'userScripts',
+      })
+      .populate('comments');
     response.status(200).json({
       allConversations,
     });

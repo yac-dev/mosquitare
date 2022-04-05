@@ -39,8 +39,8 @@ const VideoDisplayingModal = (props) => {
               {/* <div className='modal-inner-wrapper'> */}
               <div className='conversation-video-header'>
                 <Stack direction='row' spacing={1}>
-                  <Avatar alt={props.conversationState.currentConversation.users[0].name} />
-                  <Avatar alt={props.conversationState.currentConversation.users[1].name} />
+                  <Avatar>{props.conversationState.currentConversation.users[0].name}</Avatar>
+                  <Avatar>{props.conversationState.currentConversation.users[1].name}</Avatar>
                 </Stack>
                 <div className='conversation-video-close-button' onClick={() => handleCloseModal()}>
                   <i className='fa fa-close' style={{ fontSize: '20px', color: 'red', cursor: 'pointer' }}></i>

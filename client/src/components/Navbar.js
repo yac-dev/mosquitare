@@ -136,8 +136,13 @@ const Navbar = (props) => {
       open={isUserMenuOpen}
       onClose={handleUserMenuClose}
     >
-      <MenuItem onClick={() => history.push(`/userpage/${props.authState.currentUser._id}`)}>
-        Library&nbsp; <LocalLibraryIcon />
+      <MenuItem
+        onClick={() =>
+          //  history.push(`/userpage/${props.authState.currentUser._id}`)
+          (window.location = `/userpage/${props.authState.currentUser._id}`)
+        }
+      >
+        My Library&nbsp; <LocalLibraryIcon />
       </MenuItem>
       <MenuItem onClick={handleUserMenuClose} disabled={true}>
         Setting&nbsp; <SettingsIcon />
