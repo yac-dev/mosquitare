@@ -1,6 +1,6 @@
-@media only screen and (min-width: 320px) {
+@media only screen and (min-width: 320px) and (max-width: 767px) {
   .doc-editor-component {
-    height: 70vh;
+    max-height: 70vh;
     width: 40vw;
     color: white;
     background-color: rgb(37, 95, 184);
@@ -23,7 +23,43 @@
 
   .doc-editor {
     width: 100%;
-    height: 85%;
+    height: 100%;
+  }
+
+  .hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .doc-editor-component {
+    max-height: 70vh;
+    width: 40vw;
+    color: white;
+    background-color: rgb(37, 95, 184);
+    position: absolute;
+    top: 80px;
+    left: 10px;
+    z-index: 10;
+    border-radius: 5px;
+    padding: 5px;
+    cursor: grab;
+  }
+
+  .doc-editor-header {
+    height: 5%;
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .doc-editor {
+    width: 100%;
+    height: 400px;
+    background-color: white;
+    color: black;
+    overflow: auto;
   }
 
   .hidden {

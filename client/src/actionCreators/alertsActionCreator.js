@@ -1,19 +1,21 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export const alertActionCreator = (message, alertType) => (dispatch) => {
-  const id = uuidv4();
-  dispatch({
-    type: 'SET_ALERT',
-    payload: { id, message, alertType },
-  });
-
-  setTimeout(() => {
+export const alertActionCreator =
+  (message, alertType, duration = 5000) =>
+  (dispatch) => {
+    const id = uuidv4();
     dispatch({
-      type: 'REMOVE_ALERT',
-      payload: id,
+      type: 'SET_ALERT',
+      payload: { id, message, alertType },
     });
-  }, 5000);
-};
+
+    setTimeout(() => {
+      dispatch({
+        type: 'REMOVE_ALERT',
+        payload: id,
+      });
+    }, duration);
+  };
 
 export const removeAlertActionCreator = (id) => {
   return {

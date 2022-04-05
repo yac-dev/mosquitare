@@ -87,6 +87,15 @@ const LanguageStatus = (props) => {
     props.switchCurrentLanguageActionCreator1(props.socket);
   };
 
+  const renderSwitchingLanguage = () => {
+    // exchanging languagesのうち、currentLanguageじゃない方の言語をrenderするってこと。
+    const switchingLanguage = props.mediaState.exchangingLanguages.filter(
+      (languageObj) => languageObj.name !== props.mediaState.currentLanguage.name
+    ); // 注意。arrayを返している。
+
+    return <span>{switchingLanguage[0].name}</span>;
+  };
+
   return (
     <div className='language-status-wrapper'>
       <div className='language-status'>
@@ -102,9 +111,13 @@ const LanguageStatus = (props) => {
             sx={{
               height: { xxs: '20px', xs: '20px', sm: '30px', md: '30px', lg: '40px' },
               fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '14px', lg: '16px' },
+              backgroundColor: 'rgb(98, 219, 11)',
+              '&:hover': {
+                backgroundColor: 'rgb(135, 255, 48)',
+              },
             }}
           >
-            Switch Language?
+            Talk in&nbsp;{renderSwitchingLanguage()}?
           </Button>
         </ThemeProvider>
       </div>

@@ -143,7 +143,7 @@ const DocEditor = (props) => {
         <div className='doc-editor-header'>
           <p>Shared Doc</p>
           <div className='shared-doc-close-button' onClick={() => props.setOpenDoc(false)}>
-            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white' }}></i>
+            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white', cursor: 'pointer' }}></i>
           </div>
         </div>
         <div className='doc-editor' ref={wrapperRef}></div>

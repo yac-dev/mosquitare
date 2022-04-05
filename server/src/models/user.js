@@ -19,10 +19,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  gender: {
-    type: String,
-    enum: ['male', 'female'],
-  },
   photo: {
     type: String,
   },
@@ -60,13 +56,9 @@ const userSchema = new mongoose.Schema({
       ref: 'Country',
     },
   ],
-  job: {
-    type: String,
-  },
   selfIntroduction: {
     type: String,
-    maxlength: 70,
-    default: 'No description.',
+    default: 'I just started!',
   },
   conversations: [
     {
@@ -122,6 +114,12 @@ const userSchema = new mongoose.Schema({
     {
       type: mongoose.Schema.ObjectId,
       ref: 'Country',
+    },
+  ],
+  socialApps: [
+    {
+      appName: String,
+      url: String,
     },
   ],
   // visitedPhoto: [[{ type: String }]],いずれ、ここにも足していくことになる。

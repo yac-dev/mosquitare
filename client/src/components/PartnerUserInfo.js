@@ -17,12 +17,12 @@ const PartnerUserInfo = (props) => {
   };
 
   return (
-    <Draggable onDrag={handleDrag} cancel='.partner-user-info-close-button, .user-info-wrapper'>
+    <Draggable onDrag={handleDrag} cancel='.partner-user-info-close-button, .user-info-wrapperrrr'>
       <div className={`partner-user-info-component ${props.openPartnerUserInfo ? undefined : 'hidden'}`}>
         <div className='partner-user-info-header'>
           <p>Partner Infomation</p>
           <div className='partner-user-info-close-button' onClick={() => props.setOpenPartnerUserInfo(false)}>
-            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white' }}></i>
+            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white', cursor: 'pointer' }}></i>
           </div>
         </div>
         <UserInfoWrapper user={props.mediaState.callingWith} />

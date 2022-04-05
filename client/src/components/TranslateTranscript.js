@@ -10,9 +10,10 @@ import GTranslateIcon from '@mui/icons-material/GTranslate';
 
 const TranslateIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: 'rgb(37, 95, 184)',
+  // color blue
+  backgroundColor: 'rgb(0, 101, 255)',
   '&:hover': {
-    backgroundColor: 'rgb(50, 124, 237)',
+    backgroundColor: 'rgb(56, 135, 255)',
   },
 }));
 

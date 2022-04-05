@@ -100,11 +100,12 @@ const FullScreen1on1Modal = (props) => {
               show1on1={props.show1on1}
               setShow1on1={props.setShow1on1}
               socket={props.socket}
-              setOpenChatComponent={setOpenChatComponent}
-              setOpenTranscriptComponent={setOpenTranscriptComponent}
-              setOpenLanguageStatus={setOpenLanguageStatus}
+              // setOpenChatComponent={setOpenChatComponent}
+              // setOpenTranscriptComponent={setOpenTranscriptComponent}
+              // setOpenLanguageStatus={setOpenLanguageStatus}
               setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
               setOpenDoc={setOpenDoc}
+              setOpenPartnerUserInfo={setOpenPartnerUserInfo}
             />
             <LanguageStatusAndTranscript
               socket={props.socket}

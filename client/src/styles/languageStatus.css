@@ -44,7 +44,7 @@
   }
 }
 
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 768px) {
   .language-status-wrapper {
     width: 100%;
     height: 35%;
@@ -67,7 +67,7 @@
     /* background-color: white; */
     color: black;
     text-align: center;
-    border-bottom: 1px solid rgb(22, 33, 49);
+    /* border-bottom: 1px solid rgb(22, 33, 49); */
   }
 
   .learning-lang-wrapper {

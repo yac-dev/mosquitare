@@ -46,7 +46,7 @@ const LanguageStatusAndTranscript = (props) => {
             className='language-status-and-transcript-close-button'
             onClick={() => props.setOpenLanguageStatusAndTranscript(false)}
           >
-            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white' }}></i>
+            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white', cursor: 'pointer' }}></i>
           </div>
         </div>
         <LanguageStatus

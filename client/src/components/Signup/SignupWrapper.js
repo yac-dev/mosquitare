@@ -31,35 +31,6 @@ const SignupWrapper = (props) => {
   const [visited, setVisited] = useState([]);
 
   const [amIFillingBasic, setAmIFillingBasic] = useState(true);
-  const [errors, setErrors] = useState([]);
-
-  useEffect(() => {
-    if (errors.length) {
-      console.log(errors);
-    }
-  }, [errors]);
-
-  // const renderErrors = () => {
-  //   if (errors.length !== 0) {
-  //     console.log('please render error');
-  //     const errorSnackBars = errors.map((error, index) => {
-  //       return (
-  //         <div>
-  //           <SnackBar
-  //             open={true}
-  //             errors={errors}
-  //             setErrors={setErrors}
-  //             index={index}
-  //             snackBarType={error.type}
-  //             message={error.message}
-  //           />
-  //         </div>
-  //       );
-  //     });
-
-  //     return <div style={{ display: 'flex', flexDirection: 'column' }}>{errorSnackBars}</div>;
-  //   }
-  // };
 
   const renderAlerts = () => {
     if (props.alertsState.length) {

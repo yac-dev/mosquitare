@@ -119,32 +119,38 @@ const actions = [
   //   hoverColor: 'rgb(252, 252, 3)',
   // },
   {
+    // color orange
+    // 255,140,0 hover 255, 170, 66
+    // color light blue
+    // 0, 221, 255 hover 77, 231, 255
     icon: <NoteIcon />,
     name: 'Shared Doc',
     operation: 'SharedDoc',
-    color: 'rgb(52, 173, 0)',
-    hoverColor: 'rgb(66, 219, 0)',
+    color: 'rgb(255,140,0)',
+    hoverColor: 'rgb(255, 170, 66)',
   },
   {
+    // color purple
+    icon: <SupervisedUserCircleIcon />,
+    name: 'Partner Information',
+    operation: 'PartnerUserInfo',
+    color: 'rgb(179, 0, 255)',
+    hoverColor: 'rgb(205, 100, 250)',
+  },
+  {
+    // color yellow
     icon: <PortraitIcon />,
     name: 'Your Screen',
     operation: 'YourScreen',
-    color: 'rgb(16, 60, 235)',
-    hoverColor: 'rgb(16, 107, 235)',
-  },
-  {
-    icon: <GTranslateIcon />,
-    name: 'Google Translate (Sorry, not available now.)',
-    operation: 'GTranslate',
-    color: 'rgb(38, 189, 235)',
-    hoverColor: 'rgb(0, 195, 255)',
+    color: 'rgb(255, 217, 0)',
+    hoverColor: 'rgb(255, 228, 77)',
   },
   // {
-  //   icon: <SupervisedUserCircleIcon />,
-  //   name: 'Partner Information',
-  //   operation: 'PartnerInfomation',
-  //   color: 'rgb(126, 87, 194)',
-  //   hoverColor: 'rgb(157, 115, 230)',
+  //   icon: <GTranslateIcon />,
+  //   name: 'Google Translate (Sorry, not available now.)',
+  //   operation: 'GTranslate',
+  //   color: 'rgb(38, 189, 235)',
+  //   hoverColor: 'rgb(0, 195, 255)',
   // },
   // {
   //   icon: <ScreenShareIcon />,
@@ -197,18 +203,21 @@ const VideosWrapper = (props) => {
   const onWidgetIconClick = (event, operation) => {
     event.preventDefault();
     // setOpen(false);
-    if (operation === 'Chat') {
-      props.setOpenChatComponent(true);
-    }
-    if (operation === 'Transcript') {
-      props.setOpenTranscriptComponent(true);
-    }
-    if (operation === 'YourScreen') {
-      setOpenMyScreen(true);
-    }
+    // if (operation === 'Chat') {
+    //   props.setOpenChatComponent(true);
+    // }
+    // if (operation === 'Transcript') {
+    //   props.setOpenTranscriptComponent(true);
+    // }
     if (operation === 'SharedDoc') {
       props.setOpenDoc(true);
       props.socket.emit('OUR_DOC_IS_OPENED', { to: props.mediaState.callingWith.socketId });
+    }
+    if (operation === 'PartnerUserInfo') {
+      props.setOpenPartnerUserInfo(true);
+    }
+    if (operation === 'YourScreen') {
+      setOpenMyScreen(true);
     }
     setOpen(!open);
   };
