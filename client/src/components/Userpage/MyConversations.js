@@ -10,6 +10,9 @@ import Conversation from './Conversation';
 // context
 import VideoContext from './contexts/VideoContext';
 
+//css
+import '../../styles/myConversations.css';
+
 const ConversationVideos = (props) => {
   const [showVideoDisplayingModal, setShowVideoDisplayingModal] = useState(false);
   const videoRef1 = useRef();

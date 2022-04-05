@@ -64,7 +64,7 @@ const Conversation = (props) => {
     let minutes;
     let seconds;
     if (duration >= 60) {
-      minutes = Math.floort(duration / 60);
+      minutes = Math.floor(duration / 60);
       seconds = Math.floor(duration % 60);
       if (seconds < 9) {
         return (

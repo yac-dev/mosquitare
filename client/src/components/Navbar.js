@@ -300,7 +300,7 @@ const Navbar = (props) => {
               </IconButton>
             </Tooltip>
 
-            <Tooltip title='Everybody videos'>
+            <Tooltip title='Public Library'>
               <IconButton size='large' color='inherit'>
                 {/* <Badge badgeContent={17} color='error'> */}
                 <VideoLibraryIcon

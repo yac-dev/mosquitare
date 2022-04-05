@@ -144,12 +144,14 @@
     color: white;
     /* ここ、loginのheaderに影響を与える。気をつけよう。 */
   }
-  .userpage-wrapper {
+
+  /* これを消してなんで治ったんだ？？？まあいいか。*/
+  /* .userpage-wrapper {
     margin: 30px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 15px;
-  }
+  } */
 
   .my-conversations {
     margin: 30px;

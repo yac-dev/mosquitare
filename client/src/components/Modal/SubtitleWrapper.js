@@ -76,6 +76,23 @@ const SubtitleWrapper = (props) => {
 
   const transcriptsEndRef = useRef(null);
 
+  // const [seconds, setSeconds] = useState(0);
+  // const secondsRef = useRef();
+
+  // useEffect(() => {
+  //   let interval = null;
+  //   interval = setInterval(() => {
+  //     setSeconds((previous) => previous + 1);
+  //   }, 1000);
+
+  //   return () => clearInterval(interval);
+  // }, [seconds]);
+
+  // useEffect(() => {
+  //   secondsRef.current = seconds;
+  // }, [seconds]);
+  // 本当は秒数まで入れたいが、そこまでいくと時間かかるわ。やめておこう。
+
   const scrollToBottom = () => {
     transcriptsEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
