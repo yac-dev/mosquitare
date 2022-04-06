@@ -10,8 +10,8 @@ export const getDocIdActionCreator = (docId) => {
 
 export const getDocByConversationIdActionCreator = () => async (dispatch, getState) => {
   try {
-    console.log(getState().conversationState.currentConversation._id);
-    const conversationId = getState().conversationState.currentConversation._id;
+    console.log(getState().conversationState.conversation._id);
+    const conversationId = getState().conversationState.conversation._id;
     const result = await mosquitareAPI.get(`/docs/${conversationId}`);
     const { doc } = result.data;
     dispatch({

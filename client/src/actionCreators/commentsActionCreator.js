@@ -19,7 +19,7 @@ export const createCommentActionCreator = (content) => async (dispatch, getState
 
 export const getConversationCommentsActionCreator = () => async (dispatch, getState) => {
   try {
-    const conversationId = getState().conversationState.currentConversation._id;
+    const conversationId = getState().conversationState.conversation._id;
     const result = await mosquitareAPI.get(`/comments/${conversationId}`);
     const { comments } = result.data;
     console.log(comments);

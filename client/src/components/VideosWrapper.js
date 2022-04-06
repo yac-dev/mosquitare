@@ -96,6 +96,14 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
+const CenterIconButton = styled(IconButton)(({ theme }) => ({
+  // color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: 'rgb(24, 237, 84)',
+  '&:hover': {
+    backgroundColor: 'rgb(56, 255, 112)',
+  },
+}));
+
 const theme = createTheme({
   breakpoints: {
     values: {
@@ -374,12 +382,12 @@ const VideosWrapper = (props) => {
             </Tooltip> */}
           </Stack>
         </div>
-        <div className='switch-button'>
-          <ThemeProvider theme={theme}>
-            <Tooltip title='Status and Transcript'>
-              {/* <SwitchLangIconButton>
+        {/* <SwitchLangIconButton>
               <TranslateOutlinedIcon style={{ color: 'white', fontSize: '30px' }} />
             </SwitchLangIconButton> */}
+        <div className='switch-button'>
+          {/* <ThemeProvider theme={theme}>
+            <Tooltip title='Status and Transcript'>
               <Button
                 variant='contained'
                 startIcon={<RecordVoiceOverIcon />}
@@ -392,7 +400,12 @@ const VideosWrapper = (props) => {
                 {`Let's talk in ${props.mediaState.currentLanguage.name} ! `}
               </Button>
             </Tooltip>
-          </ThemeProvider>
+          </ThemeProvider> */}
+          <Tooltip title='Click to see the language status and transcripts!!'>
+            <CenterIconButton onClick={() => props.setOpenLanguageStatusAndTranscript(true)}>
+              <RecordVoiceOverIcon style={{ color: 'white' }} />
+            </CenterIconButton>
+          </Tooltip>
         </div>
       </div>
       <Modal show={show} onHide={() => setShow(false)} backdrop='static' keyboard={false}>

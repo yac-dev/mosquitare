@@ -21,6 +21,7 @@ import '../styles/comments.css';
 // ac
 import { createCommentActionCreator } from '../actionCreators/commentsActionCreator';
 import { getConversationCommentsActionCreator } from '../actionCreators/commentsActionCreator';
+import { alertActionCreator } from '../actionCreators/alertsActionCreator';
 
 const myStyle = {
   '& .MuiInputBase-input': {
@@ -248,13 +249,15 @@ const Comments = (props) => {
   };
 
   const handleSendComment = (content) => {
-    if (content) {
+    if (content && props.authState.currentUser) {
       props.createCommentActionCreator(content);
       setContent('');
+    } else if (!props.authState.currentUser) {
+      props.alertActionCreator('You need to signup or login to comment.', 'error');
+    } else if (!content) {
+      // alertかな。
+      props.alertActionCreator('Please write a comment.', 'error');
     }
-    // else{
-    // errorを表示する。これ必要ね。
-    // }
   };
 
   return (
@@ -286,7 +289,15 @@ const Comments = (props) => {
 
 // まあ、基本はこのconversationIdに関連したcommentだけを引っ張ってくる感じよ。mapStateToPropsで。
 const mapStateToProps = (state) => {
-  return { conversationState: state.conversationState, commentsState: Object.values(state.commentsState) };
+  return {
+    conversationState: state.conversationState,
+    commentsState: Object.values(state.commentsState),
+    authState: state.authState,
+  };
 };
 
-export default connect(mapStateToProps, { createCommentActionCreator, getConversationCommentsActionCreator })(Comments);
+export default connect(mapStateToProps, {
+  createCommentActionCreator,
+  getConversationCommentsActionCreator,
+  alertActionCreator,
+})(Comments);

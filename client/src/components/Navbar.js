@@ -238,38 +238,38 @@ const Navbar = (props) => {
     </Menu>
   );
 
-  // const renderSignupAndLogin = () => {
-  //   if (props.authState.currentUser) {
-  //     return null;
-  //   } else {
-  //     return (
-  //       <>
-  //         <Stack direction='row' spacing={2}>
-  //           <Button
-  //             variant='contained'
-  //             startIcon={<BorderColorIcon />}
-  //             onClick={() => {
-  //               setShowSignupModal(true);
-  //               setShowLoginModal(false);
-  //             }}
-  //           >
-  //             Signup
-  //           </Button>
-  //           <Button
-  //             variant='contained'
-  //             startIcon={<LoginIcon />}
-  //             onClick={() => {
-  //               setShowLoginModal(true);
-  //               setShowSignupModal(false);
-  //             }}
-  //           >
-  //             Login
-  //           </Button>
-  //         </Stack>
-  //       </>
-  //     );
-  //   }
-  // };
+  const renderSignupAndLogin = () => {
+    if (props.authState.currentUser) {
+      return null;
+    } else {
+      return (
+        <>
+          <Stack direction='row' spacing={2}>
+            <Button
+              variant='contained'
+              startIcon={<BorderColorIcon />}
+              onClick={() => {
+                setShowSignupModal(true);
+                setShowLoginModal(false);
+              }}
+            >
+              Signup
+            </Button>
+            <Button
+              variant='contained'
+              startIcon={<LoginIcon />}
+              onClick={() => {
+                setShowLoginModal(true);
+                setShowSignupModal(false);
+              }}
+            >
+              Login
+            </Button>
+          </Stack>
+        </>
+      );
+    }
+  };
 
   const renderToolIconButtons = () => {
     // logged inの時にのみこれを表示する。
@@ -402,7 +402,7 @@ const Navbar = (props) => {
                   <Box
                     sx={{ display: { xxs: 'none', xs: 'none', sm: 'flex', md: 'flex', lg: 'flex' }, color: 'white' }}
                   >
-                    {/* {renderSignupAndLogin()} */}
+                    {renderSignupAndLogin()}
                     {renderToolIconButtons()}
                   </Box>
                   {/* ここのBoxってなんだろな。。。 */}

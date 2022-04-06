@@ -187,26 +187,26 @@ const DisplayVideo = (props) => {
           <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
         </video>
         <div className='users-information'>
-          <div className='user-info-at-video'>
+          <div className='user-info-at-video' style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <img
               src={props.conversation.users[0].nationalities[0].flagPics[0]}
-              style={{ width: '16px', height: '10px' }}
+              style={{ width: '30px', height: '20px' }}
             />
-            &nbsp;{props.conversation.users[0].name}&nbsp;
+            &nbsp;<p style={{ fontSize: '20px' }}>{props.conversation.users[0].name}</p>&nbsp;
             <img
               src={props.conversation.users[0].nationalities[0].flagPics[0]}
-              style={{ width: '16px', height: '10px' }}
+              style={{ width: '30px', height: '20px' }}
             />
           </div>
-          <div className='user-info-at-video'>
+          <div className='user-info-at-video' style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
             <img
               src={props.conversation.users[1].nationalities[0].flagPics[0]}
-              style={{ width: '16px', height: '10px' }}
+              style={{ width: '30px', height: '20px' }}
             />
-            &nbsp;{props.conversation.users[1].name}&nbsp;
+            &nbsp;<p style={{ fontSize: '20px' }}>{props.conversation.users[1].name}</p>&nbsp;
             <img
               src={props.conversation.users[1].nationalities[0].flagPics[0]}
-              style={{ width: '16px', height: '10px' }}
+              style={{ width: '30px', height: '20px' }}
             />
           </div>
         </div>

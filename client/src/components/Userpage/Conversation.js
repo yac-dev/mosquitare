@@ -17,13 +17,15 @@ import { selectConversation } from '../../actionCreators/conversationActionCreat
 const Conversation = (props) => {
   const [showVideoDisplayingModal, setShowVideoDisplayingModal] = useState(false);
 
-  const onConversationClick = (event, conversation) => {
-    event.preventDefault();
-    props.selectConversation(conversation);
-    setShowVideoDisplayingModal(true);
-    // どのvideoがclickされたか、event.targetとかで検知できないかね。そのurlのvideoをそのまま再生する的な感じでいいんだよな。
-    // videoRef.current
-    // videoRef2.current
+  // const onConversationClick = (event, conversation) => {
+  //   event.preventDefault();
+  //   props.selectConversation(conversation);
+  //   setShowVideoDisplayingModal(true);
+  // };
+
+  const onConversationClickNew = (event) => {
+    // windowかなここは。props.conversation._idを使って。
+    window.location = `/myconversation/${props.conversation._id}`;
   };
 
   const renderThumbnails = (userMedias) => {
@@ -130,7 +132,8 @@ const Conversation = (props) => {
 
   return (
     <>
-      <div className='conversation-wrapper' onClick={(event) => onConversationClick(event, props.conversation)}>
+      {/* <div className='conversation-wrapper' onClick={(event) => onConversationClick(event, props.conversation)}> */}
+      <div className='conversation-wrapper' onClick={(event) => onConversationClickNew(event, props.conversation)}>
         {/* <div className='video-thumbnail'>
           <div className='conversation-video-wrapper'>
             <video className='thum' style={{ borderTopLeftRadius: '10px' }}>

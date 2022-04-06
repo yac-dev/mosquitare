@@ -64,14 +64,12 @@ const ConversationVideos = (props) => {
   return (
     <>
       <div className='my-conversations'>{renderConversationList()}</div>
-      <VideoContext.Provider value={{ videoRef1: videoRef1.current, videoRef2: videoRef2.current }}>
+      {/* <VideoContext.Provider value={{ videoRef1: videoRef1.current, videoRef2: videoRef2.current }}>
         <DisplayVideoModal
           showVideoDisplayingModal={showVideoDisplayingModal}
           setShowVideoDisplayingModal={setShowVideoDisplayingModal}
-          // videoRef1={videoRef1.current}
-          // videoRef2={videoRef2.current}
         />
-      </VideoContext.Provider>
+      </VideoContext.Provider> */}
     </>
   );
 };

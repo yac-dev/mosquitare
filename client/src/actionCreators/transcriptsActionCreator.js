@@ -3,7 +3,7 @@ import { GET_TRANSCRIPTS } from './type';
 
 export const getTranscriptsByConversationIdActionCreator = () => async (dispatch, getState) => {
   try {
-    const conversationId = getState().conversationState.currentConversation._id;
+    const conversationId = getState().conversationState.conversation._id;
     console.log(conversationId);
     const result = await mosquitareAPI.get(`/transcripts/${conversationId}`);
     const { transcripts } = result.data;

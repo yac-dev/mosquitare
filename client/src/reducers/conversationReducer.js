@@ -3,6 +3,7 @@ import {
   GET_CONVERSATION_ID,
   UPDATE_CONVERSATION_RECIEVED_USER,
   SELECT_CONVERSATION,
+  GET_CONVERSATION,
 } from '../actionCreators/type';
 
 const conversationReducer = (state = {}, action) => {
@@ -13,6 +14,8 @@ const conversationReducer = (state = {}, action) => {
       return { ...state, conversationId: action.payload };
     // case UPDATE_CONVERSATION_RECIEVED_USER:
     //   return {...state, } // いらないかなこれは
+    case GET_CONVERSATION:
+      return { ...state, conversation: action.payload };
     case SELECT_CONVERSATION:
       return { ...state, currentConversation: action.payload };
     default:
