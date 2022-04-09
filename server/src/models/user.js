@@ -127,6 +127,14 @@ const userSchema = new mongoose.Schema({
 
 userSchema.index({ location: '2dsphere' });
 
+userSchema.pre('save', async function (next) {
+  // if (!this.isModified('password')) return next();
+
+  // Delete passwordConfirm field
+  this.passwordConfirmation = undefined;
+  next();
+});
+
 // userSchema.pre('save', async function (next) {
 //   this.password = await bcrypt.hash(this.password, 12);
 //   this.passwordConfirmation = undefined;

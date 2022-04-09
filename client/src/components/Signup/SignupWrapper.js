@@ -173,7 +173,7 @@ const SignupWrapper = (props) => {
         visited: visited,
       };
       console.log(formData);
-      // props.signupActionCreator(formData);
+      props.signupActionCreator(formData);
     }
   };
 

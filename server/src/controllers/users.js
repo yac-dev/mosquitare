@@ -109,7 +109,7 @@ export const signup = async (request, response) => {
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
-    user.save();
+    await user.save();
 
     const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
     response.status(201).send({
