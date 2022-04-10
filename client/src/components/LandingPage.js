@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import LoginIcon from '@mui/icons-material/Login';
 import LanguageIcon from '@mui/icons-material/Language';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 //components
 import SignupWrapper from './Signup/SignupWrapper';
@@ -48,7 +49,7 @@ const LandingPage = () => {
           <Stack direction='row' spacing={2} justifyContent='center' alignItems='center'>
             <Button
               variant='contained'
-              startIcon={<LanguageIcon />}
+              startIcon={<BorderColorIcon />}
               size='large'
               onClick={() => {
                 setShowSignupModal(true);

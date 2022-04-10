@@ -122,6 +122,14 @@ const WorldMap = (props) => {
   //   setMap(null);
   // }, []);
 
+  // useEffect(() => {
+  //   setTimeout(function () {
+  //     window.addEventListener('beforeunload', () => {
+  //       socket.emit('close', { info: 'info' });
+  //     });
+  //   }, 2000);
+  // }, []);
+
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
     console.log('helloooooo ec22222222!!!!!! Hear meeeeee??????');

@@ -1,8 +1,13 @@
 import express from 'express';
-import cors from 'cors';
 const app = express();
 import './database/mongoose';
 import path from 'path';
+
+import cors from 'cors';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'xss-clean';
 
 import usersRouter from './routes/users';
 import languagesRouter from './routes/languages';
@@ -16,8 +21,23 @@ import commentsRouter from './routes/comments';
 import transcriptsRouter from './routes/transcripts';
 import docsRouter from './routes/docs';
 
-app.use(express.json());
 app.use(cors());
+// HTTP headersのsecurity check
+app.use(helmet());
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP... Please try again in an hour!',
+});
+app.use('/api', limiter);
+
+app.use(express.json());
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
 
 app.get('/', (request, response) => {
   response.send('Hello guest');

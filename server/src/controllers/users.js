@@ -52,16 +52,19 @@ import { JWT_PRIVATE_KEY } from '../../config';
 
 export const signup = async (request, response) => {
   try {
+    console.log(request.body);
     const {
       name,
       email,
       password,
       passwordConfirmation,
+      selfIntroduction,
       nativeLangs, // [langのid, langのid]って感じ。来たのはただの文字列だから、new ObjectIdでやる。
       learningLangs, // [langのid, langのid]
       nationalities, // [countryのid, countryのid]
       location, // citiesから、来たcountryのidを使ってrandomなcityをpickする。そのlngとlatを入れる感じ。
       photo,
+      visited,
     } = request.body;
 
     const city = await City.aggregate([
@@ -75,10 +78,10 @@ export const signup = async (request, response) => {
 
     const myLangs = [];
     for (let i = 0; i < nativeLangs.length; i++) {
-      myLangs.push(mongoose.Types.ObjectId(nativeLangs[i]));
+      myLangs.push(mongoose.Types.ObjectId(nativeLangs[i].value));
     }
     for (let i = 0; i < learningLangs.length; i++) {
-      myLangs.push(mongoose.Types.ObjectId(learningLangs[i]));
+      myLangs.push(mongoose.Types.ObjectId(learningLangs[i].value));
     } // generate myLangs
 
     const myLangsStatus = new Array(myLangs.length).fill(0);
@@ -95,17 +98,22 @@ export const signup = async (request, response) => {
       password: password,
       passwordConfirmation: passwordConfirmation,
       photo: randomPhotoURL,
-      nativeLangs: nativeLangs.map((lang) => mongoose.Types.ObjectId(lang)),
-      learningLangs: learningLangs.map((lang) => mongoose.Types.ObjectId(lang)),
+      nativeLangs: nativeLangs.map((lang) => mongoose.Types.ObjectId(lang.value)),
+      learningLangs: learningLangs.map((lang) => mongoose.Types.ObjectId(lang.value)),
       myLangs: myLangs,
       myLangsStatus: myLangsStatus,
-      nationalities: nationalities.map((nationality) => mongoose.Types.ObjectId(nationality)),
+      nationalities: nationalities.map((nationality) => mongoose.Types.ObjectId(nationality.value)),
       location: {
         type: 'Point',
         coordinates: [city[0].location.coordinates[0], city[0].location.coordinates[1]],
       },
       socketId: '11111',
+      visited: visited.map((country) => mongoose.Types.ObjectId(country.value)),
     });
+
+    if (selfIntroduction) {
+      user.selfIntroduction = selfIntroduction;
+    }
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);

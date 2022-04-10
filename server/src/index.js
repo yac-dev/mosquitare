@@ -243,6 +243,10 @@ io.on('connection', (socket) => {
   socket.on('OUR_DOC_IS_OPENED', (dataFromClient) => {
     io.to(dataFromClient.to).emit('OPEN_MY_DOC');
   });
+
+  // socket.on('close', (data) => {
+  //   console.log('closed', data);
+  // });
 });
 
 server.listen(process.env.PORT || 8000, () => {
