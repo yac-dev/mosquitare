@@ -60,14 +60,12 @@ const BasicUserInfo = (props) => {
   };
 
   const renderUserState = () => {
-    if (!props.user.isOnline) {
-      return <p>&#9898;&nbsp;Offline</p>;
+    if (!props.user.isOnline || !props.user.isReady) {
+      return <p>&#9898;&nbsp;I'm not available now 💤🛌</p>;
     } else if (props.user.isOnline && props.user.isInConversation) {
-      return <p>&#128308;&nbsp;Conversation now.</p>;
+      return <p>&#128308;&nbsp;Conversation now ☎️</p>;
     } else if (props.user.isOnline) {
-      return <p>&#128994;&nbsp;I'm available now!!</p>;
-    } else if (props.user.sleep) {
-      return <p>&#128309;&nbsp;I'm breaking.</p>;
+      return <p>&#128994;&nbsp;I'm available now 😁</p>;
     }
   };
 
@@ -79,11 +77,13 @@ const BasicUserInfo = (props) => {
           <div className='info-list' style={{ width: '70%' }}>
             <p>{renderCardHeaderTitle(user)}</p>
             {/* <p>Currently living in&nbsp;{user.location.name}</p> */}
-            {renderUserState()}
             <p>{user.conversations.length} conversations</p>
+            {renderUserState()}
           </div>
           <div className='avatar-wrapper' style={{ width: '30%', display: ' flex', justifyContent: 'center' }}>
-            <Avatar sx={{ width: 70, height: 70 }}>{user.name}</Avatar>
+            <Avatar sx={{ width: 70, height: 70 }} alt={user.name}>
+              {user.name}
+            </Avatar>
           </div>
         </div>
         {renderActionButtons()}

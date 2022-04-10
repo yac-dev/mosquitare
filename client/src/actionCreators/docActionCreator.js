@@ -18,6 +18,7 @@ export const getDocByConversationIdActionCreator = () => async (dispatch, getSta
       type: 'GET_DOC',
       payload: doc,
     });
+    return Promise.resolve(doc);
   } catch (error) {
     console.log(error);
   }

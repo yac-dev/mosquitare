@@ -38,9 +38,10 @@ const UserInfoLanguage = (props) => {
   return (
     <div
       className='user-info-language'
+      style={{ padding: '10px' }}
       // style={{ padding: '10px', backgroundColor: 'white', borderRadius: '5px', marginBottom: '10px' }}
     >
-      <h6 style={{ borderBottom: '1px solid black' }}>
+      <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>
         <BarChartIcon />
         Language Status&nbsp;
         <Tooltip title='This chart represents what language and how much the user speaks'>

@@ -289,7 +289,7 @@ const Navbar = (props) => {
                 <AccessTimeFilledIcon />
               </IconButton>
             </Tooltip> */}
-            <Tooltip title='Group Chat ( Sorry, not available now 😐 )'>
+            <Tooltip title='Clubs ( Under construction 🚜🛠  Please wait for a bit.)'>
               <IconButton
                 size='large'
                 edge='end'
@@ -348,7 +348,7 @@ const Navbar = (props) => {
     if (props.authState.currentUser) {
       return (
         <>
-          <Tooltip title='Where to?'>
+          <Tooltip title='World Map'>
             <IconButton
               size='large'
               aria-label='show 17 new notifications'
@@ -358,7 +358,7 @@ const Navbar = (props) => {
               <ExploreIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title='Search People'>
+          <Tooltip title='Search People ( Under construction 🚜🛠 Please wait for a bit.)'>
             <IconButton
               size='large'
               aria-label='show 17 new notifications'

@@ -25,11 +25,13 @@ const AllConversationsWrapper = (props) => {
 
   const renderConversations = () => {
     const conversationList = props.conversationsState.map((conversation) => {
-      return (
-        <>
-          <Conversation conversation={conversation} />
-        </>
-      );
+      if (conversation.videoFilename && conversation.users.length === 2) {
+        return (
+          <>
+            <Conversation conversation={conversation} />
+          </>
+        );
+      }
     });
 
     return <>{conversationList}</>;

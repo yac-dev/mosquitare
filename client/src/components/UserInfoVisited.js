@@ -28,13 +28,13 @@ const UserInfoVisited = (props) => {
   };
 
   return (
-    <div className='user-info-visited'>
-      <h6 style={{ borderBottom: '1px solid black' }}>
+    <div className='user-info-visited' style={{ padding: '10px' }}>
+      <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>
         <LanguageIcon />
-        Visited
+        Visited History
       </h6>
       {renderVisitedCountries()}
-      {howMuchCompleted()}
+      {/* {howMuchCompleted()} */}
       <VisitedMap visitedCountries={props.user.visited} />
     </div>
   );

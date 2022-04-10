@@ -4,6 +4,9 @@ import Tab from 'react-bootstrap/Tab';
 
 // mui icons
 import TranslateIcon from '@mui/icons-material/Translate';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MapIcon from '@mui/icons-material/Map';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 
 // components
 import UserInfoLanguage from './UserInfoLanguage';
@@ -12,18 +15,58 @@ import UserInfoVisited from './UserInfoVisited';
 
 const UserInfoTabs = (props) => {
   const [key, setKey] = useState('language');
+
+  const renderLanguageTitle = () => {
+    return (
+      <>
+        <TranslateIcon />
+        Language
+      </>
+    );
+  };
+
+  const renderPersonalTitle = () => {
+    return (
+      <>
+        <AccountCircleIcon />
+        Personal
+      </>
+    );
+  };
+
+  const renderBeenTitle = () => {
+    return (
+      <>
+        <MapIcon />
+        Been
+      </>
+    );
+  };
+
+  const renderPublicVideos = () => {
+    return (
+      <>
+        <VideoLibraryIcon />
+        Public Videos
+      </>
+    );
+  };
+
   return (
     <div className='user-info-tabs'>
       <Tabs id='controlled-tab-example' activeKey={key} onSelect={(k) => setKey(k)} className='mb-3'>
-        <Tab eventKey='language' title='Language'>
+        <Tab eventKey='language' title={renderLanguageTitle()}>
           <UserInfoLanguage user={props.user} />
         </Tab>
-        <Tab eventKey='personal' title='Personal'>
+        <Tab eventKey='personal' title={renderPersonalTitle()}>
           <UserInfoPersonal user={props.user} />
         </Tab>
-        <Tab eventKey='been' title='Been'>
+        <Tab eventKey='been' title={renderBeenTitle()}>
           <UserInfoVisited user={props.user} />
           {/* <div>here</div> */}
+        </Tab>
+        <Tab eventKey='publicVideos' title={renderPublicVideos()}>
+          <div>Under construction 🚜🛠 Please wait for bit.</div>
         </Tab>
         {/* <Tab eventKey='videos' title='Videos'>
           <div>Hola</div>

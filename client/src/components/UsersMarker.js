@@ -13,7 +13,7 @@ const UsersMarker = (props) => {
 
   if (props.usersState) {
     const usersRender = props.usersState.map((user) => {
-      if (user.isOnline && !user.isInConversation) {
+      if (!user.isInConversation) {
         return (
           <>
             <EachUserInfo

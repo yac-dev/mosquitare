@@ -56,9 +56,9 @@ const mapOptions = {
 // @ts-ignore
 // eslint-disable-next-line import/no-webpack-loader-syntax, import/no-unresolved
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
-const socket = io(process.env.REACT_APP_WEBRTC, {
-  path: '/mysocket',
-});
+// const socket = io(process.env.REACT_APP_WEBRTC, {
+//   path: '/mysocket',
+// });
 const Desktop = ({ children }) => {
   const isDesktop = useMediaQuery({ minWidth: 992 });
   return isDesktop ? children : null;
@@ -82,6 +82,7 @@ const Default = ({ children }) => {
 const WorldMap = (props) => {
   // const socket = io(process.env.REACT_APP_WEBRTC); // これまずいね。反省。
   // const socketId = useRef(null);
+  const [socket, setSocket] = useState();
   const [viewport, setViewport] = useState({ latitude: 47.040182, longitude: 17.071727, zoom: 1 });
   // callした後のcalling modal用
   const [showCallingModal, setShowCallingModal] = useState(false);
@@ -124,29 +125,44 @@ const WorldMap = (props) => {
 
   // useEffect(() => {
   //   setTimeout(function () {
-  //     window.addEventListener('beforeunload', () => {
-  //       socket.emit('close', { info: 'info' });
+  //     window.addEventListener('beforeunload', (e) => {
+  //       e.preventDefault();
+  //       e.returnValue = '';
+  //       // socket.emit('close', { info: 'info' });
   //     });
   //   }, 2000);
   // }, []);
 
+  // useEffect(() => {
+  //   // window.onunload()
+  // }, []);
+
   useEffect(() => {
-    const jwtToken = localStorage.getItem('mosquitare token');
-    console.log('helloooooo ec22222222!!!!!! Hear meeeeee??????');
-    console.log(jwtToken);
-    if (jwtToken) {
-      socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
-        // socketId.current = socketIdFromServer;
-        console.log('socket working??????');
-        props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer).then(() => {
-          props.getUsersActionCreator();
-        });
-      });
-    }
-    props.getMediaActionCreator();
-    props.listenCallActionCreator(socket, setShowCallingModal);
-    // props.getMeetingsActionCreator();
+    const s = io(process.env.REACT_APP_WEBRTC, {
+      path: '/mysocket',
+    });
+    setSocket(s);
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      const jwtToken = localStorage.getItem('mosquitare token');
+      console.log('helloooooo ec22222222!!!!!! Hear meeeeee??????');
+      console.log(jwtToken);
+      if (jwtToken) {
+        socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
+          // socketId.current = socketIdFromServer;
+          console.log('socket working??????');
+          props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer).then(() => {
+            props.getUsersActionCreator();
+          });
+        });
+      }
+      props.getMediaActionCreator();
+      props.listenCallActionCreator(socket, setShowCallingModal);
+    }
+    // props.getMeetingsActionCreator();
+  }, [socket]);
 
   useEffect(() => {
     if (props.mediaState.apiCallResult === 2) {
@@ -215,207 +231,143 @@ const WorldMap = (props) => {
   //   }
   // };
 
-  return (
-    <>
-      {/* modals */}
-      {/* <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
-      <FullScreen1on1Modal
-        socket={socket}
-        show1on1={show1on1}
-        setShow1on1={setShow1on1}
-        fullscreen1on1Modal={fullscreen1on1Modal}
-      /> */}
-      {/* <VerticallyCenteredModal
-        show={verticallyCenteredModal}
-        onHide={() => setVerticallyCenteredModal(false)}
-        socket={socket}
-      /> */}
-      {/* <FullScreenMeetingModal
-        socket={socket}
-        showMeeting={showMeeting}
-        currentUser={props.authState.currentUser}
-        mediaVideoStreamObject={props.mediaState.myVideoStreamObject}
-        setShowMeeting={setShowMeeting}
-        fullScreenMeetingModal={fullScreenMeetingModal}
-      /> */}
-      {/* modals */}
+  const renderWorldMap = () => {
+    if (socket) {
+      return (
+        <>
+          <Default>
+            <div style={{ height: '100vh', width: '100%' }}>
+              <ReactMapGL
+                {...viewport}
+                // {...worldMapSettings}
+                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                width='100%'
+                height='100vh'
+                mapStyle='mapbox://styles/yabbee/ckvjrmck2h1pb14mv91m5cuk7'
+                onViewportChange={(viewport) => setViewport(viewport)}
+              >
+                <UsersMarker
+                  socket={socket}
+                  setShowCallingModal={setShowCallingModal}
+                  setIsUserIconClicked={setIsUserIconClicked}
+                  userInfo={userInfo}
+                  setUserInfo={setUserInfo}
+                />
+                <RightPositionedUserDetail
+                  socket={socket}
+                  isUserIconClicked={isUserIconClicked}
+                  userInfo={userInfo}
+                  setShowCallingModal={setShowCallingModal}
+                  worldMapSettings={worldMapSettings}
+                  setWorldMapSetting={setWorldMapSetting}
+                />
+                {/* <UserDetail
+                  socket={socket}
+                  isUserIconClicked={isUserIconClicked}
+                  userInfo={userInfo}
+                  setShowCallingModal={setShowCallingModal}
+                /> */}
+              </ReactMapGL>
+              {/* {renderMap()} */}
+              <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+              <FullScreen1on1Modal
+                socket={socket}
+                show1on1={show1on1}
+                setShow1on1={setShow1on1}
+                fullscreen1on1Modal={fullscreen1on1Modal}
+              />
+            </div>
+          </Default>
 
-      {/* <div style={{ height: '100vh', width: '100%' }}> */}
+          {/* <Tablet>
+            <div style={{ height: '100vh', width: '100%' }}>
+              <ReactMapGL
+                {...viewport}
+                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                width='100%'
+                height='100vh'
+                mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+                onViewportChange={(viewport) => setViewport(viewport)}
+              >
+                <UsersMarker
+                  socket={socket}
+                  setShowCallingModal={setShowCallingModal}
+                  setIsUserIconClicked={setIsUserIconClicked}
+                  setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+                  userInfo={userInfo}
+                  setUserInfo={setUserInfo}
+                  setShowSwipeable={setShowSwipeable}
+                />
+                {showSwipeable && !props.mediaState.callAccepted ? (
+                  <SwipeableUserDetail
+                    socket={socket}
+                    userInfo={userInfo}
+                    isUserIconClicked={isUserIconClicked}
+                    openSwipeableDrawer={openSwipeableDrawer}
+                    setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+                    setShowCallingModal={setShowCallingModal}
+                  />
+                ) : null}
+              </ReactMapGL>
+              <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+              <FullScreen1on1Modal
+                socket={socket}
+                show1on1={show1on1}
+                setShow1on1={setShow1on1}
+                fullscreen1on1Modal={fullscreen1on1Modal}
+              />
+            </div>
+          </Tablet> */}
 
-      {/* <ReactMapGL
-          {...viewport}
-          mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-          width='100%'
-          height='100vh'
-          mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
-          onViewportChange={(viewport) => setViewport(viewport)}
-        >
-          <UsersMarker
-            socket={socket}
-            setShowCallingModal={setShowCallingModal}
-            setIsUserIconClicked={setIsUserIconClicked}
-            userInfo={userInfo}
-            setUserInfo={setUserInfo}
-          />
-          <Desktop>
-            <UserDetail
-              socket={socket}
-              isUserIconClicked={isUserIconClicked}
-              userInfo={userInfo}
-              setShowCallingModal={setShowCallingModal}
-            />
-          </Desktop>
-          <Tablet>
-            <SwipeableUserDetail
-              openSwipeableDrawer={openSwipeableDrawer}
-              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-            />
-          </Tablet>
           <Mobile>
-            <SwipeableUserDetail
-              openSwipeableDrawer={openSwipeableDrawer}
-              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-            />
+            <div style={{ height: '100vh', width: '100%' }}>
+              <ReactMapGL
+                {...viewport}
+                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                width='100%'
+                height='100vh'
+                mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+                onViewportChange={(viewport) => setViewport(viewport)}
+              >
+                <UsersMarker
+                  socket={socket}
+                  setShowCallingModal={setShowCallingModal}
+                  setIsUserIconClicked={setIsUserIconClicked}
+                  setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+                  userInfo={userInfo}
+                  setUserInfo={setUserInfo}
+                  setShowSwipeable={setShowSwipeable}
+                />
+                {showSwipeable && !props.mediaState.callAccepted ? (
+                  <SwipeableUserDetail
+                    socket={socket}
+                    userInfo={userInfo}
+                    isUserIconClicked={isUserIconClicked}
+                    openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
+                    setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
+                    setShowCallingModal={setShowCallingModal}
+                  />
+                ) : null}
+              </ReactMapGL>
+              <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+              <FullScreen1on1Modal
+                socket={socket}
+                show1on1={show1on1}
+                setShow1on1={setShow1on1}
+                fullscreen1on1Modal={fullscreen1on1Modal}
+              />
+            </div>
           </Mobile>
-          {/* <MeetingsList
-            socket={socket}
-            // onJoinClick={onJoinClick}
-          /> */}
-      {/* <Button
-            className='create-meeting-button'
-            // onClick={() => setVerticallyCenteredModal(true)}
-          >
-            Create new meeting??
-          </Button> */}
-      {/* </ReactMapGL> */}
 
-      <Default>
-        <div style={{ height: '100vh', width: '100%' }}>
-          <ReactMapGL
-            {...viewport}
-            // {...worldMapSettings}
-            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-            width='100%'
-            height='100vh'
-            mapStyle='mapbox://styles/yabbee/ckvjrmck2h1pb14mv91m5cuk7'
-            onViewportChange={(viewport) => setViewport(viewport)}
-          >
-            <UsersMarker
-              socket={socket}
-              setShowCallingModal={setShowCallingModal}
-              setIsUserIconClicked={setIsUserIconClicked}
-              userInfo={userInfo}
-              setUserInfo={setUserInfo}
-            />
-            <RightPositionedUserDetail
-              socket={socket}
-              isUserIconClicked={isUserIconClicked}
-              userInfo={userInfo}
-              setShowCallingModal={setShowCallingModal}
-              worldMapSettings={worldMapSettings}
-              setWorldMapSetting={setWorldMapSetting}
-            />
-            {/* <UserDetail
-              socket={socket}
-              isUserIconClicked={isUserIconClicked}
-              userInfo={userInfo}
-              setShowCallingModal={setShowCallingModal}
-            /> */}
-          </ReactMapGL>
-          {/* {renderMap()} */}
-          <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
-          <FullScreen1on1Modal
-            socket={socket}
-            show1on1={show1on1}
-            setShow1on1={setShow1on1}
-            fullscreen1on1Modal={fullscreen1on1Modal}
-          />
-        </div>
-      </Default>
+          {/* </div> */}
+        </>
+      );
+    } else {
+      return null;
+    }
+  };
 
-      {/* <Tablet>
-        <div style={{ height: '100vh', width: '100%' }}>
-          <ReactMapGL
-            {...viewport}
-            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-            width='100%'
-            height='100vh'
-            mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
-            onViewportChange={(viewport) => setViewport(viewport)}
-          >
-            <UsersMarker
-              socket={socket}
-              setShowCallingModal={setShowCallingModal}
-              setIsUserIconClicked={setIsUserIconClicked}
-              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-              userInfo={userInfo}
-              setUserInfo={setUserInfo}
-              setShowSwipeable={setShowSwipeable}
-            />
-            {showSwipeable && !props.mediaState.callAccepted ? (
-              <SwipeableUserDetail
-                socket={socket}
-                userInfo={userInfo}
-                isUserIconClicked={isUserIconClicked}
-                openSwipeableDrawer={openSwipeableDrawer}
-                setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-                setShowCallingModal={setShowCallingModal}
-              />
-            ) : null}
-          </ReactMapGL>
-          <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
-          <FullScreen1on1Modal
-            socket={socket}
-            show1on1={show1on1}
-            setShow1on1={setShow1on1}
-            fullscreen1on1Modal={fullscreen1on1Modal}
-          />
-        </div>
-      </Tablet> */}
-
-      <Mobile>
-        <div style={{ height: '100vh', width: '100%' }}>
-          <ReactMapGL
-            {...viewport}
-            mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-            width='100%'
-            height='100vh'
-            mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
-            onViewportChange={(viewport) => setViewport(viewport)}
-          >
-            <UsersMarker
-              socket={socket}
-              setShowCallingModal={setShowCallingModal}
-              setIsUserIconClicked={setIsUserIconClicked}
-              setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-              userInfo={userInfo}
-              setUserInfo={setUserInfo}
-              setShowSwipeable={setShowSwipeable}
-            />
-            {showSwipeable && !props.mediaState.callAccepted ? (
-              <SwipeableUserDetail
-                socket={socket}
-                userInfo={userInfo}
-                isUserIconClicked={isUserIconClicked}
-                openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
-                setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
-                setShowCallingModal={setShowCallingModal}
-              />
-            ) : null}
-          </ReactMapGL>
-          <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
-          <FullScreen1on1Modal
-            socket={socket}
-            show1on1={show1on1}
-            setShow1on1={setShow1on1}
-            fullscreen1on1Modal={fullscreen1on1Modal}
-          />
-        </div>
-      </Mobile>
-
-      {/* </div> */}
-    </>
-  );
+  return <>{renderWorldMap()}</>;
 };
 
 const mapStateToProps = (state) => {

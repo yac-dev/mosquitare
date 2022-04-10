@@ -67,6 +67,7 @@ import {
 
 import Transcript from './models/transcript';
 import Doc from './models/doc';
+import User from './models/user';
 
 const io = new Server(server, {
   cors: {
@@ -244,9 +245,17 @@ io.on('connection', (socket) => {
     io.to(dataFromClient.to).emit('OPEN_MY_DOC');
   });
 
-  // socket.on('close', (data) => {
-  //   console.log('closed', data);
-  // });
+  socket.on('close', (data) => {
+    console.log('sombody closed', data);
+  });
+
+  socket.on('disconnect', async () => {
+    const user = await User.findOne({ socketId: socket.id });
+    console.log(user);
+    user.isOnline = false;
+    await user.save({ validateBeforeSave: false });
+    console.log('disconnected ... ', socket.id);
+  });
 });
 
 server.listen(process.env.PORT || 8000, () => {

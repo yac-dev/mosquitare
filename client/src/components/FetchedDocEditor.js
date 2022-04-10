@@ -27,20 +27,12 @@ const FetchedDocEditor = (props) => {
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (props.conversationState) {
-      // ここでdocをconversation Idで引っ張ってくる。
-      props.getDocByConversationIdActionCreator();
+    if (quill && props.conversationState) {
+      props.getDocByConversationIdActionCreator().then((doc) => {
+        quill.setContents(doc);
+      });
     }
-  }, [props.conversationState]);
-
-  useEffect(() => {
-    if (quill && props.docState) {
-      // props.docState.docNow.data.ops.map((data) => {
-      //   return quill.setContents(data.insert);
-      // });
-      quill.setContents(props.docState.docNow.data);
-    }
-  }, [props.docState]);
+  }, [quill, props.conversationState]);
 
   const wrapperRef = useCallback((wrapper) => {
     if (wrapper == null) return;

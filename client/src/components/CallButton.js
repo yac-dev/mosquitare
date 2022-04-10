@@ -12,6 +12,9 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
+// mui components
+import Tooltip from '@mui/material/Tooltip';
+
 // action creators
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 
@@ -130,7 +133,7 @@ const CallButton = (props) => {
       }
 
       return (
-        <div className='action-button-flexbox' style={{ display: 'flex' }}>
+        <div className='action-button-flexbox' style={{ display: 'flex', gap: '10px' }}>
           <div className='call-button'>
             <Button
               id='demo-customized-button'
@@ -139,11 +142,12 @@ const CallButton = (props) => {
               aria-expanded={open ? 'true' : undefined}
               variant='contained'
               disableElevation
+              disabled={props.user.isOnline ? false : true}
               onClick={handleClick}
               endIcon={<KeyboardArrowDownIcon />}
               // sx={{ backgroundColor: 'white', color: 'black' }}
             >
-              Exchange&nbsp;
+              Exchange now&nbsp;
               <VideoCallIcon size='large' />
             </Button>
             <StyledMenu
@@ -158,9 +162,11 @@ const CallButton = (props) => {
               {menuItemDOMs}
             </StyledMenu>
           </div>
-          <Button variant='contained' disabled>
-            Apply Exchange!
-          </Button>
+          <Tooltip title='Under construction 🚜🛠 Please wait for a bit'>
+            <Button variant='contained' disabled>
+              Send a message
+            </Button>
+          </Tooltip>
         </div>
       );
     } else {

@@ -241,14 +241,9 @@ export const updateUsersSocketId = async (request, response) => {
   }
 };
 
-// こっちは、isInConversation用のhandler、でもrefactoringできるな,最終的に。
 export const updateUserConversationState = async (request, response) => {
   try {
-    const user = await User.findByIdAndUpdate(
-      request.params.id,
-      { isInConversation: true },
-      { new: true, runValidators: true }
-    );
+    const user = await User.findByIdAndUpdate(request.params.id, { isInConversation: true }, { new: true });
     response.json({
       user,
     });
@@ -291,9 +286,12 @@ export const updateConversation = async (request, response) => {
   try {
     // 多分、userのinstanceをまんま送るのがベストかね。loadmeandUpdateもそうだけど。そのinstanceのfieldを変更して、saveするっていうのが一番早いしqueryの必要がなくなる。
     const { conversationId } = request.body;
+    console.log('Updating user conversation????', request.body);
+
     const user = await User.findById(request.params.id);
     user.conversations.push(conversationId);
-    await user.save(); // TypeError: user.save is not a function これだめってなるね。。。考え直そう。
+    await user.save({ validateBeforeSave: false }); // TypeError: user.save is not a function これだめってなるね。。。考え直そう。
+
     response.status(200).json({
       user,
     });
@@ -350,7 +348,7 @@ export const updateLangsStatus = async (request, response) => {
     }
   }
   user.langsStatusHistory.push(langStatus);
-  await user.save();
+  await user.save({ validateBeforeSave: false });
   response.status(200).json({
     user,
   });

@@ -36,9 +36,9 @@ const UserInfoPersonal = (props) => {
   };
 
   return (
-    <div className='user-info-personal'>
+    <div className='user-info-personal' style={{ padding: '10px' }}>
       <div className='badges' style={{ marginBottom: '20px' }}>
-        <h6 style={{ borderBottom: '1px solid black' }}>
+        <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)' }}>
           <WorkspacePremiumIcon />
           Badges&nbsp;
           <Tooltip title='These badges are determined based on user activity'>
@@ -49,7 +49,7 @@ const UserInfoPersonal = (props) => {
       </div>
 
       <div className='self-introduction' style={{ marginBottom: '20px' }}>
-        <h6 style={{ borderBottom: '1px solid black' }}>
+        <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)' }}>
           <EmojiPeopleIcon />
           Self-Introduction&nbsp;
         </h6>
@@ -57,7 +57,7 @@ const UserInfoPersonal = (props) => {
       </div>
 
       <div className='socials' style={{ marginBottom: '20px' }}>
-        <h6 style={{ borderBottom: '1px solid black' }}>
+        <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)' }}>
           <FacebookIcon />
           Socials&nbsp;
         </h6>
@@ -67,6 +67,8 @@ const UserInfoPersonal = (props) => {
         <a className='fa fa-youtube'></a>
         <a className='fa fa-instagram'></a>
         <a className='fa fa-linkedin'></a>
+        <a className='fa fa-pinterest'></a>
+        <a className='fa fa-reddit'></a>
       </div>
     </div>
   );

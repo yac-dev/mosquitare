@@ -5,7 +5,7 @@ import history from '../history';
 export const createCommentActionCreator = (content) => async (dispatch, getState) => {
   try {
     const userId = getState().authState.currentUser._id;
-    const conversationId = getState().conversationState.currentConversation._id;
+    const conversationId = getState().conversationState.conversation._id;
     const result = await mosquitareAPI.post(`/comments/${conversationId}/${userId}`, { content });
     const { comment } = result.data;
     dispatch({

@@ -99,7 +99,7 @@ const SubtitleWrapper = (props) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [conversationTranscript]);
+  }, [conversationTranscript, partnerInterimTranscript]);
 
   const { transcript, interimTranscript, finalTranscript, resetTranscript, listening } = useSpeechRecognition({});
 
