@@ -102,7 +102,7 @@ const userSchema = new mongoose.Schema({
   ], // こっちは月毎にupdate。
   personalStatus: {
     type: Array,
-    default: ['Just started 📚'],
+    default: ['📘 Just started'],
   },
   visited: [
     {

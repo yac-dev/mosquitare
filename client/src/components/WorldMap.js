@@ -137,32 +137,66 @@ const WorldMap = (props) => {
   //   // window.onunload()
   // }, []);
 
+  // useEffect(() => {
+  //   const s = io(process.env.REACT_APP_WEBRTC, {
+  //     path: '/mysocket',
+  //   });
+  //   setSocket(s);
+  // }, []);
+
+  // useEffect(() => {
+  //   window.addEventListener('beforeunload', alertUser);
+  //   return () => {
+  //     window.removeEventListener('beforeunload', alertUser);
+  //   };
+  // }, []);
+  // const alertUser = (e) => {
+  //   e.preventDefault();
+  //   e.returnValue = '';
+  // };
+
+  // page refresh効くじゃん笑
+  // renderされた後にこれが動いて。
   useEffect(() => {
-    const s = io(process.env.REACT_APP_WEBRTC, {
-      path: '/mysocket',
-    });
-    setSocket(s);
+    const jwtToken = localStorage.getItem('mosquitare token');
+    if (jwtToken) {
+      const s = io(process.env.REACT_APP_WEBRTC, {
+        path: '/mysocket',
+      });
+      setSocket(s);
+    }
   }, []);
+  // jwtあるならsocketを設定して、そのsocketを使ってloadmeandupdateする。↓
 
   useEffect(() => {
     if (socket) {
-      const jwtToken = localStorage.getItem('mosquitare token');
-      console.log('helloooooo ec22222222!!!!!! Hear meeeeee??????');
-      console.log(jwtToken);
-      if (jwtToken) {
-        socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
-          // socketId.current = socketIdFromServer;
-          console.log('socket working??????');
-          props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer).then(() => {
-            props.getUsersActionCreator();
-          });
+      socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
+        props.loadMeAndUpdateActionCreator(localStorage.getItem('mosquitare token'), socketIdFromServer).then(() => {
+          props.getUsersActionCreator();
         });
-      }
-      props.getMediaActionCreator();
-      props.listenCallActionCreator(socket, setShowCallingModal);
+        props.getMediaActionCreator();
+        props.listenCallActionCreator(socket, setShowCallingModal);
+      });
     }
-    // props.getMeetingsActionCreator();
   }, [socket]);
+
+  // page refreshした時どうしようか。。。
+
+  // useEffect(() => {
+  //   if (socket) {
+  //     // loginしているなら
+  //     const jwtToken = localStorage.getItem('mosquitare token');
+  //     if (jwtToken) {
+  //       socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
+  //         props.loadMeAndUpdateActionCreator(jwtToken, socketIdFromServer);
+  //         props.getUsersActionCreator();
+  //         props.getMediaActionCreator();
+  //         props.listenCallActionCreator(socket, setShowCallingModal);
+  //       });
+  //     }
+  //   }
+  //   // props.getMeetingsActionCreator();
+  // }, [socket]);
 
   useEffect(() => {
     if (props.mediaState.apiCallResult === 2) {
@@ -232,7 +266,7 @@ const WorldMap = (props) => {
   // };
 
   const renderWorldMap = () => {
-    if (socket) {
+    if (socket && props.usersState.length) {
       return (
         <>
           <Default>

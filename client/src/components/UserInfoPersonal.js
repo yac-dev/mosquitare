@@ -27,12 +27,13 @@ const UserInfoPersonal = (props) => {
     const personalStatusList = props.user.personalStatus.map((status) => {
       return (
         <>
-          <span>{status}</span>&nbsp;
+          <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>{status}</span>
+          &nbsp;
         </>
       );
     });
 
-    return <div>{personalStatusList}</div>;
+    return <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}>{personalStatusList}</div>;
   };
 
   return (
