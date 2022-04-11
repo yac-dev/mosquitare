@@ -60,11 +60,11 @@ const BasicUserInfo = (props) => {
   };
 
   const renderUserState = () => {
-    if (!props.user.isOnline || !props.user.isReady) {
+    if (!props.user.isAvailableNow) {
       return <p>&#9898;&nbsp;I'm not available now 💤🛌</p>;
-    } else if (props.user.isOnline && props.user.isInConversation) {
+    } else if (props.user.isAvailableNow && props.user.isInConversation) {
       return <p>&#128308;&nbsp;Conversation now ☎️</p>;
-    } else if (props.user.isOnline) {
+    } else if (props.user.isAvailableNow) {
       return <p>&#128994;&nbsp;I'm available now 😁</p>;
     }
   };

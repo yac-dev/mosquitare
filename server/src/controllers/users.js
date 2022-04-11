@@ -151,7 +151,7 @@ export const login = async (request, response) => {
 
     // user.location = location; 一旦これはなし。
     // user.socketId = socketId;
-    user.isOnline = true;
+    user.isAvailableNow = true;
     await user.save({ validateBeforeSave: false });
 
     response.json({
@@ -256,7 +256,7 @@ export const logout = async (request, response) => {
   try {
     const user = await User.findByIdAndUpdate(
       request.params.id,
-      { isOnline: false },
+      { isAvailableNow: false },
       { new: true, runValidators: true }
     );
     response.json({

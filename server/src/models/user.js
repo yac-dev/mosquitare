@@ -82,17 +82,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  isOnline: {
+  isAvailableNow: {
     type: Boolean,
     default: true,
   },
   isInConversation: {
     type: Boolean,
     default: false,
-  },
-  isReady: {
-    type: Boolean,
-    default: true,
   },
   createdAt: {
     type: Date,
@@ -108,12 +104,6 @@ const userSchema = new mongoose.Schema({
     type: Array,
     default: ['Just started 📚'],
   },
-  talkedWith: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-    },
-  ],
   visited: [
     {
       type: mongoose.Schema.ObjectId,

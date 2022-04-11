@@ -252,7 +252,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', async () => {
     const user = await User.findOne({ socketId: socket.id });
     console.log(user);
-    user.isOnline = false;
+    user.isAvailableNow = false;
     await user.save({ validateBeforeSave: false });
     console.log('disconnected ... ', socket.id);
   });

@@ -65,9 +65,9 @@ const UserInfoTabs = (props) => {
           <UserInfoVisited user={props.user} />
           {/* <div>here</div> */}
         </Tab>
-        <Tab eventKey='publicVideos' title={renderPublicVideos()}>
+        {/* <Tab eventKey='publicVideos' title={renderPublicVideos()}>
           <div>Under construction 🚜🛠 Please wait for bit.</div>
-        </Tab>
+        </Tab> */}
         {/* <Tab eventKey='videos' title='Videos'>
           <div>Hola</div>
         </Tab> */}
