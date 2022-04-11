@@ -142,7 +142,7 @@ const CallButton = (props) => {
               aria-expanded={open ? 'true' : undefined}
               variant='contained'
               disableElevation
-              disabled={props.user.isOnline ? false : true}
+              disabled={props.user.isAvailableNow ? false : true}
               onClick={handleClick}
               endIcon={<KeyboardArrowDownIcon />}
               // sx={{ backgroundColor: 'white', color: 'black' }}
