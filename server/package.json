@@ -9,8 +9,8 @@
   "scripts": {
     "server:development": "env-cmd -f ./config/.env.development nodemon --ignore ./uploadedFilesBuffer/ --es-module-specifier-resolution=node src/index.js",
     "production": "NODE_ENV=production node --es-module-specifier-resolution=node src/index.js",
-    "server:production-aws-test": "env-cmd -f ./.env.production-aws-test node --es-module-specifier-resolution=node src/index.js",
-    "server:production-aws": "env-cmd -f ../../.env.production-aws node --es-module-specifier-resolution=node src/index.js"
+    "server:test-production-ec2": "env-cmd -f ../../.env.test-production-ec2 node --es-module-specifier-resolution=node src/index.js",
+    "server:production-ec2": "env-cmd -f ../../.env.production-ec2 node --es-module-specifier-resolution=node src/index.js"
   },
   "author": "",
   "license": "ISC",

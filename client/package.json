@@ -53,8 +53,8 @@
     "build": "react-scripts build",
     "client:development": "env-cmd -f ./config/.env.development react-scripts start",
     "build:production-heroku": "env-cmd -f ./config/.env.production-heroku react-scripts build",
-    "build:production-aws-test": "env-cmd -f ./config/.env.production-aws-test react-scripts build",
-    "build:production-aws": "env-cmd -f ./config/.env.production-aws-test react-scripts build",
+    "build:test-production-ec2": "env-cmd -f ./config/.env.test-production-ec2 react-scripts build",
+    "build:production-ec2": "env-cmd -f ./config/.env.production-ec2 react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
