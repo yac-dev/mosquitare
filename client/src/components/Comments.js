@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
-
+import { Button, Form, TextArea } from 'semantic-ui-react';
 // mui
 import { styled } from '@mui/system';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import CreateIcon from '@mui/icons-material/Create';
+import SortIcon from '@mui/icons-material/Sort';
+import FeedbackIcon from '@mui/icons-material/Feedback';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { TextField, InputAdornment } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import { Icon, Input } from 'semantic-ui-react';
-
+import Overlay from 'react-bootstrap/Overlay';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import Popover from '@mui/material/Popover';
+import CommentIcon from '@mui/icons-material/Comment';
 // css
 import '../styles/comments.css';
 
@@ -58,6 +67,19 @@ const Comments = (props) => {
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
   const [content, setContent] = useState('');
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   useEffect(() => {
     props.getConversationCommentsActionCreator();
   }, []);
@@ -92,160 +114,44 @@ const Comments = (props) => {
     if (props.commentsState) {
       const commentsList = props.commentsState.map((comment) => {
         return (
-          <ListItem alignItems='flex-start'>
-            <ListItemAvatar>
-              <Avatar alt={`${comment.user.name}`} src='/static/images/avatar/1.jpg' />
-            </ListItemAvatar>
-            <ListItemText
-              primary={`${comment.user.name}`}
-              secondary={
-                <React.Fragment>
-                  <Typography component='div' variant='body2' sx={{ color: 'white' }}>
-                    {comment.content}
-                  </Typography>
-                  <Typography component='div' variant='body2' sx={{ color: 'white' }}>
-                    From {renderNationalities(comment.user.nationalities)}
-                  </Typography>
-
-                  {/* {" — I'll be in your neighborhood doing errands this…"} */}
-                </React.Fragment>
-              }
-            />
-          </ListItem>
+          <>
+            <ListItem alignItems='flex-start'>
+              <ListItemAvatar>
+                <Avatar alt={`${comment.user.name}`} src='/static/images/avatar/1.jpg' />
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <>
+                    <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+                      {comment.user.name} &nbsp;&nbsp;from&nbsp;{renderNationalities(comment.user.nationalities)}
+                    </Typography>
+                  </>
+                }
+                secondary={
+                  <>
+                    <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+                      {comment.content}
+                    </Typography>
+                    {/* <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+                      <ThumbUpAltIcon />
+                    </Typography> */}
+                  </>
+                }
+              />
+            </ListItem>
+            <Divider variant='inset' component='li' />
+          </>
         );
       });
 
       return (
-        <div
-          style={{
-            width: '100%',
-            height: '450px',
-            backgroundColor: 'rgb(0, 85, 212)',
-            overflow: 'auto',
-            borderRadius: '10px',
-          }}
-        >
+        <>
           <List>{commentsList}</List>
-        </div>
+        </>
       );
     } else {
       return <div>No comments yet. Add a message or feedback if you have!!!</div>;
     }
-
-    //   return (
-    //     <>
-    //       <div
-    //         style={{
-    //           width: '100%',
-    //           height: '450px',
-    //           backgroundColor: 'red',
-    //           overflow: 'auto',
-    //           borderRadius: '10px',
-    //         }}
-    //       >
-    //         <List>
-    //           <ListItem alignItems='flex-start'>
-    //             <ListItemAvatar>
-    //               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-    //             </ListItemAvatar>
-    //             <ListItemText
-    //               primary='Brunch this weekend?'
-    //               secondary={
-    //                 <React.Fragment>
-    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-    //                     Ali Connors
-    //                   </Typography>
-    //                   {" — I'll be in your neighborhood doing errands this…"}
-    //                 </React.Fragment>
-    //               }
-    //             />
-    //           </ListItem>
-    //           {/* <Divider variant='inset' component='li' /> */}
-    //           <ListItem alignItems='flex-start'>
-    //             <ListItemAvatar>
-    //               <Avatar alt='Travis Howard' src='/static/images/avatar/2.jpg' />
-    //             </ListItemAvatar>
-    //             <ListItemText
-    //               primary='Summer BBQ'
-    //               secondary={
-    //                 <React.Fragment>
-    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-    //                     to Scott, Alex, Jennifer
-    //                   </Typography>
-    //                   {" — Wish I could come, but I'm out of town this…"}
-    //                 </React.Fragment>
-    //               }
-    //             />
-    //           </ListItem>
-    //           {/* <Divider variant='inset' component='li' /> */}
-    //           <ListItem alignItems='flex-start'>
-    //             <ListItemAvatar>
-    //               <Avatar alt='Cindy Baker' src='/static/images/avatar/3.jpg' />
-    //             </ListItemAvatar>
-    //             <ListItemText
-    //               primary='Oui Oui'
-    //               secondary={
-    //                 <React.Fragment>
-    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-    //                     Sandra Adams
-    //                   </Typography>
-    //                   {' — Do you have Paris recommendations? Have you ever…'}
-    //                 </React.Fragment>
-    //               }
-    //             />
-    //           </ListItem>
-    //           <ListItem alignItems='flex-start'>
-    //             <ListItemAvatar>
-    //               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-    //             </ListItemAvatar>
-    //             <ListItemText
-    //               primary='Brunch this weekend?'
-    //               secondary={
-    //                 <React.Fragment>
-    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-    //                     Ali Connors
-    //                   </Typography>
-    //                   {" — I'll be in your neighborhood doing errands this…"}
-    //                 </React.Fragment>
-    //               }
-    //             />
-    //           </ListItem>
-    //           <ListItem alignItems='flex-start'>
-    //             <ListItemAvatar>
-    //               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-    //             </ListItemAvatar>
-    //             <ListItemText
-    //               primary='Brunch this weekend?'
-    //               secondary={
-    //                 <React.Fragment>
-    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-    //                     Ali Connors
-    //                   </Typography>
-    //                   {" — I'll be in your neighborhood doing errands this…"}
-    //                 </React.Fragment>
-    //               }
-    //             />
-    //           </ListItem>
-    //           <ListItem alignItems='flex-start'>
-    //             <ListItemAvatar>
-    //               <Avatar alt='Remy Sharp' src='/static/images/avatar/1.jpg' />
-    //             </ListItemAvatar>
-    //             <ListItemText
-    //               primary='Brunch this weekend?'
-    //               secondary={
-    //                 <React.Fragment>
-    //                   <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
-    //                     Ali Connors
-    //                   </Typography>
-    //                   {" — I'll be in your neighborhood doing errands this…"}
-    //                 </React.Fragment>
-    //               }
-    //             />
-    //           </ListItem>
-    //         </List>
-    //       </div>
-    //     </>
-    //   );
   };
 
   const handleSendComment = (content) => {
@@ -261,16 +167,90 @@ const Comments = (props) => {
   };
 
   return (
-    <Draggable onDrag={handleDrag} cancel='.comment-close-btn'>
+    <Draggable onDrag={handleDrag} cancel='.fa-close, .comments-app-menu, .comments'>
       <div className={`comments-component ${props.openComments ? undefined : 'hidden'}`}>
-        <div className='comments-header'>
-          <p>Comments</p>
-          <div className='comments-close-button' onClick={() => props.setOpenComments(false)}>
-            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white', cursor: 'pointer' }}></i>
+        <div className='comments-wrapper' style={{ display: 'flex', height: '10%' }}>
+          <div className='comments-header' style={{ flex: 4 }}>
+            {/* <div className='comments-close-button' onClick={() => props.setOpenComments(false)}> */}
+            <i
+              className='fa fa-close'
+              style={{ color: 'red', cursor: 'pointer' }}
+              onClick={() => props.setOpenComments(false)}
+            ></i>
+            {/* </div> */}
+            <p style={{ fontSize: '20px' }}>
+              Comments&nbsp;
+              <CommentIcon />
+            </p>
+          </div>
+          <div className='comments-app-menu' style={{ display: 'flex', flex: 2, alignItems: 'center', gap: '30px' }}>
+            <Tooltip title='Write a comment'>
+              {/* <IconButton > */}
+              <CreateIcon sx={{ cursor: 'pointer' }} onClick={handleClick} />
+              {/* </IconButton> */}
+            </Tooltip>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              {/* dummyのdivを作っておく。*/}
+              <div style={{ width: '300px', height: '100%', padding: '5px' }}>
+                <TextField
+                  id='input-with-icon-textfield'
+                  label='Write a comment'
+                  multiline
+                  fullWidth
+                  value={content}
+                  onChange={(event) => setContent(event.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <Tooltip title='Send'>
+                          <IconButton onClick={() => handleSendComment(content)}>
+                            <SendIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant='standard'
+                />
+              </div>
+            </Popover>
+
+            <Tooltip title='Write a feedback'>
+              {/* <IconButton> */}
+              <FeedbackIcon sx={{ cursor: 'pointer' }} />
+              {/* </IconButton> */}
+            </Tooltip>
+            <Tooltip title='Sort'>
+              {/* <IconButton> */}
+              <SortIcon sx={{ cursor: 'pointer' }} />
+              {/* </IconButton> */}
+            </Tooltip>
           </div>
         </div>
-        <div className='comments'>{renderComments()}</div>
-        <div className='input-and-send'>
+
+        <div
+          className='comments'
+          style={{
+            height: '90%',
+            backgroundColor: 'rgb(232, 232, 232)',
+            overflow: 'auto',
+            borderBottomLeftRadius: '5px',
+            borderBottomRightRadius: '5px',
+            cursor: 'auto',
+          }}
+        >
+          {renderComments()}
+        </div>
+        {/* <div className='input-and-send'>
           <Input
             icon={<Icon name='edit' style={{ cursor: 'pointer' }} />}
             placeholder='Add a message or feedback...'
@@ -281,7 +261,7 @@ const Comments = (props) => {
             onChange={(event) => setContent(event.target.value)}
           />
         </div>
-        <button onClick={() => handleSendComment(content)}>Send Message</button>
+        <button onClick={() => handleSendComment(content)}>Send Message</button> */}
       </div>
     </Draggable>
   );

@@ -294,5 +294,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {})(DisplayVideo);
-
-const RenderVideo = (props) => {};

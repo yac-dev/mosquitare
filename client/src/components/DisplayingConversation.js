@@ -48,12 +48,12 @@ const DisplayingConversationVideo = (props) => {
       return (
         <>
           <div className='user-video-wrapperrr' style={{ width: '80vw', height: '50vh', margin: '0 auto' }}>
-            <div className='conversation-video-header'>
+            {/* <div className='conversation-video-header'>
               <Stack direction='row' spacing={1}>
                 <Avatar>{props.conversationState.conversation.users[0].name}</Avatar>
                 <Avatar>{props.conversationState.conversation.users[1].name}</Avatar>
               </Stack>
-            </div>
+            </div> */}
             <DisplayVideo conversation={props.conversationState.conversation} />
           </div>
         </>

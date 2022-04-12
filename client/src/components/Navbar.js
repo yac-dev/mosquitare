@@ -58,6 +58,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 // components
 import SignupWrapper from './Signup/SignupWrapper';
@@ -277,7 +278,7 @@ const Navbar = (props) => {
       return (
         <>
           <Stack direction='row' spacing={2}>
-            {/* <Tooltip title='World Clock ( Sorry, not available now 😐 )'>
+            <Tooltip title='World Poll ( Under construction 🚜🛠  Please wait for a bit.)'>
               <IconButton
                 size='large'
                 edge='end'
@@ -286,10 +287,10 @@ const Navbar = (props) => {
                 // onClick={handleProfileMenuOpen}
                 color='inherit'
               >
-                <AccessTimeFilledIcon />
+                <BarChartIcon />
               </IconButton>
-            </Tooltip> */}
-            <Tooltip title='Clubs ( Under construction 🚜🛠  Please wait for a bit.)'>
+            </Tooltip>
+            <Tooltip title='Meet Up ( Under construction 🚜🛠  Please wait for a bit.)'>
               <IconButton
                 size='large'
                 edge='end'
