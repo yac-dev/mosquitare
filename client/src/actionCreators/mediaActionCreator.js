@@ -461,17 +461,20 @@ export const answerCallActionCreator =
 //   connectionRef.current = peerInitiator;
 // };
 
-export const hangUpCallActionCreator = (connectionRef) => (dispatch) => {
-  console.log('hangup should be working!!');
+export const hangUpCallActionCreator = () => {
   // dispatch(updateUserConversationToFalseActionCreator()); // ここpromisifyね。これだめ。
   // connectionRef.current.destroy();
-  dispatch({
-    type: HANG_UP_CALL,
-    payload: '',
-  });
+  // dispatch({
+  //   type: HANG_UP_CALL,
+  //   payload: '',
+  // });
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
   // その前にrecordingだ。
   // window.location = '/worldmap'; // まあこれでいいのかね。
+  return {
+    type: HANG_UP_CALL,
+    payload: '',
+  };
 };
 
 export const disconnectCallActionCreator = (connectionRef) => (dispatch) => {

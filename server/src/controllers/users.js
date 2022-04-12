@@ -192,6 +192,9 @@ export const loadMeAndUpdate = async (request, response) => {
     const { user } = request;
     console.log(request.body.socketId);
     user.socketId = request.body.socketId;
+    if (!user.isAvailableNow) {
+      user.isAvailableNow = true;
+    }
     await user.save({ validateBeforeSave: false });
     response.json({ user });
   } catch (error) {

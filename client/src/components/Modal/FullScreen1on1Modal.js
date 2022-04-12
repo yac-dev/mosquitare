@@ -106,6 +106,7 @@ const FullScreen1on1Modal = (props) => {
               setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
               setOpenDoc={setOpenDoc}
               setOpenPartnerUserInfo={setOpenPartnerUserInfo}
+              setShowAfterFinishingModal={props.setShowAfterFinishingModal}
             />
             <LanguageStatusAndTranscript
               socket={props.socket}

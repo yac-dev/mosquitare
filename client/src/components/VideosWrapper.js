@@ -294,6 +294,8 @@ const VideosWrapper = (props) => {
     setShow(false);
     connectionRef.current.destroy();
     props.setShow1on1(false);
+    props.setShowAfterFinishingModal(true);
+    // props.hangUpCallActionCreator();
     // props.hangUpCallActionCreator(); //これだけだと、下ですぐにmodalを閉じて、api callをさまたげることになる。
     // window.location = '/worldmap'; // まあこれでいいのかね。
   };

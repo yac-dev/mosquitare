@@ -137,10 +137,18 @@ const SubtitleWrapper = (props) => {
           store.getState().mediaState.currentLanguage.name === store.getState().mediaState.exchangingLanguages[0].name
         ) {
           // setMyLearningLangTranscript((previouState) => [...previouState, transcriptObject]);
-          countTranscriptWords(finalTranscript, props.setCountLearningLangLength);
+          countTranscriptWords(
+            finalTranscript,
+            props.setCountLearningLangLength,
+            store.getState().mediaState.currentLanguage.name
+          );
         } else {
           // setMyNativeLangTranscript((previouState) => [...previouState, transcriptObject]);
-          countTranscriptWords(finalTranscript, props.setCountNativeLangLength);
+          countTranscriptWords(
+            finalTranscript,
+            props.setCountNativeLangLength,
+            store.getState().mediaState.currentLanguage.name
+          );
         }
       } else if (store.getState().mediaState.amIRecieving) {
         if (
@@ -148,10 +156,18 @@ const SubtitleWrapper = (props) => {
         ) {
           // 向こうがlearningな言語を喋っているのね、ってこと。
           // setMyNativeLangTranscript((previouState) => [...previouState, finalTranscript]);
-          countTranscriptWords(finalTranscript, props.setCountNativeLangLength);
+          countTranscriptWords(
+            finalTranscript,
+            props.setCountNativeLangLength,
+            store.getState().mediaState.currentLanguage.name
+          );
         } else {
           // setMyLearningLangTranscript((previouState) => [...previouState, finalTranscript]);
-          countTranscriptWords(finalTranscript, props.setCountLearningLangLength);
+          countTranscriptWords(
+            finalTranscript,
+            props.setCountLearningLangLength,
+            store.getState().mediaState.currentLanguage.name
+          );
         }
       }
       // if (props.mediaState.currentLanguage.name === props.authState.currentUser.learningLangs[0].name) {
@@ -241,11 +257,13 @@ const SubtitleWrapper = (props) => {
   // }, [props.mediaState.callDisconnected]);
 
   // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
-  const countTranscriptWords = (transcript, setCountLangLength) => {
-    if (store.getState().mediaState.currentLanguage.name === 'English' || 'Spanish' || 'French' || 'German') {
+  const countTranscriptWords = (transcript, setCountLangLength, languageName) => {
+    if (languageName === 'English' || 'Spanish' || 'French' || 'German') {
+      console.log('european working????');
       const wordsLength = transcript.split(' ').length;
       setCountLangLength((previousState) => previousState + wordsLength);
-    } else if (store.getState().mediaState.currentLanguage.name === 'Japanese' || 'Korean' || 'Chinese') {
+    } else if (languageName === 'Japanese' || 'Korean' || 'Chinese') {
+      console.log('asian working???');
       setCountLangLength((previousState) => previousState + transcript.length);
     }
   };

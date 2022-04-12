@@ -8,6 +8,7 @@ import { Button } from 'semantic-ui-react';
 // components
 import CallingModal from './CallingModal';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
+import AfterFinishingModal from './AfterFinishingModal';
 // import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 // import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
 
@@ -89,6 +90,7 @@ const WorldMap = (props) => {
   // 1on1 modal用
   const [show1on1, setShow1on1] = useState(false);
   const [fullscreen1on1Modal, setFullscreen1on1Modal] = useState(true);
+  const [showAfterFinishingModal, setShowAfterFinishingModal] = useState(false);
   // meeting modal用
   // const [showMeeting, setShowMeeting] = useState(false);
   // const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
@@ -197,6 +199,12 @@ const WorldMap = (props) => {
   //   }
   //   // props.getMeetingsActionCreator();
   // }, [socket]);
+
+  // useEffect(() => {
+  //   if (props.mediaState.hangUp) {
+  //     setShowAfterFinishingModal(true);
+  //   }
+  // }, [props.mediaState.hangUp]);
 
   useEffect(() => {
     if (props.mediaState.apiCallResult === 2) {
@@ -309,6 +317,11 @@ const WorldMap = (props) => {
                 show1on1={show1on1}
                 setShow1on1={setShow1on1}
                 fullscreen1on1Modal={fullscreen1on1Modal}
+                setShowAfterFinishingModal={setShowAfterFinishingModal}
+              />
+              <AfterFinishingModal
+                showAfterFinishingModal={showAfterFinishingModal}
+                setShowAfterFinishingModal={setShowAfterFinishingModal}
               />
             </div>
           </Default>

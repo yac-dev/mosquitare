@@ -35,6 +35,7 @@ const INITIAL_STATE = {
   apiCallResult: 0,
   callDisconnected: false,
   gotRejected: false,
+  hangUp: false,
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
@@ -84,16 +85,16 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
     // こんな具合でいんじゃないか。。
     case HANG_UP_CALL:
       return {
-        ...state,
-        amICalling: false,
-        amIRecieving: false,
-        callingWith: null,
-        // whoIsCalling: null,
-        callerSignal: null,
-        oppositeIdToCall: null,
-        callAccepted: false,
-        callFinished: true,
-        currentLanguage: null,
+        // ...state,
+        // amICalling: false,
+        // amIRecieving: false,
+        // callingWith: null,
+        // callerSignal: null,
+        // oppositeIdToCall: null,
+        // callAccepted: false,
+        // callFinished: true,
+        // currentLanguage: null,
+        hangUp: true,
       };
     case SWITCH_CURRENT_LANGUAGE:
       return {
