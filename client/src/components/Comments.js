@@ -111,7 +111,7 @@ const Comments = (props) => {
   };
 
   const renderComments = () => {
-    if (props.commentsState) {
+    if (props.commentsState.length) {
       const commentsList = props.commentsState.map((comment) => {
         return (
           <>
@@ -150,7 +150,7 @@ const Comments = (props) => {
         </>
       );
     } else {
-      return <div>No comments yet. Add a message or feedback if you have!!!</div>;
+      return <div style={{ color: 'black' }}>No comments yet. Write a message or feedback if you have!</div>;
     }
   };
 

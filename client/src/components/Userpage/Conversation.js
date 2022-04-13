@@ -10,9 +10,21 @@ import PublicIcon from '@mui/icons-material/Public';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PeopleIcon from '@mui/icons-material/People';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import CommentIcon from '@mui/icons-material/Comment';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+import Stack from '@mui/material/Stack';
+import { styled } from '@mui/material/styles';
 // ac
 import { selectConversation } from '../../actionCreators/conversationActionCreators';
+
+const SmallAvatar = styled(Avatar)(({ theme }) => ({
+  width: 17,
+  height: 17,
+  // border: `2px solid ${theme.palette.background.paper}`,
+}));
 
 const Conversation = (props) => {
   const [showVideoDisplayingModal, setShowVideoDisplayingModal] = useState(false);
@@ -46,18 +58,41 @@ const Conversation = (props) => {
 
   const renderPeople = (users) => {
     return (
-      <h2>
-        {users[0].name} &amp; {users[1].name}
-      </h2>
+      <>
+        <div style={{ flex: 1, display: 'flex', gap: '5px', alignItems: 'center' }}>
+          <Badge
+            overlap='circular'
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={<SmallAvatar src={users[0].nationalities[0].flagPics[0]} />}
+          >
+            {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+            <Avatar sx={{ cursor: 'pointer' }}>{users[0].name}</Avatar>
+          </Badge>
+
+          <span>{users[0].name}</span>
+        </div>
+        <div style={{ flex: 1, display: 'flex', gap: '5px', alignItems: 'center' }}>
+          <Badge
+            overlap='circular'
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={<SmallAvatar src={users[1].nationalities[0].flagPics[0]} />}
+          >
+            {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+            <Avatar sx={{ cursor: 'pointer' }}>{users[1].name}</Avatar>
+          </Badge>
+
+          {users[1].name}
+        </div>
+      </>
     );
   };
 
   const renderGenre = (genre) => {
     return (
-      <p style={{ margin: '0px' }}>
-        <LanguageIcon />
-        &nbsp;{genre[0].name} &amp; {genre[1].name}
-      </p>
+      <>
+        {/* <LanguageIcon /> */}
+        Exchanged&nbsp;{genre[0].name} &amp; {genre[1].name}
+      </>
     );
   };
 
@@ -71,7 +106,6 @@ const Conversation = (props) => {
       if (seconds < 9) {
         return (
           <>
-            <AccessTimeIcon />
             &nbsp;<span>{minutes}</span>
             <span>&#58;</span>0{seconds}
           </>
@@ -79,7 +113,6 @@ const Conversation = (props) => {
       } else {
         return (
           <>
-            <AccessTimeIcon />
             &nbsp;<span>{minutes}</span>
             <span>&#58;</span>
             <span>{seconds}</span>
@@ -92,7 +125,6 @@ const Conversation = (props) => {
       if (seconds < 9) {
         return (
           <>
-            <AccessTimeIcon />
             &nbsp;<span>{minutes}</span>
             <span>&#58;</span>0{seconds}
           </>
@@ -100,7 +132,6 @@ const Conversation = (props) => {
       } else {
         return (
           <>
-            <AccessTimeIcon />
             &nbsp;<span>{minutes}</span>
             <span>&#58;</span>
             <span>{seconds}</span>
@@ -132,35 +163,50 @@ const Conversation = (props) => {
 
   return (
     <>
-      {/* <div className='conversation-wrapper' onClick={(event) => onConversationClick(event, props.conversation)}> */}
-      <div className='conversation-wrapper' onClick={(event) => onConversationClickNew(event, props.conversation)}>
-        {/* <div className='video-thumbnail'>
-          <div className='conversation-video-wrapper'>
-            <video className='thum' style={{ borderTopLeftRadius: '10px' }}>
-              <source
-                src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.calledUserMedia.videoFileName}`}
-              />
-            </video>
+      <div className='conversation-wrapper'>
+        <div
+          style={{ position: 'relative', cursor: 'pointer' }}
+          onClick={(event) => onConversationClickNew(event, props.conversation)}
+        >
+          <video style={{ width: '100%' }}>
+            <source
+              src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.videoFilename}`}
+            />
+          </video>
+          <div style={{ position: 'absolute', top: '5px', right: '5px' }}>
+            {renderDuration(props.conversation.duration)}
           </div>
-          <div className='conversation-video-wrapper'>
-            <video className='thum' style={{ borderTopRightRadius: '10px' }}>
-              <source
-                src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.recievedUserMedia.videoFileName}`}
-              />
-            </video>
-          </div>
-        </div> */}
-        {/* {renderThumbnails(props.conversation.userMedias)} */}
-        <video style={{ width: '100%', borderRadius: '10px' }}>
-          <source
-            src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.videoFilename}`}
-          />
-        </video>
+        </div>
         <div className='conversation-information'>
-          {renderPeople(props.conversation.users)}
-          {renderGenre(props.conversation.genre)}
-          {renderDuration(props.conversation.duration)}
-          {renderISODateToString(props.conversation.createdAt)}
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+            {renderPeople(props.conversation.users)}
+          </div>
+          <div className='thumbnai-genre' style={{ marginBottom: '20px' }}>
+            {renderGenre(props.conversation.genre)}
+          </div>
+
+          <div className='conversation-stats' style={{ display: 'flex' }}>
+            <div className='conversation-good-and-comment' style={{ flex: 5 }}>
+              <div className='icon-wrapper' style={{ display: 'flex', gap: '10px' }}>
+                <div>
+                  <VisibilityIcon />
+                  1k
+                </div>
+                <div>
+                  <ThumbUpAltIcon />
+                  10
+                </div>
+                <div>
+                  <CommentIcon />
+                  10
+                </div>
+              </div>
+            </div>
+            <div className='video-date' style={{ flex: 5 }}>
+              {renderISODateToString(props.conversation.createdAt)}
+            </div>
+          </div>
+
           {/* {renderPublic()} */}
         </div>
       </div>

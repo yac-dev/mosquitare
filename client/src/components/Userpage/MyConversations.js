@@ -48,11 +48,13 @@ const ConversationVideos = (props) => {
       return null;
     } else {
       const conversationList = props.myConversations.map((myConversation) => {
-        return (
-          <>
-            <Conversation conversation={myConversation} />
-          </>
-        );
+        if (myConversation.videoFilename) {
+          return (
+            <>
+              <Conversation conversation={myConversation} />
+            </>
+          );
+        }
       });
       return (
         // <div className='conversation-list'>{conversationList}</div>

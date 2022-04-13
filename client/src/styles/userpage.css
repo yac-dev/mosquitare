@@ -157,14 +157,14 @@
     margin: 30px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 15px;
+    grid-gap: 20px;
   }
 
   .conversation-wrapper {
     width: 100%;
-    border-radius: 10px;
-    border: 1px solid rgb(0, 97, 194);
-    cursor: pointer;
+    /* border-radius: 10px; */
+    /* border: 1px solid rgb(0, 97, 194); */
+    /* cursor: pointer; */
     background-color: rgb(0, 55, 110);
   }
 
@@ -184,7 +184,7 @@
   }
 
   .conversation-information {
-    height: 150px;
+    /* height: 150px; */
     /* border: 1px solid black; */
     padding: 15px;
     border-bottom-left-radius: 10px;

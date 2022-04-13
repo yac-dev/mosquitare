@@ -21,6 +21,9 @@ import Avatar from '@mui/material/Avatar';
 import ShareIcon from '@mui/icons-material/Share';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import Badge from '@mui/material/Badge';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
@@ -84,14 +87,11 @@ const theme = createTheme({
   },
 });
 
-const actions = [
-  { icon: <RecordVoiceOverIcon />, name: 'Transcript' },
-  { icon: <CommentIcon />, name: 'Comments' },
-  { icon: <InsertDriveFileIcon />, name: 'Doc' },
-  { icon: <GTranslateIcon />, name: 'Translate' },
-  { icon: <ThumbUpAltIcon />, name: 'Good!' },
-  { icon: <ShareIcon />, name: 'Share' },
-];
+const SmallAvatar = styled(Avatar)(({ theme }) => ({
+  width: 17,
+  height: 17,
+  // border: `2px solid ${theme.palette.background.paper}`,
+}));
 
 // propsでconversationが来る。
 const DisplayVideo = (props) => {
@@ -200,7 +200,10 @@ const DisplayVideo = (props) => {
   return (
     // <>{renderVideoSrc()}</>
     <>
-      <div className='displaying-video-wrapper' style={{ width: '80vw', margin: '0 auto', backgroundColor: 'black' }}>
+      <div
+        className='displaying-video-wrapper'
+        style={{ width: '80vw', margin: '0 auto', backgroundColor: 'rgb(0, 55, 110)' }}
+      >
         <div className='users-information' style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
           <div
             className='user-info-at-video'
@@ -209,11 +212,13 @@ const DisplayVideo = (props) => {
               alignItems: 'center',
             }}
           >
-            <Avatar>{props.conversation.users[0].name}</Avatar>&nbsp;
-            <img
-              src={props.conversation.users[0].nationalities[0].flagPics[0]}
-              style={{ width: '30px', height: '20px' }}
-            />
+            <Badge
+              overlap='circular'
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={<SmallAvatar src={props.conversation.users[0].nationalities[0].flagPics[0]} />}
+            >
+              <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[0].name}</Avatar>
+            </Badge>
           </div>
           <div
             className='user-info-at-video'
@@ -222,11 +227,13 @@ const DisplayVideo = (props) => {
               alignItems: 'center',
             }}
           >
-            <Avatar>{props.conversation.users[1].name}</Avatar>&nbsp;
-            <img
-              src={props.conversation.users[1].nationalities[0].flagPics[0]}
-              style={{ width: '30px', height: '20px' }}
-            />
+            <Badge
+              overlap='circular'
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={<SmallAvatar src={props.conversation.users[1].nationalities[0].flagPics[0]} />}
+            >
+              <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[1].name}</Avatar>
+            </Badge>
           </div>
         </div>
         <video
@@ -292,16 +299,26 @@ const DisplayVideo = (props) => {
         <div className='video-apps' style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
           <div>
             <IconButton>
-              <AccessTimeIcon sx={{ color: 'white' }} />
+              <CalendarTodayIcon sx={{ color: 'white' }} />
             </IconButton>
             {props.conversation.createdAt}
           </div>
           <div>
             <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
               <IconButton>
+                <VisibilityIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </Tooltip>
+            1k
+          </div>
+
+          <div>
+            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+              <IconButton>
                 <ThumbUpAltIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
+            10
           </div>
           <div>
             <IconButton onClick={() => setOpenTranscripts(true)}>
