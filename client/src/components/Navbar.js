@@ -54,9 +54,12 @@ import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import Button from '@mui/material/Button';
+import EmailIcon from '@mui/icons-material/Email';
+import PeopleIcon from '@mui/icons-material/People';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import SendIcon from '@mui/icons-material/Send';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import Stack from '@mui/material/Stack';
 import BarChartIcon from '@mui/icons-material/BarChart';
 
@@ -143,13 +146,27 @@ const Navbar = (props) => {
           (window.location = `/userpage/${props.authState.currentUser._id}`)
         }
       >
-        My Library&nbsp; <LocalLibraryIcon />
+        <LocalLibraryIcon />
+        &nbsp;My Library
+      </MenuItem>
+      <MenuItem disabled={true}>
+        <EmailIcon />
+        &nbsp;Messages
+      </MenuItem>
+      <MenuItem disabled={true}>
+        <PeopleIcon />
+        &nbsp;Friends
+      </MenuItem>
+      <MenuItem disabled={true}>
+        <MenuBookIcon />
+        &nbsp; Activity
       </MenuItem>
       <MenuItem onClick={handleUserMenuClose} disabled={true}>
-        Setting&nbsp; <SettingsIcon />
+        <SettingsIcon />
+        &nbsp;Setting
       </MenuItem>
       <MenuItem onClick={() => props.logoutActionCreator()}>
-        Logout&nbsp; <LogoutIcon />
+        <LogoutIcon /> &nbsp; Logout
       </MenuItem>
     </Menu>
   );
@@ -278,7 +295,7 @@ const Navbar = (props) => {
       return (
         <>
           <Stack direction='row' spacing={2}>
-            <Tooltip title='World Poll ( Under construction 🚜🛠  Please wait for a bit.)'>
+            <Tooltip title='World Stats ( Under construction 🚜🛠  Please wait for a bit.)'>
               <IconButton
                 size='large'
                 edge='end'
@@ -317,7 +334,7 @@ const Navbar = (props) => {
                 {/* </Badge> */}
               </IconButton>
             </Tooltip>
-            <Tooltip title='Your Personal Page'>
+            <Tooltip title='My Account'>
               <IconButton
                 size='large'
                 edge='end'

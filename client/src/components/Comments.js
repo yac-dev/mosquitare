@@ -24,6 +24,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import Popover from '@mui/material/Popover';
 import CommentIcon from '@mui/icons-material/Comment';
+import Badge from '@mui/material/Badge';
+import ReplyIcon from '@mui/icons-material/Reply';
 // css
 import '../styles/comments.css';
 
@@ -31,6 +33,12 @@ import '../styles/comments.css';
 import { createCommentActionCreator } from '../actionCreators/commentsActionCreator';
 import { getConversationCommentsActionCreator } from '../actionCreators/commentsActionCreator';
 import { alertActionCreator } from '../actionCreators/alertsActionCreator';
+
+const SmallAvatar = styled(Avatar)(({ theme }) => ({
+  width: 17,
+  height: 17,
+  // border: `2px solid ${theme.palette.background.paper}`,
+}));
 
 const myStyle = {
   '& .MuiInputBase-input': {
@@ -117,13 +125,21 @@ const Comments = (props) => {
           <>
             <ListItem alignItems='flex-start'>
               <ListItemAvatar>
-                <Avatar alt={`${comment.user.name}`} src='/static/images/avatar/1.jpg' />
+                <Badge
+                  overlap='circular'
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  badgeContent={<SmallAvatar src={comment.user.nationalities[0].flagPics[0]} />}
+                >
+                  {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+                  <Avatar sx={{ cursor: 'pointer' }}>{comment.user.name}</Avatar>
+                  {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
+                </Badge>
               </ListItemAvatar>
               <ListItemText
                 primary={
                   <>
                     <Typography component='div' variant='body2' sx={{ color: 'black' }}>
-                      {comment.user.name} &nbsp;&nbsp;from&nbsp;{renderNationalities(comment.user.nationalities)}
+                      {comment.user.name}
                     </Typography>
                   </>
                 }
@@ -132,9 +148,14 @@ const Comments = (props) => {
                     <Typography component='div' variant='body2' sx={{ color: 'black' }}>
                       {comment.content}
                     </Typography>
-                    {/* <Typography component='div' variant='body2' sx={{ color: 'black' }}>
-                      <ThumbUpAltIcon />
-                    </Typography> */}
+                    <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+                      {comment.createdAt}
+                    </Typography>
+                    <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+                      <Tooltip title='Reply (Under construction 🚜🛠 Please wait for a bit.)'>
+                        <ReplyIcon sx={{ fontSize: '17px', cursor: 'pointer' }} />
+                      </Tooltip>
+                    </Typography>
                   </>
                 }
               />

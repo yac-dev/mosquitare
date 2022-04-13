@@ -43,12 +43,16 @@ const ConversationVideos = (props) => {
   };
 
   // conversation一つ一つに関して、componentを作る必要があるわ。作り直そう。
+  // loginしてない人にも見れるようにしないといかんわ。
   const renderConversationList = () => {
     if (!props.authState.currentUser) {
       return null;
     } else {
       const conversationList = props.myConversations.map((myConversation) => {
-        if (myConversation.videoFilename) {
+        // 基本、bugがおこるとしたら、ffmpegでミスってvideoFilenameがなくなるか、usersがそもそも入らなくなるか、って感じね。
+        if (!myConversation.videoFilename || myConversation.users.length !== 2 || !myConversation.isPublic) {
+          return null;
+        } else {
           return (
             <>
               <Conversation conversation={myConversation} />

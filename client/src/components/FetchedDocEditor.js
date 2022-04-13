@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import Quill from 'quill';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import StarIcon from '@mui/icons-material/Star';
 
 //css
 import 'quill/dist/quill.snow.css';
@@ -10,6 +12,7 @@ import 'quill/dist/quill.snow.css';
 
 // ac
 import { getDocByConversationIdActionCreator } from '../actionCreators/docActionCreator';
+import { IconButton, Tooltip } from '@mui/material';
 
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
@@ -57,7 +60,7 @@ const FetchedDocEditor = (props) => {
   };
 
   return (
-    <Draggable onDrag={handleDrag} cancel='.shared-doc-close-button, .doc-editor'>
+    <Draggable onDrag={handleDrag} cancel='.shared-doc-close-button, .doc-editor, .edito-app-menus'>
       <div
         className={`fetched-doc-editor-component ${props.openFetchedDocEditor ? undefined : 'hidden'}`}
         style={{
@@ -89,6 +92,14 @@ const FetchedDocEditor = (props) => {
               <InsertDriveFileIcon />
             </p>
             {/* </div> */}
+          </div>
+          <div className='edito-app-menus' style={{ display: 'flex', flex: 2, alignItems: 'center', gap: '30px' }}>
+            <Tooltip title='Bookmark ( Under construction 🚜🛠 Please wait for a bit.)'>
+              <BookmarkIcon sx={{ cursor: 'pointer' }} />
+            </Tooltip>
+            <Tooltip title='So usuful!( Under construction 🚜🛠 Please wait for a bit.)'>
+              <StarIcon sx={{ cursor: 'pointer' }} />
+            </Tooltip>
           </div>
         </div>
         <div

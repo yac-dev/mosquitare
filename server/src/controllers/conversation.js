@@ -116,6 +116,7 @@ export const getAllConversations = async (request, response) => {
         path: 'genre',
       });
     // .populate('comments');
+    // 多分、AllConversation、MyConversationでgoodとかviewをrenderさせたい場合は、これも必要かもね。
     response.status(200).json({
       allConversations,
     });

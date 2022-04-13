@@ -25,7 +25,9 @@ const AllConversationsWrapper = (props) => {
 
   const renderConversations = () => {
     const conversationList = props.conversationsState.map((conversation) => {
-      if (conversation.videoFilename && conversation.users.length === 2) {
+      if (!conversation.videoFilename || conversation.users.length !== 2 || !conversation.isPublic) {
+        return null;
+      } else {
         return (
           <>
             <Conversation conversation={conversation} />
