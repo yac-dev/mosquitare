@@ -17,6 +17,19 @@ import CommentIcon from '@mui/icons-material/Comment';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Avatar from '@mui/material/Avatar';
+import ShareIcon from '@mui/icons-material/Share';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
+import Box from '@mui/material/Box';
+import Backdrop from '@mui/material/Backdrop';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
 
 // components
 import Comments from '../Comments';
@@ -71,6 +84,15 @@ const theme = createTheme({
   },
 });
 
+const actions = [
+  { icon: <RecordVoiceOverIcon />, name: 'Transcript' },
+  { icon: <CommentIcon />, name: 'Comments' },
+  { icon: <InsertDriveFileIcon />, name: 'Doc' },
+  { icon: <GTranslateIcon />, name: 'Translate' },
+  { icon: <ThumbUpAltIcon />, name: 'Good!' },
+  { icon: <ShareIcon />, name: 'Share' },
+];
+
 // propsでconversationが来る。
 const DisplayVideo = (props) => {
   const [loaded, setLoaded] = useState(0);
@@ -92,6 +114,10 @@ const DisplayVideo = (props) => {
   const [openTranscripts, setOpenTranscripts] = useState(false);
   const [openComments, setOpenComments] = useState(false);
   const [openFetchedDocEditor, setOpenFetchedDocEditor] = useState(false);
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   useEffect(() => {
     if (loaded === 2) {
@@ -174,116 +200,154 @@ const DisplayVideo = (props) => {
   return (
     // <>{renderVideoSrc()}</>
     <>
-      <div className='displaying-video-wrapper'>
-        <video
-          className='displaying-video-1'
-          // onLoadedMetadata={(event) => loadMeta(event)}
-          // onTimeUpdate={() => timeUpdateForVideo1()}
-          playsInline
-          controls
-          // width='640px'
-          // height='320px'
-        >
-          <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
-        </video>
-        <div className='users-information'>
-          <div className='user-info-at-video' style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={props.conversation.users[0].nationalities[0].flagPics[0]}
-              style={{ width: '30px', height: '20px' }}
-            />
-            &nbsp;<p style={{ fontSize: '20px' }}>{props.conversation.users[0].name}</p>&nbsp;
+      <div className='displaying-video-wrapper' style={{ width: '80vw', margin: '0 auto', backgroundColor: 'black' }}>
+        <div className='users-information' style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+          <div
+            className='user-info-at-video'
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar>{props.conversation.users[0].name}</Avatar>&nbsp;
             <img
               src={props.conversation.users[0].nationalities[0].flagPics[0]}
               style={{ width: '30px', height: '20px' }}
             />
           </div>
-          <div className='user-info-at-video' style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <img
-              src={props.conversation.users[1].nationalities[0].flagPics[0]}
-              style={{ width: '30px', height: '20px' }}
-            />
-            &nbsp;<p style={{ fontSize: '20px' }}>{props.conversation.users[1].name}</p>&nbsp;
+          <div
+            className='user-info-at-video'
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar>{props.conversation.users[1].name}</Avatar>&nbsp;
             <img
               src={props.conversation.users[1].nationalities[0].flagPics[0]}
               style={{ width: '30px', height: '20px' }}
             />
           </div>
         </div>
-        {/* <div className='video-seekbar'>
-          <input
-            className='seekbar'
-            ref={seekbarRef}
-            type='range'
-            min='0'
-            max='100'
-            step='1'
-            value={seekBarValue}
-            // onChange={handleChange}
-            // width='300px'
-          />
+        <video
+          className='displaying-video-1'
+          playsInline
+          controls
+          disablePictureInPicture
+          controlslist='nodownload noplaybackrate'
+          // width='640px'
+          // height='320px'
+          style={{ marginBottom: '20px' }}
+        >
+          <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
+        </video>
+        {/* <div className='users-information'>
+          <div
+            className='user-info-at-video'
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <img
+              src={props.conversation.users[0].nationalities[0].flagPics[0]}
+              style={{ width: '30px', height: '20px' }}
+            />
+            &nbsp; <Avatar>{props.conversation.users[0].name}</Avatar>&nbsp;
+          </div>
+          <div
+            className='user-info-at-video'
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <img
+              src={props.conversation.users[1].nationalities[0].flagPics[0]}
+              style={{ width: '30px', height: '20px' }}
+            />
+            &nbsp; <Avatar>{props.conversation.users[0].name}</Avatar>&nbsp;
+          </div>
+          <div
+            className='user-info-at-video'
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'black',
+            }}
+          >
+            <img
+              src={props.conversation.users[1].nationalities[0].flagPics[0]}
+              style={{ width: '30px', height: '20px' }}
+            />
+            &nbsp;<Avatar>{props.conversation.users[1].name}</Avatar>&nbsp;
+            <img
+              src={props.conversation.users[1].nationalities[0].flagPics[0]}
+              style={{ width: '30px', height: '20px' }}
+            />
+          </div>
         </div> */}
-      </div>
-      <div className='button-stack-wrapper'>
-        <Stack direction='row' spacing={2}>
-          <ThemeProvider theme={theme}>
-            <Tooltip title='Transcript' arrow>
-              <TranscriptIconButton onClick={() => setOpenTranscripts(true)}>
-                <RecordVoiceOverIcon
-                  sx={{
-                    width: { md: '30px', lg: '40px' },
-                    height: { md: '30px', lg: '40px' },
-                  }}
-                />
-              </TranscriptIconButton>
+        <div className='video-apps' style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
+          <div>
+            <IconButton>
+              <AccessTimeIcon sx={{ color: 'white' }} />
+            </IconButton>
+            {props.conversation.createdAt}
+          </div>
+          <div>
+            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+              <IconButton>
+                <ThumbUpAltIcon sx={{ color: 'white' }} />
+              </IconButton>
             </Tooltip>
-          </ThemeProvider>
-          <Transcripts openTranscripts={openTranscripts} setOpenTranscripts={setOpenTranscripts} />
+          </div>
+          <div>
+            <IconButton onClick={() => setOpenTranscripts(true)}>
+              <RecordVoiceOverIcon sx={{ color: 'white' }} />
+            </IconButton>
+            Transcript
+          </div>
+          <div>
+            <IconButton onClick={() => setOpenComments(true)}>
+              <CommentIcon sx={{ color: 'white' }} />
+            </IconButton>
+            Comments
+          </div>
+          <div>
+            <IconButton onClick={() => setOpenFetchedDocEditor(true)}>
+              <InsertDriveFileIcon sx={{ color: 'white' }} />
+            </IconButton>
+            Doc
+          </div>
 
-          <ThemeProvider theme={theme}>
-            <Tooltip title='Comments' arrow>
-              <CommentIconButton onClick={() => setOpenComments(true)}>
-                <CommentIcon
-                  sx={{
-                    width: { md: '30px', lg: '40px' },
-                    height: { md: '30px', lg: '40px' },
-                  }}
-                />
-              </CommentIconButton>
+          <div>
+            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+              <IconButton>
+                <GTranslateIcon sx={{ color: 'white' }} />
+              </IconButton>
             </Tooltip>
-          </ThemeProvider>
-          <Comments openComments={openComments} setOpenComments={setOpenComments} />
+            Translate
+          </div>
+          <div>
+            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+              <IconButton>
+                <ShareIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </Tooltip>
+            Share
+          </div>
+        </div>
 
-          <ThemeProvider theme={theme}>
-            <Tooltip title='Shared note' arrow>
-              <NoteIconButton onClick={() => setOpenFetchedDocEditor(true)}>
-                <InsertDriveFileIcon
-                  sx={{
-                    width: { md: '30px', lg: '40px' },
-                    height: { md: '30px', lg: '40px' },
-                  }}
-                />
-              </NoteIconButton>
-            </Tooltip>
-          </ThemeProvider>
-          <FetchedDocEditor
-            openFetchedDocEditor={openFetchedDocEditor}
-            setOpenFetchedDocEditor={setOpenFetchedDocEditor}
-          />
+        <Transcripts openTranscripts={openTranscripts} setOpenTranscripts={setOpenTranscripts} />
 
-          <ThemeProvider theme={theme}>
-            <Tooltip title='Translate (Sorry, not available now 🙅🏻)' arrow>
-              <GTranslateIconButton>
-                <GTranslateIcon
-                  sx={{
-                    width: { md: '30px', lg: '40px' },
-                    height: { md: '30px', lg: '40px' },
-                  }}
-                />
-              </GTranslateIconButton>
-            </Tooltip>
-          </ThemeProvider>
-        </Stack>
+        <Comments openComments={openComments} setOpenComments={setOpenComments} />
+
+        <FetchedDocEditor
+          openFetchedDocEditor={openFetchedDocEditor}
+          setOpenFetchedDocEditor={setOpenFetchedDocEditor}
+        />
       </div>
     </>
   );

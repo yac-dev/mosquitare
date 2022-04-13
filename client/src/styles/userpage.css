@@ -253,8 +253,8 @@
   }
 
   .displaying-video-wrapper {
-    width: 100%;
-    margin: 0 auto;
+    /* width: 100%;
+    margin: 0 auto; */
     /* position: absolute;
     top: 50%;
     transform: translateY(-50%); */
@@ -265,19 +265,19 @@
     height: 400px; */
     width: 100%;
     object-fit: contain;
-    border-radius: 10px;
+    /* border-radius: 10px; */
   }
 
   .users-information {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    /* justify-content: center; */
   }
 
-  .user-info-at-video {
+  /* .user-info-at-video {
     flex: 1;
-  }
+  } */
 
   .video-seekbar {
     width: 60%;
