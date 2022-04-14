@@ -20,6 +20,7 @@ import userScriptsRouter from './routes/userScripts';
 import commentsRouter from './routes/comments';
 import transcriptsRouter from './routes/transcripts';
 import docsRouter from './routes/docs';
+import mailsRouter from './routes/mails';
 
 app.use(cors());
 // HTTP headersのsecurity check
@@ -54,6 +55,7 @@ app.use('/api/userscripts', userScriptsRouter);
 app.use('/api/comments', commentsRouter);
 app.use('/api/transcripts', transcriptsRouter);
 app.use('/api/docs', docsRouter);
+app.use('/api/mails', mailsRouter);
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 

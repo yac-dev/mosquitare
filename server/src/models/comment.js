@@ -8,7 +8,7 @@ const commentSchema = new mongoose.Schema({
     type: String,
     default: 'message',
     enum: {
-      values: ['message', 'advice'],
+      values: ['message', 'feedback'],
       massgae: 'Please select either message or advice.',
     },
   },

@@ -6,6 +6,24 @@ import jwt from 'jsonwebtoken';
 // import bcrypt from 'bcryptjs';
 import bcrypt from 'bcrypt';
 import { JWT_PRIVATE_KEY } from '../../config';
+import nodemailer from 'nodemailer';
+import sendgridTransport from 'nodemailer-sendgrid-transport';
+
+// const transporter = nodemailer.createTransport(
+//   sendgridTransport({
+//     auth: {
+//       api_key: process.env.SENDGRID_API_KEY,
+//     },
+//   })
+// );
+
+const transporter = nodemailer.createTransport({
+  service: process.env.NODEMAILER_SERVICE,
+  auth: {
+    user: process.env.NODEMAILER_USER,
+    pass: process.env.NODEMAILER_PASSWORD,
+  },
+});
 
 // export const signup = async (request, response, next) => {
 //   try {
@@ -118,6 +136,21 @@ export const signup = async (request, response) => {
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
+
+    // var mailOptions = {
+    //   // from: 'agua0828@gmail.com',
+    //   to: user.email,
+    //   subject: 'Welcome',
+    //   html: '<h1>Welcome</h1><p>That was easy!</p>',
+    // };
+
+    // transporter.sendMail(mailOptions, function (error, info) {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log('Email sent: ' + info.response);
+    //   }
+    // });
 
     const jwtToken = jwt.sign({ id: user._id }, process.env.JWT_PRIVATE_KEY, { expiresIn: '10d' });
     response.status(201).send({
