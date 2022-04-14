@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const mailSchema = new mongoose.Schema({
+const messageSchema = new mongoose.Schema({
   sender: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
@@ -9,7 +9,7 @@ const mailSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  message: String,
+  content: String,
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -17,5 +17,5 @@ const mailSchema = new mongoose.Schema({
   read: Boolean,
 });
 
-const Mail = mongoose.model('Mail', mailSchema);
-export default Mail;
+const Message = mongoose.model('Message', messageSchema);
+export default Message;

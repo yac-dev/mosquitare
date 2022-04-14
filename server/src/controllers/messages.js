@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import Mail from '../models/mail';
+import Message from '../models/message';
 import User from '../models/user';
 
 const transporter = nodemailer.createTransport({
@@ -10,13 +10,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const createMail = async (request, response) => {
+export const createMessage = async (request, response) => {
   try {
     const { senderId, recipientId } = request.params;
-    const mail = await Mail.create({
+    const message = await Message.create({
       sender: senderId,
       recipient: recipientId,
-      message: request.body.message,
+      content: request.body.content,
       read: false,
     });
 
@@ -26,7 +26,7 @@ export const createMail = async (request, response) => {
     const mailOptions = {
       to: recipient.email,
       subject: 'You got a message from other user!',
-      html: `<h1>Lampost</h1><p>Hi ${recipient}. You got a message from ${sender.name}.</p><p>Please follow the link below and send reply!</p><br><a href="${process.env.MAIL_LINK} />`,
+      html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><p>Please follow the link below and send reply!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
@@ -36,8 +36,8 @@ export const createMail = async (request, response) => {
         console.log('Email sent: ' + info.response);
       }
     });
-    response.send(201).json({
-      mail,
+    response.status(201).json({
+      message,
     });
   } catch (error) {
     console.log(error);
