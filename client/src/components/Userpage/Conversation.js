@@ -169,9 +169,7 @@ const Conversation = (props) => {
           onClick={(event) => onConversationClickNew(event, props.conversation)}
         >
           <video style={{ width: '100%' }}>
-            <source
-              src={`https://mosquitare-dev-bucket-for-mediafiles.s3.us-east-2.amazonaws.com/${props.conversation.videoFilename}`}
-            />
+            <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
           </video>
           <div style={{ position: 'absolute', top: '5px', right: '5px' }}>
             {renderDuration(props.conversation.duration)}
