@@ -39,9 +39,14 @@ import PrintIcon from '@mui/icons-material/Print';
 import Comments from '../Comments';
 import Transcripts from '../Transcripts';
 import FetchedDocEditor from '../FetchedDocEditor';
+import Snackbar from '../Snackbar';
+//ac
+import { createLikeActionCreator } from '../../actionCreators/likesActionCreator';
+import { getConversationLikesActionCreator } from '../../actionCreators/likesActionCreator';
 
 // css
 import '../../styles/userpage.css';
+import { alertActionCreator } from '../../actionCreators/alertsActionCreator';
 
 const TranscriptIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
@@ -127,6 +132,10 @@ const DisplayVideo = (props) => {
     }
   }, [loaded]);
 
+  useEffect(() => {
+    props.getConversationLikesActionCreator(props.conversation._id);
+  }, []);
+
   // useEffect(() => {
   //   seekbarRef.current.addEventListener('change', () => {
   //     videoRef1.current.currentTime = (videoRef1.current.duration * seekbarRef.current.value) / seekbarRef.current.max;
@@ -197,6 +206,28 @@ const DisplayVideo = (props) => {
   //     setPlayOrPause('play');
   //   }
   // };
+
+  const onLikeClick = (conversationId) => {
+    if (props.likesState[props.authState.currentUser._id]) {
+      props.alertActionCreator('You have already liked this conversation.', 'info');
+    } else {
+      props.createLikeActionCreator(conversationId);
+    }
+  };
+
+  const renderAlerts = () => {
+    if (props.alertsState.length) {
+      const alertsSnackBars = props.alertsState.map((alert) => {
+        return <Snackbar open={true} id={alert.id} snackBarType={alert.alertType} message={alert.message} />;
+      });
+
+      return (
+        <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+          <Stack spacing={2}>{alertsSnackBars}</Stack>
+        </div>
+      );
+    }
+  };
 
   return (
     // <>{renderVideoSrc()}</>
@@ -314,32 +345,28 @@ const DisplayVideo = (props) => {
           </div> */}
 
           <div>
-            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
-              <IconButton>
+            <Tooltip title='Like' arrow>
+              <IconButton onClick={() => onLikeClick(props.conversation._id)}>
                 <ThumbUpAltIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
-            10
+            {Object.values(props.likesState).length}&nbsp;likes
           </div>
           <div>
-            <Tooltip title='Contributors ( Under construction 🚜🛠 Please wait a bit.)' arrow>
-              <IconButton>
-                <GroupsIcon sx={{ color: 'white' }} />
+            <Tooltip title='Conversation transcript' arrow>
+              <IconButton onClick={() => setOpenTranscripts(true)}>
+                <RecordVoiceOverIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
-            10
-          </div>
-          <div>
-            <IconButton onClick={() => setOpenTranscripts(true)}>
-              <RecordVoiceOverIcon sx={{ color: 'white' }} />
-            </IconButton>
             Transcript
           </div>
           <div>
-            <IconButton onClick={() => setOpenComments(true)}>
-              <CommentIcon sx={{ color: 'white' }} />
-            </IconButton>
-            Comments
+            <Tooltip title='Write a comment' arrow>
+              <IconButton onClick={() => setOpenComments(true)}>
+                <CommentIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </Tooltip>
+            {props.commentsState.length}&nbsp;Comments
           </div>
           <div>
             <IconButton onClick={() => setOpenFetchedDocEditor(true)}>
@@ -347,9 +374,16 @@ const DisplayVideo = (props) => {
             </IconButton>
             Doc
           </div>
-
           <div>
-            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+            <Tooltip title='Contributors ( Under construction 🚜🛠 Please wait a bit.)' arrow>
+              <IconButton>
+                <GroupsIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </Tooltip>
+            Contributors
+          </div>
+          <div>
+            <Tooltip title='Google Translate (Under construction 🚜🛠 Please wait a bit.)' arrow>
               <IconButton>
                 <GTranslateIcon sx={{ color: 'white' }} />
               </IconButton>
@@ -357,7 +391,7 @@ const DisplayVideo = (props) => {
             Translate
           </div>
           <div>
-            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+            <Tooltip title='(Under construction 🚜🛠 Please wait a bit.)' arrow>
               <IconButton>
                 <ShareIcon sx={{ color: 'white' }} />
               </IconButton>
@@ -374,13 +408,23 @@ const DisplayVideo = (props) => {
           openFetchedDocEditor={openFetchedDocEditor}
           setOpenFetchedDocEditor={setOpenFetchedDocEditor}
         />
+        {renderAlerts()}
       </div>
     </>
   );
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState };
+  return {
+    authState: state.authState,
+    commentsState: Object.values(state.commentsState),
+    likesState: state.likesState,
+    alertsState: state.alertsState,
+  };
 };
 
-export default connect(mapStateToProps, {})(DisplayVideo);
+export default connect(mapStateToProps, {
+  createLikeActionCreator,
+  getConversationLikesActionCreator,
+  alertActionCreator,
+})(DisplayVideo);

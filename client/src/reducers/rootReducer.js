@@ -13,6 +13,9 @@ import currentWatchingConversationReducer from './currentWatchingConversationRed
 import docReducer from './docReducer';
 import transcriptsReducer from './transcriptsReducer';
 import alertsReducer from './alertsReducer';
+import allLikesStatReducer from './allLikesStatReducer';
+import allCommentsStatReducer from './allCommentsStatReducer';
+import likesReducer from './likesReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -29,6 +32,9 @@ const rootReducer = combineReducers({
   docState: docReducer,
   transcriptsState: transcriptsReducer,
   alertsState: alertsReducer,
+  allLikesStatState: allLikesStatReducer,
+  allCommentsStatState: allCommentsStatReducer,
+  likesState: likesReducer,
 });
 
 export default rootReducer;

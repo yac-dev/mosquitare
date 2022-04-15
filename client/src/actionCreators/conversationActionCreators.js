@@ -159,7 +159,6 @@ export const updateConversationUsersActionCreator = () => async (dispatch, getSt
 
 export const getConversationActionCreator = (conversationId) => async (dispatch, getState) => {
   try {
-    console.log('heeeeeeey');
     const result = await mosquitareAPI.get(`/conversations/${conversationId}`);
     const { conversation } = result.data;
     console.log(conversation);

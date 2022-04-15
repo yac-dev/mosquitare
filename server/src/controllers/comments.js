@@ -37,3 +37,22 @@ export const getConversationComments = async (request, response) => {
     console.log(error);
   }
 };
+
+export const aggregateAllComments = async (request, response) => {
+  try {
+    console.log('aggregating comments');
+    const allCommentsStat = await Comment.aggregate([
+      {
+        $group: {
+          _id: '$conversation',
+          nums: { $sum: 1 },
+        },
+      },
+    ]);
+    response.status(200).json({
+      allCommentsStat,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

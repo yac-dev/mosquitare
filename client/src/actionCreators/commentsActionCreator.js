@@ -38,3 +38,16 @@ export const cleanUpComments = () => {
     payload: '',
   };
 };
+
+export const aggregateAllCommentsActionCreator = () => async (dispatch, getState) => {
+  try {
+    const result = await mosquitareAPI.get('/comments/aggregateall');
+    const { allCommentsStat } = result.data;
+    dispatch({
+      type: 'GET_ALL_COMMENTS_STAT',
+      payload: allCommentsStat,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

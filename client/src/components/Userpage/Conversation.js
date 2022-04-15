@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 // mui
@@ -17,8 +17,12 @@ import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
+import GroupsIcon from '@mui/icons-material/Groups';
+import Tooltip from '@mui/material/Tooltip';
 // ac
 import { selectConversation } from '../../actionCreators/conversationActionCreators';
+import { aggregateAllCommentsActionCreator } from '../../actionCreators/commentsActionCreator';
+import { aggregateAllLikesActionCreator } from '../../actionCreators/likesActionCreator';
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
   width: 17,
@@ -34,6 +38,11 @@ const Conversation = (props) => {
   //   props.selectConversation(conversation);
   //   setShowVideoDisplayingModal(true);
   // };
+
+  useEffect(() => {
+    // props.aggregateAllCommentsActionCreator();
+    // props.aggregateAllLikesActionCreator();
+  }, []);
 
   const onConversationClickNew = (event) => {
     // windowかなここは。props.conversation._idを使って。
@@ -161,6 +170,22 @@ const Conversation = (props) => {
     );
   };
 
+  const renderLikesCount = () => {
+    if (props.allLikesStatState[props.conversation._id]) {
+      return <>{props.allLikesStatState[props.conversation._id].nums}</>;
+    } else {
+      return null;
+    }
+  };
+
+  const renderCommentsCount = () => {
+    if (props.allCommentsStatState[props.conversation._id]) {
+      return <>{props.allCommentsStatState[props.conversation._id].nums}</>;
+    } else {
+      return null;
+    }
+  };
+
   return (
     <>
       <div className='conversation-wrapper'>
@@ -184,23 +209,29 @@ const Conversation = (props) => {
           </div>
 
           <div className='conversation-stats' style={{ display: 'flex' }}>
-            <div className='conversation-good-and-comment' style={{ flex: 5 }}>
-              <div className='icon-wrapper' style={{ display: 'flex', gap: '10px' }}>
-                <div>
+            <div className='conversation-good-and-comment' style={{ flex: 6 }}>
+              <div className='icon-wrapper' style={{ display: 'flex', gap: '25px' }}>
+                {/* <div>
                   <VisibilityIcon />
                   1k
-                </div>
+                </div> */}
                 <div>
                   <ThumbUpAltIcon />
-                  10
+                  {renderLikesCount()}
                 </div>
                 <div>
                   <CommentIcon />
-                  10
+                  {renderCommentsCount()}
+                </div>
+                <div>
+                  <Tooltip title='Contributors (Under construction 🚜🛠 Please wait for a bit.)'>
+                    <GroupsIcon />
+                  </Tooltip>
+                  ?
                 </div>
               </div>
             </div>
-            <div className='video-date' style={{ flex: 5 }}>
+            <div className='video-date' style={{ flex: 4 }}>
               {renderISODateToString(props.conversation.createdAt)}
             </div>
           </div>
@@ -218,4 +249,12 @@ const Conversation = (props) => {
   );
 };
 
-export default connect(null, { selectConversation })(Conversation);
+const mapStateToProps = (state) => {
+  return { allLikesStatState: state.allLikesStatState, allCommentsStatState: state.allCommentsStatState };
+};
+
+export default connect(mapStateToProps, {
+  selectConversation,
+  aggregateAllCommentsActionCreator,
+  aggregateAllLikesActionCreator,
+})(Conversation);

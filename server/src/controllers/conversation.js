@@ -86,17 +86,21 @@ export const getConversation = async (request, response) => {
         //   path: 'videoFileName',
         // },
       })
+      // .populate({
+      //   path: 'userMedias',
+      //   // populate: {
+      //   //   path: 'videoFileName',
+      //   // },
+      // })
+      // .populate({
+      //   path: 'userScripts',
+      // })
       .populate({
-        path: 'userMedias',
-        // populate: {
-        //   path: 'videoFileName',
-        // },
+        path: 'comments',
       })
       .populate({
-        path: 'userScripts',
-      })
-      .populate('comments');
-
+        path: 'likes',
+      });
     response.status(200).json({
       conversation,
     });
@@ -115,6 +119,12 @@ export const getAllConversations = async (request, response) => {
       .populate({
         path: 'genre',
       });
+    // .populate({
+    //   path: 'comments',
+    // })
+    // .populate({
+    //   path: 'likes',
+    // });
     // .populate('comments');
     // 多分、AllConversation、MyConversationでgoodとかviewをrenderさせたい場合は、これも必要かもね。
     response.status(200).json({

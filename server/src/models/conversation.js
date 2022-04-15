@@ -33,6 +33,12 @@ const conversationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  contributors: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+  ],
   reviews: [
     {
       type: mongoose.Schema.ObjectId,
@@ -111,6 +117,19 @@ conversationSchema.virtual('comments', {
   foreignField: 'conversation',
   localField: '_id', // 俺の何を参照してきてんの？ってこと。
 });
+
+conversationSchema.virtual('likes', {
+  ref: 'Like',
+  foreignField: 'conversation',
+  localField: '_id',
+});
+
+// いずれこれは必要になる。
+// conversationSchema.virtual('contributors', {
+//   ref: 'Contribute',
+//   foreignField: 'conversation',
+//   localField: '_id'
+// })
 
 // conversationSchema.pre(/^find/, function (next) {
 //   // this.populate({

@@ -15,5 +15,7 @@ const likeSchema = new mongoose.Schema({
   },
 });
 
+likeSchema.index({ conversation: 1 });
+
 const Like = mongoose.model('Like', likeSchema);
 export default Like;
