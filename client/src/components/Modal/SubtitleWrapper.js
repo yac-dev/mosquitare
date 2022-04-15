@@ -65,7 +65,7 @@ const SubtitleWrapper = (props) => {
   const [myLearningLangTranscript, setMyLearningLangTranscript] = useState([]);
   const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
   const [partnerInterimTranscript, setPartnerInterimTranscript] = useState();
-  const [partnerFinalTranscript, setPartnerFinalTranscript] = useState();
+  const [partnerFinalTranscript, setPartnerFinalTranscript] = useState(0);
   // const [countLearningLangLength, setCountLearningLangLength] = useState(0);
   // const [countNativeLangLength, setCountNativeLangLength] = useState(0);
   const [deltaPosition, setDeltaPosition] = useState({ x: 0, y: 0 });
@@ -76,21 +76,22 @@ const SubtitleWrapper = (props) => {
 
   const transcriptsEndRef = useRef(null);
 
-  // const [seconds, setSeconds] = useState(0);
-  // const secondsRef = useRef();
+  const [seconds, setSeconds] = useState(0);
+  const [startSeconds, setStartSeconds] = useState();
+  const secondsRef = useRef();
 
-  // useEffect(() => {
-  //   let interval = null;
-  //   interval = setInterval(() => {
-  //     setSeconds((previous) => previous + 1);
-  //   }, 1000);
+  useEffect(() => {
+    let interval = null;
+    interval = setInterval(() => {
+      setSeconds((previous) => previous + 1);
+    }, 1000);
 
-  //   return () => clearInterval(interval);
-  // }, [seconds]);
+    return () => clearInterval(interval);
+  }, [seconds]);
 
-  // useEffect(() => {
-  //   secondsRef.current = seconds;
-  // }, [seconds]);
+  useEffect(() => {
+    secondsRef.current = seconds;
+  }, [seconds]);
   // 本当は秒数まで入れたいが、そこまでいくと時間かかるわ。やめておこう。
 
   const scrollToBottom = () => {
@@ -125,6 +126,7 @@ const SubtitleWrapper = (props) => {
       transcriptObject['user'] = store.getState().authState.currentUser._id;
       transcriptObject['language'] = store.getState().mediaState.currentLanguage._id;
       transcriptObject['conversation'] = store.getState().conversationState._id;
+      transcriptObject['seconds'] = startSeconds;
       setConversationTranscript((previouState) => [...previouState, transcriptObject]);
       const to = store.getState().mediaState.callingWith.socketId;
       // props.socket.emit(I_SEND_MY_FINAL_TRANSCRIPT_TO_MY_PARTNER, { to, finalTranscript });
@@ -132,6 +134,9 @@ const SubtitleWrapper = (props) => {
 
       // if(props.mediaState.amICalling){ if(props.mediaState.currentLanguage._id === props.mediaState.exchanging[0]) }
       // この状態の時は、learningを話しているということになる。
+      // 整理しよう。
+      // exchanginLanguagesの並びは、amICallingの場合は[0]に自分のlearningがあり、[1]にnativeがある。
+      // amIRecievingの場合は、[0]に自分のnativeが入っていて、[1]に自分のlearningが入っていることになる。
       if (store.getState().mediaState.amICalling) {
         if (
           store.getState().mediaState.currentLanguage.name === store.getState().mediaState.exchangingLanguages[0].name
@@ -151,7 +156,9 @@ const SubtitleWrapper = (props) => {
           );
         }
       } else if (store.getState().mediaState.amIRecieving) {
+        // amIRecievingの場合は、[0]に自分のnativeがあり、[1]に自分のlearningがある。
         if (
+          // 今の言語が、自分にとっての[0]と同じ名前の場合、今自分はnative言語を喋っている。
           store.getState().mediaState.currentLanguage.name === store.getState().mediaState.exchangingLanguages[0].name
         ) {
           // 向こうがlearningな言語を喋っているのね、ってこと。
@@ -182,12 +189,50 @@ const SubtitleWrapper = (props) => {
 
     if (!finalTranscript) {
       // interimの時
+      setStartSeconds(seconds);
       console.log('Im sending interim transcript to partner');
       console.log(interimTranscript);
       const to = store.getState().mediaState.callingWith.socketId;
       props.socket.emit(I_SEND_MY_INTERIM_TRANSCRIPT_TO_MY_PARTNER, { to, interimTranscript });
     }
   }, [interimTranscript, finalTranscript]);
+
+  // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
+  //  これ、不思議な挙動をしてるんだよな。。。
+  // const countTranscriptWords = (transcript, setCountLangLength, languageName) => {
+  //   if (languageName === 'English' || 'Spanish' || 'French' || 'German') {
+  //     console.log('european working????');
+  //     const wordsLength = transcript.split(' ').length;
+  //     setCountLangLength((previousState) => previousState + wordsLength);
+  //   } else if (languageName === 'Japanese' || 'Korean' || 'Chinese') {
+  //     console.log('asian working???');
+  //     setCountLangLength((previousState) => previousState + transcript.length);
+  //   }
+  // };
+
+  const countTranscriptWords = (transcript, setCountLangLength, languageName) => {
+    switch (languageName) {
+      case 'English':
+      case 'Spanish':
+      case 'German':
+      case 'French':
+      case 'Polish':
+      case 'Italian':
+      case 'Portugues':
+      case 'Russian':
+      case 'Dutch':
+        const wordsLengthEuropean = transcript.split(' ').length;
+        setCountLangLength((previousState) => previousState + wordsLengthEuropean);
+        break;
+      case 'Japanese':
+      case 'Chinese':
+      case 'Korean':
+        setCountLangLength((previousState) => previousState + transcript.length);
+        break;
+      default:
+        console.log('nothing');
+    }
+  };
 
   useEffect(() => {
     if (!listening) {
@@ -255,18 +300,6 @@ const SubtitleWrapper = (props) => {
   //     // ここで、文字数をapiに送ることもする。
   //   }
   // }, [props.mediaState.callDisconnected]);
-
-  // ラテン系言語やゲルマン系言語はこれでいい。ただ、中国語とか日本語とかになるとまた別のfunction作らないといけない。これはあくまで前者用。
-  const countTranscriptWords = (transcript, setCountLangLength, languageName) => {
-    if (languageName === 'English' || 'Spanish' || 'French' || 'German') {
-      console.log('european working????');
-      const wordsLength = transcript.split(' ').length;
-      setCountLangLength((previousState) => previousState + wordsLength);
-    } else if (languageName === 'Japanese' || 'Korean' || 'Chinese') {
-      console.log('asian working???');
-      setCountLangLength((previousState) => previousState + transcript.length);
-    }
-  };
 
   const renderTranscripts = () => {
     const transcriptList = conversationTranscript.map((conversationTranscript) => {

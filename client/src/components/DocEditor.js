@@ -99,7 +99,7 @@ const DocEditor = (props) => {
     if (quill && props.docState.id) {
       const interval = setInterval(() => {
         props.socket.emit('SAVE_OUR_DOC', { docId: props.docState.id, docData: quill.getContents() });
-      }, 3000);
+      }, 7000);
 
       return () => {
         clearInterval(interval);

@@ -27,8 +27,8 @@ export const createMessage = async (request, response) => {
 
     const mailOptions = {
       to: recipient.email,
-      subject: 'You got a message from other user!',
-      html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><p>Please follow the link below and send reply!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
+      subject: 'You got a message!',
+      html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><p>Please follow the link below to check it out!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
     };
 
     console.log(recipient.email);
