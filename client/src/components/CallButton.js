@@ -223,6 +223,7 @@ const CallButton = (props) => {
               <TextField
                 id='input-with-icon-textfield'
                 label='Write a short message'
+                placeholder='e.g. Do you want to talk with me on January 1st?'
                 multiline
                 fullWidth
                 value={content}
