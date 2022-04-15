@@ -72,7 +72,7 @@ const Tablet = ({ children }) => {
 };
 
 const Mobile = ({ children }) => {
-  const isMobile = useMediaQuery({ maxWidth: 767 });
+  const isMobile = useMediaQuery({ maxWidth: 599 });
   return isMobile ? children : null;
 };
 
@@ -383,7 +383,7 @@ const WorldMap = (props) => {
           </Tablet> */}
 
           <Mobile>
-            <div style={{ height: '100vh', width: '100%' }}>
+            {/* <div style={{ height: '100vh', width: '100%' }}>
               <ReactMapGL
                 {...viewport}
                 mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -419,6 +419,10 @@ const WorldMap = (props) => {
                 setShow1on1={setShow1on1}
                 fullscreen1on1Modal={fullscreen1on1Modal}
               />
+            </div> */}
+            <div>
+              Sorry for the inconvinience. Conversation on mobile device is not available now. Please access by laptop
+              or desktop device.
             </div>
           </Mobile>
 

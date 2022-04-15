@@ -21,6 +21,7 @@ import commentsRouter from './routes/comments';
 import transcriptsRouter from './routes/transcripts';
 import docsRouter from './routes/docs';
 import messagesRouter from './routes/messages';
+import likesRouter from './routes/likes';
 
 app.use(cors());
 // HTTP headersのsecurity check
@@ -56,6 +57,7 @@ app.use('/api/comments', commentsRouter);
 app.use('/api/transcripts', transcriptsRouter);
 app.use('/api/docs', docsRouter);
 app.use('/api/messages', messagesRouter);
+app.use('/api/likes', likesRouter);
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 

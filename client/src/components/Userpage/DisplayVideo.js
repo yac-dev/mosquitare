@@ -24,6 +24,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Badge from '@mui/material/Badge';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 import Box from '@mui/material/Box';
 import Backdrop from '@mui/material/Backdrop';
@@ -303,19 +304,27 @@ const DisplayVideo = (props) => {
             </IconButton>
             {props.conversation.createdAt}
           </div>
-          <div>
+          {/* <div>
             <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
               <IconButton>
                 <VisibilityIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
             1k
-          </div>
+          </div> */}
 
           <div>
             <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
               <IconButton>
                 <ThumbUpAltIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </Tooltip>
+            10
+          </div>
+          <div>
+            <Tooltip title='Contributors ( Under construction 🚜🛠 Please wait a bit.)' arrow>
+              <IconButton>
+                <GroupsIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
             10
