@@ -13,6 +13,8 @@ const transporter = nodemailer.createTransport({
 export const createMessage = async (request, response) => {
   try {
     const { senderId, recipientId } = request.params;
+    console.log(senderId, recipientId);
+    console.log(request.body.content);
     const message = await Message.create({
       sender: senderId,
       recipient: recipientId,
@@ -28,6 +30,8 @@ export const createMessage = async (request, response) => {
       subject: 'You got a message from other user!',
       html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><p>Please follow the link below and send reply!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
     };
+
+    console.log(recipient.email);
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {

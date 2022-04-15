@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import store from '../store';
-import VideoCallIcon from '@mui/icons-material/VideoCall';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import TranslateIcon from '@mui/icons-material/Translate';
 import DuoIcon from '@mui/icons-material/Duo';
 
@@ -11,12 +11,17 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
+import SendIcon from '@mui/icons-material/Send';
+import Popover from '@mui/material/Popover';
+import { TextField, InputAdornment } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 // mui components
 import Tooltip from '@mui/material/Tooltip';
 
 // action creators
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
+import { createMessageActionCreator } from '../actionCreators/messagesActionCreator';
+import { alertActionCreator } from '../actionCreators/alertsActionCreator';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -60,7 +65,22 @@ const CallButton = (props) => {
   const [exchangeableLearningLangs, setExchangeableLearningLangs] = useState([]);
   const [exchangeableNativeLangs, setExchangeableNativeLangs] = useState([]);
   // const [menuItemDDOMs, setMenuItemDOMs] = useState([]);
+  const [content, setContent] = useState('');
 
+  const [sendAnchorEl, setSendAnchorEl] = React.useState(null);
+
+  const handleSendClick = (event) => {
+    setSendAnchorEl(event.currentTarget);
+  };
+
+  const handleSendClose = () => {
+    setSendAnchorEl(null);
+  };
+
+  const openSend = Boolean(sendAnchorEl);
+  const idSend = openSend ? 'simple-popover' : undefined;
+
+  // dropdown用
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -109,6 +129,19 @@ const CallButton = (props) => {
     props.callActionCreator(props.socket, mySocketId, oppositeSocketId, exchangingLanguages);
   };
 
+  const handleSendMessage = (recipientId) => {
+    if (content && props.authState.currentUser) {
+      // props.createCommentActionCreator(content);
+      props.createMessageActionCreator(content, recipientId);
+      setContent('');
+    } else if (!props.authState.currentUser) {
+      props.alertActionCreator('You need to signup or login to comment.', 'error');
+    } else if (!content) {
+      // alertかな。
+      props.alertActionCreator('Please write a message.', 'error');
+    }
+  };
+
   const renderExchangeableLangs = () => {
     const menuItemDOMs = [];
     if (exchangeableLearningLangs.length && exchangeableNativeLangs.length) {
@@ -147,8 +180,8 @@ const CallButton = (props) => {
               endIcon={<KeyboardArrowDownIcon />}
               // sx={{ backgroundColor: 'white', color: 'black' }}
             >
-              Exchange now&nbsp;
-              <VideoCallIcon size='large' />
+              <VideocamIcon size='large' />
+              &nbsp; Exchange now
             </Button>
             <StyledMenu
               id='demo-customized-menu'
@@ -162,11 +195,53 @@ const CallButton = (props) => {
               {menuItemDOMs}
             </StyledMenu>
           </div>
-          <Tooltip title='Under construction 🚜🛠 Please wait for a bit'>
-            <Button variant='contained' disabled>
-              Send a message
-            </Button>
-          </Tooltip>
+          <Button
+            variant='contained'
+            startIcon={<SendIcon />}
+            onClick={handleSendClick}
+            sx={{
+              backgroundColor: 'rgb(0, 186, 68)',
+              '&:hover': {
+                backgroundColor: 'rgb(0, 158, 58)',
+              },
+            }}
+          >
+            Send a message
+          </Button>
+          <Popover
+            id={idSend}
+            open={openSend}
+            anchorEl={sendAnchorEl}
+            onClose={handleSendClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+          >
+            {/* dummyのdivを作っておく。*/}
+            <div style={{ width: '300px', height: '100%', padding: '5px' }}>
+              <TextField
+                id='input-with-icon-textfield'
+                label='Write a short message'
+                multiline
+                fullWidth
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Tooltip title='Send'>
+                        <IconButton>
+                          <SendIcon onClick={() => handleSendMessage(props.user._id)} />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+                variant='standard'
+              />
+            </div>
+          </Popover>
         </div>
       );
     } else {
@@ -181,4 +256,6 @@ const mapStateToProps = (state) => {
   return { authState: state.authState };
 };
 
-export default connect(mapStateToProps, { callActionCreator })(CallButton);
+export default connect(mapStateToProps, { callActionCreator, createMessageActionCreator, alertActionCreator })(
+  CallButton
+);

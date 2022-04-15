@@ -11,7 +11,8 @@ import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
 import AfterFinishingModal from './AfterFinishingModal';
 // import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 // import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
-
+import { Stack } from '@mui/material';
+import SnackBar from './Snackbar';
 import UsersMarker from './UsersMarker';
 import MeetingsList from './Meeting/MeetingsList';
 
@@ -232,6 +233,20 @@ const WorldMap = (props) => {
     props.callActionCreator(socket, mySocketId, oppositeSocketId);
   };
 
+  const renderAlerts = () => {
+    if (props.alertsState.length) {
+      const alertsSnackBars = props.alertsState.map((alert) => {
+        return <SnackBar open={true} id={alert.id} snackBarType={alert.alertType} message={alert.message} />;
+      });
+
+      return (
+        <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+          <Stack spacing={2}>{alertsSnackBars}</Stack>
+        </div>
+      );
+    }
+  };
+
   // meeting用のfull screen modalのtrigger
   // const onJoinClick = (meeting) => {
   //   setFullScreenMeetingModal(true);
@@ -323,6 +338,7 @@ const WorldMap = (props) => {
                 showAfterFinishingModal={showAfterFinishingModal}
                 setShowAfterFinishingModal={setShowAfterFinishingModal}
               />
+              {renderAlerts()}
             </div>
           </Default>
 
@@ -424,6 +440,7 @@ const mapStateToProps = (state) => {
     usersState: Object.values(state.usersState),
     meetingState: state.meetingState,
     peerState: state.peerState,
+    alertsState: state.alertsState,
   };
 };
 

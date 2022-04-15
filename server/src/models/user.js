@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   email: {
     type: String,
@@ -64,6 +65,26 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'I just started!',
   },
+  gender: {
+    type: String,
+    default: 'prefer not to answer',
+    enum: {
+      values: [
+        'male',
+        'female',
+        'transgender male',
+        'transgender female',
+        'gender varient',
+        'not listed',
+        'prefer not to answer',
+      ],
+    },
+  },
+  job: [
+    {
+      type: String,
+    },
+  ],
   conversations: [
     {
       type: mongoose.Schema.ObjectId,
