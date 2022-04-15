@@ -336,11 +336,37 @@ export const createUserMedia = async (request, response) => {
       });
 
       const partnerUserMedia = await UserMedia.findById(conversation.userMedias[0]._id);
-      const outputFileName = await execFFMPEG(
-        partnerUserMedia.videoFileName,
-        file.filename,
-        request.params.conversationId
+
+      // const outputFileName = await execFFMPEG(
+      //   partnerUserMedia.videoFileName,
+      //   file.filename,
+      //   request.params.conversationId
+      // );
+
+      execFFMPEG(partnerUserMedia.videoFileName, file.filename, request.params.conversationId).then(
+        async (outputFileName) => {
+          conversation.videoFilename = outputFileName;
+          conversation.userMedias.push(userMedia);
+          await conversation.save();
+          const filesToAWS = [
+            // files.outputVideoFilename,
+            // files.screenShotFilename,
+            outputFileName,
+            partnerUserMedia.videoFileName, //partnerのと自分のvideoもs3に保存しておく。
+            file.filename,
+            // transcodedFiles.transcodedFilename,
+            // transcodedFiles.screenShotFilename,
+            // myTranscodedFiles.transcodedFilename,
+            // myTranscodedFiles.screenShotFilename,
+          ];
+
+          filesToAWS.forEach((filename) => {
+            // uploadFile(file);
+            uploadFile(filename);
+          });
+        }
       );
+
       // partnerUserMedia.videoFileName = transcodedFilename;
       // partnerUserMedia.videoFileName = transcodedFiles.transcodedFilename;
       // partnerUserMedia.thumbnail = transcodedFiles.screenShotFilename; // 一旦コメントアウト
@@ -358,12 +384,13 @@ export const createUserMedia = async (request, response) => {
       //   'partner transcoded screenshot file exists??'
       // );
       // await partnerUserMedia.save();
+
       console.log('heeey, is here working????');
-      // ここで、partnerのscreenshotとtranscodeされたmp4 fileがあるかの確認をしよう。
-      conversation.videoFilename = outputFileName;
-      // conversation.thumbnail = files.screenShotFilename;
-      conversation.userMedias.push(userMedia);
-      await conversation.save();
+      // // ここで、partnerのscreenshotとtranscodeされたmp4 fileがあるかの確認をしよう。
+      // conversation.videoFilename = outputFileName;
+      // // conversation.thumbnail = files.screenShotFilename;
+      // conversation.userMedias.push(userMedia);
+      // await conversation.save();
 
       // partner側の変更、これで終わり。
       // 次は自分
@@ -378,24 +405,25 @@ export const createUserMedia = async (request, response) => {
       // conversation.userMedias.push(userMedia);
       // await conversation.save();
       // こっからawsにあげる処理を書いていく。
-      const filesToAWS = [
-        // files.outputVideoFilename,
-        // files.screenShotFilename,
-        outputFileName,
-        partnerUserMedia.videoFileName, //partnerのと自分のvideoもs3に保存しておく。
-        file.filename,
-        // transcodedFiles.transcodedFilename,
-        // transcodedFiles.screenShotFilename,
-        // myTranscodedFiles.transcodedFilename,
-        // myTranscodedFiles.screenShotFilename,
-      ];
 
-      filesToAWS.forEach((filename) => {
-        // uploadFile(file);
-        uploadFile(filename);
-      });
+      // const filesToAWS = [
+      //   // files.outputVideoFilename,
+      //   // files.screenShotFilename,
+      //   outputFileName,
+      //   partnerUserMedia.videoFileName, //partnerのと自分のvideoもs3に保存しておく。
+      //   file.filename,
+      //   // transcodedFiles.transcodedFilename,
+      //   // transcodedFiles.screenShotFilename,
+      //   // myTranscodedFiles.transcodedFilename,
+      //   // myTranscodedFiles.screenShotFilename,
+      // ];
+
+      // filesToAWS.forEach((filename) => {
+      //   // uploadFile(file);
+      //   uploadFile(filename);
+      // });
       response.status(200).json({
-        success: userMedia,
+        message: 'now processing. wait a bit!',
       });
     }
 
