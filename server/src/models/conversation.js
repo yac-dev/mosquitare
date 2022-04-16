@@ -33,12 +33,12 @@ const conversationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  contributors: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
-    },
-  ],
+  // contributors: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     ref: 'User',
+  //   },
+  // ], //virtualでいい。多分。ただ、その代わりcontributeっていうmodelが必要になる。そこで、typeはupdate transcriptとかfeedbackとかを入れることになる。
   reviews: [
     {
       type: mongoose.Schema.ObjectId,

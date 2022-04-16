@@ -22,6 +22,7 @@ import transcriptsRouter from './routes/transcripts';
 import docsRouter from './routes/docs';
 import messagesRouter from './routes/messages';
 import likesRouter from './routes/likes';
+import conversationPrivacySettingsRouter from './routes/conversationPrivacySettings';
 
 app.use(cors());
 // HTTP headersのsecurity check
@@ -58,6 +59,7 @@ app.use('/api/transcripts', transcriptsRouter);
 app.use('/api/docs', docsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/likes', likesRouter);
+app.use('/api/conversationprivacysettings', conversationPrivacySettingsRouter);
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
 

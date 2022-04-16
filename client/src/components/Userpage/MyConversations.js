@@ -50,7 +50,7 @@ const ConversationVideos = (props) => {
     } else {
       const conversationList = props.myConversations.map((myConversation) => {
         // 基本、bugがおこるとしたら、ffmpegでミスってvideoFilenameがなくなるか、usersがそもそも入らなくなるか、って感じね。
-        if (!myConversation.videoFilename || myConversation.users.length !== 2 || !myConversation.isPublic) {
+        if (!myConversation.videoFilename || myConversation.users.length !== 2) {
           return null;
         } else {
           return (

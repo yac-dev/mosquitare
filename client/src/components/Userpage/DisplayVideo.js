@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
+import { Modal } from 'react-bootstrap';
 
 import VideoContext from './contexts/VideoContext';
 
@@ -23,6 +24,7 @@ import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Badge from '@mui/material/Badge';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import GroupsIcon from '@mui/icons-material/Groups';
 
@@ -43,6 +45,7 @@ import Snackbar from '../Snackbar';
 //ac
 import { createLikeActionCreator } from '../../actionCreators/likesActionCreator';
 import { getConversationLikesActionCreator } from '../../actionCreators/likesActionCreator';
+import { setToPrivateActionCreator } from '../../actionCreators/conversationPrivacySettingsActionCreator';
 
 // css
 import '../../styles/userpage.css';
@@ -121,9 +124,14 @@ const DisplayVideo = (props) => {
   const [openComments, setOpenComments] = useState(false);
   const [openFetchedDocEditor, setOpenFetchedDocEditor] = useState(false);
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  // const [open, setOpen] = React.useState(false);
+  // const handleOpen = () => setOpen(true);
+  // const handleClose = () => setOpen(false); // これなんだろね。なんでこのmuiらしきもんがある？？
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     if (loaded === 2) {
@@ -207,6 +215,47 @@ const DisplayVideo = (props) => {
   //   }
   // };
 
+  const setToPrivate = () => {
+    if (props.conversation.isPublic) {
+      props.setToPrivateActionCreator(props.conversation._id);
+      setShow(false);
+      window.location = `/myconversation/${props.match.params.conversationId}`; //display videoのページに戻ってくるってやりたいね。
+    } else {
+      console.log('No way');
+    }
+  };
+
+  const setToPublic = () => {
+    if (!props.conversation.isPublic) {
+    } else {
+      console.log('no way');
+    }
+  };
+
+  const renderPublicOrPrivate = () => {
+    if (props.conversation.isPublic) {
+      return (
+        <div>
+          <Tooltip title='Anybody in this app can watch this conversation.' arrow>
+            <IconButton onClick={() => setShow(true)}>
+              <VisibilityIcon sx={{ color: 'white' }} />
+            </IconButton>
+          </Tooltip>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Tooltip title='Only you and your partner can watch this conversation.' arrow>
+            <IconButton>
+              <VisibilityOffIcon sx={{ color: 'white' }} />
+            </IconButton>
+          </Tooltip>
+        </div>
+      );
+    }
+  };
+
   const onLikeClick = (conversationId) => {
     if (props.likesState[props.authState.currentUser._id]) {
       props.alertActionCreator('You have already liked this conversation.', 'info');
@@ -236,36 +285,47 @@ const DisplayVideo = (props) => {
         className='displaying-video-wrapper'
         style={{ width: '80vw', margin: '0 auto', backgroundColor: 'rgb(0, 55, 110)' }}
       >
-        <div className='users-information' style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-          <div
-            className='user-info-at-video'
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <Badge
-              overlap='circular'
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              badgeContent={<SmallAvatar src={props.conversation.users[0].nationalities[0].flagPics[0]} />}
+        <div style={{ display: 'flex', padding: '20px' }}>
+          <div className='users-information' style={{ display: 'flex', gap: '20px', flex: 7 }}>
+            <div
+              className='user-info-at-video'
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
             >
-              <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[0].name}</Avatar>
-            </Badge>
+              <Badge
+                overlap='circular'
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                badgeContent={<SmallAvatar src={props.conversation.users[0].nationalities[0].flagPics[0]} />}
+              >
+                <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[0].name}</Avatar>
+              </Badge>
+            </div>
+            <div
+              className='user-info-at-video'
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Badge
+                overlap='circular'
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                badgeContent={<SmallAvatar src={props.conversation.users[1].nationalities[0].flagPics[0]} />}
+              >
+                <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[1].name}</Avatar>
+              </Badge>
+            </div>
           </div>
-          <div
-            className='user-info-at-video'
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <Badge
-              overlap='circular'
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              badgeContent={<SmallAvatar src={props.conversation.users[1].nationalities[0].flagPics[0]} />}
-            >
-              <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[1].name}</Avatar>
-            </Badge>
+          <div className='status-info' style={{ display: 'flex', gap: '20px', flex: 3, justifyContent: 'center' }}>
+            <div>
+              <IconButton>
+                <CalendarTodayIcon sx={{ color: 'white' }} />
+              </IconButton>
+              {props.conversation.createdAt}
+            </div>
+            {renderPublicOrPrivate()}
           </div>
         </div>
         <video
@@ -276,7 +336,7 @@ const DisplayVideo = (props) => {
           controlslist='nodownload noplaybackrate'
           // width='640px'
           // height='320px'
-          style={{ marginBottom: '20px' }}
+          // style={{ marginBottom: '20px' }}
         >
           <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
         </video>
@@ -328,22 +388,7 @@ const DisplayVideo = (props) => {
             />
           </div>
         </div> */}
-        <div className='video-apps' style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
-          <div>
-            <IconButton>
-              <CalendarTodayIcon sx={{ color: 'white' }} />
-            </IconButton>
-            {props.conversation.createdAt}
-          </div>
-          {/* <div>
-            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
-              <IconButton>
-                <VisibilityIcon sx={{ color: 'white' }} />
-              </IconButton>
-            </Tooltip>
-            1k
-          </div> */}
-
+        <div className='video-apps' style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px' }}>
           <div>
             <Tooltip title='Like' arrow>
               <IconButton onClick={() => onLikeClick(props.conversation._id)}>
@@ -351,14 +396,6 @@ const DisplayVideo = (props) => {
               </IconButton>
             </Tooltip>
             {Object.values(props.likesState).length}&nbsp;likes
-          </div>
-          <div>
-            <Tooltip title='Conversation transcript' arrow>
-              <IconButton onClick={() => setOpenTranscripts(true)}>
-                <RecordVoiceOverIcon sx={{ color: 'white' }} />
-              </IconButton>
-            </Tooltip>
-            Transcript
           </div>
           <div>
             <Tooltip title='Write a comment' arrow>
@@ -369,29 +406,38 @@ const DisplayVideo = (props) => {
             {props.commentsState.length}&nbsp;Comments
           </div>
           <div>
+            <Tooltip title='Conversation transcript' arrow>
+              <IconButton onClick={() => setOpenTranscripts(true)}>
+                <RecordVoiceOverIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </Tooltip>
+            Transcript
+          </div>
+          <div>
             <IconButton onClick={() => setOpenFetchedDocEditor(true)}>
               <InsertDriveFileIcon sx={{ color: 'white' }} />
             </IconButton>
             Doc
           </div>
           <div>
-            <Tooltip title='Contributors ( Under construction 🚜🛠 Please wait a bit.)' arrow>
+            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
               <IconButton>
                 <GroupsIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
             Contributors
           </div>
-          <div>
+          {/* <div>
             <Tooltip title='Google Translate (Under construction 🚜🛠 Please wait a bit.)' arrow>
               <IconButton>
                 <GTranslateIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
             Translate
-          </div>
+          </div> */}
+
           <div>
-            <Tooltip title='(Under construction 🚜🛠 Please wait a bit.)' arrow>
+            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
               <IconButton>
                 <ShareIcon sx={{ color: 'white' }} />
               </IconButton>
@@ -409,6 +455,19 @@ const DisplayVideo = (props) => {
           setOpenFetchedDocEditor={setOpenFetchedDocEditor}
         />
         {renderAlerts()}
+        <Modal show={show} onHide={() => setShow(false)} backdrop='static' keyboard={false}>
+          <Modal.Body>
+            <div style={{ color: 'black' }}>
+              <h3 style={{ textAlign: 'center' }}>⚠️ Are you sure you want to set this conversation to private?</h3>
+              <br />
+              You can't get any comments, feedbacks or transcription updates if you hide this conversation.
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={() => setShow(false)}>No</Button>
+            <Button onClick={() => setToPrivate()}>Yes</Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );
@@ -427,4 +486,5 @@ export default connect(mapStateToProps, {
   createLikeActionCreator,
   getConversationLikesActionCreator,
   alertActionCreator,
+  setToPrivateActionCreator,
 })(DisplayVideo);

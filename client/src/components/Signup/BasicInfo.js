@@ -48,7 +48,7 @@ const BasicInfo = (props) => {
       <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <PasswordIcon />
-          &nbsp;Password Confirmation (At least 8 characters)
+          &nbsp;Password Confirmation
         </label>
         <input
           type='password'

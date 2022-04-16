@@ -1,5 +1,6 @@
 import Conversation from '../models/conversation';
-import ConversationState from '../models/conversationState';
+// import ConversationState from '../models/conversationState';
+import ConversationPrivacySetting from '../models/conversationPrivacySetting';
 
 export const createConversation = async (request, response) => {
   try {
@@ -10,9 +11,14 @@ export const createConversation = async (request, response) => {
     conversation.users.push(userId);
     conversation.genre = genre;
     conversation.isPublic = true;
-    const conversationState = await ConversationState.create({
+    // const conversationState = await ConversationState.create({
+    //   conversation: conversation._id,
+    //   state: [true, true],
+    // });
+    await ConversationPrivacySetting.create({
+      user: userId,
       conversation: conversation._id,
-      state: [true, true],
+      isPublishing: true,
     });
     await conversation.save();
     response.json({
@@ -32,6 +38,11 @@ export const updateConversationUsers = async (request, response) => {
     await conversation.save();
     response.json({
       conversation,
+    });
+    await ConversationPrivacySetting.create({
+      user: userId,
+      conversation: conversation._id,
+      isPublishing: true,
     });
   } catch (error) {
     console.log(error);
