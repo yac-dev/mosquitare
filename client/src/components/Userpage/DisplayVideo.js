@@ -219,7 +219,7 @@ const DisplayVideo = (props) => {
     if (props.conversation.isPublic) {
       props.setToPrivateActionCreator(props.conversation._id);
       setShow(false);
-      window.location = `/myconversation/${props.match.params.conversationId}`; //display videoのページに戻ってくるってやりたいね。
+      // window.location = `/myconversation/${props.conversation._id}`; //display videoのページに戻ってくるってやりたいね。
     } else {
       console.log('No way');
     }

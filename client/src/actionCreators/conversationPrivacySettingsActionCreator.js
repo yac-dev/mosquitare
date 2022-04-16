@@ -5,10 +5,10 @@ export const setToPrivateActionCreator = (conversationId) => async (dispatch, ge
   try {
     const userId = getState().authState.currentUser._id;
     const result = await mosquitareAPI.patch(`/conversationprivacysettings/private/${conversationId}`, { userId });
-    // dispatch({
-    //   type: '',
-    //   payload: ''
-    // })
+    dispatch({
+      type: 'CNAHGE_TO_PRIVATE',
+      payload: '',
+    });
 
     dispatch(alertActionCreator('Set this conversation to private.', 'success'));
   } catch (error) {

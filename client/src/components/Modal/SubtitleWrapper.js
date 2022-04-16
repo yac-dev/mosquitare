@@ -213,21 +213,37 @@ const SubtitleWrapper = (props) => {
   const countTranscriptWords = (transcript, setCountLangLength, languageName) => {
     switch (languageName) {
       case 'English':
+      case 'French':
       case 'Spanish':
       case 'German':
-      case 'French':
-      case 'Polish':
       case 'Italian':
-      case 'Portugues':
+      case 'Portuguese':
       case 'Russian':
       case 'Dutch':
+      case 'Polish':
+      case 'Swedish':
+      case 'Finnish':
+      case 'Norwegian':
+      case 'Czech':
+      case 'Turkish':
+      case 'Romanian':
+      case 'Greek':
         const wordsLengthEuropean = transcript.split(' ').length;
         setCountLangLength((previousState) => previousState + wordsLengthEuropean);
         break;
       case 'Japanese':
-      case 'Chinese':
+      case 'Chinese-Mandarin':
+      case 'Chinese-Cantonese':
       case 'Korean':
         setCountLangLength((previousState) => previousState + transcript.length);
+        break;
+      // arabicとhebrewに関してはまた別。
+      case 'Arabic':
+      case 'Hebrew':
+        console.log('hey');
+        break;
+      case 'Hindi':
+        console.log('dont know...');
         break;
       default:
         console.log('nothing');

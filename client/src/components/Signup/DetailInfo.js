@@ -278,7 +278,8 @@ const countryOptions = [
 
 const languageOptions = [
   { key: '61711a02dc33a75226a7f363', value: '61711a02dc33a75226a7f363', text: 'English' },
-  { key: '61711a02dc33a75226a7f358', value: '61711a02dc33a75226a7f358', text: '中文' },
+  { key: '61711a02dc33a75226a7f358', value: '61711a02dc33a75226a7f358', text: '中文(普通话)' },
+  { key: '625a5ef054085be43f57cf23', value: '625a5ef054085be43f57cf23', text: '中文(広東語)' },
   { key: '61711a02dc33a75226a7f36a', value: '61711a02dc33a75226a7f36a', text: 'Français' },
   { key: '61711a02dc33a75226a7f3cf', value: '61711a02dc33a75226a7f3cf', text: 'Español' },
   { key: '61711a02dc33a75226a7f36e', value: '61711a02dc33a75226a7f36e', text: 'Deutsch' },
@@ -287,8 +288,8 @@ const languageOptions = [
   { key: '61711a02dc33a75226a7f383', value: '61711a02dc33a75226a7f383', text: '日本語' },
   { key: '61711a02dc33a75226a7f3c0', value: '61711a02dc33a75226a7f3c0', text: 'Русский' },
   { key: '61711a02dc33a75226a7f390', value: '61711a02dc33a75226a7f390', text: '한국인' },
-  { key: '61711a02dc33a75226a7f341', value: '61711a02dc33a75226a7f341', text: 'عربى' },
-  { key: '61711a02dc33a75226a7f376', value: '61711a02dc33a75226a7f376', text: 'हिन्दी' },
+  // { key: '61711a02dc33a75226a7f341', value: '61711a02dc33a75226a7f341', text: 'عربى' },
+  // { key: '61711a02dc33a75226a7f376', value: '61711a02dc33a75226a7f376', text: 'हिन्दी' },
   { key: '61711a02dc33a75226a7f361', value: '61711a02dc33a75226a7f361', text: 'Nederlands' },
   { key: '61711a02dc33a75226a7f3b9', value: '61711a02dc33a75226a7f3b9', text: 'Polskie' },
   { key: '61711a02dc33a75226a7f3d3', value: '61711a02dc33a75226a7f3d3', text: 'Svenska' },
@@ -297,7 +298,7 @@ const languageOptions = [
   { key: '61711a02dc33a75226a7f35e', value: '61711a02dc33a75226a7f35e', text: 'Čeština' },
   { key: '61711a02dc33a75226a7f3de', value: '61711a02dc33a75226a7f3de', text: 'Türkçe' },
   { key: '61b42360476ed2196992b77e', value: '61b42360476ed2196992b77e', text: 'Limba Română' },
-  { key: '61b422eb476ed2196992b77d', value: '61b422eb476ed2196992b77d', text: 'עִבְרִית' },
+  // { key: '61b422eb476ed2196992b77d', value: '61b422eb476ed2196992b77d', text: 'עִבְרִית' },
   { key: '61b4312f92ae00c28783dd1b', value: '61b4312f92ae00c28783dd1b', text: 'Ελληνικά' },
 ];
 

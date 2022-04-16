@@ -18,6 +18,10 @@ const conversationReducer = (state = {}, action) => {
       return { ...state, conversation: action.payload };
     case SELECT_CONVERSATION:
       return { ...state, currentConversation: action.payload };
+    case 'CNAHGE_TO_PRIVATE':
+      const shallowCopy = { ...state };
+      shallowCopy.conversation.isPublic = false;
+      return { ...state, shallowCopy };
     default:
       return state;
   }
