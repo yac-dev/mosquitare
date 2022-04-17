@@ -228,7 +228,7 @@ const SubtitleWrapper = (props) => {
       case 'Turkish':
       case 'Romanian':
       case 'Greek':
-        const wordsLengthEuropean = transcript.split(' ').length;
+        const wordsLengthEuropean = transcript.split('').filter((character) => character !== ' ').length;
         setCountLangLength((previousState) => previousState + wordsLengthEuropean);
         break;
       case 'Japanese':
@@ -322,7 +322,8 @@ const SubtitleWrapper = (props) => {
       if (conversationTranscript.user === store.getState().authState.currentUser._id) {
         return (
           <>
-            <span>You: {conversationTranscript.transcript}</span>&nbsp;
+            <span>You: {conversationTranscript.transcript}</span>&nbsp;<span>{conversationTranscript.seconds}</span>
+            &nbsp;
             <Tooltip title='translate'>
               <TranslateTranscript translateInput={conversationTranscript.transcript} />
             </Tooltip>
@@ -334,6 +335,7 @@ const SubtitleWrapper = (props) => {
             <span>
               {store.getState().mediaState.callingWith.name}: {conversationTranscript.transcript}
             </span>
+            &nbsp;<span>{conversationTranscript.seconds}</span>
             &nbsp;
             <Tooltip title='translate'>
               <TranslateTranscript translateInput={conversationTranscript.transcript} />
@@ -502,6 +504,7 @@ const SubtitleWrapper = (props) => {
         > */}
       {/* <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp; */}
       {/* {renderSwitchLangButton()} */}
+      {seconds}
       {renderTranscripts()}
       {renderPartnerInterimTranscript()}
       {renderMyInterimTranscript()}

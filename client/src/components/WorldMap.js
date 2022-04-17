@@ -223,6 +223,7 @@ const WorldMap = (props) => {
     if (props.mediaState.callAccepted) {
       setFullscreen1on1Modal(true);
       setShow1on1(true);
+      // ここで、相手に「お前のmodalを開け」っていうsocket eventを相手に発する。相手も、これがきたらmodalを開く感じよ。
     }
   }, [props.mediaState.callAccepted]);
 

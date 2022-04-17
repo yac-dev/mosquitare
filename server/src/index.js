@@ -175,6 +175,7 @@ io.on('connection', (socket) => {
       user: dataFromSpeaker.transcriptObject.user,
       conversation: dataFromSpeaker.transcriptObject.conversation,
       language: dataFromSpeaker.transcriptObject.language,
+      seconds: dataFromSpeaker.transcriptObject.seconds,
     });
 
     io.to(dataFromSpeaker.to).emit(MY_PARTNER_SEND_ME_FINAL_TRANSCRIPT, {

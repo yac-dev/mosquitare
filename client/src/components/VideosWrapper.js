@@ -50,10 +50,16 @@ import { sendConversationIdActionCreator } from '../actionCreators/conversationA
 import { updateUserConversationStateActionCreator } from '../actionCreators/authActionCreators';
 import { updateUserConversationsActionCreator } from '../actionCreators/authActionCreators';
 
+// call始まり
+import { alertActionCreator } from '../actionCreators/alertsActionCreator';
+
 // call 終わり
 import { hangUpCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { disconnectCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { updateUserConversationToFalseActionCreator } from '../actionCreators/authActionCreators';
+
+// components
+import SnackBar from './Snackbar';
 
 // styles for mui
 const LogoutIconButton = styled(IconButton)(({ theme }) => ({
@@ -273,6 +279,12 @@ const VideosWrapper = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (props.show1on1) {
+      props.alertActionCreator(`Let's talk in ${props.mediaState.currentLanguage.name} at first!`, 'success');
+    }
+  }, [props.show1on1]);
+
   // ここの構造。に段階で面倒臭いんだよ。改善しよう。
   // useEffect(() => {
   //   if (props.mediaState.apiCallResult === 2) {
@@ -281,6 +293,20 @@ const VideosWrapper = (props) => {
   //     props.updateUserConversationToFalseActionCreator();
   //   }
   // }, [props.mediaState.apiCallResult]); // これ、どういう目的で作った。。。？
+
+  const renderAlerts = () => {
+    if (props.alertsState.length) {
+      const alertsSnackBars = props.alertsState.map((alert) => {
+        return <SnackBar open={true} id={alert.id} snackBarType={alert.alertType} message={alert.message} />;
+      });
+
+      return (
+        <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+          <Stack spacing={2}>{alertsSnackBars}</Stack>
+        </div>
+      );
+    }
+  };
 
   const onHangUpClick = () => {
     // 1, callacceptedを閉じるっていう具合かね。callacceptedがfalseを引き金に、mediarecorderとspeechrecognitionも停止する。
@@ -419,12 +445,13 @@ const VideosWrapper = (props) => {
           <Button onClick={() => onHangUpClick()}>Finish</Button>
         </Modal.Footer>
       </Modal>
+      {renderAlerts()}
     </>
   );
 };
 
 const mapStateToProps = (state) => {
-  return { mediaState: state.mediaState };
+  return { mediaState: state.mediaState, alertsState: state.alertsState };
 };
 
 export default connect(mapStateToProps, {
@@ -439,4 +466,5 @@ export default connect(mapStateToProps, {
   hangUpCallActionCreator,
   disconnectCallActionCreator,
   updateUserConversationToFalseActionCreator,
+  alertActionCreator,
 })(VideosWrapper);

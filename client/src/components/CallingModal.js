@@ -62,7 +62,7 @@ const CallingModal = (props) => {
 
   const handleAnswerCall = () => {
     props.setShowCallingModal(false);
-    props.answerCallActionCreator1(); // これを閉じて、fullscreenまでは出た。
+    props.answerCallActionCreator1(); // これを閉じて、fullscreenまでは出た。ここでは、callAcceptedをtrueにするだけ。
   };
 
   const handleRejectCall = () => {
@@ -161,7 +161,7 @@ const CallingModal = (props) => {
       return (
         <>
           <NoAccountsIcon />
-          <div style={{ color: 'black' }}>Sorry, your partner is not available now...</div>
+          <div style={{ color: 'black' }}>OOPS... Your partner is not available now...</div>
         </>
       );
     }

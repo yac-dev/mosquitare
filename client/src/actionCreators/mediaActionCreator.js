@@ -127,20 +127,20 @@ export const callActionCreator =
       initiator: true,
       stream: myVideoStreamObject,
       trickle: false,
-      config: {
-        iceServers: [
-          {
-            urls: 'stun:numb.viagenie.ca',
-            username: 'sultan1640@gmail.com',
-            credential: '98376683',
-          },
-          {
-            urls: 'turn:numb.viagenie.ca',
-            username: 'sultan1640@gmail.com',
-            credential: '98376683',
-          },
-        ],
-      },
+      // config: {
+      //   iceServers: [
+      //     {
+      //       urls: 'stun:numb.viagenie.ca',
+      //       username: 'sultan1640@gmail.com',
+      //       credential: '98376683',
+      //     },
+      //     {
+      //       urls: 'turn:numb.viagenie.ca',
+      //       username: 'sultan1640@gmail.com',
+      //       credential: '98376683',
+      //     },
+      //   ],
+      // },
     });
     dispatch({
       type: HOLD_MY_INITIATED_PEER,
@@ -226,20 +226,20 @@ export const answerCallActionCreator2 =
       initiator: false,
       stream: myVideoStreamObject,
       trickle: false,
-      config: {
-        iceServers: [
-          {
-            urls: 'stun:numb.viagenie.ca',
-            username: 'sultan1640@gmail.com',
-            credential: '98376683',
-          },
-          {
-            urls: 'turn:numb.viagenie.ca',
-            username: 'sultan1640@gmail.com',
-            credential: '98376683',
-          },
-        ],
-      },
+      // config: {
+      //   iceServers: [
+      //     {
+      //       urls: 'stun:numb.viagenie.ca',
+      //       username: 'sultan1640@gmail.com',
+      //       credential: '98376683',
+      //     },
+      //     {
+      //       urls: 'turn:numb.viagenie.ca',
+      //       username: 'sultan1640@gmail.com',
+      //       credential: '98376683',
+      //     },
+      //   ],
+      // },
       // config: {
       //   iceServers: [
       //     {
