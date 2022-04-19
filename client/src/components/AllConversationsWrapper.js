@@ -4,6 +4,10 @@ import { connect } from 'react-redux';
 // components
 import Conversation from './UserPage/Conversation';
 
+// mui
+import LinearProgress from '@mui/material/LinearProgress';
+import Stack from '@mui/material/Stack';
+
 // ac
 import { loadMeActionCreator } from '../actionCreators/authActionCreators';
 import { getAllConversationsActionCreator } from '../actionCreators/conversationActionCreators';
@@ -50,9 +54,29 @@ const AllConversationsWrapper = (props) => {
     return <>{conversationList}</>;
   };
 
+  const renderLoading = () => {
+    if (!props.conversationsState.length) {
+      return (
+        <>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Stack sx={{ width: '70%' }} spacing={2}>
+                <LinearProgress color='secondary' />
+                <LinearProgress color='success' />
+                <LinearProgress color='inherit' />
+              </Stack>
+            </div>
+            Loading videos...
+          </div>
+        </>
+      );
+    }
+  };
+
   return (
     <div className='all-conversations-wrapper-wrapper'>
       <h2 style={{ margin: '20px' }}>Public Library</h2>
+      {renderLoading()}
       <div className='all-conversations-wrapper'>{renderConversations()}</div>
     </div>
   );

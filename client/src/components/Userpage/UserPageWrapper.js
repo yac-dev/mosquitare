@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 // mui
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import LinearProgress from '@mui/material/LinearProgress';
+import Stack from '@mui/material/Stack';
 
 // components
 import MyConversations from './MyConversations';
@@ -47,11 +49,31 @@ const UserPageWrapper = (props) => {
     }
   };
 
+  const renderLoading = () => {
+    if (!props.conversationsState.length) {
+      return (
+        <>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Stack sx={{ width: '70%' }} spacing={2}>
+                <LinearProgress color='secondary' />
+                <LinearProgress color='success' />
+                <LinearProgress color='inherit' />
+              </Stack>
+            </div>
+            Loading videos...
+          </div>
+        </>
+      );
+    }
+  };
+
   return (
     <div className='userpage-wrapper-wrapper'>
       <h2 style={{ margin: '20px' }}>
         <VideoLibraryIcon size='large' /> &nbsp; Library
       </h2>
+      {renderLoading()}
       <div className='userpage-wrapper'>
         {renderMyConversations()}
         {/* <video width='320' height='240' src={myVideo} codecs='avc1.4d002a, mp4a.40.2' controls type='video/mp4' /> */}
