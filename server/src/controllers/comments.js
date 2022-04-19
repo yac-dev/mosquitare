@@ -1,4 +1,6 @@
 import Comment from '../models/comment';
+import Conversation from '../models/conversation';
+import User from '../models/user';
 import nodemailer from 'nodemailer';
 import Message from '../models/message';
 import mongoose from 'mongoose';
@@ -23,35 +25,39 @@ export const createComment = async (request, response) => {
     await comment.save();
     comment = await comment.populate({ path: 'user', select: '_id name flagPics', model: 'User' }); // client側でcreateした後にもpopulateする方法。
 
-    // もう疲れた。いいやここは。
-    // const { senderId, recipientId } = request.params;
-    // console.log(senderId, recipientId);
-    // console.log(request.body.content);
-    // const message = await Message.create({
-    //   sender: senderId,
-    //   recipient: recipientId,
-    //   content: request.body.content,
-    //   read: false,
-    // });
+    const conversation = await Conversation.findById(conversationId);
+    const { users } = conversation;
+    // console.log(users)
 
-    // const sender = await User.findById(senderId);
-    // const recipient = await User.findById(recipientId);
+    // conversationの二人にmailを送る。
+    const sendEmail = async (recipientUserId) => {
+      const message = await Message.create({
+        sender: userId,
+        recipient: recipientUserId,
+        content: content, // commentの内容をそのまま書けばいい。
+        read: false,
+      });
 
-    // const mailOptions = {
-    //   to: recipient.email,
-    //   subject: 'You got a message!',
-    //   html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><p>Please follow the link below to check it out!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
-    // };
+      const sender = await User.findById(userId);
+      const recipient = await User.findById(recipientUserId);
 
-    // console.log(recipient.email);
+      const mailOptions = {
+        to: recipient.email,
+        subject: 'You got a comment!',
+        html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><br><h3>${content}</h3><br><p>Please follow the link below to check it out!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
+      };
 
-    // transporter.sendMail(mailOptions, function (error, info) {
-    //   if (error) {
-    //     console.log(error);
-    //   } else {
-    //     console.log('Email sent: ' + info.response);
-    //   }
-    // });
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
+      });
+    };
+
+    await sendEmail(users[0]._id);
+    await sendEmail(users[1]._id);
 
     response.status(201).json({
       comment,
