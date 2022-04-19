@@ -46,7 +46,7 @@ const Conversation = (props) => {
 
   const onConversationClickNew = (event) => {
     // windowかなここは。props.conversation._idを使って。
-    window.location = `/myconversation/${props.conversation._id}`;
+    window.location = `/myconversation/${props.conversation.users[0]._id}/${props.conversation.users[1]._id}/${props.conversation._id}`;
   };
 
   const renderThumbnails = (userMedias) => {

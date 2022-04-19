@@ -56,31 +56,87 @@ const LanguageStatus = (props) => {
   //   }
   // }, [props.mediaState.callDisconnected]);
 
-  const renderLearningLanguageStatus = () => {
-    return (
-      <div className='learning-lang-wrapper'>
-        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-          Learnning
-        </Typography>
-        <Typography variant='h6' component='div'>
-          {props.countLearningLangLength} words
-        </Typography>
-      </div>
-    );
+  const renderlearningLangWordsStatus = () => {
+    if (props.mediaState.amICalling) {
+      return (
+        <>
+          <div className='learning-lang-wrapper'>
+            <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+              {props.mediaState.exchangingLanguages[0].name}
+            </Typography>
+            <Typography variant='h6' component='div'>
+              {props.countLearningLangLength} words
+            </Typography>
+          </div>
+        </>
+      );
+    } else if (props.mediaState.amIRecieving) {
+      return (
+        <>
+          <div className='learning-lang-wrapper'>
+            <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+              {props.mediaState.exchangingLanguages[1].name}
+            </Typography>
+            <Typography variant='h6' component='div'>
+              {props.countLearningLangLength} words
+            </Typography>
+          </div>
+        </>
+      );
+    }
+  }; // とにかく、左側にlearning langが来る。
+
+  const renderNativeLangWordsStatus = () => {
+    if (props.mediaState.amICalling) {
+      return (
+        <div>
+          <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+            {props.mediaState.exchangingLanguages[1].name}
+          </Typography>
+          <Typography variant='h6' component='div'>
+            {props.countNativeLangLength} words
+          </Typography>
+        </div>
+      );
+    } else if (props.mediaState.amIRecieving) {
+      return (
+        <div>
+          <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+            {props.mediaState.exchangingLanguages[0].name}
+          </Typography>
+          <Typography variant='h6' component='div'>
+            {props.countNativeLangLength} words
+          </Typography>
+        </div>
+      );
+    }
   };
 
-  const renderNativeLanguageStatus = () => {
-    return (
-      <div>
-        <Typography sx={{ mb: 1.5 }} color='text.secondary'>
-          Native
-        </Typography>
-        <Typography variant='h6' component='div'>
-          {props.countNativeLangLength} words
-        </Typography>
-      </div>
-    );
-  };
+  // const renderLearningLanguageStatus = () => {
+  //   return (
+  //     <div className='learning-lang-wrapper'>
+  //       <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+  //         Learnning
+  //       </Typography>
+  //       <Typography variant='h6' component='div'>
+  //         {props.countLearningLangLength} words
+  //       </Typography>
+  //     </div>
+  //   );
+  // };
+
+  // const renderNativeLanguageStatus = () => {
+  //   return (
+  //     <div>
+  //       <Typography sx={{ mb: 1.5 }} color='text.secondary'>
+  //         Native
+  //       </Typography>
+  //       <Typography variant='h6' component='div'>
+  //         {props.countNativeLangLength} words
+  //       </Typography>
+  //     </div>
+  //   );
+  // };
 
   const switchLanguage = () => {
     //言語を切り替えたら、自動でoffになる。
@@ -99,8 +155,8 @@ const LanguageStatus = (props) => {
   return (
     <div className='language-status-wrapper'>
       <div className='language-status'>
-        {renderLearningLanguageStatus()}
-        {renderNativeLanguageStatus()}
+        {renderlearningLangWordsStatus()}
+        {renderNativeLangWordsStatus()}
       </div>
       <div className='switch-language-button'>
         <ThemeProvider theme={theme}>
@@ -111,9 +167,9 @@ const LanguageStatus = (props) => {
             sx={{
               height: { xxs: '20px', xs: '20px', sm: '30px', md: '30px', lg: '40px' },
               fontSize: { xxs: '10px', xs: '10px', sm: '12px', md: '14px', lg: '16px' },
-              backgroundColor: 'rgb(98, 219, 11)',
+              backgroundColor: 'rgb(69, 166, 0)',
               '&:hover': {
-                backgroundColor: 'rgb(135, 255, 48)',
+                backgroundColor: 'rgb(90, 214, 0)',
               },
             }}
           >

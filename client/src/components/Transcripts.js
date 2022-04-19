@@ -26,6 +26,35 @@ const Transcripts = (props) => {
     props.getTranscriptsByConversationIdActionCreator();
   }, []);
 
+  const renderSecondsToTimes = (secs) => {
+    const hours = Math.floor(secs / (60 * 60));
+    const divisorForMinutes = secs % (60 * 60);
+    const minutes = Math.floor(divisorForMinutes / 60);
+
+    const divisorForSeconds = divisorForMinutes % 60;
+    const seconds = Math.ceil(divisorForSeconds);
+
+    const obj = {
+      h: hours,
+      m: minutes,
+      s: seconds,
+    };
+
+    if (obj.hours === 0) {
+      return (
+        <>
+          {obj.minutes}:{obj.seconds}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {obj.hours}:{obj.minutes}:{obj.seconds}
+        </>
+      );
+    }
+  };
+
   const renderTranscripts = () => {
     if (props.transcriptsState.length) {
       const transcriptsList = props.transcriptsState.map((transcript) => {
@@ -40,6 +69,7 @@ const Transcripts = (props) => {
                   <>
                     <Typography component='div' variant='body2' sx={{ color: 'black' }}>
                       {/* &#64; 3:00&nbsp;&nbsp; */}
+                      {renderSecondsToTimes(transcript.seconds)}
                       {transcript.user.name}&nbsp;said
                     </Typography>
                   </>

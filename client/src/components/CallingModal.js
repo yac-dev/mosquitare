@@ -30,6 +30,8 @@ import { answerCallActionCreator1 } from '../actionCreators/mediaActionCreator';
 import { myCallIsAcceptedActionCreator } from '../actionCreators/mediaActionCreator';
 import { rejectCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { gotRejectedMyCallActionCreator } from '../actionCreators/mediaActionCreator';
+// import { openMyModalActionCreator } from '../actionCreators/mediaActionCreator';
+import { openMyModalActionCreatorReciever } from '../actionCreators/mediaActionCreator';
 import history from '../history';
 
 const CancelButton = styled(Button)(({ theme }) => ({
@@ -52,22 +54,27 @@ const CallingModal = (props) => {
   // modal bodyがcallをかけたか受けたかで変わるようにする。
 
   useEffect(() => {
-    // 少なくとも、ここのcomponentでは、refをもたない。refを持つのはfulscreenの方だからね。
-    props.myCallIsAcceptedActionCreator(props.socket, props.setShowCallingModal);
-  }, []);
-
-  useEffect(() => {
     props.gotRejectedMyCallActionCreator(props.socket);
   }, []);
-
-  const handleAnswerCall = () => {
-    props.setShowCallingModal(false);
-    props.answerCallActionCreator1(); // これを閉じて、fullscreenまでは出た。ここでは、callAcceptedをtrueにするだけ。
-  };
 
   const handleRejectCall = () => {
     props.rejectCallActionCreator(props.socket);
     props.setShowCallingModal(false);
+  };
+
+  // useEffect(() => {
+  //   // callAcceptedにして、
+  //   // ここでmodalを開く。
+  //   props.openMyModalActionCreator(props.socket, props.setShowCallingModal, props.setShow1on1);
+  // }, []); // これで、caller側もmodalが開く。
+  // なんで、これを消してcaller側映った？？？
+
+  useEffect(() => {
+    props.openMyModalActionCreatorReciever(props.socket, props.setShowCallingModal, props.setShow1on1);
+  }, []);
+
+  const handleAnswerCall = () => {
+    props.answerCallActionCreator1(props.socket, props.setShowCallingModal, props.setShow1on1);
   };
 
   const switchRender = () => {
@@ -220,7 +227,9 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   answerCallActionCreator1,
-  myCallIsAcceptedActionCreator,
+  // myCallIsAcceptedActionCreator,
   rejectCallActionCreator,
   gotRejectedMyCallActionCreator,
+  // openMyModalActionCreator,
+  openMyModalActionCreatorReciever,
 })(CallingModal);

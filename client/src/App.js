@@ -18,6 +18,7 @@ import UserPageWrapper from './components/UserPage/UserPageWrapper';
 import Review from './components/ReviewForm';
 import AllConversationsWrapper from './components/AllConversationsWrapper';
 import DisplayingConversation from './components/DisplayingConversation';
+import DevelopersInfo from './components/DevelopersInfo';
 // import MapEg from './MapEg';
 
 const App = () => {
@@ -77,7 +78,8 @@ const App = () => {
         <Route path='/userpage/:id' exact component={UserPageWrapper} />
         <Route path='/review' exact component={Review} />
         <Route path='/allvideos' exact component={AllConversationsWrapper} />
-        <Route path='/myconversation/:conversationId' exact component={DisplayingConversation} />
+        <Route path='/myconversation/:user0Id/:user1Id/:conversationId' exact component={DisplayingConversation} />
+        <Route path='/developersinfo' exact component={DevelopersInfo} />
         {/* <Route path='/uservideo/:userid/:conversationid' exact component={ConversationVideo} /> */}
       </Router>
     </div>

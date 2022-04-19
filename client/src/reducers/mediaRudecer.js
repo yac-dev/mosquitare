@@ -36,6 +36,7 @@ const INITIAL_STATE = {
   callDisconnected: false,
   gotRejected: false,
   hangUp: false,
+  callCanceled: false,
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
@@ -80,9 +81,13 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         callingWith: action.payload.recieverUserInfo,
         partnerSignalData: action.payload.partnerSignalData,
       };
+    case 'GET_RECIEVER_USER_INFO':
+      return { ...state, callAccepted: true, callingWith: action.payload };
     case GET_PARTNER_MEDIA:
       return { ...state, partnerVideoStreamObject: action.payload };
     // こんな具合でいんじゃないか。。
+    case 'CALL_CANCELED':
+      return { ...state, callCanceled: true };
     case HANG_UP_CALL:
       return {
         // ...state,

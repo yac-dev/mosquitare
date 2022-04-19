@@ -23,6 +23,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
       };
     // case UPDATE_CONVERSATION_STATE:
     //   return state // これいらないや。
+    case 'UPDATE_ISAVAILABLENOW_TO_FALSE':
+      return { ...state, currentUser: action.payload };
     default:
       return state;
   }

@@ -244,7 +244,7 @@ const VideosWrapper = (props) => {
         });
       } else if (props.mediaState.amICalling) {
         props
-          .completeConnectionWithMyPartnerActionCreator1(myVideoRef, oppositeVideoRef, connectionRef)
+          .completeConnectionWithMyPartnerActionCreator1(props.socket, myVideoRef, oppositeVideoRef, connectionRef)
           .then(() => {
             return props.updateUserConversationStateActionCreator();
           })
@@ -335,6 +335,7 @@ const VideosWrapper = (props) => {
   return (
     <>
       <div className='videos-wrapper'>
+        {renderAlerts()}
         <video className='partner-video' playsInline ref={oppositeVideoRef} autoPlay />
         <Draggable onDrag={handleDrag} cancel='.btn'>
           <div className={`myvideo-wrapper ${openMyScreen ? undefined : 'hidden'}`}>
@@ -445,7 +446,6 @@ const VideosWrapper = (props) => {
           <Button onClick={() => onHangUpClick()}>Finish</Button>
         </Modal.Footer>
       </Modal>
-      {renderAlerts()}
     </>
   );
 };

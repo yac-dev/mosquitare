@@ -44,15 +44,13 @@ import { createUserMedia } from './userMediasActionCreators';
 import { updateConversationUserMediaActionCreator } from './conversationActionCreators';
 import { updateIntegratedUserMediaActionCreator } from './integratedUserMediasActionCreators';
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
+import { mosquitareAPI } from '../apis/mosquitare';
 
 export const getMediaActionCreator = // ここのlearningLanguageとnativeLanguage、最初からこれ入れていいかね。空の文字烈で終わりそうだな。。。まあ実験だ。
 
     (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
-    (dispatch) => {
-      const videoConstrains = {
-        width: { ideal: 480 },
-        height: { ideal: 270 },
-      };
+    (dispatch, getState) => {
+      const videoConstrains = { width: { ideal: 480 }, height: { ideal: 270 } };
       const audioConstraints = {
         autoGainControl: false,
         channelCount: 2,
@@ -63,91 +61,69 @@ export const getMediaActionCreator = // ここのlearningLanguageとnativeLangua
         // sampleSize: 16,
         // volume: 1.0,
       };
-      navigator.mediaDevices.getUserMedia({ video: videoConstrains, audio: audioConstraints }).then((stream) => {
-        dispatch({
-          type: GET_MEDIA,
-          payload: stream,
-        });
-        // 以下record用のsetting。ただそれだけ。
-        // const mime = ['audio/wav', 'audio/mpeg', 'audio/webm', 'audio/ogg'].filter(MediaRecorder.isTypeSupported)[0];
-        // ----------------------
-        // mediaRecorder.current = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
-        // mediaRecorder.current.ondataavailable = function (event) {
-        //   // setChunksForVideo((prevState) => [...prevState, event.data]);
-        //   // setChunksForAudio((prevState) => [...prevState, event.data]);
-        //   chunksForVideo.push(event.data);
-        //   chunksForAudio.push(event.data);
-        //   console.log(chunksForVideo);
-        //   console.log(chunksForAudio);
-        // };
-        // mediaRecorder.current.onstop = (event) => {
-        //   let blobForVideo = new Blob(chunksForVideo, { type: 'video/mp4;' });
-        //   let blobForAudio = new Blob(chunksForAudio, { type: 'audio/webm;codecs=opus' });
-        //   // let blobForLearningLanguage = new Blob([learningLanguageScript], { type: 'text/plain' });
-        //   // let blobForNativeLanguage = new Blob([nativeLanguageScript], { type: 'text/plain' });
+      navigator.mediaDevices
+        .getUserMedia({ video: videoConstrains, audio: audioConstraints })
+        .then((stream) => {
+          // getUserMediaがblockに帰られた時用。
+          // stream.getTracks().forEach(
+          //   (track) =>
+          //     (track.onended = async () => {
+          //       const userId = getState().authState.currentUser._id;
+          //       const result = await mosquitareAPI.patch(`/users/${userId}/isavailablenow`);
+          //       const { user } = result.data;
+          //       dispatch({
+          //         type: 'UPDATE_ISAVAILABLENOW_TO_FALSE',
+          //         payload: user,
+          //       });
+          //     })
+          // );
 
-        //   console.log('record stopped!!!');
-        //   chunksForVideo = [];
-        //   chunksForAudio = [];
-        //   Promise.resolve()
-        //     .then(() => {
-        //       return dispatch(createUserMedia(blobForVideo, blobForAudio));
-        //     }) // ここでconversatonのupdateだね。
-        //     .then((userMedia) => {
-        //       return dispatch(updateConversationUserMediaActionCreator(userMedia));
-        //     })
-        //     // .then((userMedia) => {
-        //     //   return dispatch(updateIntegratedUserMediaActionCreator(userMedia));
-        //     // })
-        //     .then(() => {
-        //       return dispatch(hangUpCallActionCreator(connectionRef));
-        //     })
-        //     .then(() => {
-        //       return dispatch(updateUserConversationToFalseActionCreator());
-        //     });
-        //   // dispatch(createUserMedia(blobForVideo, blobForAudio, connectionRef));
-        //   // ↑createUserMediaをpromisifyすることになるだろう。thenでchainして、integratedの方のupdateとかをやっていくことになるだろう。
-        //   // ここからはapi requestだろう。今回の俺の場合はdatabase、s3に保存することだからね。
-        // };
-      });
+          dispatch({
+            type: GET_MEDIA,
+            payload: stream,
+          });
+        })
+        .catch(async (error) => {
+          // ここでisAvailableをoffにする。
+          // const userId = getState().authState.currentUser._id;
+          // const result = await mosquitareAPI.patch(`/users/${userId}/isavailablenow`);
+          // const { user } = result.data;
+          // dispatch({
+          //   type: 'UPDATE_ISAVAILABLENOW_TO_FALSE',
+          //   payload: user,
+          // });
+        });
     };
 
+// stun serverの設定
+// config: {
+//   iceServers: [
+//     {
+//       urls: 'stun:numb.viagenie.ca',
+//       username: 'sultan1640@gmail.com',
+//       credential: '98376683',
+//     },
+//     {
+//       urls: 'turn:numb.viagenie.ca',
+//       username: 'sultan1640@gmail.com',
+//       credential: '98376683',
+//     },
+//   ],
+// },
 // callする側、worldmapで実行されるやつら。
 export const callActionCreator =
   (socket, mySocketId, oppositeSocketId, exchangingLanguages) => (dispatch, getState) => {
-    // startLanguageはobjectな。
     const { myVideoStreamObject } = getState().mediaState;
     console.log('Im calling...');
     const callerUserInfo = getState().authState.currentUser;
-    // const startLanguage = callerUserInfo.learningLangs[0];
-    // console.log(startLanguage);
-    console.log(exchangingLanguages);
 
-    const peerInitiator = new Peer({
-      initiator: true,
-      stream: myVideoStreamObject,
-      trickle: false,
-      // config: {
-      //   iceServers: [
-      //     {
-      //       urls: 'stun:numb.viagenie.ca',
-      //       username: 'sultan1640@gmail.com',
-      //       credential: '98376683',
-      //     },
-      //     {
-      //       urls: 'turn:numb.viagenie.ca',
-      //       username: 'sultan1640@gmail.com',
-      //       credential: '98376683',
-      //     },
-      //   ],
-      // },
-    });
+    const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
     dispatch({
       type: HOLD_MY_INITIATED_PEER,
       payload: peerInitiator,
     });
     peerInitiator.on('signal', (signalData) => {
-      socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo, exchangingLanguages }); // ここに、callerのdataを加えよう。
+      socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo, exchangingLanguages });
       dispatch({
         type: CALL,
         payload: exchangingLanguages,
@@ -155,43 +131,8 @@ export const callActionCreator =
     });
   };
 
-// callする側、callingModalで実行されるやつら。
-export const myCallIsAcceptedActionCreator = (socket, setShowCallingModal) => (dispatch, getState) => {
-  socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
-    const { peerInitiator } = getState().peerState;
-    console.log('My call is accepted.');
-    const startLanguage = getState().authState.currentUser.learningLangs[0];
-    dispatch({
-      type: MY_CALL_ACCEPTED,
-      payload: {
-        recieverUserInfo: dataFromServer.recieverUserInfo,
-        startLanguage,
-        partnerSignalData: dataFromServer.signalData,
-      },
-    });
-    setShowCallingModal(false);
-  });
-};
-
-// callする側、fullscreenで実行されるやつら。
-export const completeConnectionWithMyPartnerActionCreator1 =
-  (myVideoRef, oppositeVideoRef, connectionRef) => (dispatch, getState) => {
-    const { peerInitiator } = getState().peerState;
-    const { myVideoStreamObject } = getState().mediaState;
-    const { partnerSignalData } = getState().mediaState;
-    const { partnerVideoStreamObject } = getState().mediaState;
-    peerInitiator.signal(partnerSignalData);
-    peerInitiator.on('stream', (stream) => {
-      console.log('INITIATOR on stream should be working');
-      myVideoRef.current.srcObject = myVideoStreamObject;
-      oppositeVideoRef.current.srcObject = stream;
-      connectionRef.current = peerInitiator;
-    });
-    return Promise.resolve();
-  };
-
 // call受ける側、worldmapで実行されるやつら。
-export const listenCallActionCreator = (socket, setShowCallingModal) => (dispatch) => {
+export const listenCallActionCreator = (socket, setShowCallingModal) => (dispatch, getState) => {
   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
     console.log('Somebody calls me.');
     const { signalData, whoIsCalling, callerUserInfo, exchangingLanguages } = dataFromServer;
@@ -201,14 +142,56 @@ export const listenCallActionCreator = (socket, setShowCallingModal) => (dispatc
       type: LISTEN_CALL,
       payload: { signalData, whoIsCalling, callerUserInfo, exchangingLanguages },
     });
+    const { myVideoStreamObject } = getState().mediaState;
+    const peerReciever = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
+    const recieverUserInfo = getState().authState.currentUser;
+    const me = getState().authState.currentUser.socketId;
+    // peerReciever.on('signal', (signalData) => {
+    //   console.log('ifhwoqrifrqiiqhgioehiohfioqrhioioqioo');
+    //   socket.emit(I_ANSWER_THE_CALL, { signalData, whoIsCalling, recieverUserInfo, me });
+    // });
+    dispatch({
+      type: HOLD_MY_INITIATED_PEER,
+      payload: peerReciever,
+    });
   });
 };
 
-// call受ける側、callingmodalで実行されるやつら。
-export const answerCallActionCreator1 = (socket) => (dispatch, getState) => {
+export const answerCallActionCreator1 = (socket, setShowCallingModal, setShow1on1) => (dispatch, getState) => {
+  // const partnerSocketId = getState().mediaState.callingWith.socketId;
+  // socket.emit('HEY_OPEN_YOUR_FULLSCREEN_MODAL_LETS_START', { to: getState().mediaState.callingWith.socketId });
+  // const { peerInitiator } = getState().peerState;
+  const peerReciever = getState().peerState.peer;
+  const recieverUserInfo = getState().authState.currentUser;
+  const { whoIsCalling } = getState().mediaState;
+  const me = getState().authState.currentUser.socketId;
+  // peerReciever.on('signal', (signalData) => {
+  //   console.log('ifhwoqrifrqiiqhgioehiohfioqrhioioqioo');
+  //   socket.emit(I_ANSWER_THE_CALL, { signalData, whoIsCalling, recieverUserInfo, me });
+  // });
+  socket.emit('LETS_OPEN_OUR_FULLSCREEN_MODAL', {
+    to: getState().mediaState.callingWith.socketId,
+    recieverUserInfo: getState().authState.currentUser,
+  }); //ここでrecieveruserinfoを渡していい。下のmyCallAcceptedではなくて。
+  // socket.emit('HEY_OPEN_YOUR_FULLSCREEN_MODAL_LETS_START', { to: getState().mediaState.callingWith.socketId });
+  setShowCallingModal(false);
+  setShow1on1(true);
   dispatch({
     type: ANSWER_CALL,
     payload: '',
+  });
+};
+
+// まあ、本当はcaller。
+export const openMyModalActionCreatorReciever = (socket, setShowCallingModal, setShow1on1) => (dispatch, getState) => {
+  socket.on('I_OPEN_MY_MODAL', (dataFromServer) => {
+    console.log('hey hvuhwqfihqierh');
+    dispatch({
+      type: 'GET_RECIEVER_USER_INFO',
+      payload: dataFromServer.recieverUserInfo,
+    });
+    setShowCallingModal(false);
+    setShow1on1(true);
   });
 };
 
@@ -219,46 +202,50 @@ export const answerCallActionCreator2 =
     const { myVideoStreamObject } = getState().mediaState;
     const { partnerVideoStreamObject } = getState().mediaState;
     const { callerSignal } = getState().mediaState;
-    const recieverUserInfo = getState().authState.currentUser;
+    // const recieverUserInfo = getState().authState.currentUser;
 
-    const { whoIsCalling } = getState().mediaState;
-    const peerReciever = new Peer({
-      initiator: false,
-      stream: myVideoStreamObject,
-      trickle: false,
-      // config: {
-      //   iceServers: [
-      //     {
-      //       urls: 'stun:numb.viagenie.ca',
-      //       username: 'sultan1640@gmail.com',
-      //       credential: '98376683',
-      //     },
-      //     {
-      //       urls: 'turn:numb.viagenie.ca',
-      //       username: 'sultan1640@gmail.com',
-      //       credential: '98376683',
-      //     },
-      //   ],
-      // },
-      // config: {
-      //   iceServers: [
-      //     {
-      //       url: 'stun:stun.l.google.com:19302',
-      //     },
-      //     {
-      //       url: 'turn:18.191.241.72:3478',
-      //       username: 'yosukekoji',
-      //       credential: '123456',
-      //     },
-      //   ],
-      // },
-    });
-    dispatch({
-      type: HOLD_MY_INITIATED_PEER,
-      payload: peerReciever,
-    });
+    // const { whoIsCalling } = getState().mediaState;
+
+    // const peerReciever = new Peer({
+    //   initiator: false,
+    //   stream: myVideoStreamObject,
+    //   trickle: false,
+    //   // config: {
+    //   //   iceServers: [
+    //   //     {
+    //   //       urls: 'stun:numb.viagenie.ca',
+    //   //       username: 'sultan1640@gmail.com',
+    //   //       credential: '98376683',
+    //   //     },
+    //   //     {
+    //   //       urls: 'turn:numb.viagenie.ca',
+    //   //       username: 'sultan1640@gmail.com',
+    //   //       credential: '98376683',
+    //   //     },
+    //   //   ],
+    //   // },
+    //   // config: {
+    //   //   iceServers: [
+    //   //     {
+    //   //       url: 'stun:stun.l.google.com:19302',
+    //   //     },
+    //   //     {
+    //   //       url: 'turn:18.191.241.72:3478',
+    //   //       username: 'yosukekoji',
+    //   //       credential: '123456',
+    //   //     },
+    //   //   ],
+    //   // },
+    // });
+    // dispatch({
+    //   type: HOLD_MY_INITIATED_PEER,
+    //   payload: peerReciever,
+    // });
+    const peerReciever = getState().peerState.peer;
+    //fullscreenになった時に、これが実行されるのか。。。
     peerReciever.on('signal', (signalData) => {
-      socket.emit(I_ANSWER_THE_CALL, { signalData, whoIsCalling, recieverUserInfo });
+      console.log('reciever sending signal????');
+      socket.emit(I_ANSWER_THE_CALL, { signalData, to: getState().mediaState.callingWith.socketId });
     });
 
     peerReciever.on('stream', (stream) => {
@@ -268,26 +255,51 @@ export const answerCallActionCreator2 =
       connectionRef.current = peerReciever;
     });
     peerReciever.signal(callerSignal);
+
     console.log('I answered');
     return Promise.resolve();
   };
 
-export const completeConnectionWithMyPartnerActionCreator =
-  (socket, peerInitiator, myVideoRef, oppositeVideoRef, connectionRef, mediaRecorder) => (dispatch, getState) => {
-    // return new Promise((resolve, reject) => {
+// export const openMyModalActionCreator = (socket, setShowCallingModal, setShow1on1) => (dispatch, getState) => {
+//   socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
+//     console.log('My call is accepted.');
+//     const startLanguage = getState().authState.currentUser.learningLangs[0];
+//     dispatch({
+//       type: MY_CALL_ACCEPTED,
+//       payload: {
+//         recieverUserInfo: dataFromServer.recieverUserInfo,
+//         partnerSignalData: dataFromServer.signalData,
+//       }, // ここでcallAcceptedにする。
+//     });
+//   });
+// };
+
+// callする側、callingModalで実行されるやつら。
+// export const myCallIsAcceptedActionCreator = (socket, setShowCallingModal) => (dispatch, getState) => {
+//   socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
+//     const { peerInitiator } = getState().peerState;
+//     console.log('My call is accepted.');
+//     const startLanguage = getState().authState.currentUser.learningLangs[0];
+//     dispatch({
+//       type: MY_CALL_ACCEPTED,
+//       payload: {
+//         recieverUserInfo: dataFromServer.recieverUserInfo,
+//         startLanguage,
+//         partnerSignalData: dataFromServer.signalData,
+//       },
+//     });
+//   });
+// };
+
+// callする側、fullscreenで実行されるやつら。
+export const completeConnectionWithMyPartnerActionCreator1 =
+  (socket, myVideoRef, oppositeVideoRef, connectionRef) => (dispatch, getState) => {
+    const peerInitiator = getState().peerState.peer;
+    const { myVideoStreamObject } = getState().mediaState;
+    const { partnerSignalData } = getState().mediaState;
+    const { partnerVideoStreamObject } = getState().mediaState;
     socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
-      // このcompleteConnectionっていうacを分解したほうがいいな。socket.onを、fullの方に書く。その後に、acを連ねて書いていく、って言うほうが確実に分かりやすいな。後で直したほうがいい。
-      const { peerInitiator } = getState().peerState;
-      const { myVideoStreamObject } = getState().mediaState;
       console.log('My call is accepted.');
-      const startLanguage = getState().authState.currentUser.learningLangs[0];
-      dispatch({
-        type: CALL_ACCEPTED,
-        payload: {
-          recieverUserInfo: dataFromServer.recieverUserInfo,
-          startLanguage,
-        }, // callが受け入れられたら、相手のinfoとcurrentLanguageを埋める。
-      });
       peerInitiator.signal(dataFromServer.signalData);
       peerInitiator.on('stream', (stream) => {
         myVideoRef.current.srcObject = myVideoStreamObject;
@@ -295,33 +307,75 @@ export const completeConnectionWithMyPartnerActionCreator =
         connectionRef.current = peerInitiator;
         console.log('call accepted??????');
       });
-      Promise.resolve()
-        .then(() => {
-          return dispatch(updateUserConversationStateActionCreator());
-        })
-        .then(() => {
-          return dispatch(startMediaRecorder(mediaRecorder));
-        })
-        .then(() => {
-          return dispatch(createConversationActionCreator(socket)); // 多分ここも分けることになる。
-        })
-        .then(() => {
-          return dispatch(sendConversationIdActionCreator(socket));
-        })
-        .then(() => {
-          return dispatch(updateUserConversationsActionCreator()); // まずは実験。どうなるでしょうか。→だめ。userのinstanceをまんま渡してpatchはうまく動かん見たいだ。
-        });
-      // .then(() => {
-      //   return dispatch(createIntegratedUserMediaActionCreator());
-      // })
-      // .then(() => {
-      //   return dispatch(sendIntegratedUserMediaActionCeator(socket));
-      // })
-      // .then(() => {
-      //   return dispatch(updateConversationIntegratedUserMediaActionCreator());
-      // });
     });
+
+    // peerInitiator.signal(partnerSignalData);
+    // peerInitiator.on('stream', (stream) => {
+    //   console.log('INITIATOR on stream should be working');
+    //   myVideoRef.current.srcObject = myVideoStreamObject;
+    //   oppositeVideoRef.current.srcObject = stream;
+    //   connectionRef.current = peerInitiator;
+    // });
+    return Promise.resolve();
   };
+
+export const callWasCanceldActionCreator = () => {
+  return {
+    type: 'CALL_CANCELED',
+    payload: '',
+  };
+};
+
+// export const completeConnectionWithMyPartnerActionCreator =
+//   (socket, peerInitiator, myVideoRef, oppositeVideoRef, connectionRef, mediaRecorder) => (dispatch, getState) => {
+//     // return new Promise((resolve, reject) => {
+//     socket.on(MY_CALL_IS_ACCEPTED, (dataFromServer) => {
+//       // このcompleteConnectionっていうacを分解したほうがいいな。socket.onを、fullの方に書く。その後に、acを連ねて書いていく、って言うほうが確実に分かりやすいな。後で直したほうがいい。
+//       const peerInitiator = getState().peerState.peer;
+//       const { myVideoStreamObject } = getState().mediaState;
+//       console.log('My call is accepted.');
+//       // const startLanguage = getState().authState.currentUser.learningLangs[0];
+//       // dispatch({
+//       //   type: CALL_ACCEPTED,
+//       //   payload: {
+//       //     recieverUserInfo: dataFromServer.recieverUserInfo,
+//       //     startLanguage,
+//       //   }, // callが受け入れられたら、相手のinfoとcurrentLanguageを埋める。
+//       // });
+//       peerInitiator.signal(dataFromServer.signalData);
+//       peerInitiator.on('stream', (stream) => {
+//         myVideoRef.current.srcObject = myVideoStreamObject;
+//         oppositeVideoRef.current.srcObject = stream;
+//         connectionRef.current = peerInitiator;
+//         console.log('call accepted??????');
+//       });
+//       Promise.resolve()
+//         .then(() => {
+//           return dispatch(updateUserConversationStateActionCreator());
+//         })
+//         .then(() => {
+//           return dispatch(startMediaRecorder(mediaRecorder));
+//         })
+//         .then(() => {
+//           return dispatch(createConversationActionCreator(socket)); // 多分ここも分けることになる。
+//         })
+//         .then(() => {
+//           return dispatch(sendConversationIdActionCreator(socket));
+//         })
+//         .then(() => {
+//           return dispatch(updateUserConversationsActionCreator()); // まずは実験。どうなるでしょうか。→だめ。userのinstanceをまんま渡してpatchはうまく動かん見たいだ。
+//         });
+//       // .then(() => {
+//       //   return dispatch(createIntegratedUserMediaActionCreator());
+//       // })
+//       // .then(() => {
+//       //   return dispatch(sendIntegratedUserMediaActionCeator(socket));
+//       // })
+//       // .then(() => {
+//       //   return dispatch(updateConversationIntegratedUserMediaActionCreator());
+//       // });
+//     });
+//   };
 
 export const startMediaRecorder = (mediaRecorderRef) => (dispatch, getState) => {
   return new Promise((resolve, reject) => {

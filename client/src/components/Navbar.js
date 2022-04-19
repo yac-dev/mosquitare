@@ -57,6 +57,7 @@ import Button from '@mui/material/Button';
 import EmailIcon from '@mui/icons-material/Email';
 import PeopleIcon from '@mui/icons-material/People';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import InfoIcon from '@mui/icons-material/Info';
 
 import SendIcon from '@mui/icons-material/Send';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -264,8 +265,9 @@ const Navbar = (props) => {
         <>
           <Stack direction='row' spacing={2}>
             <Button
-              variant='contained'
+              variant='text'
               startIcon={<BorderColorIcon />}
+              sx={{ color: 'white' }}
               onClick={() => {
                 setShowSignupModal(true);
                 setShowLoginModal(false);
@@ -274,8 +276,9 @@ const Navbar = (props) => {
               Signup
             </Button>
             <Button
-              variant='contained'
+              variant='text'
               startIcon={<LoginIcon />}
+              sx={{ color: 'white' }}
               onClick={() => {
                 setShowLoginModal(true);
                 setShowSignupModal(false);
@@ -384,6 +387,16 @@ const Navbar = (props) => {
               // onClick={() => (window.location = '/worldmap')}
             >
               <TravelExploreIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Developers's Info">
+            <IconButton
+              size='large'
+              aria-label='show 17 new notifications'
+              color='inherit'
+              onClick={() => (window.location = '/developersinfo')}
+            >
+              <InfoIcon />
             </IconButton>
           </Tooltip>
         </>

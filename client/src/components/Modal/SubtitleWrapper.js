@@ -125,7 +125,7 @@ const SubtitleWrapper = (props) => {
       transcriptObject['transcript'] = finalTranscript;
       transcriptObject['user'] = store.getState().authState.currentUser._id;
       transcriptObject['language'] = store.getState().mediaState.currentLanguage._id;
-      transcriptObject['conversation'] = store.getState().conversationState._id;
+      transcriptObject['conversation'] = store.getState().conversationState.conversationId;
       transcriptObject['seconds'] = startSeconds;
       setConversationTranscript((previouState) => [...previouState, transcriptObject]);
       const to = store.getState().mediaState.callingWith.socketId;
@@ -192,7 +192,7 @@ const SubtitleWrapper = (props) => {
       setStartSeconds(seconds);
       console.log('Im sending interim transcript to partner');
       console.log(interimTranscript);
-      const to = store.getState().mediaState.callingWith.socketId;
+      const to = props.mediaState.callingWith.socketId;
       props.socket.emit(I_SEND_MY_INTERIM_TRANSCRIPT_TO_MY_PARTNER, { to, interimTranscript });
     }
   }, [interimTranscript, finalTranscript]);
@@ -247,6 +247,35 @@ const SubtitleWrapper = (props) => {
         break;
       default:
         console.log('nothing');
+    }
+  };
+
+  const renderSecondsToTimes = (secs) => {
+    const hours = Math.floor(secs / (60 * 60));
+    const divisorForMinutes = secs % (60 * 60);
+    const minutes = Math.floor(divisorForMinutes / 60);
+
+    const divisorForSeconds = divisorForMinutes % 60;
+    const seconds = Math.ceil(divisorForSeconds);
+
+    const obj = {
+      h: hours,
+      m: minutes,
+      s: seconds,
+    };
+
+    if (obj.hours === 0) {
+      return (
+        <>
+          {obj.minutes}:{obj.seconds}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {obj.hours}:{obj.minutes}:{obj.seconds}
+        </>
+      );
     }
   };
 
@@ -322,7 +351,8 @@ const SubtitleWrapper = (props) => {
       if (conversationTranscript.user === store.getState().authState.currentUser._id) {
         return (
           <>
-            <span>You: {conversationTranscript.transcript}</span>&nbsp;<span>{conversationTranscript.seconds}</span>
+            <span>You: {conversationTranscript.transcript}</span>&nbsp;
+            {renderSecondsToTimes(conversationTranscript.seconds)}
             &nbsp;
             <Tooltip title='translate'>
               <TranslateTranscript translateInput={conversationTranscript.transcript} />
@@ -335,7 +365,7 @@ const SubtitleWrapper = (props) => {
             <span>
               {store.getState().mediaState.callingWith.name}: {conversationTranscript.transcript}
             </span>
-            &nbsp;<span>{conversationTranscript.seconds}</span>
+            &nbsp;{renderSecondsToTimes(conversationTranscript.seconds)}
             &nbsp;
             <Tooltip title='translate'>
               <TranslateTranscript translateInput={conversationTranscript.transcript} />
@@ -504,7 +534,7 @@ const SubtitleWrapper = (props) => {
         > */}
       {/* <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp; */}
       {/* {renderSwitchLangButton()} */}
-      {seconds}
+      {/* {seconds} */}
       {renderTranscripts()}
       {renderPartnerInterimTranscript()}
       {renderMyInterimTranscript()}

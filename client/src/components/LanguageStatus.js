@@ -73,8 +73,8 @@ const LanguageStatus = (props) => {
           <CloseIcon />
         </CloseIconButton>
         <div>Your Language Status</div>
-        <p>Learning: {props.countLearningLangLength} words</p>
-        <p>Native: {props.countNativeLangLength} words</p>
+        {/* <p>Learning: {props.countLearningLangLength} words</p>
+        <p>Native: {props.countNativeLangLength} words</p> */}
         {/* {renderStatus()} */}
         <Button
           variant='contained'

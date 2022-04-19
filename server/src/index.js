@@ -92,25 +92,48 @@ const docDefaultValue = '';
 io.on('connection', (socket) => {
   socket.emit(I_GOT_SOCKET_ID, socket.id);
 
-  socket.on(I_CALL_SOMEBODY, (dataFromCaller) => {
+  socket.on(I_CALL_SOMEBODY, async (dataFromCaller) => {
     // console.log(dataFromCaller);
     // console.log('server?????');
     // console.log(dataFromCaller.oppositeSocketId);
     // console.log(dataFromCaller);
-    io.to(dataFromCaller.oppositeSocketId).emit(SOMEBODY_CALLS_ME, {
-      signalData: dataFromCaller.signalData,
-      whoIsCalling: dataFromCaller.mySocketId,
-      callerUserInfo: dataFromCaller.callerUserInfo,
-      exchangingLanguages: dataFromCaller.exchangingLanguages,
-    });
+    const user = await User.find({ socketId: dataFromCaller.to });
+    if (user.isInConversation) {
+      io.to(dataFromReject.to).emit(MY_CALL_IS_REJECTED, {
+        message: dataFromReject.message,
+      });
+    } else {
+      io.to(dataFromCaller.oppositeSocketId).emit(SOMEBODY_CALLS_ME, {
+        signalData: dataFromCaller.signalData,
+        whoIsCalling: dataFromCaller.mySocketId,
+        callerUserInfo: dataFromCaller.callerUserInfo,
+        exchangingLanguages: dataFromCaller.exchangingLanguages,
+      });
+    }
   });
 
-  socket.on(I_ANSWER_THE_CALL, (dataFromAnswerer) => {
-    console.log(dataFromAnswerer);
-    io.to(dataFromAnswerer.whoIsCalling).emit(MY_CALL_IS_ACCEPTED, {
+  socket.on('HEY_OPEN_YOUR_FULLSCREEN_MODAL_LETS_START', (dataFromReciever) => {
+    console.log('coming in server????');
+    io.to(dataFromReciever.to).emit('I_GOT_OPEN_YOUR_MODAL_FROM_RECIEVER', {});
+  });
+
+  socket.on('LETS_OPEN_OUR_FULLSCREEN_MODAL', (dataFromCaller) => {
+    io.to(dataFromCaller.to).emit('I_OPEN_MY_MODAL', { recieverUserInfo: dataFromCaller.recieverUserInfo });
+  });
+
+  socket.on(I_ANSWER_THE_CALL, async (dataFromAnswerer) => {
+    console.log('signal data from reciever??');
+    // console.log(dataFromAnswerer);
+    // const user = await User.find({ socketId: dataFromAnswerer.whoIsCalling });
+    // if (!io.sockets[dataFromAnswerer.whoIsCalling]) {
+    //   console.log('ooooooooooosp cancellll');
+    //   io.to(dataFromAnswerer.me).emit('OOPS_CALLER_CANCELED_THE_CALL', {});
+    // } else { // 一回ここははすぞう。
+    io.to(dataFromAnswerer.to).emit(MY_CALL_IS_ACCEPTED, {
       signalData: dataFromAnswerer.signalData,
-      recieverUserInfo: dataFromAnswerer.recieverUserInfo,
+      // recieverUserInfo: dataFromAnswerer.recieverUserInfo,
     });
+    // }
   });
 
   socket.on(SORRY_I_DONT_WANNA_CHAT_WITH_YOU, (dataFromReject) => {

@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
@@ -104,6 +105,7 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 
 // propsでconversationが来る。
 const DisplayVideo = (props) => {
+  const { user0Id, user1Id } = useParams();
   const [loaded, setLoaded] = useState(0);
   // const refForPlayingVideo1 = useRef();
   // const refForPlayingVideo2 = useRef();
@@ -217,9 +219,15 @@ const DisplayVideo = (props) => {
 
   const setToPrivate = () => {
     if (props.conversation.isPublic) {
-      props.setToPrivateActionCreator(props.conversation._id);
-      setShow(false);
-      // window.location = `/myconversation/${props.conversation._id}`; //display videoのページに戻ってくるってやりたいね。
+      if (
+        JSON.stringify(user0Id) === JSON.stringify(props.authState.currentUser._id) ||
+        JSON.stringify(user1Id) === JSON.stringify(props.authState.currentUser._id)
+      ) {
+        props.setToPrivateActionCreator(props.conversation._id);
+        setShow(false);
+      } else {
+        props.alertActionCreator("You don't have a permission to change this conversation setting.", 'error');
+      }
     } else {
       console.log('No way');
     }
@@ -229,6 +237,17 @@ const DisplayVideo = (props) => {
     if (!props.conversation.isPublic) {
     } else {
       console.log('no way');
+    }
+  };
+
+  const onPublicOrPrivateClick = () => {
+    if (
+      JSON.stringify(user0Id) === JSON.stringify(props.authState.currentUser._id) ||
+      JSON.stringify(user1Id) === JSON.stringify(props.authState.currentUser._id)
+    ) {
+      setShow(true);
+    } else {
+      props.alertActionCreator("You don't have a permission to change this conversation setting.", 'error');
     }
   };
 
@@ -325,7 +344,7 @@ const DisplayVideo = (props) => {
               </IconButton>
               {props.conversation.createdAt}
             </div>
-            {renderPublicOrPrivate()}
+            {/* {renderPublicOrPrivate()} */}
           </div>
         </div>
         <video

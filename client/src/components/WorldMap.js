@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 import ReactMapGL from 'react-map-gl';
+import store from '../store';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 import { Button } from 'semantic-ui-react';
@@ -177,11 +178,17 @@ const WorldMap = (props) => {
         props.loadMeAndUpdateActionCreator(localStorage.getItem('mosquitare token'), socketIdFromServer).then(() => {
           props.getUsersActionCreator();
         });
+
         props.getMediaActionCreator();
         props.listenCallActionCreator(socket, setShowCallingModal);
       });
     }
   }, [socket]);
+
+  // useEffect(() => {
+  //   if (props.authState.currentUser._id) {
+  //   }
+  // }, [props.authState.currentUser]);
 
   // page refreshした時どうしようか。。。
 
@@ -218,14 +225,20 @@ const WorldMap = (props) => {
     setInterval(() => props.getUsersActionCreator(), 7000);
   }, []);
 
+  // useEffect(() => {
+  //   // CallingModal componentでmodalを閉じてから、callAcceptedをonにしてこれが動く。
+  //   if (props.mediaState.callAccepted) {
+  //     setFullscreen1on1Modal(true);
+  //     setShow1on1(true);
+  //     const partnerSOcketId = props.mediaState.callingWith.socketId;
+  //     // ここで、相手に「お前のmodalを開け」っていうsocket eventを相手に発する。相手も、これがきたらmodalを開く感じよ。
+  //     socket.emit('HEY_OPEN_YOUR_FULLSCREEN_MODAL_LETS_START', { to: partnerSOcketId }); //というか、お前の方もcallAcceptedに今すぐしろ、っていうsocket evtnを送る必要がる。
+  //   }
+  // }, [props.mediaState.callAccepted]);
+
   useEffect(() => {
-    // CallingModal componentでmodalを閉じてから、callAcceptedをonにしてこれが動く。
-    if (props.mediaState.callAccepted) {
-      setFullscreen1on1Modal(true);
-      setShow1on1(true);
-      // ここで、相手に「お前のmodalを開け」っていうsocket eventを相手に発する。相手も、これがきたらmodalを開く感じよ。
-    }
-  }, [props.mediaState.callAccepted]);
+    // socket.on('YOUR_CALL_IS_ACCEPTED',)
+  }, []);
 
   const onCallClick = (event, oppositeSocketId) => {
     event.preventDefault();
@@ -327,7 +340,13 @@ const WorldMap = (props) => {
                 /> */}
               </ReactMapGL>
               {/* {renderMap()} */}
-              <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+              <CallingModal
+                socket={socket}
+                show={showCallingModal}
+                setShowCallingModal={setShowCallingModal}
+                show1on1={show1on1}
+                setShow1on1={setShow1on1}
+              />
               <FullScreen1on1Modal
                 socket={socket}
                 show1on1={show1on1}

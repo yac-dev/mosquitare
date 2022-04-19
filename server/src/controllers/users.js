@@ -185,6 +185,9 @@ export const login = async (request, response) => {
     // user.location = location; 一旦これはなし。
     // user.socketId = socketId;
     user.isAvailableNow = true;
+    if (user.isInConversation) {
+      user.isInConversation = false;
+    }
     await user.save({ validateBeforeSave: false });
 
     response.json({
@@ -227,6 +230,9 @@ export const loadMeAndUpdate = async (request, response) => {
     user.socketId = request.body.socketId;
     if (!user.isAvailableNow) {
       user.isAvailableNow = true;
+    }
+    if (user.isInConversation) {
+      user.isInConversation = false;
     }
     await user.save({ validateBeforeSave: false });
     response.json({ user });
@@ -388,4 +394,17 @@ export const updateLangsStatus = async (request, response) => {
   response.status(200).json({
     user,
   });
+};
+
+export const updateIsAvailableToFalse = async (request, response) => {
+  try {
+    const user = await User.findById(request.params.id);
+    user.isAvailableNow = false;
+    await user.save({ validateBeforeSave: false });
+    response.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

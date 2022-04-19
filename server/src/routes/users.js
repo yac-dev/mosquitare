@@ -13,6 +13,7 @@ import {
   logout,
   updateConversation,
   updateLangsStatus,
+  updateIsAvailableToFalse,
 } from '../controllers/users';
 import { authorization } from '../middlewares/authorization';
 
@@ -30,6 +31,7 @@ router.patch('/loadmeandupdate', authorization, loadMeAndUpdate);
 router.get('/', getUsers);
 router.patch('/:id/logout', logout);
 router.patch('/:id', updateUsersSocketId); // ここも。
+router.patch('/:id/isavailablenow', updateIsAvailableToFalse);
 
 router.patch('/:id/langsstatus', updateLangsStatus);
 

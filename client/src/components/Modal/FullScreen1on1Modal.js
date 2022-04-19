@@ -7,6 +7,7 @@ import { Modal } from 'react-bootstrap';
 // mui
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 
 // components
 import MediaRecorder from '../MediaRecord';
@@ -23,6 +24,9 @@ import AppsWrapper from '../ConversationApps/AppsWrapper';
 
 // css
 import '../../styles/1on1.css';
+
+//ac
+import { callWasCanceldActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -59,6 +63,12 @@ const FullScreen1on1Modal = (props) => {
   const [openLanguageStatusAndTranscript, setOpenLanguageStatusAndTranscript] = useState(false);
   const [openDoc, setOpenDoc] = useState(false);
   const [openPartnerUserInfo, setOpenPartnerUserInfo] = useState(false);
+  const [showCanceledModal, setShowCanceledModal] = useState(false);
+
+  // useEffect(() => {
+  //   // 少なくとも、ここのcomponentでは、refをもたない。refを持つのはfulscreenの方だからね。
+  //   props.myCallIsAcceptedActionCreator(props.socket, props.setShowCallingModal);
+  // }, []);
 
   const handleClick = () => {
     setOpen(true);
@@ -81,146 +91,225 @@ const FullScreen1on1Modal = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    props.socket.on('OOPS_CALLER_CANCELED_THE_CALL', () => {
+      props.callWasCanceldActionCreator();
+      props.setShow1on1(false);
+      setShowCanceledModal(true);
+    });
+  }, []);
+
+  const renderModalBody = () => {
+    if (props.mediaState.callAccepted) {
+      return (
+        <>
+          <VideosWrapper
+            show1on1={props.show1on1}
+            setShow1on1={props.setShow1on1}
+            socket={props.socket}
+            // setOpenChatComponent={setOpenChatComponent}
+            // setOpenTranscriptComponent={setOpenTranscriptComponent}
+            // setOpenLanguageStatus={setOpenLanguageStatus}
+            setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
+            setOpenDoc={setOpenDoc}
+            setOpenPartnerUserInfo={setOpenPartnerUserInfo}
+            setShowAfterFinishingModal={props.setShowAfterFinishingModal}
+          />
+          {/* <MediaRecorder />
+          <LanguageStatusAndTranscript
+            socket={props.socket}
+            countLearningLangLength={countLearningLangLength}
+            countNativeLangLength={countNativeLangLength}
+            setCountLearningLangLength={setCountLearningLangLength}
+            setCountNativeLangLength={setCountNativeLangLength}
+            setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
+            openLanguageStatusAndTranscript={openLanguageStatusAndTranscript}
+          />
+          <DocEditor socket={props.socket} openDoc={openDoc} setOpenDoc={setOpenDoc} /> */}
+          <PartnerUserInfo openPartnerUserInfo={openPartnerUserInfo} setOpenPartnerUserInfo={setOpenPartnerUserInfo} />
+        </>
+      );
+    }
+  };
+
   // callAcceptedの時だけ、これをrenderするっていう感じだ。
   const screenRender = () => {
     // if (props.mediaState.callAccepted) {
-    return (
-      <>
-        <Modal
-          show={props.show1on1}
-          fullscreen={props.fullscreen1on1Modal}
-          onHide={() => props.setShow1on1(false)}
-          // style={{ backgroundColor: 'black' }}
-        >
-          {/* 単純に、propsでstyling用のwidthをvideos wrapperとverticalTabsWrapperそれぞれに渡せばいいや。*/}
-          <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
-            <MediaRecorder />
-            {/* <MyClock /> */}
-            <VideosWrapper
-              show1on1={props.show1on1}
-              setShow1on1={props.setShow1on1}
-              socket={props.socket}
-              // setOpenChatComponent={setOpenChatComponent}
-              // setOpenTranscriptComponent={setOpenTranscriptComponent}
-              // setOpenLanguageStatus={setOpenLanguageStatus}
-              setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
-              setOpenDoc={setOpenDoc}
-              setOpenPartnerUserInfo={setOpenPartnerUserInfo}
-              setShowAfterFinishingModal={props.setShowAfterFinishingModal}
-            />
-            <LanguageStatusAndTranscript
-              socket={props.socket}
-              countLearningLangLength={countLearningLangLength}
-              countNativeLangLength={countNativeLangLength}
-              setCountLearningLangLength={setCountLearningLangLength}
-              setCountNativeLangLength={setCountNativeLangLength}
-              setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
-              openLanguageStatusAndTranscript={openLanguageStatusAndTranscript}
-            />
-            <DocEditor socket={props.socket} openDoc={openDoc} setOpenDoc={setOpenDoc} />
-            <PartnerUserInfo
-              openPartnerUserInfo={openPartnerUserInfo}
-              setOpenPartnerUserInfo={setOpenPartnerUserInfo}
-            />
+    if (!props.mediaState.callCanceled) {
+      return (
+        <>
+          <Modal
+            show={props.show1on1}
+            fullscreen={props.fullscreen1on1Modal}
+            onHide={() => props.setShow1on1(false)}
+            // style={{ backgroundColor: 'black' }}
+          >
+            {/* 単純に、propsでstyling用のwidthをvideos wrapperとverticalTabsWrapperそれぞれに渡せばいいや。*/}
+            <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
+              {renderModalBody()}
+              <MediaRecorder />
+              <LanguageStatusAndTranscript
+                socket={props.socket}
+                countLearningLangLength={countLearningLangLength}
+                countNativeLangLength={countNativeLangLength}
+                setCountLearningLangLength={setCountLearningLangLength}
+                setCountNativeLangLength={setCountNativeLangLength}
+                setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
+                openLanguageStatusAndTranscript={openLanguageStatusAndTranscript}
+              />
+              <DocEditor socket={props.socket} openDoc={openDoc} setOpenDoc={setOpenDoc} />
+            </Modal.Body>
+
+            {/* <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
+              <MediaRecorder />
+              <VideosWrapper
+                show1on1={props.show1on1}
+                setShow1on1={props.setShow1on1}
+                socket={props.socket}
+                // setOpenChatComponent={setOpenChatComponent}
+                // setOpenTranscriptComponent={setOpenTranscriptComponent}
+                // setOpenLanguageStatus={setOpenLanguageStatus}
+                setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
+                setOpenDoc={setOpenDoc}
+                setOpenPartnerUserInfo={setOpenPartnerUserInfo}
+                setShowAfterFinishingModal={props.setShowAfterFinishingModal}
+              />
+              <LanguageStatusAndTranscript
+                socket={props.socket}
+                countLearningLangLength={countLearningLangLength}
+                countNativeLangLength={countNativeLangLength}
+                setCountLearningLangLength={setCountLearningLangLength}
+                setCountNativeLangLength={setCountNativeLangLength}
+                setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
+                openLanguageStatusAndTranscript={openLanguageStatusAndTranscript}
+              />
+              <DocEditor socket={props.socket} openDoc={openDoc} setOpenDoc={setOpenDoc} />
+              <PartnerUserInfo
+                openPartnerUserInfo={openPartnerUserInfo}
+                setOpenPartnerUserInfo={setOpenPartnerUserInfo}
+              /> */}
             {/* <Chat
-              socket={props.socket}
-              openChatComponent={openChatComponent}
-              setOpenChatComponent={setOpenChatComponent}
-            /> */}
+                socket={props.socket}
+                openChatComponent={openChatComponent}
+                setOpenChatComponent={setOpenChatComponent}
+              /> */}
             {/* <SubtitleWrapper
-              socket={props.socket}
-              openTranscriptComponent={openTranscriptComponent}
-              setOpenTranscriptComponent={setOpenTranscriptComponent}
-              setCountLearningLangLength={setCountLearningLangLength}
-              setCountNativeLangLength={setCountNativeLangLength}
-            /> */}
+                socket={props.socket}
+                openTranscriptComponent={openTranscriptComponent}
+                setOpenTranscriptComponent={setOpenTranscriptComponent}
+                setCountLearningLangLength={setCountLearningLangLength}
+                setCountNativeLangLength={setCountNativeLangLength}
+              /> */}
             {/* <LanguageStatus
-              socket={props.socket}
-              countLearningLangLength={countLearningLangLength}
-              countNativeLangLength={countNativeLangLength}
-              openLanguageStatus={openLanguageStatus}
-              setOpenLanguageStatus={setOpenLanguageStatus}
-            /> */}
+                socket={props.socket}
+                countLearningLangLength={countLearningLangLength}
+                countNativeLangLength={countNativeLangLength}
+                openLanguageStatus={openLanguageStatus}
+                setOpenLanguageStatus={setOpenLanguageStatus}
+              /> */}
             {/* <AppsWrapper /> */}
-          </Modal.Body>
-        </Modal>
-      </>
-      // <>
-      //   <Desktop>
-      //     <Modal
-      //       show={props.show1on1}
-      //       fullscreen={props.fullscreen1on1Modal}
-      //       onHide={() => props.setShow1on1(false)}
-      //       // style={{ backgroundColor: 'black' }}
-      //     >
-      //       {/* 単純に、propsでstyling用のwidthをvideos wrapperとverticalTabsWrapperそれぞれに渡せばいいや。*/}
-      //       <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
-      //         <MediaRecorder />
-      //         {/* <MyClock /> */}
-      //         <VideosWrapper
-      //           show1on1={props.show1on1}
-      //           setShow1on1={props.setShow1on1}
-      //           socket={props.socket}
-      //           setOpenChatComponent={setOpenChatComponent}
-      //           setOpenTranscriptComponent={setOpenTranscriptComponent}
-      //           setOpenLanguageStatus={setOpenLanguageStatus}
-      //         />
-      //         <Chat
-      //           socket={props.socket}
-      //           openChatComponent={openChatComponent}
-      //           setOpenChatComponent={setOpenChatComponent}
-      //         />
-      //         <SubtitleWrapper
-      //           socket={props.socket}
-      //           openTranscriptComponent={openTranscriptComponent}
-      //           setOpenTranscriptComponent={setOpenTranscriptComponent}
-      //           setCountLearningLangLength={setCountLearningLangLength}
-      //           setCountNativeLangLength={setCountNativeLangLength}
-      //         />
-      //         <LanguageStatus
-      //           countLearningLangLength={countLearningLangLength}
-      //           countNativeLangLength={countNativeLangLength}
-      //           openLanguageStatus={openLanguageStatus}
-      //           setOpenLanguageStatus={setOpenLanguageStatus}
-      //         />
-      //         {/* <AppsWrapper /> */}
-      //       </Modal.Body>
-      //     </Modal>
-      //   </Desktop>
+            {/* </Modal.Body> */}
+          </Modal>
+        </>
+        // <>
+        //   <Desktop>
+        //     <Modal
+        //       show={props.show1on1}
+        //       fullscreen={props.fullscreen1on1Modal}
+        //       onHide={() => props.setShow1on1(false)}
+        //       // style={{ backgroundColor: 'black' }}
+        //     >
+        //       {/* 単純に、propsでstyling用のwidthをvideos wrapperとverticalTabsWrapperそれぞれに渡せばいいや。*/}
+        //       <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
+        //         <MediaRecorder />
+        //         {/* <MyClock /> */}
+        //         <VideosWrapper
+        //           show1on1={props.show1on1}
+        //           setShow1on1={props.setShow1on1}
+        //           socket={props.socket}
+        //           setOpenChatComponent={setOpenChatComponent}
+        //           setOpenTranscriptComponent={setOpenTranscriptComponent}
+        //           setOpenLanguageStatus={setOpenLanguageStatus}
+        //         />
+        //         <Chat
+        //           socket={props.socket}
+        //           openChatComponent={openChatComponent}
+        //           setOpenChatComponent={setOpenChatComponent}
+        //         />
+        //         <SubtitleWrapper
+        //           socket={props.socket}
+        //           openTranscriptComponent={openTranscriptComponent}
+        //           setOpenTranscriptComponent={setOpenTranscriptComponent}
+        //           setCountLearningLangLength={setCountLearningLangLength}
+        //           setCountNativeLangLength={setCountNativeLangLength}
+        //         />
+        //         <LanguageStatus
+        //           countLearningLangLength={countLearningLangLength}
+        //           countNativeLangLength={countNativeLangLength}
+        //           openLanguageStatus={openLanguageStatus}
+        //           setOpenLanguageStatus={setOpenLanguageStatus}
+        //         />
+        //         {/* <AppsWrapper /> */}
+        //       </Modal.Body>
+        //     </Modal>
+        //   </Desktop>
 
-      //   <Tablet>
-      //     <Modal
-      //       show={props.show1on1}
-      //       fullscreen={props.fullscreen1on1Modal}
-      //       onHide={() => props.setShow1on1(false)}
-      //       // style={{ backgroundColor: 'black' }}
-      //     >
-      //       <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
-      //         {/* <MediaRecorder /> */}
-      //         <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
-      //         {/* <VerticalTabsWrapper socket={props.socket} /> */}
-      //         {/* <AppsWrapper /> */}
-      //       </Modal.Body>
-      //     </Modal>
-      //   </Tablet>
+        //   <Tablet>
+        //     <Modal
+        //       show={props.show1on1}
+        //       fullscreen={props.fullscreen1on1Modal}
+        //       onHide={() => props.setShow1on1(false)}
+        //       // style={{ backgroundColor: 'black' }}
+        //     >
+        //       <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
+        //         {/* <MediaRecorder /> */}
+        //         <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
+        //         {/* <VerticalTabsWrapper socket={props.socket} /> */}
+        //         {/* <AppsWrapper /> */}
+        //       </Modal.Body>
+        //     </Modal>
+        //   </Tablet>
 
-      //   <Mobile>
-      //     <Modal
-      //       show={props.show1on1}
-      //       fullscreen={props.fullscreen1on1Modal}
-      //       onHide={() => props.setShow1on1(false)}
-      //       // style={{ backgroundColor: 'black' }}
-      //     >
-      //       <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
-      //         {/* <MediaRecorder /> */}
-      //         <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
-      //         {/* <VerticalTabsWrapper socket={props.socket} /> */}
-      //         {/* <AppsWrapper /> */}
-      //       </Modal.Body>
-      //     </Modal>
-      //   </Mobile>
-      // </>
-    );
+        //   <Mobile>
+        //     <Modal
+        //       show={props.show1on1}
+        //       fullscreen={props.fullscreen1on1Modal}
+        //       onHide={() => props.setShow1on1(false)}
+        //       // style={{ backgroundColor: 'black' }}
+        //     >
+        //       <Modal.Body bsPrefix='fullscreen1on1-modal-body'>
+        //         {/* <MediaRecorder /> */}
+        //         <VideosWrapper show1on1={props.show1on1} setShow1on1={props.setShow1on1} socket={props.socket} />
+        //         {/* <VerticalTabsWrapper socket={props.socket} /> */}
+        //         {/* <AppsWrapper /> */}
+        //       </Modal.Body>
+        //     </Modal>
+        //   </Mobile>
+        // </>
+      );
+    } else {
+      // ここで、OOPSで'your partner canceled the call'のmodalを出して、閉じるボタンを出してpage reloadさせてあげる。
+      return (
+        <>
+          <Modal show={showCanceledModal} backdrop='static' keyboard={false}>
+            <Modal.Body bsPrefix='calling-modal-body'>
+              <div style={{ color: 'black' }}>OOPS... Your partner canceled this call.</div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant='contained'
+                onClick={() => {
+                  setShowCanceledModal(false);
+                  window.location = '/worldmap'; // まあこれでいいのかね。
+                }}
+              >
+                Finish this call
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </>
+      );
+    }
     // } else {
     //   return null;
     // }
@@ -233,4 +322,4 @@ const mapStateToProps = (state) => {
   return { mediaState: state.mediaState, authState: state.authState };
 };
 
-export default connect(mapStateToProps, {})(FullScreen1on1Modal);
+export default connect(mapStateToProps, { callWasCanceldActionCreator })(FullScreen1on1Modal);
