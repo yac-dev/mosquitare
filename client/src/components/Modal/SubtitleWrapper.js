@@ -6,8 +6,9 @@ import { createSpeechlySpeechRecognition } from '@speechly/speech-recognition-po
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 
-// ac
+// component
 import TranslateTranscript from '../TranslateTranscript';
+import TranslatedText from './TranslatedText';
 
 // mui
 import Tooltip from '@mui/material/Tooltip';
@@ -17,6 +18,14 @@ import Stack from '@mui/material/Stack';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/system';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
+
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Typography from '@mui/material/Typography';
 
 // socket event
 import {
@@ -61,6 +70,7 @@ const CloseIconButton = styled(IconButton)(({ theme }) => ({
 // SpeechRecognition.applyPolyfill(SpeechlySpeechRecognition);
 
 const SubtitleWrapper = (props) => {
+  const [googleTranslated, setGoogleTranslated] = useState('');
   const [conversationTranscript, setConversationTranscript] = useState([]);
   const [myLearningLangTranscript, setMyLearningLangTranscript] = useState([]);
   const [myNativeLangTranscript, setMyNativeLangTranscript] = useState([]);
@@ -124,6 +134,7 @@ const SubtitleWrapper = (props) => {
       const transcriptObject = {};
       transcriptObject['transcript'] = finalTranscript;
       transcriptObject['user'] = store.getState().authState.currentUser._id;
+      transcriptObject['name'] = store.getState().authState.currentUser.name;
       transcriptObject['language'] = store.getState().mediaState.currentLanguage._id;
       transcriptObject['conversation'] = store.getState().conversationState.conversationId;
       transcriptObject['seconds'] = startSeconds;
@@ -264,16 +275,20 @@ const SubtitleWrapper = (props) => {
       s: seconds,
     };
 
-    if (obj.hours === 0) {
+    if (obj.h === 0) {
       return (
         <>
-          {obj.minutes}:{obj.seconds}
+          <span style={{ color: 'rgb(37, 95, 184)' }}>
+            @{obj.m}:{obj.s}
+          </span>
         </>
       );
     } else {
       return (
         <>
-          {obj.hours}:{obj.minutes}:{obj.seconds}
+          <span style={{ color: 'rgb(37, 95, 184)' }}>
+            @{obj.h}:{obj.m}:{obj.s}
+          </span>
         </>
       );
     }
@@ -346,37 +361,110 @@ const SubtitleWrapper = (props) => {
   //   }
   // }, [props.mediaState.callDisconnected]);
 
-  const renderTranscripts = () => {
+  const renderGoogleTranslated = () => {
+    if (googleTranslated) {
+      return <span>{googleTranslated}</span>;
+    } else {
+      return null;
+    }
+  };
+
+  const renderName = (conversationTranscript) => {
+    if (conversationTranscript.user === store.getState().authState.currentUser._id) {
+      return <>You</>;
+    } else if (conversationTranscript.user === store.getState().mediaState.callingWith._id) {
+      return <>{conversationTranscript.name}</>;
+    }
+  };
+
+  const renderTranscriptsNew = () => {
     const transcriptList = conversationTranscript.map((conversationTranscript) => {
-      if (conversationTranscript.user === store.getState().authState.currentUser._id) {
-        return (
-          <>
-            <span>You: {conversationTranscript.transcript}</span>&nbsp;
-            {renderSecondsToTimes(conversationTranscript.seconds)}
-            &nbsp;
-            <Tooltip title='translate'>
-              <TranslateTranscript translateInput={conversationTranscript.transcript} />
-            </Tooltip>
-          </>
-        );
-      } else if (conversationTranscript.user === store.getState().mediaState.callingWith._id) {
-        return (
-          <>
-            <span>
-              {store.getState().mediaState.callingWith.name}: {conversationTranscript.transcript}
-            </span>
-            &nbsp;{renderSecondsToTimes(conversationTranscript.seconds)}
-            &nbsp;
-            <Tooltip title='translate'>
-              <TranslateTranscript translateInput={conversationTranscript.transcript} />
-            </Tooltip>
-          </>
-        );
-      }
+      return (
+        <>
+          <ListItem
+            alignItems='flex-start'
+            secondaryAction={
+              <Tooltip title='translate'>
+                <IconButton edge='end'>
+                  <TranslateTranscript
+                    translateInput={conversationTranscript.transcript}
+                    setGoogleTranslated={setGoogleTranslated}
+                  />
+                </IconButton>
+              </Tooltip>
+            }
+          >
+            <ListItemAvatar>
+              <Avatar alt={`${conversationTranscript.name}`} />
+            </ListItemAvatar>
+            <ListItemText
+              primary={
+                <>
+                  <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+                    {renderName(conversationTranscript)}&nbsp;
+                    {renderSecondsToTimes(conversationTranscript.seconds)}
+                  </Typography>
+                </>
+              }
+              secondary={
+                <>
+                  <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+                    {conversationTranscript.transcript}
+                    <TranslatedText googleTranslated={googleTranslated} />
+                    {/* <Tooltip title='translate'>
+                      <IconButton edge='end'>
+                        <TranslateTranscript translateInput={conversationTranscript.transcript} />
+                      </IconButton>
+                    </Tooltip> */}
+                  </Typography>
+                </>
+              }
+            />
+          </ListItem>
+          <Divider variant='inset' component='li' />
+        </>
+      );
     });
 
-    return <>{transcriptList}</>;
+    return (
+      <>
+        <List>{transcriptList}</List>
+      </>
+    );
   };
+
+  // const renderTranscripts = () => {
+  //   const transcriptList = conversationTranscript.map((conversationTranscript) => {
+  //     if (conversationTranscript.user === store.getState().authState.currentUser._id) {
+  //       return (
+  //         <>
+  //           <span>You: {conversationTranscript.transcript}</span>&nbsp;
+  //           {renderSecondsToTimes(conversationTranscript.seconds)}
+  //           &nbsp;
+  //           <Tooltip title='translate'>
+  //             <TranslateTranscript translateInput={conversationTranscript.transcript} />
+  //           </Tooltip>
+  //         </>
+  //       );
+  //     } else if (conversationTranscript.user === store.getState().mediaState.callingWith._id) {
+  //       return (
+  //         <>
+  //           <span>
+  //             {store.getState().mediaState.callingWith.name}: {conversationTranscript.transcript}
+  //           </span>
+  //           &nbsp;{renderSecondsToTimes(conversationTranscript.seconds)}
+  //           &nbsp;
+  //           <Tooltip title='translate'>
+  //             <TranslateTranscript translateInput={conversationTranscript.transcript} />
+  //           </Tooltip>
+  //         </>
+  //       );
+  //     }
+  //   });
+
+  //   return <>{transcriptList}</>;
+  // }; // 一応残しておこう。
+
   // steventのapi key AIzaSyCf0Xy0OnhxlduyEt3K8zP-sOuu-l_u6uA
   const handleDrag = (e, ui) => {
     const { x, y } = deltaPosition;
@@ -505,20 +593,14 @@ const SubtitleWrapper = (props) => {
     <div
       // className={`transcript-component ${props.openTranscriptComponent  ? undefined : 'hidden'}`}
       className={'transcript-component'}
-      // style={{
-      //   color: 'white',
-      //   backgroundColor: 'rgb(29, 49, 79)',
-      //   borderRadius: '5px',
-      //   overflow: 'auto',
-      //   height: '80vh',
-      //   width: '40vw',
-      //   position: 'absolute',
-      //   top: '80px',
-      //   right: '50px',
-      //   cursor: 'grab',
-      //   zIndex: 10,
-      //   padding: '5px',
-      // }}
+      style={{
+        color: 'black',
+        backgroundColor: 'rgb(232, 232, 232)',
+        overflow: 'auto',
+        width: '100%',
+        cursor: 'auto',
+        flex: 7,
+      }}
     >
       {/* <div className='transcript-header' style={{ height: '10%' }}>
           <Stack direction='row' justifyContent='space-between' alignItems='baseline'>
@@ -535,7 +617,8 @@ const SubtitleWrapper = (props) => {
       {/* <span>Now we are speaking {props.mediaState.currentLanguage.name}</span>&nbsp; */}
       {/* {renderSwitchLangButton()} */}
       {/* {seconds} */}
-      {renderTranscripts()}
+      {/* {renderTranscripts()} */}
+      {renderTranscriptsNew()}
       {renderPartnerInterimTranscript()}
       {renderMyInterimTranscript()}
       {/* transcript自体、finalになったら自動的に消える。だからtranscript renderてだけでいい。*/}

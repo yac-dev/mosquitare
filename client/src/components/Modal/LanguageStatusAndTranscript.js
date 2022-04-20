@@ -40,25 +40,35 @@ const LanguageStatusAndTranscript = (props) => {
       cancel='.language-status-and-transcript-close-button, .language-status-wrapper, .transcript-component, .fa, .fa-close'
     >
       <div className={`language-status-and-transcript ${props.openLanguageStatusAndTranscript ? undefined : 'hidden'}`}>
-        <div className='language-status-and-transcript-header'>
-          <p>Status&#38;Transcript</p>
-          <div
-            className='language-status-and-transcript-close-button'
-            onClick={() => props.setOpenLanguageStatusAndTranscript(false)}
-          >
-            <i className='fa fa-close' style={{ fontSize: '12px', color: 'white', cursor: 'pointer' }}></i>
+        <div className='language-status-and-transcript-wrapper' style={{ display: 'flex', height: '10%' }}>
+          <div className='language-status-and-transcript-header' style={{ flex: 2 }}>
+            <i
+              className='fa fa-close'
+              onClick={() => props.setOpenLanguageStatusAndTranscript(false)}
+              style={{ color: 'red', cursor: 'pointer' }}
+            ></i>
+            <p style={{ fontSize: '20px' }}>
+              Status&#38;Transcript&nbsp;
+              {/* <RecordVoiceOverIcon /> */}
+            </p>
           </div>
+          <div
+            className='language-status-and-transcript-app-menu'
+            style={{ display: 'flex', flex: 2, alignItems: 'center', gap: '30px' }}
+          ></div>
         </div>
-        <LanguageStatus
-          socket={props.socket}
-          countLearningLangLength={props.countLearningLangLength}
-          countNativeLangLength={props.countNativeLangLength}
-        />
-        <SubtitleWrapper
-          socket={props.socket}
-          setCountLearningLangLength={props.setCountLearningLangLength}
-          setCountNativeLangLength={props.setCountNativeLangLength}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', height: '90%', gap: '10px' }}>
+          <LanguageStatus
+            socket={props.socket}
+            countLearningLangLength={props.countLearningLangLength}
+            countNativeLangLength={props.countNativeLangLength}
+          />
+          <SubtitleWrapper
+            socket={props.socket}
+            setCountLearningLangLength={props.setCountLearningLangLength}
+            setCountNativeLangLength={props.setCountNativeLangLength}
+          />
+        </div>
       </div>
     </Draggable>
   );

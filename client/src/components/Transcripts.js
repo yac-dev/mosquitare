@@ -43,13 +43,17 @@ const Transcripts = (props) => {
     if (obj.hours === 0) {
       return (
         <>
-          {obj.minutes}:{obj.seconds}
+          <span style={{ color: 'rgb(37, 95, 184)', cursor: 'pointer' }}>
+            @{obj.minutes}:{obj.seconds}
+          </span>
         </>
       );
     } else {
       return (
         <>
-          {obj.hours}:{obj.minutes}:{obj.seconds}
+          <span style={{ color: 'rgb(37, 95, 184)', cursor: 'pointer' }}>
+            @{obj.hours}:{obj.minutes}:{obj.seconds}
+          </span>
         </>
       );
     }

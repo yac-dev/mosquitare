@@ -18,7 +18,7 @@ const TranslateIconButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const TranslateTranscript = (props) => {
-  const [translated, setTranslated] = useState('');
+  // const [translated, setTranslated] = useState('');
 
   const googleTranslate = async (input) => {
     let targetLanguage;
@@ -40,19 +40,20 @@ const TranslateTranscript = (props) => {
         }
         // { cancelToken: cancelToken.token }
       );
-      setTranslated(data.data.translations[0].translatedText);
+      props.setGoogleTranslatedd(data.data.translations[0].translatedText);
       // return data.data.translations[0].translatedText;
     } catch (err) {
       return '';
     }
   };
-  const renderTranslated = () => {
-    if (translated) {
-      return <div>{translated}</div>;
-    } else {
-      return null;
-    }
-  };
+
+  // const renderTranslated = () => {
+  //   if (translated) {
+  //     return <div>{translated}</div>;
+  //   } else {
+  //     return null;
+  //   }
+  // };
 
   return (
     <>
@@ -63,8 +64,8 @@ const TranslateTranscript = (props) => {
           </TranslateIconButton>
         </Tooltip>
       </span>
-      <br></br>
-      {renderTranslated()}
+      {/* <br></br>
+      {renderTranslated()} */}
     </>
   );
 };

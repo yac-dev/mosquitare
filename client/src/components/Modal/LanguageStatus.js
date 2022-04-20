@@ -153,7 +153,7 @@ const LanguageStatus = (props) => {
   };
 
   return (
-    <div className='language-status-wrapper'>
+    <div className='language-status-wrapper' style={{ flex: 3 }}>
       <div className='language-status'>
         {renderlearningLangWordsStatus()}
         {renderNativeLangWordsStatus()}

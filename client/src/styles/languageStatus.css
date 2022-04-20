@@ -14,18 +14,17 @@
 
   .language-status-wrapper {
     width: 100%;
-    height: 35%;
+    /* height: 35%; */
     position: relative;
-    border-radius: 5px;
     /* border: 1px solid white; */
-    background-color: rgb(37, 95, 184);
-    margin-bottom: 5px;
+    background-color: rgb(232, 232, 232);
+    /* margin-bottom: 5px; */
   }
 
   .language-status {
     display: flex;
     height: 60%;
-    border-radius: 5px;
+    /* border-radius: 5px; */
   }
 
   .language-status > div {
@@ -47,18 +46,17 @@
 @media only screen and (min-width: 768px) {
   .language-status-wrapper {
     width: 100%;
-    height: 35%;
+    /* height: 35%; */
     position: relative;
-    border-radius: 5px;
-    /* background-color: rgb(37, 95, 184); */
-    background-color: white;
-    margin-bottom: 10px;
+    /* border-radius: 5px; */
+    background-color: rgb(232, 232, 232);
+    /* margin-bottom: 10px; */
   }
 
   .language-status {
     display: flex;
     height: 60%;
-    border-radius: 5px;
+    /* border-radius: 5px; */
   }
 
   .language-status > div {
