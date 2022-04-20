@@ -16,7 +16,7 @@ const RightPositionedUserDetail = (props) => {
               position: 'absolute',
               right: '50px',
               top: '30px',
-              backgroundColor: 'rgb(0, 96, 191)',
+              backgroundColor: 'rgb(37, 95, 184)',
               padding: '10px',
               color: 'black',
             }}

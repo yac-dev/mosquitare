@@ -13,11 +13,19 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import Tooltip from '@mui/material/Tooltip';
 import HelpIcon from '@mui/icons-material/Help';
 // mui components
+import { styled } from '@mui/system';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
+import Badge from '@mui/material/Badge';
+
+const SmallAvatar = styled(Avatar)(({ theme }) => ({
+  width: 23,
+  height: 23,
+  // border: `2px solid ${theme.palette.background.paper}`,
+}));
 
 const BasicUserInfo = (props) => {
   const renderCardHeaderTitle = (user) => {
@@ -81,9 +89,17 @@ const BasicUserInfo = (props) => {
             {renderUserState()}
           </div>
           <div className='avatar-wrapper' style={{ width: '30%', display: ' flex', justifyContent: 'center' }}>
-            <Avatar sx={{ width: 70, height: 70 }} alt={user.name}>
-              {user.name}
-            </Avatar>
+            <Badge
+              overlap='circular'
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
+            >
+              {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+              <Avatar sx={{ width: 85, height: 85 }} alt={user.name}>
+                {user.name}
+              </Avatar>
+              {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
+            </Badge>
           </div>
         </div>
         {renderActionButtons()}

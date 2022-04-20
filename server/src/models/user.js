@@ -121,10 +121,10 @@ const userSchema = new mongoose.Schema({
       ref: 'PenaltyReview',
     },
   ], // こっちは月毎にupdate。
-  personalStatus: {
-    type: Array,
-    default: ['📘 Just started'],
-  },
+  // personalStatus: {
+  //   type: Array,
+  //   default: ['📘 Just started'],
+  // },
   visited: [
     {
       type: mongoose.Schema.ObjectId,
@@ -135,6 +135,12 @@ const userSchema = new mongoose.Schema({
     {
       appName: String,
       url: String,
+    },
+  ],
+  ratingAverage: [
+    {
+      type: Number,
+      default: [0, 0, 0, 0, 0, 0, 0],
     },
   ],
   // visitedPhoto: [[{ type: String }]],いずれ、ここにも足していくことになる。

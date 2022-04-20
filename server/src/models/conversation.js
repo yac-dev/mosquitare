@@ -15,12 +15,6 @@ const conversationSchema = new mongoose.Schema({
       ref: 'UserMedia',
     },
   ],
-  userScripts: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'UserScript',
-    },
-  ],
   genre: [
     {
       type: mongoose.Schema.ObjectId,
@@ -33,18 +27,18 @@ const conversationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  ratings: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Rating',
+    },
+  ],
   // contributors: [
   //   {
   //     type: mongoose.Schema.ObjectId,
   //     ref: 'User',
   //   },
   // ], //virtualでいい。多分。ただ、その代わりcontributeっていうmodelが必要になる。そこで、typeはupdate transcriptとかfeedbackとかを入れることになる。
-  reviews: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Review',
-    },
-  ],
 
   // ------- previous design
   // calledUser: {

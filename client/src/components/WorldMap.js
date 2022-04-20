@@ -40,6 +40,8 @@ import { callActionCreator } from '../actionCreators/mediaActionCreator';
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
 import mapboxgl from 'mapbox-gl';
 
+import RatePartner from './RatePartner';
+
 const containerStyle = {
   height: '100vh',
   width: '100%',

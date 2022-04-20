@@ -11,9 +11,13 @@ import YouTubeIcon from '@mui/icons-material/YouTube';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import BarChartIcon from '@mui/icons-material/BarChart';
 
 // mui components
 import Tooltip from '@mui/material/Tooltip';
+
+// components
+import PersonalityChart from './PersonalityChart';
 
 // css
 import '../styles/userInfoPersonal.css';
@@ -40,13 +44,14 @@ const UserInfoPersonal = (props) => {
     <div className='user-info-personal' style={{ padding: '10px' }}>
       <div className='badges' style={{ marginBottom: '20px' }}>
         <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)' }}>
-          <WorkspacePremiumIcon />
-          Badges&nbsp;
-          <Tooltip title='These badges are determined based on user activity'>
+          <BarChartIcon />
+          Personal Status&nbsp; <span></span>
+          <Tooltip title='This status is based on user reviews.'>
             <HelpIcon />
           </Tooltip>
         </h6>
-        {renderBadges(props.user)}
+        {/* {renderBadges(props.user)} */}
+        <PersonalityChart user={props.user} />
       </div>
 
       <div className='self-introduction' style={{ marginBottom: '20px' }}>
