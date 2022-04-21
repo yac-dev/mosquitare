@@ -27,33 +27,59 @@ const userSchema = new mongoose.Schema({
   photo: {
     type: String,
   },
+  // nativeLangs: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     required: true,
+  //     ref: 'Language',
+  //   },
+  // ],
   nativeLangs: [
     {
-      type: mongoose.Schema.ObjectId,
-      required: true,
-      ref: 'Language',
+      language: {
+        type: mongoose.Schema.ObjectId,
+        required: true,
+        ref: 'Language',
+      },
+      status: {
+        type: Number,
+        default: 0,
+      },
     },
   ],
+  // learningLangs: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     required: true,
+  //     ref: 'Language',
+  //   },
+  // ],
   learningLangs: [
     {
-      type: mongoose.Schema.ObjectId,
-      required: true,
-      ref: 'Language',
+      language: {
+        type: mongoose.Schema.ObjectId,
+        required: true,
+        ref: 'Language',
+      },
+      status: {
+        type: Number,
+        default: 0,
+      },
     },
   ],
-  myLangs: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Language',
-    },
-  ],
-  myLangsStatus: [
-    {
-      type: Number,
-      default: [0, 0],
-    },
-  ],
-  langsStatusHistory: [[Number]],
+  // myLangs: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     ref: 'Language',
+  //   },
+  // ],
+  // myLangsStatus: [
+  //   {
+  //     type: Number,
+  //     default: [0, 0],
+  //   },
+  // ],
+  // langsStatusHistory: [[Number]],
   nationalities: [
     {
       type: mongoose.Schema.ObjectId,
@@ -80,11 +106,6 @@ const userSchema = new mongoose.Schema({
       ],
     },
   },
-  job: [
-    {
-      type: String,
-    },
-  ],
   conversations: [
     {
       type: mongoose.Schema.ObjectId,
@@ -115,20 +136,17 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  pendingPenalty: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'PenaltyReview',
-    },
-  ], // こっちは月毎にupdate。
-  // personalStatus: {
-  //   type: Array,
-  //   default: ['📘 Just started'],
-  // },
   visited: [
     {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Country',
+      country: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Country',
+      },
+      // photos: [
+      //   {
+      //     type: mongoose.Schema.ObjectId,
+      //   }
+      // ]
     },
   ],
   socialApps: [
@@ -139,6 +157,22 @@ const userSchema = new mongoose.Schema({
   ],
   ratingAverage: mongoose.Schema.Types.Mixed,
   // visitedPhoto: [[{ type: String }]],いずれ、ここにも足していくことになる。
+  // pendingPenalty: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     ref: 'PenaltyReview',
+  //   },
+  // ], // こっちは月毎にupdate。
+  // personalStatus: {
+  //   type: Array,
+  //   default: ['📘 Just started'],
+  // },
+  // visited: [
+  //   {
+  //     type: mongoose.Schema.ObjectId,
+  //     ref: 'Country',
+  //   },
+  // ],
 });
 
 userSchema.index({ location: '2dsphere' });

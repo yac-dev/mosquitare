@@ -48,12 +48,12 @@ const PersonalityChart = (props) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const slicedData = props.user.ratingAverage.slice(0, 5);
+    const ratingAverageData = Object.values(props.user.ratingAverage).slice(0, 5);
     const d = {
       labels,
       datasets: [
         {
-          data: slicedData,
+          data: ratingAverageData,
           backgroundColor: [
             'rgba(37, 95, 184)',
             'rgb(44, 184, 63)',
@@ -86,7 +86,7 @@ const PersonalityChart = (props) => {
   };
 
   const render = () => {
-    if (props.user.ratingAverage.every((element) => element === 0)) {
+    if (data.every((element) => element === 0)) {
       return <>{renderInitialData()}</>;
     } else if (data) {
       return (

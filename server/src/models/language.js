@@ -9,6 +9,7 @@ const languageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  text: String,
   codeForSpeechRecognition: String,
 });
 
