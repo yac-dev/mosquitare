@@ -6,10 +6,10 @@ import LanguageIcon from '@mui/icons-material/Language';
 
 const UserInfoVisited = (props) => {
   const renderVisitedCountries = () => {
-    const visitedCountriesList = props.user.visited.map((country) => {
+    const visitedCountriesList = props.user.visited.map((element) => {
       return (
         <>
-          <img src={country.flagPics[0]} style={{ width: '16px', height: '10px' }} />
+          <img src={element.country.flagPics[0]} style={{ width: '16px', height: '10px' }} />
           &nbsp;
         </>
       );

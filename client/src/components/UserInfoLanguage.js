@@ -11,7 +11,7 @@ import Tooltip from '@mui/material/Tooltip';
 const UserInfoLanguage = (props) => {
   const renderNativeLanguages = (user) => {
     const nativeLanguagesList = user.nativeLangs.map((language) => {
-      return <p>{language.name}</p>;
+      return <p>{language.language.name}</p>;
     });
 
     return (
@@ -24,7 +24,7 @@ const UserInfoLanguage = (props) => {
 
   const renderLearningLanguages = (user) => {
     const learningLanguagesList = user.learningLangs.map((language) => {
-      return <p>{language.name}</p>;
+      return <p>{language.language.name}</p>;
     });
 
     return (

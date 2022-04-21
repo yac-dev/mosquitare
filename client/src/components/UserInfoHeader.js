@@ -78,7 +78,8 @@ const BasicUserInfo = (props) => {
   };
 
   const renderPersonalStatusAverage = (user) => {
-    if (user.ratingAverage.every((element) => element === 0)) {
+    const ratingAverageArray = Object.values(user.ratingAverage).slice(0, 5);
+    if (ratingAverageArray.every((element) => element === 0)) {
       return (
         <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
           New!
@@ -86,10 +87,13 @@ const BasicUserInfo = (props) => {
       );
     }
     const initialValue = 0;
-    const sliced = user.ratingAverage.slice(0, 5);
-    const sumWithInitial = sliced.reduce((previousValue, currentValue) => previousValue + currentValue, initialValue);
+    // const sliced = user.ratingAverage.slice(0, 5);
+    const sumWithInitial = ratingAverageArray.reduce(
+      (previousValue, currentValue) => previousValue + currentValue,
+      initialValue
+    );
 
-    const average = Math.round((sumWithInitial / sliced.length) * 10) / 10;
+    const average = Math.round((sumWithInitial / ratingAverageArray.length) * 10) / 10;
     if (average >= 7.5) {
       return (
         <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>

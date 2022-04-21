@@ -94,15 +94,16 @@ export const signup = async (request, response) => {
       { $sample: { size: 1 } },
     ]);
 
-    const myLangs = [];
-    for (let i = 0; i < nativeLangs.length; i++) {
-      myLangs.push(mongoose.Types.ObjectId(nativeLangs[i].value));
-    }
-    for (let i = 0; i < learningLangs.length; i++) {
-      myLangs.push(mongoose.Types.ObjectId(learningLangs[i].value));
-    } // generate myLangs
+    // 多分、valueっていうpropertyの中にlanguageのobjectidが入っているんだろう。
+    // const myLangs = [];
+    // for (let i = 0; i < nativeLangs.length; i++) {
+    //   myLangs.push(mongoose.Types.ObjectId(nativeLangs[i].value));
+    // }
+    // for (let i = 0; i < learningLangs.length; i++) {
+    //   myLangs.push(mongoose.Types.ObjectId(learningLangs[i].value));
+    // } // generate myLangs
 
-    const myLangsStatus = new Array(myLangs.length).fill(0);
+    // const myLangsStatus = new Array(myLangs.length).fill(0);
 
     let randomPhotoURL;
     if (!photo) {
@@ -110,23 +111,32 @@ export const signup = async (request, response) => {
       randomPhotoURL = `https://picsum.photos/id/${randomId}/80/80`;
     }
 
+    // nativeLangs [{..., value: 13414134}, {..., value: 17168}]
+    const nativeLanguages = [];
+
     const user = await new User({
       name: name,
       email: email,
       password: password,
       passwordConfirmation: passwordConfirmation,
       photo: randomPhotoURL,
-      nativeLangs: nativeLangs.map((lang) => mongoose.Types.ObjectId(lang.value)),
-      learningLangs: learningLangs.map((lang) => mongoose.Types.ObjectId(lang.value)),
-      myLangs: myLangs,
-      myLangsStatus: myLangsStatus,
-      nationalities: nationalities.map((nationality) => mongoose.Types.ObjectId(nationality.value)),
+      nativeLangs: nativeLangs.map((lang) => {
+        return { language: lang.value, status: 0 };
+      }),
+      learningLangs: learningLangs.map((lang) => {
+        return { language: lang.value, status: 0 };
+      }),
+      // myLangs: myLangs,
+      // myLangsStatus: myLangsStatus,
+      nationalities: nationalities.map((nationality) => nationality.value),
       location: {
         type: 'Point',
         coordinates: [city[0].location.coordinates[0], city[0].location.coordinates[1]],
       },
       socketId: '11111',
-      visited: visited.map((country) => mongoose.Types.ObjectId(country.value)),
+      visited: visited.map((country) => {
+        return { country: country.value };
+      }),
     });
 
     if (selfIntroduction) {
@@ -375,26 +385,48 @@ export const updateConversation = async (request, response) => {
 // postmanでtestだな。
 export const updateLangsStatus = async (request, response) => {
   const { countDatas } = request.body;
-
   // user.myLangs  ['78749r4089','6726r61288']
   // countDatas  [{id: '78749r4089', length: 245}, {id: '6726r61288', length: 345}];
+  // countDatasのindex 0には必ずlearningの言語が、index1にはnativeの言語が来る。
   const user = await User.findById(request.params.id);
-  const myLangsLength = user.myLangs.length;
-  const langStatus = new Array(myLangsLength).fill(0);
-  for (let i = 0; i < myLangsLength; i++) {
-    for (let j = 0; j < countDatas.length; j++) {
-      if (user.myLangs[i]._id.toString() === countDatas[j].id) {
-        langStatus[i] = countDatas[j].length;
-        user.myLangsStatus[i] += countDatas[j].length;
-      }
+  for (let i = 0; i < user.learningLangs.length; i++) {
+    if (countDatas[0].id === user.learningLangs[i].language.toString()) {
+      user.learningLangs[i].status += countDatas[0].length;
     }
   }
-  user.langsStatusHistory.push(langStatus);
+  for (let i = 0; i < user.nativeLangs.length; i++) {
+    if (countDatas[1].id === user.learningLangs[i].language.toString()) {
+      user.learningLangs[i].status += countDatas[1].length;
+    }
+  }
   await user.save({ validateBeforeSave: false });
   response.status(200).json({
     user,
   });
 };
+
+// export const updateLangsStatus = async (request, response) => {
+//   const { countDatas } = request.body;
+
+//   // user.myLangs  ['78749r4089','6726r61288']
+//   // countDatas  [{id: '78749r4089', length: 245}, {id: '6726r61288', length: 345}];
+//   const user = await User.findById(request.params.id);
+//   const userAllLangs = [];
+
+//   for (let i = 0; i < myLangsLength; i++) {
+//     for (let j = 0; j < countDatas.length; j++) {
+//       if (user.myLangs[i]._id.toString() === countDatas[j].id) {
+//         langStatus[i] = countDatas[j].length;
+//         user.myLangsStatus[i] += countDatas[j].length;
+//       }
+//     }
+//   }
+//   user.langsStatusHistory.push(langStatus);
+//   await user.save({ validateBeforeSave: false });
+//   response.status(200).json({
+//     user,
+//   });
+// };
 
 export const updateIsAvailableToFalse = async (request, response) => {
   try {

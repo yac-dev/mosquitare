@@ -100,7 +100,7 @@ const UserInfoCardNew = (props) => {
     const userNativeLanguages = user.nativeLangs.map((nativeLanguage) => {
       return (
         <>
-          <div>{nativeLanguage.name}</div>
+          <div>{nativeLanguage.language.name}</div>
         </>
       );
     });
@@ -117,7 +117,7 @@ const UserInfoCardNew = (props) => {
     const userLearningLanguages = user.learningLangs.map((learningLanguage) => {
       return (
         <>
-          <div>{learningLanguage.name}</div>
+          <div>{learningLanguage.language.name}</div>
         </>
       );
     });

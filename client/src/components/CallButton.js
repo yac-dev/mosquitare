@@ -89,8 +89,9 @@ const CallButton = (props) => {
     const buffer1 = [];
     for (let i = 0; i < myLearningLangs.length; i++) {
       for (let j = 0; j < props.user.nativeLangs.length; j++) {
-        if (myLearningLangs[i]._id === props.user.nativeLangs[j]._id) {
-          buffer1.push(myLearningLangs[i]);
+        // if (myLearningLangs[i]._id === props.user.nativeLangs[j]._id) {
+        if (myLearningLangs[i].language === props.user.nativeLangs[j].language) {
+          buffer1.push(myLearningLangs[i].language);
           // setExchangeableLearningLangs((previousState) => [...previousState, myLearningLangs[i]]);
           // 足していく方法だと、userを変えるたびにarrayにたされることになる。毎回初期化するために、bufferを用意する。
         }
@@ -102,8 +103,9 @@ const CallButton = (props) => {
     const myNativeLangs = store.getState().authState.currentUser.nativeLangs;
     for (let i = 0; i < myNativeLangs.length; i++) {
       for (let j = 0; j < props.user.learningLangs.length; j++) {
-        if (myNativeLangs[i]._id === props.user.learningLangs[j]._id) {
-          buffer2.push(myNativeLangs[i]);
+        // if (myNativeLangs[i]._id === props.user.learningLangs[j]._id) {
+        if (myNativeLangs[i].language === props.user.learningLangs[j].language) {
+          buffer2.push(myNativeLangs[i].language);
           // setExchangeableNativeLangs((previousState) => [...previousState, myNativeLangs[i]]);
         }
       }

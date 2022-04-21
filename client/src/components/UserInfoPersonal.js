@@ -43,20 +43,20 @@ const UserInfoPersonal = (props) => {
   };
 
   const renderDating = () => {
-    if (props.user.ratingAverage[5] >= 1) {
+    if (props.user.ratingAverage['datingHunter'] >= 1) {
       return (
         <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
-          💕💕 Dating hunter +{props.user.ratingAverage[5]}
+          💕💕 Dating hunter +{props.user.ratingAverage['datingHunter']}
         </span>
       );
     }
   };
 
   const renderMoney = () => {
-    if (props.user.ratingAverage[6] >= 1) {
+    if (props.user.ratingAverage['moneyHunter'] >= 1) {
       return (
         <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
-          💰💰 Money hunter +{props.user.ratingAverage[5]}
+          💰💰 Money hunter +{props.user.ratingAverage['moneyHunter']}
         </span>
       );
     }

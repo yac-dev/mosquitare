@@ -14,7 +14,10 @@ const EachCountry = (props) => {
           <Marker
             // longitude={props.country.location.coordinates[0]}
             // latitude={props.country.location.coordinates[1]}
-            position={{ lat: props.country.location.coordinates[1], lng: props.country.location.coordinates[0] }}
+            position={{
+              lat: props.country.country.location.coordinates[1],
+              lng: props.country.country.location.coordinates[0],
+            }}
           ></Marker>
         </>
       );

@@ -62,19 +62,21 @@ const LanguageChart = (props) => {
   useEffect(() => {
     console.log(props.user);
     const mappedLangLabels = [];
+    const myLangs = [...props.user.learningLangs, ...props.user.nativeLangs];
     for (let i = 0; i < props.user.nativeLangs.length; i++) {
-      for (let j = 0; j < props.user.myLangs.length; j++) {
-        if (props.user.nativeLangs[i].name === props.user.myLangs[j].name) {
-          mappedLangLabels.push(`${props.user.myLangs[j].name} (native)`);
+      for (let j = 0; j < myLangs.length; j++) {
+        if (props.user.nativeLangs[i].language.name === myLangs[j].language.name) {
+          mappedLangLabels.push(`${myLangs[j].language.name} (native)`);
         } else {
-          mappedLangLabels.push(`${props.user.myLangs[j].name} (learning)`);
+          mappedLangLabels.push(`${myLangs[j].language.name} (learning)`);
         }
       }
     }
     // 割合の計算
     const data = [];
-    const statusSum = props.user.myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
-    props.user.myLangsStatus.forEach((langStatus) => {
+    const myLangsStatus = myLangs.map((lang) => lang.status);
+    const statusSum = myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
+    myLangsStatus.forEach((langStatus) => {
       const ratio = Math.floor((langStatus / statusSum) * 100);
       data.push(ratio);
     });
@@ -105,14 +107,16 @@ const LanguageChart = (props) => {
   };
 
   const render = () => {
-    const statusSum = props.user.myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
+    const myLangs = [...props.user.learningLangs, ...props.user.nativeLangs];
+    const myLangsStatus = myLangs.map((lang) => lang.status);
+    // const statusSum = myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
     // for (let i = 0; i < props.user.myLangsStatus.length; i++) {}　あとでこっちに書き換えよう。シンプルにfor loopで、全部0なら　No dataってrenderする方が分かりやすい。
     // if (statusSum === 0) {
     //   return <>{renderInitialData()}</>;
     // } else if (data) {
     //   return <div style={{ width: '99%' }}>{renderDoughnut()}</div>;
     // }
-    if (props.user.myLangsStatus.every((element) => element === 0)) {
+    if (myLangsStatus.every((element) => element === 0)) {
       return <>{renderInitialData()}</>;
     } else if (data) {
       return (

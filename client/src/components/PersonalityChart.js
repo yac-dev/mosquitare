@@ -86,7 +86,8 @@ const PersonalityChart = (props) => {
   };
 
   const render = () => {
-    if (data.every((element) => element === 0)) {
+    const ratingAverageData = Object.values(props.user.ratingAverage).slice(0, 5);
+    if (ratingAverageData.every((element) => element === 0)) {
       return <>{renderInitialData()}</>;
     } else if (data) {
       return (

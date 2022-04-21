@@ -146,7 +146,7 @@ const userSchema = new mongoose.Schema({
       //   {
       //     type: mongoose.Schema.ObjectId,
       //   }
-      // ]
+      // ] // ここは、virtualでいいや。
     },
   ],
   socialApps: [
@@ -155,7 +155,36 @@ const userSchema = new mongoose.Schema({
       url: String,
     },
   ],
-  ratingAverage: mongoose.Schema.Types.Mixed,
+  ratingAverage: {
+    enthusiastic: {
+      type: Number,
+      default: 0,
+    },
+    friendly: {
+      type: Number,
+      default: 0,
+    },
+    patient: {
+      type: Number,
+      default: 0,
+    },
+    helpful: {
+      type: Number,
+      default: 0,
+    },
+    respectCulture: {
+      type: Number,
+      default: 0,
+    },
+    datingHunter: {
+      type: Number,
+      default: 0,
+    },
+    moneyHunter: {
+      type: Number,
+      default: 0,
+    },
+  },
   // visitedPhoto: [[{ type: String }]],いずれ、ここにも足していくことになる。
   // pendingPenalty: [
   //   {
@@ -191,14 +220,15 @@ userSchema.pre('save', async function (next) {
 //   next();
 // });
 
+// ここのpopulate、一回comment outしておく。
 userSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'nativeLangs',
+    path: 'nativeLangs.language',
     select: 'name code codeForSpeechRecognition',
   });
 
   this.populate({
-    path: 'learningLangs',
+    path: 'learningLangs.language',
     select: 'name code codeForSpeechRecognition',
   });
 
@@ -207,13 +237,13 @@ userSchema.pre(/^find/, function (next) {
     select: 'name flagPics',
   });
 
-  this.populate({
-    path: 'myLangs',
-    select: 'name',
-  });
+  // this.populate({
+  //   path: 'myLangs',
+  //   select: 'name',
+  // });
 
   this.populate({
-    path: 'visited',
+    path: 'visited.country',
     select: 'name location flagPics',
   });
   // this.populate({
