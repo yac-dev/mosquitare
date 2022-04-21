@@ -12,6 +12,9 @@ import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDiss
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
+import HelpIcon from '@mui/icons-material/Help';
+import Zoom from '@mui/material/Zoom';
+
 // css
 import '../styles/ratePartner.css';
 import Checkbox from '@mui/material/Checkbox';
@@ -46,7 +49,7 @@ const RatePartner = (props) => {
 
   const renderDatingLable = () => {
     if (datingChecked) {
-      return <>My partner is looking for romance 💕</>;
+      return <>My partner is looking for Dating partner 💕</>;
     } else {
       return <>No problem. My partner is fine!</>;
     }
@@ -96,7 +99,16 @@ const RatePartner = (props) => {
 
         <div className='rate-list' style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           <div>
-            <Typography component='legend'>Enthusiastic 💪</Typography>
+            <Typography component='legend'>
+              💪 Enthusiastic
+              <Tooltip
+                TransitionComponent={Zoom}
+                title='How much were your partner passionate about practicing language?'
+                arrow
+              >
+                <HelpIcon />
+              </Tooltip>
+            </Typography>
             <Rating
               name='customized-10'
               defaultValue={0}
@@ -108,7 +120,12 @@ const RatePartner = (props) => {
             />
           </div>
           <div>
-            <Typography component='legend'>Friendly 😁</Typography>
+            <Typography component='legend'>
+              😁 Friendly
+              <Tooltip TransitionComponent={Zoom} title='How much were your partner kind and pleasant to you?' arrow>
+                <HelpIcon />
+              </Tooltip>
+            </Typography>
             <Rating
               name='customized-10'
               defaultValue={0}
@@ -120,7 +137,12 @@ const RatePartner = (props) => {
             />
           </div>
           <div>
-            <Typography component='legend'>Patient 🧑‍🏫</Typography>
+            <Typography component='legend'>
+              🧑‍🏫 Patient
+              <Tooltip TransitionComponent={Zoom} title='How much did your partner try to listen to you?' arrow>
+                <HelpIcon />
+              </Tooltip>
+            </Typography>
             <Rating
               name='customized-10'
               defaultValue={0}
@@ -132,7 +154,16 @@ const RatePartner = (props) => {
             />
           </div>
           <div>
-            <Typography component='legend'>Helpful ✍️</Typography>
+            <Typography component='legend'>
+              ✍️ Helpful
+              <Tooltip
+                TransitionComponent={Zoom}
+                title='How much did your partner teach you or took a note on Shared Doc?'
+                arrow
+              >
+                <HelpIcon />
+              </Tooltip>
+            </Typography>
             <Rating
               name='customized-10'
               defaultValue={0}
@@ -144,7 +175,16 @@ const RatePartner = (props) => {
             />
           </div>
           <div>
-            <Typography component='legend'>Respect Culture 🤝</Typography>
+            <Typography component='legend'>
+              🤝 Respect Culture
+              <Tooltip
+                TransitionComponent={Zoom}
+                title='How much did your partner try to understand the cultural difference?'
+                arrow
+              >
+                <HelpIcon />
+              </Tooltip>
+            </Typography>
             <Rating
               name='customized-10'
               defaultValue={0}
@@ -156,7 +196,16 @@ const RatePartner = (props) => {
             />
           </div>
           <div>
-            <Typography component='legend'>💕 Dating hunter 💕</Typography>
+            <Typography component='legend'>
+              💕 Dating hunter 💕
+              <Tooltip
+                TransitionComponent={Zoom}
+                title='Did your partner ask you about your relationship status? e.g. Do you have a boyfriend? Are you married?'
+                arrow
+              >
+                <HelpIcon />
+              </Tooltip>
+            </Typography>
             <Checkbox
               checked={datingChecked}
               onChange={handleDatingChange}
@@ -165,7 +214,16 @@ const RatePartner = (props) => {
             {renderDatingLable()}
           </div>
           <div>
-            <Typography component='legend'>💰 Money hunter 💰</Typography>
+            <Typography component='legend'>
+              💰 Money hunter 💰
+              <Tooltip
+                TransitionComponent={Zoom}
+                title='Did your partner ask you about money related thing? e.g Are you interested in Bitcoin investment? Can I borrow $100?'
+                arrow
+              >
+                <HelpIcon />
+              </Tooltip>
+            </Typography>
             <Checkbox checked={moneyChecked} onChange={handleMoneyChange} inputProps={{ 'aria-label': 'controlled' }} />
             {renderMoneyLabel()}
           </div>

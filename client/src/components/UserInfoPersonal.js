@@ -42,6 +42,26 @@ const UserInfoPersonal = (props) => {
     return <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}>{personalStatusList}</div>;
   };
 
+  const renderDating = () => {
+    if (props.user.ratingAverage[5] >= 1) {
+      return (
+        <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
+          💕💕 Dating hunter +{props.user.ratingAverage[5]}
+        </span>
+      );
+    }
+  };
+
+  const renderMoney = () => {
+    if (props.user.ratingAverage[6] >= 1) {
+      return (
+        <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
+          💰💰 Money hunter +{props.user.ratingAverage[5]}
+        </span>
+      );
+    }
+  };
+
   return (
     <div className='user-info-personal' style={{ padding: '10px' }}>
       <div className='badges' style={{ marginBottom: '20px' }}>
@@ -54,6 +74,10 @@ const UserInfoPersonal = (props) => {
         </h6>
         {/* {renderBadges(props.user)} */}
         <PersonalityChart user={props.user} />
+        <div style={{ display: 'flex', flexWrap: 'wrape', gap: '5px' }}>
+          {renderDating()}
+          {renderMoney()}
+        </div>
       </div>
 
       <div className='self-introduction' style={{ marginBottom: '20px' }}>
@@ -64,12 +88,12 @@ const UserInfoPersonal = (props) => {
         <p>{props.user.selfIntroduction}</p>
       </div>
 
-      <div className='socials' style={{ marginBottom: '20px' }}>
+      {/* <div className='socials' style={{ marginBottom: '20px' }}>
         <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)' }}>
           <WorkIcon />
           Job&nbsp;
         </h6>
-      </div>
+      </div> */}
     </div>
   );
 };

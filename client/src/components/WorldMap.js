@@ -217,7 +217,7 @@ const WorldMap = (props) => {
   // }, [props.mediaState.hangUp]);
 
   useEffect(() => {
-    if (props.mediaState.apiCallResult === 2) {
+    if (props.mediaState.apiCallResult === 3) {
       window.location = '/worldmap';
     }
   }, [props.mediaState.apiCallResult]);

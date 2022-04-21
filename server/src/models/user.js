@@ -137,12 +137,7 @@ const userSchema = new mongoose.Schema({
       url: String,
     },
   ],
-  ratingAverage: [
-    {
-      type: Number,
-      default: [0, 0, 0, 0, 0, 0, 0],
-    },
-  ],
+  ratingAverage: mongoose.Schema.Types.Mixed,
   // visitedPhoto: [[{ type: String }]],いずれ、ここにも足していくことになる。
 });
 

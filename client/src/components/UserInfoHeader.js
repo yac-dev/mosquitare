@@ -78,16 +78,33 @@ const BasicUserInfo = (props) => {
   };
 
   const renderPersonalStatusAverage = (user) => {
+    if (user.ratingAverage.every((element) => element === 0)) {
+      return (
+        <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
+          New!
+        </span>
+      );
+    }
     const initialValue = 0;
     const sliced = user.ratingAverage.slice(0, 5);
     const sumWithInitial = sliced.reduce((previousValue, currentValue) => previousValue + currentValue, initialValue);
 
     const average = Math.round((sumWithInitial / sliced.length) * 10) / 10;
-    return (
-      <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
+    if (average >= 7.5) {
+      return (
+        <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
+          {average}
+        </span>
+      );
+    } else if (average > 5.0 || average <= 7.4) {
+      <span style={{ color: 'white', backgroundColor: 'rgb(206, 209, 52)', padding: '5px', borderRadius: '5px' }}>
         {average}
-      </span>
-    );
+      </span>;
+    } else if (average <= 4.9) {
+      <span style={{ color: 'white', backgroundColor: 'rgb(186, 7, 43)', padding: '5px', borderRadius: '5px' }}>
+        {average}
+      </span>;
+    }
   };
 
   // このcomponent名自体を後で変えた方がいい。このfunction名はこれでいい。

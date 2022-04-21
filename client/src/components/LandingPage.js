@@ -9,6 +9,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 //components
 import SignupWrapper from './Signup/SignupWrapper';
 import Login from './Signup/Login';
+import RatePartner from './RatePartner';
 
 const styles = {
   paperContainer: {
@@ -73,6 +74,7 @@ const LandingPage = () => {
           <SignupWrapper showSignupModal={showSignupModal} setShowSignupModal={setShowSignupModal} />
           <Login showLoginModal={showLoginModal} setShowLoginModal={setShowLoginModal} />
         </div>
+        <RatePartner />
       </div>
 
       {/* <div className='welcome'>

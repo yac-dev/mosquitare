@@ -4,8 +4,7 @@ import User from '../models/user';
 
 export const createRating = async (request, response) => {
   try {
-    const { conversationId, userFrom, userTo } = request.params;
-    const { rating } = request.body;
+    const { conversationId, userFrom, userTo, rating } = request.body;
     const newRating = await Rating.create({
       conversation: conversationId,
       userFrom,
@@ -13,20 +12,35 @@ export const createRating = async (request, response) => {
       rating,
     });
 
-    // conversationのidをここで入れて。
+    // このconversationで、どんなratingが来たか保存する。
     const conversation = await Conversation.findById(conversationId);
     conversation.ratings.push(newRating._id);
-    // partner userのratingAverageをupdateする。
-    const user = await User.findById(newRating.userTo);
-    const sum = user.ratingAverage.map((value, index) => value + newRating.rating[index]);
-    // 最後二つのelementに関しては、割る２しない。
-    const updatedRatingAverage = [];
-    for (let i = 0; i < sum.length - 2; i++) {
-      updatedRatingAverage.push(Math.round((sum[i] / 2) * 10) / 10);
-    }
-    user.ratingAverage = updatedRatingAverage;
+    await conversation.save();
+    // こっから、partner userのratingAverageをupdateする。
+    const user = await User.findById(userTo);
+    // user.ratingAverageのhash table。
+    // {"enthusiastic": 10, "friendly": 9, "patient": 8, "helpful": 7, "respectCulture": 6, "datingHunter": 1, "moneyHunter": 0}っていうdata structureを持っているとして。。。
+    // ['enthusiastic','friendly', 'patient', 'helpful', 'respectCulture','datingHunter', 'moneyHunter']
+    const newA = Object.keys(user.ratingAverage);
+    Object.keys(user.ratingAverage).forEach((status) => {
+      if (status === 'datingHunter') {
+        if (rating[status]) {
+          user.ratingAverage[status] = user.ratingAverage[status] + 1;
+        }
+      } else if (status === 'moneyHunter') {
+        if (rating[status]) {
+          user.ratingAverage[status] = user.ratingAverage[status] + 1;
+        }
+      } else {
+        user.ratingAverage[status] = Math.round(((user.ratingAverage[status] + rating[status]) / 2) * 10) / 10;
+      }
+    });
+    user.markModified('ratingAverage');
+    await user.save({ validateBeforeSave: false });
+
     response.status(200).json({
       message: 'success',
+      user,
     });
   } catch (error) {
     console.log(error);

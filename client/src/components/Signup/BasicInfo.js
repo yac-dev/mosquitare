@@ -68,7 +68,7 @@ const BasicInfo = (props) => {
           &nbsp; Self-Introduction
         </label>
         <TextArea
-          placeholder='e.g. why you are learning, how log have you been learning, your job etc'
+          placeholder='e.g. Write about yourself.Your interests, why you are learning, how log have you been learning etc'
           onChange={(event) => props.setSelfIntroduction(event.target.value)}
           value={props.selfIntroduction}
         />

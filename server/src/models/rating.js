@@ -13,7 +13,8 @@ const ratingSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  rating: [Number],
+  rating: mongoose.Schema.Types.Mixed,
+  // rating {enthusiastic: 10, friendly: 8, patient: 6, helpful: 5, respectCulture: 8, datingHunter: false, moneyHunter: false}
 });
 
 const Rating = mongoose.model('Rating', ratingSchema);

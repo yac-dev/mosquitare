@@ -42,7 +42,7 @@ export const options = {
   maintainAspectRatio: false, // これだ。resizeな。pluginの外に出すとできたよ。
 };
 
-const labels = ['Enthusiastic', 'Friendly', 'Patient', 'Helpful', 'Respect Culture'];
+const labels = ['💪 Enthusiastic', '😄 Friendly', '🧑‍🏫 Patient', '✍️ Helpful', '🤝 Respect Culture'];
 
 const PersonalityChart = (props) => {
   const [data, setData] = useState(null);

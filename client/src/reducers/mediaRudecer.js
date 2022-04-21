@@ -119,6 +119,7 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
     case CREATE_USER_MEDIA:
     case CREATE_USER_SCRIPT:
     case 'SEND_LANGUAGE_STATUS':
+    case 'CREATE_RATING':
       return { ...state, apiCallResult: state.apiCallResult + 1 };
     case DISCONNECT_CALL:
       return { ...state, callDisconnected: true };
