@@ -34,6 +34,9 @@ export const options = {
       grid: {
         display: false,
       },
+      ticks: {
+        color: 'black',
+      },
     },
   },
   maintainAspectRatio: false, // これだ。resizeな。pluginの外に出すとできたよ。
@@ -75,7 +78,7 @@ const PersonalityChart = (props) => {
   }, [props.user]);
 
   const renderBar = () => {
-    return <Bar data={data} options={options} width={300} height={150} />;
+    return <Bar data={data} options={options} width={400} height={150} />;
   };
 
   const renderInitialData = () => {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { SocialIcon } from 'react-social-icons';
 
 // mui icons
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
@@ -12,6 +13,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import WorkIcon from '@mui/icons-material/Work';
 
 // mui components
 import Tooltip from '@mui/material/Tooltip';
@@ -64,17 +66,9 @@ const UserInfoPersonal = (props) => {
 
       <div className='socials' style={{ marginBottom: '20px' }}>
         <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)' }}>
-          <FacebookIcon />
-          Socials&nbsp;
+          <WorkIcon />
+          Job&nbsp;
         </h6>
-        <a className='fa fa-facebook'></a>
-        <a className='fa fa-twitter'></a>
-        <a className='fa fa-github'></a>
-        <a className='fa fa-youtube'></a>
-        <a className='fa fa-instagram'></a>
-        <a className='fa fa-linkedin'></a>
-        <a className='fa fa-pinterest'></a>
-        <a className='fa fa-reddit'></a>
       </div>
     </div>
   );

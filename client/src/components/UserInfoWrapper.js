@@ -16,6 +16,7 @@ const UserInfoWrapper = (props) => {
       className='user-info-wrapperrrr'
       style={{ width: '100%', height: '100%', backgroundColor: 'rgb(232, 232, 232)', padding: '15px', color: 'black' }}
     >
+      {/* rgb(232, 232, 232) */}
       <UserInfoHeader user={props.user} socket={props.socket} setShowCallingModal={props.setShowCallingModal} />
       <UserInfoTabs user={props.user} />
       {/* <BasicUserInfo user={props.user} />

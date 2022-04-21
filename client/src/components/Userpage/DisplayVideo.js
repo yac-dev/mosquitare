@@ -344,7 +344,7 @@ const DisplayVideo = (props) => {
               </IconButton>
               {props.conversation.createdAt}
             </div>
-            {/* {renderPublicOrPrivate()} */}
+            {renderPublicOrPrivate()}
           </div>
         </div>
         <video

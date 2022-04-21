@@ -13,8 +13,10 @@ import UserInfoLanguage from './UserInfoLanguage';
 import UserInfoPersonal from './UserInfoPersonal';
 import UserInfoVisited from './UserInfoVisited';
 
+import '../styles/tabs.css';
+
 const UserInfoTabs = (props) => {
-  const [key, setKey] = useState('language');
+  const [key, setKey] = useState('personal');
 
   const renderLanguageTitle = () => {
     return (
@@ -55,11 +57,11 @@ const UserInfoTabs = (props) => {
   return (
     <div className='user-info-tabs'>
       <Tabs id='controlled-tab-example' activeKey={key} onSelect={(k) => setKey(k)} className='mb-3'>
-        <Tab eventKey='language' title={renderLanguageTitle()}>
-          <UserInfoLanguage user={props.user} />
-        </Tab>
         <Tab eventKey='personal' title={renderPersonalTitle()}>
           <UserInfoPersonal user={props.user} />
+        </Tab>
+        <Tab eventKey='language' title={renderLanguageTitle()}>
+          <UserInfoLanguage user={props.user} />
         </Tab>
         <Tab eventKey='been' title={renderBeenTitle()}>
           <UserInfoVisited user={props.user} />

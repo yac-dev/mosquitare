@@ -1,0 +1,42 @@
+.nav-tabs .nav-link {
+  /* background-color: transparent !important;
+  border-top: 1px solid rgb(181, 181, 181) !important;
+  border-left: 1px solid rgb(181, 181, 181) !important;
+  border-right: 1px solid rgb(181, 181, 181) !important;
+  border-bottom: none;
+  color: black !important; */
+  color: black;
+}
+
+.nav-tabs {
+  /* border-bottom: 1px solid rgb(181, 181, 181); */
+}
+
+.nav-tabs .nav-link.active {
+  /* background-color: rgb(232, 232, 232); */
+  background-color: transparent !important;
+  border-top: 1px solid rgb(181, 181, 181) !important;
+  border-left: 1px solid rgb(181, 181, 181) !important;
+  border-right: 1px solid rgb(181, 181, 181) !important;
+  border-bottom: rgb(232, 232, 232);
+  color: rgb(37, 95, 184) !important;
+}
+
+.nav-tabs .nav-link:hover {
+  border-top: 1px solid rgb(181, 181, 181);
+  border-left: 1px solid rgb(181, 181, 181);
+  border-right: 1px solid rgb(181, 181, 181);
+  /* border-bottom: none; */
+}
+
+/* .nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  color: rgb(37, 95, 184);
+  background-color: transparent !important;
+  border-color: red;
+}
+
+.nav-tabs {
+  border-bottom: none;
+  color: black;
+} */

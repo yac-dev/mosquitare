@@ -22,8 +22,8 @@ import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
 import Badge from '@mui/material/Badge';
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
-  width: 23,
-  height: 23,
+  width: 27,
+  height: 27,
   // border: `2px solid ${theme.palette.background.paper}`,
 }));
 
@@ -69,12 +69,25 @@ const BasicUserInfo = (props) => {
 
   const renderUserState = () => {
     if (!props.user.isAvailableNow) {
-      return <p>&#9898;&nbsp;I'm not available now 💤🛌</p>;
+      return <p style={{ marginBottom: '10px' }}>&#9898;&nbsp;I'm not available now 💤🛌</p>;
     } else if (props.user.isAvailableNow && props.user.isInConversation) {
-      return <p>&#128308;&nbsp;Conversation now ☎️</p>;
+      return <p style={{ marginBottom: '10px' }}>&#128308;&nbsp;Conversation now ☎️</p>;
     } else if (props.user.isAvailableNow) {
-      return <p>&#128994;&nbsp;I'm available now 😁</p>;
+      return <p style={{ marginBottom: '10px' }}>&#128994;&nbsp;I'm available now 😁</p>;
     }
+  };
+
+  const renderPersonalStatusAverage = (user) => {
+    const initialValue = 0;
+    const sliced = user.ratingAverage.slice(0, 5);
+    const sumWithInitial = sliced.reduce((previousValue, currentValue) => previousValue + currentValue, initialValue);
+
+    const average = Math.round((sumWithInitial / sliced.length) * 10) / 10;
+    return (
+      <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
+        {average}
+      </span>
+    );
   };
 
   // このcomponent名自体を後で変えた方がいい。このfunction名はこれでいい。
@@ -82,13 +95,16 @@ const BasicUserInfo = (props) => {
     return (
       <div className='user-info-header' style={{ marginBottom: '20px' }}>
         <div className='user-info-header-flexbox' style={{ display: 'flex', marginBottom: '20px' }}>
-          <div className='info-list' style={{ width: '70%' }}>
-            <p>{renderCardHeaderTitle(user)}</p>
-            {/* <p>Currently living in&nbsp;{user.location.name}</p> */}
-            <p>{user.conversations.length} conversations</p>
-            {renderUserState()}
+          <div className='info-list' style={{ flex: 5, textAlign: 'center' }}>
+            <div>
+              <div style={{ margin: '10px' }}>
+                {user.name}&nbsp;{renderPersonalStatusAverage(user)}
+              </div>
+              {renderUserState()}
+              <p>{user.conversations.length} conversations</p>
+            </div>
           </div>
-          <div className='avatar-wrapper' style={{ width: '30%', display: ' flex', justifyContent: 'center' }}>
+          <div className='avatar-wrapper' style={{ flex: 5, display: 'flex', justifyContent: 'center' }}>
             <Badge
               overlap='circular'
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
