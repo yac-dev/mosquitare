@@ -14,6 +14,7 @@ import {
   updateConversation,
   updateLangsStatus,
   updateIsAvailableToFalse,
+  updateIsAvailableToFalseById,
 } from '../controllers/users';
 import { authorization } from '../middlewares/authorization';
 
@@ -27,11 +28,12 @@ router.post('/login', login);
 router.get('/loadme', authorization, loadMe); // これと、
 router.patch('/socketid', updateUserSocketId); // この二つに分けたほうがいいや。
 router.patch('/loadmeandupdate', authorization, loadMeAndUpdate);
+router.patch('/isavailablenow', authorization, updateIsAvailableToFalse);
+router.patch('/:id/isavailablenow', updateIsAvailableToFalseById);
 
 router.get('/', getUsers);
 router.patch('/:id/logout', logout);
 router.patch('/:id', updateUsersSocketId); // ここも。
-router.patch('/:id/isavailablenow', updateIsAvailableToFalse);
 
 router.patch('/:id/langsstatus', updateLangsStatus);
 

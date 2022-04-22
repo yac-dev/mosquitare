@@ -63,7 +63,6 @@ export const loadMeActionCreator = (jwtToken) => async (dispatch, getState) => {
   }
 };
 
-// このLOAD_MEが複数回起こる原因は何なの？そもそもuseEffectで設定をしているのに。。。→多分変なバグだろう。実際には、serverを何回も起こすなんてしないから、まあそんなに気にする必要もないだろう。
 export const loadMeAndUpdateActionCreator = (jwtToken, socketId) => async (dispatch, getState) => {
   try {
     console.log('load me side before finish');

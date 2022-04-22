@@ -204,14 +204,17 @@ const WorldMap = (props) => {
     if (socket) {
       socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
         props.loadMeAndUpdateActionCreator(localStorage.getItem('mosquitare token'), socketIdFromServer).then(() => {
+          props.getMediaActionCreator();
           props.getUsersActionCreator();
         });
+        // props.getMediaActionCreator();
 
-        props.getMediaActionCreator();
         props.listenCallActionCreator(socket, setShowCallingModal);
       });
     }
   }, [socket]);
+
+  useEffect(() => {}, []);
 
   // useEffect(() => {
   //   if (props.authState.currentUser._id) {

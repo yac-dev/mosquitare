@@ -37,12 +37,13 @@ const INITIAL_STATE = {
   gotRejected: false,
   hangUp: false,
   callCanceled: false,
+  mediaDisabled: false,
 };
 
 const mediaReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case GET_MEDIA:
-      return { ...state, myVideoStreamObject: action.payload };
+      return { ...state, myVideoStreamObject: action.payload, mediaDisabled: false };
     case CALL:
       return {
         ...state,
@@ -114,6 +115,8 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
       return { ...state, callDisconnected: true };
     case GOT_REJECTED:
       return { ...state, gotRejected: true, amICalling: false };
+    case 'UPDATE_ISAVAILABLENOW_TO_FALSE':
+      return { ...state, mediaDisabled: true };
     default:
       return state;
   }

@@ -46,54 +46,64 @@ import { updateIntegratedUserMediaActionCreator } from './integratedUserMediasAc
 import { updateUserConversationToFalseActionCreator } from './authActionCreators';
 import { mosquitareAPI } from '../apis/mosquitare';
 
-export const getMediaActionCreator = // ここのlearningLanguageとnativeLanguage、最初からこれ入れていいかね。空の文字烈で終わりそうだな。。。まあ実験だ。
-
-    (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
-    (dispatch, getState) => {
-      const videoConstrains = { width: { ideal: 480 }, height: { ideal: 270 } };
-      const audioConstraints = {
-        autoGainControl: false,
-        channelCount: 2,
-        echoCancellation: true,
-        latency: 0,
-        noiseSuppression: false, // これあると聞こえづらくなるわ。
-        // sampleRate: 48000,
-        // sampleSize: 16,
-        // volume: 1.0,
-      };
-      navigator.mediaDevices
-        .getUserMedia({ video: videoConstrains, audio: audioConstraints })
-        .then((stream) => {
-          // getUserMediaがblockに帰られた時用。
-          // stream.getTracks().forEach(
-          //   (track) =>
-          //     (track.onended = async () => {
-          //       const userId = getState().authState.currentUser._id;
-          //       const result = await mosquitareAPI.patch(`/users/${userId}/isavailablenow`);
-          //       const { user } = result.data;
-          //       dispatch({
-          //         type: 'UPDATE_ISAVAILABLENOW_TO_FALSE',
-          //         payload: user,
-          //       });
-          //     })
-          // );
-
-          dispatch({
-            type: GET_MEDIA,
-            payload: stream,
-          });
-        })
-        .catch(async (error) => {
-          // ここでisAvailableをoffにする。
-          // const userId = getState().authState.currentUser._id;
-          // const result = await mosquitareAPI.patch(`/users/${userId}/isavailablenow`);
-          // const { user } = result.data;
-          // dispatch({
-          //   type: 'UPDATE_ISAVAILABLENOW_TO_FALSE',
-          //   payload: user,
-          // });
-        });
+export const getMediaActionCreator =
+  (mediaRecorder, chunksForVideo, chunksForAudio, learningLanguageScript, nativeLanguageScript, connectionRef) =>
+  (dispatch, getState) => {
+    const videoConstrains = { width: { ideal: 480 }, height: { ideal: 270 } };
+    const audioConstraints = {
+      autoGainControl: false,
+      channelCount: 2,
+      echoCancellation: true,
+      latency: 0,
+      noiseSuppression: false, // これあると聞こえづらくなるわ。
+      // sampleRate: 48000,
+      // sampleSize: 16,
+      // volume: 1.0,
     };
+    navigator.mediaDevices
+      .getUserMedia({ video: videoConstrains, audio: audioConstraints })
+      .then((stream) => {
+        // getUserMediaがblockに帰られた時用。
+        stream.getTracks().forEach(
+          (track) =>
+            (track.onended = async () => {
+              const userId = getState().authState.currentUser._id;
+              const result = await mosquitareAPI.patch(`/users/${userId}/isavailablenow`);
+              const { user } = result.data;
+              dispatch({
+                type: 'UPDATE_ISAVAILABLENOW_TO_FALSE',
+                payload: user,
+              });
+            })
+        );
+
+        dispatch({
+          type: GET_MEDIA,
+          payload: stream,
+        });
+      })
+      .catch(async (error) => {
+        // const userId = getState().authState.currentUser._id;
+        console.log(error);
+        const jwtToken = localStorage.getItem('mosquitare token');
+        console.log('here is jwt', jwtToken);
+        const result = await mosquitareAPI.patch(
+          `/users/isavailablenow`,
+          {},
+          {
+            headers: {
+              authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+        const { user } = result.data;
+        console.log(user, 'error part working??');
+        dispatch({
+          type: 'UPDATE_ISAVAILABLENOW_TO_FALSE',
+          payload: user,
+        });
+      });
+  };
 
 // stun serverの設定
 // config: {

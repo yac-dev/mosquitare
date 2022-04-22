@@ -17,6 +17,10 @@ import { TextField, InputAdornment } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 // mui components
 import Tooltip from '@mui/material/Tooltip';
+import { Stack } from '@mui/material';
+
+// components
+import Snackbar from './Snackbar';
 
 // action creators
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
@@ -68,6 +72,20 @@ const CallButton = (props) => {
   const [content, setContent] = useState('');
 
   const [sendAnchorEl, setSendAnchorEl] = React.useState(null);
+
+  const renderAlerts = () => {
+    if (props.alertsState.length) {
+      const alertsSnackBars = props.alertsState.map((alert) => {
+        return <Snackbar open={true} id={alert.id} snackBarType={alert.alertType} message={alert.message} />;
+      });
+
+      return (
+        <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+          <Stack spacing={2}>{alertsSnackBars}</Stack>
+        </div>
+      );
+    }
+  };
 
   const handleSendClick = (event) => {
     setSendAnchorEl(event.currentTarget);
@@ -123,12 +141,20 @@ const CallButton = (props) => {
   const onCallClick = (event, oppositeSocketId, exchangingLanguages) => {
     event.preventDefault();
     // props.setIsPopupOpen(false);
-    const mySocketId = props.authState.currentUser.socketId;
-    if (props.setOpenSwipeableDrawer) {
-      props.setOpenSwipeableDrawer(false);
+    if (props.mediaState.mediaDisabled) {
+      props.alertActionCreator(
+        'Please allow your camera and microphone access. And then, refresh the page.',
+        'error',
+        7000
+      );
+    } else {
+      const mySocketId = props.authState.currentUser.socketId;
+      if (props.setOpenSwipeableDrawer) {
+        props.setOpenSwipeableDrawer(false);
+      }
+      props.setShowCallingModal(true);
+      props.callActionCreator(props.socket, mySocketId, oppositeSocketId, exchangingLanguages);
     }
-    props.setShowCallingModal(true);
-    props.callActionCreator(props.socket, mySocketId, oppositeSocketId, exchangingLanguages);
   };
 
   const handleSendMessage = (recipientId) => {
@@ -256,7 +282,7 @@ const CallButton = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState };
+  return { authState: state.authState, mediaState: state.mediaState };
 };
 
 export default connect(mapStateToProps, { callActionCreator, createMessageActionCreator, alertActionCreator })(

@@ -432,6 +432,20 @@ export const updateLangsStatus = async (request, response) => {
 
 export const updateIsAvailableToFalse = async (request, response) => {
   try {
+    console.log('falsing');
+    const { user } = request;
+    user.isAvailableNow = false;
+    await user.save({ validateBeforeSave: false });
+    response.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateIsAvailableToFalseById = async (request, response) => {
+  try {
     const user = await User.findById(request.params.id);
     user.isAvailableNow = false;
     await user.save({ validateBeforeSave: false });
