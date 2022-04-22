@@ -46,7 +46,10 @@ const UserInfoPersonal = (props) => {
     if (props.user.ratingAverage['datingHunter'] >= 1) {
       return (
         <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
-          💕💕 Dating hunter +{props.user.ratingAverage['datingHunter']}
+          💕😍 Looking for Romance&nbsp;
+          <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
+            +{props.user.ratingAverage['datingHunter']}
+          </span>
         </span>
       );
     }
@@ -56,7 +59,23 @@ const UserInfoPersonal = (props) => {
     if (props.user.ratingAverage['moneyHunter'] >= 1) {
       return (
         <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
-          💰💰 Money hunter +{props.user.ratingAverage['moneyHunter']}
+          💰🤑 Need some money&nbsp;
+          <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
+            +{props.user.ratingAverage['moneyHunter']}
+          </span>
+        </span>
+      );
+    }
+  };
+
+  const renderGettingNumber = () => {
+    if (props.user.ratingAverage['numberHunter'] >= 1) {
+      return (
+        <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
+          📱💕 Getting Number&nbsp;
+          <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
+            +{props.user.ratingAverage['numberHunter']}
+          </span>
         </span>
       );
     }

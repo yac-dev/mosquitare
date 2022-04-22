@@ -10,6 +10,7 @@ import { Button } from 'semantic-ui-react';
 import CallingModal from './CallingModal';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
 import AfterFinishingModal from './AfterFinishingModal';
+import RatingModal from './RatingModal';
 // import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 // import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
 import { Stack } from '@mui/material';
@@ -36,6 +37,7 @@ import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreator';
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 
+import { alertActionCreator } from '../actionCreators/alertsActionCreator';
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
 import mapboxgl from 'mapbox-gl';
@@ -94,7 +96,8 @@ const WorldMap = (props) => {
   // 1on1 modal用
   const [show1on1, setShow1on1] = useState(false);
   const [fullscreen1on1Modal, setFullscreen1on1Modal] = useState(true);
-  const [showAfterFinishingModal, setShowAfterFinishingModal] = useState(false);
+  // const [showAfterFinishingModal, setShowAfterFinishingModal] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
   // meeting modal用
   // const [showMeeting, setShowMeeting] = useState(false);
   // const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
@@ -161,8 +164,31 @@ const WorldMap = (props) => {
   //   e.returnValue = '';
   // };
 
-  // page refresh効くじゃん笑
-  // renderされた後にこれが動いて。
+  useEffect(() => {
+    if (localStorage.getItem('after login')) {
+      props.alertActionCreator('Logged in successfully!', 'success');
+      localStorage.removeItem('after login');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem('after video finish')) {
+      props.alertActionCreator(
+        'Nice conversation! You can check and review your conversation on your personal page.',
+        'success',
+        10000
+      );
+      localStorage.removeItem('after signup');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (localStorage.getItem('after signup')) {
+      props.alertActionCreator('Welcome to Lampost! Your location was mapped randomly.', 'success');
+      localStorage.removeItem('after signup');
+    }
+  }, []);
+
   useEffect(() => {
     const jwtToken = localStorage.getItem('mosquitare token');
     if (jwtToken) {
@@ -218,6 +244,7 @@ const WorldMap = (props) => {
 
   useEffect(() => {
     if (props.mediaState.apiCallResult === 3) {
+      localStorage.setItem('after video finish', true);
       window.location = '/worldmap';
     }
   }, [props.mediaState.apiCallResult]);
@@ -304,6 +331,16 @@ const WorldMap = (props) => {
   //   }
   // };
 
+  const renderRatingModal = () => {
+    if (props.mediaState.hangUp) {
+      return (
+        <>
+          <RatingModal showRatingModal={showRatingModal} setShowRatingModal={setShowRatingModal} />
+        </>
+      );
+    }
+  };
+
   const renderWorldMap = () => {
     if (socket && props.usersState.length) {
       return (
@@ -354,12 +391,14 @@ const WorldMap = (props) => {
                 show1on1={show1on1}
                 setShow1on1={setShow1on1}
                 fullscreen1on1Modal={fullscreen1on1Modal}
-                setShowAfterFinishingModal={setShowAfterFinishingModal}
+                // setShowAfterFinishingModal={setShowAfterFinishingModal}
+                setShowRatingModal={setShowRatingModal}
               />
-              <AfterFinishingModal
+              {renderRatingModal()}
+              {/* <AfterFinishingModal
                 showAfterFinishingModal={showAfterFinishingModal}
                 setShowAfterFinishingModal={setShowAfterFinishingModal}
-              />
+              /> */}
               {renderAlerts()}
             </div>
           </Default>
@@ -477,4 +516,5 @@ export default connect(mapStateToProps, {
   listenCallActionCreator,
   getMeetingsActionCreator,
   callActionCreator,
+  alertActionCreator,
 })(WorldMap);

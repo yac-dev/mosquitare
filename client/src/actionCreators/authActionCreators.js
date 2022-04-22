@@ -10,6 +10,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
     const result = await mosquitareAPI.post('/users/signup', formData);
     console.log('signup side', result);
     localStorage.setItem('mosquitare token', result.data.jwtToken);
+    localStorage.setItem('after signup', true);
 
     dispatch({
       type: SIGNUP,
@@ -33,6 +34,7 @@ export const loginActionCreator = (formData) => async (dispatch) => {
       type: LOGIN,
       payload: result.data,
     });
+    localStorage.setItem('after login', true);
     window.location = '/worldmap';
   } catch (error) {
     console.log(error);
@@ -166,9 +168,9 @@ export const updateUserMyLangsStatusActionCreator =
         // countTable[learningLanguageId] = learningLangLength;
         // countTable[nativeLanguageId] = nativeLangLength;
         countDatas[0]['id'] = exchangingLanguages[0]._id;
-        countDatas[0]['length'] = learningLangLength;
+        countDatas[0]['words'] = learningLangLength;
         countDatas[1]['id'] = exchangingLanguages[1]._id;
-        countDatas[1]['length'] = nativeLangLength;
+        countDatas[1]['words'] = nativeLangLength;
         // languageAndLengthTable['learningLang']['_id'] = exchangingLanguages[0]._id;
         // languageAndLengthTable['learningLang']['length'] = learningLangLength;
         // languageAndLengthTable['nativeLang']['_id'] = exchangingLanguages[1]._id;
@@ -183,9 +185,9 @@ export const updateUserMyLangsStatusActionCreator =
         // countTable[learningLanguageId] = learningLangLength;
         // countTable[nativeLanguageId] = nativeLangLength;
         countDatas[0]['id'] = exchangingLanguages[1]._id;
-        countDatas[0]['length'] = learningLangLength;
+        countDatas[0]['words'] = learningLangLength;
         countDatas[1]['id'] = exchangingLanguages[0]._id;
-        countDatas[1]['length'] = nativeLangLength;
+        countDatas[1]['words'] = nativeLangLength;
       }
       mosquitareAPI.patch(`/users/${userId}/langsstatus`, { countDatas });
       // ここやろう。

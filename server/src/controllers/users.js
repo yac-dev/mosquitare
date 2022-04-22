@@ -389,14 +389,16 @@ export const updateLangsStatus = async (request, response) => {
   // countDatas  [{id: '78749r4089', length: 245}, {id: '6726r61288', length: 345}];
   // countDatasのindex 0には必ずlearningの言語が、index1にはnativeの言語が来る。
   const user = await User.findById(request.params.id);
+  // languaugeではアクセスできないね。populateしているから。
   for (let i = 0; i < user.learningLangs.length; i++) {
-    if (countDatas[0].id === user.learningLangs[i].language.toString()) {
-      user.learningLangs[i].status += countDatas[0].length;
+    // _idがundefinedだと。。。
+    if (countDatas[0].id === user.learningLangs[i].language._id.toString()) {
+      user.learningLangs[i].words += countDatas[0].words;
     }
   }
   for (let i = 0; i < user.nativeLangs.length; i++) {
-    if (countDatas[1].id === user.learningLangs[i].language.toString()) {
-      user.learningLangs[i].status += countDatas[1].length;
+    if (countDatas[1].id === user.learningLangs[i].language._id.toString()) {
+      user.learningLangs[i].words += countDatas[1].words;
     }
   }
   await user.save({ validateBeforeSave: false });

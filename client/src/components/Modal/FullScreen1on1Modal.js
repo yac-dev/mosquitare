@@ -113,7 +113,7 @@ const FullScreen1on1Modal = (props) => {
             setOpenLanguageStatusAndTranscript={setOpenLanguageStatusAndTranscript}
             setOpenDoc={setOpenDoc}
             setOpenPartnerUserInfo={setOpenPartnerUserInfo}
-            setShowAfterFinishingModal={props.setShowAfterFinishingModal}
+            setShowRatingModal={props.setShowRatingModal}
           />
           {/* <MediaRecorder />
           <LanguageStatusAndTranscript

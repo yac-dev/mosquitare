@@ -10,6 +10,8 @@ import { Tooltip } from '@mui/material';
 import HelpIcon from '@mui/icons-material/Help';
 import Zoom from '@mui/material/Zoom';
 import EditIcon from '@mui/icons-material/Edit';
+import { Stack } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 // componetns
 import Snackbar from './Snackbar';
@@ -26,6 +28,7 @@ const RatingModal = (props) => {
   const [respectCultureValue, setRespectCultureValue] = useState(0);
   const [datingChecked, setDatingChecked] = useState(false);
   const [moneyChecked, setMoneyChecked] = useState(false);
+  const [numberChecked, setNumberChecked] = useState(false);
 
   const handleDatingChange = (event) => {
     setDatingChecked(event.target.checked);
@@ -33,22 +36,48 @@ const RatingModal = (props) => {
 
   const renderDatingLable = () => {
     if (datingChecked) {
-      return <>My partner is looking for Dating partner 💕</>;
+      return <>My partner asked me about my relationship status 💕</>;
     } else {
-      return <>No problem. My partner is fine!</>;
-    }
-  };
-
-  const renderMoneyLabel = () => {
-    if (moneyChecked) {
-      return <>My partner is asking for money 💰</>;
-    } else {
-      return <>No problem. My partner is fine!</>;
+      return <>No problem. My partner is fine 👍</>;
     }
   };
 
   const handleMoneyChange = (event) => {
     setMoneyChecked(event.target.checked);
+  };
+
+  const renderMoneyLabel = () => {
+    if (moneyChecked) {
+      return <>My partner asked me for money 💰</>;
+    } else {
+      return <>No problem. My partner is fine 👍</>;
+    }
+  };
+
+  const handleNumberChange = (event) => {
+    setNumberChecked(event.target.checked);
+  };
+
+  const renderNumberLabel = () => {
+    if (numberChecked) {
+      return <>My partner asked me for my phone number 📞</>;
+    } else {
+      return <>No problem. My partner is fine 👍</>;
+    }
+  };
+
+  const renderAlerts = () => {
+    if (props.alertsState.length) {
+      const alertsSnackBars = props.alertsState.map((alert) => {
+        return <Snackbar open={true} id={alert.id} snackBarType={alert.alertType} message={alert.message} />;
+      });
+
+      return (
+        <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+          <Stack spacing={2}>{alertsSnackBars}</Stack>
+        </div>
+      );
+    }
   };
 
   const onSubmitClick = () => {
@@ -62,27 +91,32 @@ const RatingModal = (props) => {
       respectCulture: respectCultureValue,
       datingHunter: datingChecked,
       moneyHunter: moneyChecked,
+      numberHunter: numberChecked,
     };
 
     if (!enthusiasticValue || !friendlyValue || !patientValue || !helpfulValue || !respectCultureValue) {
       props.alertActionCreator('Please leave every rating.', 'error');
     }
     console.log(rating);
-    // props.createRatingActionCreator(rating);
+    props.createRatingActionCreator(rating);
   };
 
   return (
     <Modal
-      show={props.showAfterFinishingModal}
-      onHide={() => props.setShowAfterFinishingModal(false)}
+      show={props.showRatingModal}
+      // onHide={() => props.setShowAfterFinishingModal(false)}
       backdrop='static'
       keyboard={false}
     >
       <Modal.Body>
-        <Modal.Header closeButton>
-          <Modal.Title>Leave a rate!</Modal.Title>
+        <Modal.Header>
+          <Modal.Title style={{ color: 'black' }}>
+            [Important!]&nbsp; <EditIcon />
+            &nbsp;Rating
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {renderAlerts()}
           <div className='rate-partner' style={{}}>
             {/* <div className='rate-partner-wrapper' style={{ display: 'flex', height: '10%' }}>
               <div className='rate-partner-header' style={{ flex: 4 }}>
@@ -99,7 +133,9 @@ const RatingModal = (props) => {
               >
               </div>
             </div> */}
-            <p>Important! Please rate {props.mediaState.callingWith.name} to make this application more usuful.</p>
+            <h5 style={{ color: 'black', textAlign: 'center' }}>
+              Please rate {props.mediaState.callingWith.name} to make this application more usuful.
+            </h5>
             <div className='rate-list' style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div>
                 <Typography component='legend'>
@@ -208,7 +244,7 @@ const RatingModal = (props) => {
               </div>
               <div>
                 <Typography component='legend'>
-                  💕 Dating hunter 💕
+                  💕 Dating Hunter 💕
                   <Tooltip
                     TransitionComponent={Zoom}
                     title={`Did ${props.mediaState.callingWith.name} ask you about your relationship status? e.g. Do you have a boyfriend? Are you single?`}
@@ -226,10 +262,10 @@ const RatingModal = (props) => {
               </div>
               <div>
                 <Typography component='legend'>
-                  💰 Money hunter 💰
+                  💰 Money Hunter 💰
                   <Tooltip
                     TransitionComponent={Zoom}
-                    title={`Did ${props.mediaState.callingWith.name} ask you about money related thing? e.g Are you interested in Bitcoin investment? Can I borrow $100?`}
+                    title={`Did ${props.mediaState.callingWith.name} ask you for your money or money transaction? e.g Can I borrow $100? Do you want to try Bitcoin investment?`}
                     arrow
                   >
                     <HelpIcon />
@@ -242,22 +278,39 @@ const RatingModal = (props) => {
                 />
                 {renderMoneyLabel()}
               </div>
+              <div>
+                <Typography component='legend'>
+                  📞 Phone Number Hunter 📞
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`Did ${props.mediaState.callingWith.name} ask your phone number? e.g Can I get your number? What's your number?`}
+                    arrow
+                  >
+                    <HelpIcon />
+                  </Tooltip>
+                </Typography>
+                <Checkbox
+                  checked={numberChecked}
+                  onChange={handleNumberChange}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+                {renderNumberLabel()}
+              </div>
             </div>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='contained' startIcon={<EditIcon />} onClick={() => onSubmitClick()}>
+          <Button variant='contained' startIcon={<SendIcon />} onClick={() => onSubmitClick()}>
             Submit
           </Button>
         </Modal.Footer>
-        <Snackbar />
       </Modal.Body>
     </Modal>
   );
 };
 
 const mapStateToProps = (state) => {
-  return { mediaState: state.mediaState };
+  return { mediaState: state.mediaState, alertsState: state.alertsState };
 };
 
 export default connect(mapStateToProps, { alertActionCreator, createRatingActionCreator })(RatingModal);

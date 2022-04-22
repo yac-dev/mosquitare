@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Chart, Doughnut } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
@@ -27,9 +28,9 @@ const options = {
       display: false,
       // position: 'left',
     },
-    tooltip: {
-      enabled: false,
-    },
+    // tooltip: {
+    //   enabled: false,
+    // },
     // responsive: true,
 
     datalabels: {
@@ -67,14 +68,16 @@ const LanguageChart = (props) => {
       for (let j = 0; j < myLangs.length; j++) {
         if (props.user.nativeLangs[i].language.name === myLangs[j].language.name) {
           mappedLangLabels.push(`${myLangs[j].language.name} (native)`);
+          // mappedLangLabels.push(`${myLangs[j].language.name}`);
         } else {
           mappedLangLabels.push(`${myLangs[j].language.name} (learning)`);
+          // mappedLangLabels.push(`${myLangs[j].language.name}`);
         }
       }
     }
     // 割合の計算
     const data = [];
-    const myLangsStatus = myLangs.map((lang) => lang.status);
+    const myLangsStatus = myLangs.map((lang) => lang.words);
     const statusSum = myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
     myLangsStatus.forEach((langStatus) => {
       const ratio = Math.floor((langStatus / statusSum) * 100);
@@ -86,8 +89,9 @@ const LanguageChart = (props) => {
         {
           label: 'Language Status',
           data: data,
-          backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
-          borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+          // backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+          backgroundColor: ['rgba(37, 95, 184)', 'rgb(44, 184, 63)'],
+          // borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
           borderWidth: 1,
           hoverOffset: 30,
         },
@@ -98,7 +102,7 @@ const LanguageChart = (props) => {
   // ここのdependencyが足りなかったのよ。これだから怖い。programmingは。。。
 
   const renderDoughnut = () => {
-    return <Doughnut data={data} options={options} width={150} height={150} />;
+    return <Doughnut data={data} options={options} width={200} height={200} />;
   };
 
   // 何がnativeかと何を勉強したいかの表示ね。
@@ -108,7 +112,7 @@ const LanguageChart = (props) => {
 
   const render = () => {
     const myLangs = [...props.user.learningLangs, ...props.user.nativeLangs];
-    const myLangsStatus = myLangs.map((lang) => lang.status);
+    const myLangsStatus = myLangs.map((lang) => lang.words);
     // const statusSum = myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
     // for (let i = 0; i < props.user.myLangsStatus.length; i++) {}　あとでこっちに書き換えよう。シンプルにfor loopで、全部0なら　No dataってrenderする方が分かりやすい。
     // if (statusSum === 0) {
@@ -121,8 +125,8 @@ const LanguageChart = (props) => {
     } else if (data) {
       return (
         <div
-          // style={{ width: '99%' }}
-          style={{ width: '100%' }}
+        // style={{ width: '99%' }}
+        // style={{ width: '100%' }}
         >
           {renderDoughnut()}
         </div>

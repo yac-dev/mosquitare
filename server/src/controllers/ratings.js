@@ -31,6 +31,8 @@ export const createRating = async (request, response) => {
         if (rating[status]) {
           user.ratingAverage[status] = user.ratingAverage[status] + 1;
         }
+      } else if (status === 'numberHunter') {
+        user.ratingAverage[status] = user.ratingAverage[status] + 1;
       } else {
         user.ratingAverage[status] = Math.round(((user.ratingAverage[status] + rating[status]) / 2) * 10) / 10;
       }

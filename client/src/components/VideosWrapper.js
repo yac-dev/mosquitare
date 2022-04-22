@@ -317,10 +317,12 @@ const VideosWrapper = (props) => {
     // そうか、そもそもcallAcceptedをfalseにした時点で、もうmodalが表示されないようになっているんだ。
     // props.setShow1on1(false);
     // props.updateUserConversationToFalseActionCreator();
+    props.hangUpCallActionCreator();
     setShow(false);
     connectionRef.current.destroy();
     props.setShow1on1(false);
-    props.setShowAfterFinishingModal(true);
+    props.setShowRatingModal(true);
+    // props.setShowAfterFinishingModal(true);
     // props.hangUpCallActionCreator();
     // props.hangUpCallActionCreator(); //これだけだと、下ですぐにmodalを閉じて、api callをさまたげることになる。
     // window.location = '/worldmap'; // まあこれでいいのかね。

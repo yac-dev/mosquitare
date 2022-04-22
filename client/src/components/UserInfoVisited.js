@@ -1,6 +1,9 @@
 import React from 'react';
 import VisitedMap from './VisitedMap';
 
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
+
 // mui icons
 import LanguageIcon from '@mui/icons-material/Language';
 
@@ -9,13 +12,18 @@ const UserInfoVisited = (props) => {
     const visitedCountriesList = props.user.visited.map((element) => {
       return (
         <>
-          <img src={element.country.flagPics[0]} style={{ width: '16px', height: '10px' }} />
-          &nbsp;
+          <Avatar alt='country' src={element.country.flagPics[0]} sx={{ width: 30, height: 30 }} />
         </>
       );
     });
 
-    return <>{visitedCountriesList}</>;
+    return (
+      <>
+        <Stack direction='row' spacing={1}>
+          {visitedCountriesList}
+        </Stack>
+      </>
+    );
   };
 
   const howMuchCompleted = () => {

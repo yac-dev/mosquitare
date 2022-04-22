@@ -89,18 +89,7 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
     case 'CALL_CANCELED':
       return { ...state, callCanceled: true };
     case HANG_UP_CALL:
-      return {
-        // ...state,
-        // amICalling: false,
-        // amIRecieving: false,
-        // callingWith: null,
-        // callerSignal: null,
-        // oppositeIdToCall: null,
-        // callAccepted: false,
-        // callFinished: true,
-        // currentLanguage: null,
-        hangUp: true,
-      };
+      return { ...state, hangUp: true };
     case SWITCH_CURRENT_LANGUAGE:
       return {
         ...state,
@@ -117,7 +106,7 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
         chunks: [...state.chunks, action.payload],
       };
     case CREATE_USER_MEDIA:
-    case CREATE_USER_SCRIPT:
+    // case CREATE_USER_SCRIPT:
     case 'SEND_LANGUAGE_STATUS':
     case 'CREATE_RATING':
       return { ...state, apiCallResult: state.apiCallResult + 1 };

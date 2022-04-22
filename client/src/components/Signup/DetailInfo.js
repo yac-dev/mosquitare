@@ -491,7 +491,7 @@ const DetailInfo = (props) => {
             return (
               <TextField
                 {...params}
-                label='Which country have you ever been to ?'
+                label='Where have you ever been to?'
                 disabled
                 // inputProps={{
                 //   ...params.inputProps,

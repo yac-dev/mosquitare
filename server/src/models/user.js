@@ -41,7 +41,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         ref: 'Language',
       },
-      status: {
+      words: {
+        type: Number,
+        default: 0,
+      },
+      level: {
         type: Number,
         default: 0,
       },
@@ -61,7 +65,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         ref: 'Language',
       },
-      status: {
+      words: {
+        type: Number,
+        default: 0,
+      },
+      level: {
         type: Number,
         default: 0,
       },
@@ -181,6 +189,10 @@ const userSchema = new mongoose.Schema({
       default: 0,
     },
     moneyHunter: {
+      type: Number,
+      default: 0,
+    },
+    numberHunter: {
       type: Number,
       default: 0,
     },

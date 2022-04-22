@@ -118,7 +118,7 @@ const BasicUserInfo = (props) => {
         <div className='user-info-header-flexbox' style={{ display: 'flex', marginBottom: '20px' }}>
           <div className='info-list' style={{ flex: 5, textAlign: 'center' }}>
             <div>
-              <div style={{ margin: '10px' }}>
+              <div style={{ margin: '10px', fontWeight: 'bolder' }}>
                 {user.name}&nbsp;{renderPersonalStatusAverage(user)}
               </div>
               {renderUserState()}
