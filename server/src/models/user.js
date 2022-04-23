@@ -164,38 +164,8 @@ const userSchema = new mongoose.Schema({
     },
   ],
   ratingAverage: {
-    enthusiastic: {
-      type: Number,
-      default: 0,
-    },
-    friendly: {
-      type: Number,
-      default: 0,
-    },
-    patient: {
-      type: Number,
-      default: 0,
-    },
-    helpful: {
-      type: Number,
-      default: 0,
-    },
-    respectCulture: {
-      type: Number,
-      default: 0,
-    },
-    datingHunter: {
-      type: Number,
-      default: 0,
-    },
-    moneyHunter: {
-      type: Number,
-      default: 0,
-    },
-    numberHunter: {
-      type: Number,
-      default: 0,
-    },
+    type: mongoose.Schema.ObjectId,
+    ref: 'RatingAverage',
   },
   // visitedPhoto: [[{ type: String }]],いずれ、ここにも足していくことになる。
   // pendingPenalty: [

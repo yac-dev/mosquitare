@@ -12,6 +12,13 @@ import Zoom from '@mui/material/Zoom';
 import EditIcon from '@mui/icons-material/Edit';
 import { Stack } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { TextField, InputAdornment } from '@mui/material';
+
+// accordion
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 // componetns
 import Snackbar from './Snackbar';
@@ -21,24 +28,48 @@ import { alertActionCreator } from '../actionCreators/alertsActionCreator';
 import { createRatingActionCreator } from '../actionCreators/ratingsActionCreator';
 
 const RatingModal = (props) => {
-  const [enthusiasticValue, setEnthusiasticValue] = useState(0);
-  const [friendlyValue, setFriendlyValue] = useState(0);
-  const [helpfulValue, setHelpfulValue] = useState(0);
-  const [patientValue, setPatientValue] = useState(0);
-  const [respectCultureValue, setRespectCultureValue] = useState(0);
-  const [datingChecked, setDatingChecked] = useState(false);
+  const [enthusiasmValue, setEnthusiasmValue] = useState(0);
+  const [friendlinessValue, setFriendlinessValue] = useState(0);
+  const [patienceValue, setPatienceValue] = useState(0);
+  const [cooperationValue, setCooperationValue] = useState(0);
+  const [diversityValue, setDiversityValue] = useState(0);
+  const [romanceChecked, setRomanceChecked] = useState(false);
+  const [romanceDetail, setRomanceDetail] = useState('');
   const [moneyChecked, setMoneyChecked] = useState(false);
-  const [numberChecked, setNumberChecked] = useState(false);
-
-  const handleDatingChange = (event) => {
-    setDatingChecked(event.target.checked);
+  const [moneyDetail, setMoneyDetail] = useState('');
+  const [racismChecked, setRacismChecked] = useState(false);
+  const [racismDetail, setRacismDetail] = useState('');
+  const handleRomanceChange = (event) => {
+    setRomanceChecked(event.target.checked);
   };
 
-  const renderDatingLable = () => {
-    if (datingChecked) {
-      return <>My partner asked me about my relationship status 💕</>;
+  const renderRomanceLabel = () => {
+    if (romanceChecked) {
+      return (
+        <>
+          My partner asked me about my relationship status 💕<br></br>
+          <TextField
+            id='input-with-icon-textfield'
+            label='Please write the problem you had briefly.'
+            multiline
+            fullWidth
+            value={romanceDetail}
+            onChange={(event) => setRomanceDetail(event.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Tooltip title='Send'>
+                    <EditIcon />
+                  </Tooltip>
+                </InputAdornment>
+              ),
+            }}
+            variant='standard'
+          />
+        </>
+      );
     } else {
-      return <>No problem. My partner is fine 👍</>;
+      return <>No problem. My partner was completely fine 👍</>;
     }
   };
 
@@ -48,21 +79,65 @@ const RatingModal = (props) => {
 
   const renderMoneyLabel = () => {
     if (moneyChecked) {
-      return <>My partner asked me for money 💰</>;
+      return (
+        <>
+          My partner asked me for money 💰<br></br>
+          <TextField
+            id='input-with-icon-textfield'
+            label='Please write the problem you had briefly.'
+            multiline
+            fullWidth
+            value={moneyDetail}
+            onChange={(event) => setMoneyDetail(event.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Tooltip title='Send'>
+                    <EditIcon />
+                  </Tooltip>
+                </InputAdornment>
+              ),
+            }}
+            variant='standard'
+          />
+        </>
+      );
     } else {
-      return <>No problem. My partner is fine 👍</>;
+      return <>No problem. My partner was completely fine 👍</>;
     }
   };
 
-  const handleNumberChange = (event) => {
-    setNumberChecked(event.target.checked);
+  const handleRacismChange = (event) => {
+    setRacismChecked(event.target.checked);
   };
 
-  const renderNumberLabel = () => {
-    if (numberChecked) {
-      return <>My partner asked me for my phone number 📞</>;
+  const renderRacismLabel = () => {
+    if (racismChecked) {
+      return (
+        <>
+          My partner gave me racist comments or behavior<br></br>
+          <TextField
+            id='input-with-icon-textfield'
+            label='Please write the problem you had briefly.'
+            multiline
+            fullWidth
+            value={racismDetail}
+            onChange={(event) => setRacismDetail(event.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position='start'>
+                  <Tooltip title='Send'>
+                    <EditIcon />
+                  </Tooltip>
+                </InputAdornment>
+              ),
+            }}
+            variant='standard'
+          />
+        </>
+      );
     } else {
-      return <>No problem. My partner is fine 👍</>;
+      return <>No problem. My partner was completely fine 👍</>;
     }
   };
 
@@ -83,22 +158,49 @@ const RatingModal = (props) => {
   const onSubmitClick = () => {
     // ここでapi requestを送ることになる。
     // rating {"enthusiastic": 10, "friendly": 8, "patient": 6, "helpful": 5, "respectCulture": 8," datingHunter": false, "moneyHunter": false}
-    const rating = {
-      enthusiastic: enthusiasticValue,
-      friendly: friendlyValue,
-      patient: patientValue,
-      helpful: helpfulValue,
-      respectCulture: respectCultureValue,
-      datingHunter: datingChecked,
-      moneyHunter: moneyChecked,
-      numberHunter: numberChecked,
+    // diversity
+    const ratingData = {
+      enthusiasm: enthusiasmValue,
+      friendliness: friendlinessValue,
+      patience: patienceValue,
+      cooperation: cooperationValue,
+      diversity: diversityValue,
+      romanceHunter: {
+        checked: romanceChecked,
+        detail: romanceDetail,
+      },
+      moneyHunter: {
+        checked: moneyChecked,
+        detail: moneyDetail,
+      },
+      racism: {
+        checked: racismChecked,
+        detail: racismDetail,
+      },
     };
 
-    if (!enthusiasticValue || !friendlyValue || !patientValue || !helpfulValue || !respectCultureValue) {
+    if (!enthusiasmValue || !friendlinessValue || !patienceValue || !cooperationValue || !diversityValue) {
       props.alertActionCreator('Please leave every rating.', 'error');
     }
-    console.log(rating);
-    props.createRatingActionCreator(rating);
+    if (romanceChecked) {
+      if (!romanceDetail) {
+        props.alertActionCreator('Please write the problem about Romance Hunter', 'error');
+      }
+    }
+
+    if (moneyChecked) {
+      if (!moneyDetail) {
+        props.alertActionCreator('Please write the problem about Money Hunter', 'error');
+      }
+    }
+
+    if (racismChecked) {
+      if (!racismDetail) {
+        props.alertActionCreator('Please write the problem about Racism', 'error');
+      }
+    }
+    console.log(ratingData);
+    props.createRatingActionCreator(ratingData);
   };
 
   return (
@@ -136,10 +238,10 @@ const RatingModal = (props) => {
             <h5 style={{ color: 'black', textAlign: 'center' }}>
               Please rate {props.mediaState.callingWith.name} to make this application more usuful.
             </h5>
-            <div className='rate-list' style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div className='rating-1' style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div>
                 <Typography component='legend'>
-                  💪 Enthusiastic
+                  💪 Enthusiasm
                   <Tooltip
                     TransitionComponent={Zoom}
                     title={`How much was ${props.mediaState.callingWith.name} passionate about practicing language?`}
@@ -152,18 +254,18 @@ const RatingModal = (props) => {
                   name='customized-10'
                   defaultValue={0}
                   max={10}
-                  value={enthusiasticValue}
+                  value={enthusiasmValue}
                   onChange={(event, newValue) => {
-                    setEnthusiasticValue(newValue);
+                    setEnthusiasmValue(newValue);
                   }}
                 />
               </div>
               <div>
                 <Typography component='legend'>
-                  😁 Friendly
+                  😁 Friendliness
                   <Tooltip
                     TransitionComponent={Zoom}
-                    title={`How much was ${props.mediaState.callingWith.name} kind and pleasant to you?`}
+                    title={`How much was ${props.mediaState.callingWith.name} friendly to you?`}
                     arrow
                   >
                     <HelpIcon />
@@ -173,15 +275,15 @@ const RatingModal = (props) => {
                   name='customized-10'
                   defaultValue={0}
                   max={10}
-                  value={friendlyValue}
+                  value={friendlinessValue}
                   onChange={(event, newValue) => {
-                    setFriendlyValue(newValue);
+                    setFriendlinessValue(newValue);
                   }}
                 />
               </div>
               <div>
                 <Typography component='legend'>
-                  🧑‍🏫 Patient
+                  🧑‍🏫 Patience
                   <Tooltip
                     TransitionComponent={Zoom}
                     title={`How much did ${props.mediaState.callingWith.name} try to listen to you?`}
@@ -194,18 +296,18 @@ const RatingModal = (props) => {
                   name='customized-10'
                   defaultValue={0}
                   max={10}
-                  value={helpfulValue}
+                  value={cooperationValue}
                   onChange={(event, newValue) => {
-                    setHelpfulValue(newValue);
+                    setCooperationValue(newValue);
                   }}
                 />
               </div>
               <div>
                 <Typography component='legend'>
-                  ✍️ Helpful
+                  ✍️ Cooperation
                   <Tooltip
                     TransitionComponent={Zoom}
-                    title={`How much did ${props.mediaState.callingWith.name} teach language to you or took a note on Shared Doc?`}
+                    title={`How much did ${props.mediaState.callingWith.name} teach language to you or take a note on Shared Doc?`}
                     arrow
                   >
                     <HelpIcon />
@@ -215,18 +317,18 @@ const RatingModal = (props) => {
                   name='customized-10'
                   defaultValue={0}
                   max={10}
-                  value={patientValue}
+                  value={patienceValue}
                   onChange={(event, newValue) => {
-                    setPatientValue(newValue);
+                    setPatienceValue(newValue);
                   }}
                 />
               </div>
               <div>
                 <Typography component='legend'>
-                  🤝 Respect Culture
+                  🤝 Diversity
                   <Tooltip
                     TransitionComponent={Zoom}
-                    title={`How much did ${props.mediaState.callingWith.name} try to understand the cultural difference?`}
+                    title={`How much did ${props.mediaState.callingWith.name} respect the cultural difference?`}
                     arrow
                   >
                     <HelpIcon />
@@ -236,29 +338,31 @@ const RatingModal = (props) => {
                   name='customized-10'
                   defaultValue={0}
                   max={10}
-                  value={respectCultureValue}
+                  value={diversityValue}
                   onChange={(event, newValue) => {
-                    setRespectCultureValue(newValue);
+                    setDiversityValue(newValue);
                   }}
                 />
               </div>
+            </div>
+            <div className='rating-2' style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div>
                 <Typography component='legend'>
-                  💕 Dating Hunter 💕
+                  💕 Romance Hunter 💕
                   <Tooltip
                     TransitionComponent={Zoom}
-                    title={`Did ${props.mediaState.callingWith.name} ask you about your relationship status? e.g. Do you have a boyfriend? Are you single?`}
+                    title={`Did ${props.mediaState.callingWith.name} ask you about your relationship status or phone number for dating? e.g. Do you have a boyfriend? Are you single? Can I get your number?`}
                     arrow
                   >
                     <HelpIcon />
                   </Tooltip>
                 </Typography>
                 <Checkbox
-                  checked={datingChecked}
-                  onChange={handleDatingChange}
+                  checked={romanceChecked}
+                  onChange={handleRomanceChange}
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
-                {renderDatingLable()}
+                {renderRomanceLabel()}
               </div>
               <div>
                 <Typography component='legend'>
@@ -280,21 +384,21 @@ const RatingModal = (props) => {
               </div>
               <div>
                 <Typography component='legend'>
-                  📞 Phone Number Hunter 📞
+                  Racism
                   <Tooltip
                     TransitionComponent={Zoom}
-                    title={`Did ${props.mediaState.callingWith.name} ask your phone number? e.g Can I get your number? What's your number?`}
+                    title={`Did ${props.mediaState.callingWith.name} give you any racist comments or behavior?`}
                     arrow
                   >
                     <HelpIcon />
                   </Tooltip>
                 </Typography>
                 <Checkbox
-                  checked={numberChecked}
-                  onChange={handleNumberChange}
+                  checked={racismChecked}
+                  onChange={handleRacismChange}
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
-                {renderNumberLabel()}
+                {renderRacismLabel()}
               </div>
             </div>
           </div>
