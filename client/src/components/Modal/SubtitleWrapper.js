@@ -44,6 +44,7 @@ import { updateConversationUserScriptActionCreator } from '../../actionCreators/
 import { updateUserMyLangsStatusActionCreator } from '../../actionCreators/authActionCreators';
 import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaActionCreator';
 import { recieveSwitchingLanguageRequestActionCreator1 } from '../../actionCreators/mediaActionCreator';
+import { alertActionCreator } from '../../actionCreators/alertsActionCreator';
 
 // css
 import '../../styles/transcript.css';
@@ -326,6 +327,7 @@ const SubtitleWrapper = (props) => {
   useEffect(() => {
     props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
       props.recieveSwitchingLanguageRequestActionCreator1(dataFromServer.switchingLanguage);
+      props.alertActionCreator('Your partner changed language.', 'info')
     });
   }, []);
 
@@ -719,4 +721,5 @@ export default connect(mapStateToProps, {
   updateUserMyLangsStatusActionCreator,
   switchCurrentLanguageActionCreator1,
   recieveSwitchingLanguageRequestActionCreator1,
+  alertActionCreator
 })(SubtitleWrapper);

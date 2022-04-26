@@ -190,7 +190,7 @@ const SignupWrapper = (props) => {
       >
         {renderAlerts()}
         <Modal.Header>
-          <Modal.Title>Welcome to Lampost!</Modal.Title>
+          <Modal.Title style={{ color: 'black' }}>Welcome to Lampost!</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className='signup-form'>{renderModalBody()}</div>

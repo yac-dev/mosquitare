@@ -42,13 +42,13 @@ export const options = {
   maintainAspectRatio: false, // これだ。resizeな。pluginの外に出すとできたよ。
 };
 
-const labels = ['💪 Enthusiastic', '😄 Friendly', '🧑‍🏫 Patient', '✍️ Helpful', '🤝 Respect Culture'];
+const labels = ['💪 Enthusiasm', '😄 Friendliness', '🧑‍🏫 Patience', '✍️ Cooperation', '🤝 Diversity'];
 
 const PersonalityChart = (props) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const ratingAverageData = Object.values(props.user.ratingAverage).slice(0, 5);
+    const ratingAverageData = Object.values(props.user.ratingAverage).slice(2, 7);
     const d = {
       labels,
       datasets: [
@@ -86,7 +86,7 @@ const PersonalityChart = (props) => {
   };
 
   const render = () => {
-    const ratingAverageData = Object.values(props.user.ratingAverage).slice(0, 5);
+    const ratingAverageData = Object.values(props.user.ratingAverage).slice(2, 7);
     if (ratingAverageData.every((element) => element === 0)) {
       return <>{renderInitialData()}</>;
     } else if (data) {

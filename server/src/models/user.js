@@ -228,6 +228,10 @@ userSchema.pre(/^find/, function (next) {
     path: 'visited.country',
     select: 'name location flagPics',
   });
+
+  this.populate({
+    path: 'ratingAverage',
+  });
   // this.populate({
   //   path: 'conversations',
   // });

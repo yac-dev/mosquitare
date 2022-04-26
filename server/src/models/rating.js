@@ -20,15 +20,15 @@ const ratingSchema = new mongoose.Schema({
   diversity: Number,
   romanceHunter: {
     checked: Boolean,
-    message: String,
+    detail: String,
   },
   moneyHunter: {
     checked: Boolean,
-    message: String,
+    detail: String,
   },
   racism: {
     checked: Boolean,
-    message: String,
+    detail: String,
   },
   // rating {enthusiastic: 10, friendly: 8, patient: 6, helpful: 5, respectCulture: 8, datingHunter: false, moneyHunter: false}
 });

@@ -8,6 +8,7 @@ import { Modal } from 'react-bootstrap';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
+import { Stack } from '@mui/material';
 
 // components
 import MediaRecorder from '../MediaRecord';
@@ -21,6 +22,8 @@ import PartnerUserInfo from '../PartnerUserInfo';
 import MyClock from '../MyClock';
 // import VerticalTabsWrapper from '../VerticalTabsWrapper';
 import AppsWrapper from '../ConversationApps/AppsWrapper';
+// components
+import SnackBar from '../Snackbar';
 
 // css
 import '../../styles/1on1.css';
@@ -69,6 +72,20 @@ const FullScreen1on1Modal = (props) => {
   //   // 少なくとも、ここのcomponentでは、refをもたない。refを持つのはfulscreenの方だからね。
   //   props.myCallIsAcceptedActionCreator(props.socket, props.setShowCallingModal);
   // }, []);
+
+  const renderAlerts = () => {
+    if (props.alertsState.length) {
+      const alertsSnackBars = props.alertsState.map((alert) => {
+        return <SnackBar open={true} id={alert.id} snackBarType={alert.alertType} message={alert.message} />;
+      });
+
+      return (
+        <div style={{ position: 'absolute', top: '20px', right: '20px' }}>
+          <Stack spacing={2}>{alertsSnackBars}</Stack>
+        </div>
+      );
+    }
+  };
 
   const handleClick = () => {
     setOpen(true);
@@ -319,7 +336,7 @@ const FullScreen1on1Modal = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { mediaState: state.mediaState, authState: state.authState };
+  return { mediaState: state.mediaState, authState: state.authState, alertsState: state.alertsState };
 };
 
 export default connect(mapStateToProps, { callWasCanceldActionCreator })(FullScreen1on1Modal);

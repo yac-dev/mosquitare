@@ -1,4 +1,5 @@
 import User from '../models/user';
+import RatingAverage from '../models/ratingAverage';
 import City from '../models/city';
 import mongoose from 'mongoose';
 
@@ -145,8 +146,12 @@ export const signup = async (request, response) => {
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
-    await user.save();
+    const ratingAverage = await RatingAverage.create({
+      user: user._id,
+    });
 
+    user.ratingAverage = ratingAverage;
+    await user.save();
     // var mailOptions = {
     //   // from: 'agua0828@gmail.com',
     //   to: user.email,

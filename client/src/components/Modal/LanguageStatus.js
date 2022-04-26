@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 // ac
 import { switchCurrentLanguageActionCreator1 } from '../../actionCreators/mediaActionCreator';
 import { updateUserMyLangsStatusActionCreator } from '../../actionCreators/authActionCreators';
+import { alertActionCreator } from '../../actionCreators/alertsActionCreator';
 
 // mui
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -141,6 +142,7 @@ const LanguageStatus = (props) => {
   const switchLanguage = () => {
     //言語を切り替えたら、自動でoffになる。
     props.switchCurrentLanguageActionCreator1(props.socket);
+    props.alertActionCreator('Changed language.', 'info');
   };
 
   const renderSwitchingLanguage = () => {
@@ -185,6 +187,8 @@ const mapStateToProps = (state) => {
   return { mediaState: state.mediaState };
 };
 
-export default connect(mapStateToProps, { switchCurrentLanguageActionCreator1, updateUserMyLangsStatusActionCreator })(
-  LanguageStatus
-);
+export default connect(mapStateToProps, {
+  switchCurrentLanguageActionCreator1,
+  updateUserMyLangsStatusActionCreator,
+  alertActionCreator,
+})(LanguageStatus);

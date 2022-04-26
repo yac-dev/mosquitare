@@ -174,7 +174,7 @@ const WorldMap = (props) => {
   useEffect(() => {
     if (localStorage.getItem('after video finish')) {
       props.alertActionCreator(
-        'Nice conversation! You can check and review your conversation on your personal page.',
+        'Did you enjoy the conversation? You can review your conversation on your personal page.',
         'success',
         10000
       );
@@ -184,7 +184,7 @@ const WorldMap = (props) => {
 
   useEffect(() => {
     if (localStorage.getItem('after signup')) {
-      props.alertActionCreator('Welcome to Lampost! Your location was mapped randomly.', 'success');
+      props.alertActionCreator('Welcome to Lampost! Your location was placed randomly!', 'success', 10000);
       localStorage.removeItem('after signup');
     }
   }, []);

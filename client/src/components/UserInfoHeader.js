@@ -78,7 +78,7 @@ const BasicUserInfo = (props) => {
   };
 
   const renderPersonalStatusAverage = (user) => {
-    const ratingAverageArray = Object.values(user.ratingAverage).slice(0, 5);
+    const ratingAverageArray = Object.values(user.ratingAverage).slice(2, 7);
     if (ratingAverageArray.every((element) => element === 0)) {
       return (
         <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
