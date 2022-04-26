@@ -27,6 +27,8 @@ const RightPositionedUserDetail = (props) => {
               setShowCallingModal={props.setShowCallingModal}
               showVideoModal={props.showVideoModal}
               setShowVideoModal={props.setShowVideoModal}
+              showSendMessageModal={props.showSendMessageModal}
+              setShowSendMessageModal={props.setShowSendMessageModal}
             />
           </div>
         );

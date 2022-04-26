@@ -39,7 +39,7 @@ const UserInfoVideos = (props) => {
   };
 
   return (
-    <div class='user-videos-wrapper' style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+    <div class='user-videos-wrapper' style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', overflow: 'auto' }}>
       {renderUserVideos()}
     </div>
   );

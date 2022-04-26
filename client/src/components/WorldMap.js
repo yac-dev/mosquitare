@@ -100,6 +100,8 @@ const WorldMap = (props) => {
   // const [showAfterFinishingModal, setShowAfterFinishingModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showSendMessageModal, setShowSendMessageModal] = useState(false);
+
   // meeting modal用
   // const [showMeeting, setShowMeeting] = useState(false);
   // const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
@@ -211,7 +213,7 @@ const WorldMap = (props) => {
         });
         // props.getMediaActionCreator();
 
-        props.listenCallActionCreator(socket, setShowCallingModal);
+        props.listenCallActionCreator(socket, setShowCallingModal, setShowVideoModal);
       });
     }
   }, [socket]);
@@ -388,6 +390,8 @@ const WorldMap = (props) => {
                   setWorldMapSetting={setWorldMapSetting}
                   showVideoModal={showVideoModal}
                   setShowVideoModal={setShowVideoModal}
+                  showSendMessageModal={showSendMessageModal}
+                  setShowSendMessageModal={setShowSendMessageModal}
                 />
                 {/* <UserDetail
                   socket={socket}

@@ -65,7 +65,7 @@ const BasicInfo = (props) => {
         <input type='file' onChange={() => props.setPhoto()} /> */}
         <label>
           <EmojiPeopleIcon />
-          &nbsp; Self-Introduction
+          &nbsp; Self-Introduction (limited 150 characters)
         </label>
         <TextArea
           placeholder='Write about yourself such as your job, interests, why you are learning, how log have you been learning etc'

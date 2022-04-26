@@ -460,7 +460,7 @@ const DetailInfo = (props) => {
         />
       </div>
 
-      <div className='signup-visited' style={{ marginBottom: '20px', color: 'black' }}>
+      {/* <div className='signup-visited' style={{ marginBottom: '20px', color: 'black' }}>
         <label>
           <ConnectingAirportsIcon />
           &nbsp;Travel History
@@ -502,7 +502,8 @@ const DetailInfo = (props) => {
             );
           }}
         />
-      </div>
+      </div> */}
+
       {/* <Autocomplete
         // multiple
         id='tags-outlined'

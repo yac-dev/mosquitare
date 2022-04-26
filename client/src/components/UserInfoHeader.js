@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
+import ReadMoreReact from 'read-more-react';
 
 // components
 import LanguageChart from './LanguageChart';
@@ -69,11 +70,23 @@ const BasicUserInfo = (props) => {
 
   const renderUserState = () => {
     if (!props.user.isAvailableNow) {
-      return <span>&#9898;&nbsp;Not available 💤🛌</span>;
+      return (
+        <Tooltip title='Not available now'>
+          <span>💤🛌</span>
+        </Tooltip>
+      );
     } else if (props.user.isAvailableNow && props.user.isInConversation) {
-      return <span>&#128308;&nbsp;Conversation now ☎️</span>;
+      return (
+        <Tooltip title='Having conversation now'>
+          <span>🤔☎️</span>
+        </Tooltip>
+      );
     } else if (props.user.isAvailableNow) {
-      return <span>&#128994;&nbsp;Available now 😁</span>;
+      return (
+        <Tooltip title='Available now'>
+          <span>😃🤚</span>
+        </Tooltip>
+      );
     }
   };
 
@@ -85,30 +98,36 @@ const BasicUserInfo = (props) => {
           New!
         </span>
       );
-    }
-    const initialValue = 0;
-    // const sliced = user.ratingAverage.slice(0, 5);
-    const sumWithInitial = ratingAverageArray.reduce(
-      (previousValue, currentValue) => previousValue + currentValue,
-      initialValue
-    );
+    } else {
+      const initialValue = 0;
+      // const sliced = user.ratingAverage.slice(0, 5);
+      const sumWithInitial = ratingAverageArray.reduce(
+        (previousValue, currentValue) => previousValue + currentValue,
+        initialValue
+      );
 
-    const average = Math.round((sumWithInitial / ratingAverageArray.length) * 10) / 10;
-    if (average >= 7.5) {
+      const average = Math.round((sumWithInitial / ratingAverageArray.length) * 10) / 10;
       return (
         <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
           {average}
         </span>
       );
-    } else if (average > 5.0 || average <= 7.4) {
-      <span style={{ color: 'white', backgroundColor: 'rgb(206, 209, 52)', padding: '5px', borderRadius: '5px' }}>
-        {average}
-      </span>;
-    } else if (average <= 4.9) {
-      <span style={{ color: 'white', backgroundColor: 'rgb(186, 7, 43)', padding: '5px', borderRadius: '5px' }}>
-        {average}
-      </span>;
     }
+    // if (average >= 7.5) {
+    //   return (
+    //     <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
+    //       {average}
+    //     </span>
+    //   );
+    // } else if (average > 5.0 || average <= 7.4) {
+    //   <span style={{ color: 'white', backgroundColor: 'rgb(206, 209, 52)', padding: '5px', borderRadius: '5px' }}>
+    //     {average}
+    //   </span>;
+    // } else if (average <= 4.9) {
+    //   <span style={{ color: 'white', backgroundColor: 'rgb(186, 7, 43)', padding: '5px', borderRadius: '5px' }}>
+    //     {average}
+    //   </span>;
+    // }
   };
 
   // このcomponent名自体を後で変えた方がいい。このfunction名はこれでいい。
@@ -121,6 +140,8 @@ const BasicUserInfo = (props) => {
               <div style={{ margin: '10px', fontWeight: 'bolder' }}>
                 {user.name}&nbsp;{renderPersonalStatusAverage(user)}&nbsp;{renderUserState()}
               </div>
+              <ReadMoreReact text={user.selfIntroduction} readMoreText='read more' />
+              {/* <ReadMoreReact></ReadMoreReact>
               <p>{user.selfIntroduction}</p>
               {/* <p>{user.conversations.length} conversations</p> */}
             </div>

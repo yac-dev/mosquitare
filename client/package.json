@@ -40,6 +40,7 @@
     "react-scripts": "4.0.3",
     "react-social-icons": "^5.13.0",
     "react-speech-recognition": "^3.9.0",
+    "read-more-react": "^1.0.10",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
     "resize-observer": "^1.0.4",

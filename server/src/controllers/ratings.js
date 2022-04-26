@@ -50,16 +50,37 @@ export const createRating = async (request, response) => {
           ratingAverage.racism += 1;
         }
       } else if (status === 'enthusiasm') {
-        ratingAverage.enthusiasm = Math.round(((ratingAverage.enthusiasm + ratingData['enthusiasm']) / 2) * 10) / 10;
+        if (ratingAverage.enthusiasm === 0) {
+          ratingAverage.enthusiasm = ratingData['enthusiasm'];
+        } else {
+          ratingAverage.enthusiasm = Math.round(((ratingAverage.enthusiasm + ratingData['enthusiasm']) / 2) * 10) / 10;
+        }
       } else if (status === 'friendliness') {
-        ratingAverage.friendliness =
-          Math.round(((ratingAverage.friendliness + ratingData['friendliness']) / 2) * 10) / 10;
+        if (ratingAverage.friendliness === 0) {
+          ratingAverage.friendliness = ratingData['friendliness'];
+        } else {
+          ratingAverage.friendliness =
+            Math.round(((ratingAverage.friendliness + ratingData['friendliness']) / 2) * 10) / 10;
+        }
       } else if (status === 'patience') {
-        ratingAverage.patience = Math.round(((ratingAverage.patience + ratingData['patience']) / 2) * 10) / 10;
+        if (ratingAverage.patience === 0) {
+          ratingAverage.patience = ratingData['patience'];
+        } else {
+          ratingAverage.patience = Math.round(((ratingAverage.patience + ratingData['patience']) / 2) * 10) / 10;
+        }
       } else if (status === 'cooperation') {
-        ratingAverage.cooperation = Math.round(((ratingAverage.cooperation + ratingData['cooperation']) / 2) * 10) / 10;
+        if (ratingAverage.cooperation === 0) {
+          ratingAverage.cooperation = ratingData['cooperation'];
+        } else {
+          ratingAverage.cooperation =
+            Math.round(((ratingAverage.cooperation + ratingData['cooperation']) / 2) * 10) / 10;
+        }
       } else if (status === 'diversity') {
-        ratingAverage.diversity = Math.round(((ratingAverage.diversity + ratingData['diversity']) / 2) * 10) / 10;
+        if (ratingAverage.diversity === 0) {
+          ratingAverage.diversity = ratingData['diversity'];
+        } else {
+          ratingAverage.diversity = Math.round(((ratingAverage.diversity + ratingData['diversity']) / 2) * 10) / 10;
+        }
       }
     });
     // user.markModified('ratingAverage');

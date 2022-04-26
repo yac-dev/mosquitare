@@ -142,11 +142,12 @@ export const callActionCreator =
   };
 
 // call受ける側、worldmapで実行されるやつら。
-export const listenCallActionCreator = (socket, setShowCallingModal) => (dispatch, getState) => {
+export const listenCallActionCreator = (socket, setShowCallingModal, setShowVideoModal) => (dispatch, getState) => {
   socket.on(SOMEBODY_CALLS_ME, (dataFromServer) => {
     console.log('Somebody calls me.');
     const { signalData, whoIsCalling, callerUserInfo, exchangingLanguages } = dataFromServer;
     console.log(exchangingLanguages);
+    setShowVideoModal(false);
     setShowCallingModal(true);
     dispatch({
       type: LISTEN_CALL,
