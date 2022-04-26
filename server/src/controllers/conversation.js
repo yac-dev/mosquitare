@@ -1,6 +1,7 @@
 import Conversation from '../models/conversation';
 // import ConversationState from '../models/conversationState';
 import ConversationPrivacySetting from '../models/conversationPrivacySetting';
+import User from '../models/user';
 
 export const createConversation = async (request, response) => {
   try {
@@ -160,6 +161,26 @@ export const getMyConversations = async (request, response) => {
       });
     response.status(200).json({
       myConversations,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserConversations = async (request, response) => {
+  try {
+    const user = await User.findById(request.params.userId);
+    console.log(user);
+    const userConversations = await Conversation.find({ _id: { $in: user.conversations } })
+      .populate({
+        path: 'users',
+        select: 'name photo',
+      })
+      .populate({
+        path: 'genre',
+      });
+    response.status(200).json({
+      userConversations,
     });
   } catch (error) {
     console.log(error);

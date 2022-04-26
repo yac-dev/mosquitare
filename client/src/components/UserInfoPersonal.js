@@ -99,13 +99,13 @@ const UserInfoPersonal = (props) => {
         </div>
       </div>
 
-      <div className='self-introduction' style={{ marginBottom: '20px' }}>
+      {/* <div className='self-introduction' style={{ marginBottom: '20px' }}>
         <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)' }}>
           <EmojiPeopleIcon />
           Self-Introduction&nbsp;
         </h6>
         <p>{props.user.selfIntroduction}</p>
-      </div>
+      </div> */}
 
       {/* <div className='socials' style={{ marginBottom: '20px' }}>
         <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)' }}>

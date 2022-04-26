@@ -18,6 +18,14 @@ const conversationsReducer = (state = INITAIL_STATE, action) => {
       return { ...state, ...myConversations };
     case 'CLEAN_UP_CONVERSATIONS':
       return { ...INITAIL_STATE };
+    case 'GET_USER_CONVERSATIONS':
+      const userConversations = {};
+      action.payload.forEach((userConversation) => {
+        userConversations[userConversation._id] = userConversation;
+      });
+      return { ...state, ...userConversations };
+    case 'CLEANUP_USER_CONVERSATIONS':
+      return { ...INITAIL_STATE };
     default:
       return { ...state };
   }

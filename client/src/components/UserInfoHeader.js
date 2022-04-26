@@ -69,11 +69,11 @@ const BasicUserInfo = (props) => {
 
   const renderUserState = () => {
     if (!props.user.isAvailableNow) {
-      return <p style={{ marginBottom: '10px' }}>&#9898;&nbsp;I'm not available now 💤🛌</p>;
+      return <span>&#9898;&nbsp;Not available 💤🛌</span>;
     } else if (props.user.isAvailableNow && props.user.isInConversation) {
-      return <p style={{ marginBottom: '10px' }}>&#128308;&nbsp;Conversation now ☎️</p>;
+      return <span>&#128308;&nbsp;Conversation now ☎️</span>;
     } else if (props.user.isAvailableNow) {
-      return <p style={{ marginBottom: '10px' }}>&#128994;&nbsp;I'm available now 😁</p>;
+      return <span>&#128994;&nbsp;Available now 😁</span>;
     }
   };
 
@@ -119,10 +119,10 @@ const BasicUserInfo = (props) => {
           <div className='info-list' style={{ flex: 5, textAlign: 'center' }}>
             <div>
               <div style={{ margin: '10px', fontWeight: 'bolder' }}>
-                {user.name}&nbsp;{renderPersonalStatusAverage(user)}
+                {user.name}&nbsp;{renderPersonalStatusAverage(user)}&nbsp;{renderUserState()}
               </div>
-              {renderUserState()}
-              <p>{user.conversations.length} conversations</p>
+              <p>{user.selfIntroduction}</p>
+              {/* <p>{user.conversations.length} conversations</p> */}
             </div>
           </div>
           <div className='avatar-wrapper' style={{ flex: 5, display: 'flex', justifyContent: 'center' }}>

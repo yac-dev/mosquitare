@@ -18,7 +18,11 @@ const UserInfoWrapper = (props) => {
     >
       {/* rgb(232, 232, 232) */}
       <UserInfoHeader user={props.user} socket={props.socket} setShowCallingModal={props.setShowCallingModal} />
-      <UserInfoTabs user={props.user} />
+      <UserInfoTabs
+        user={props.user}
+        showVideoModal={props.showVideoModal}
+        setShowVideoModal={props.setShowVideoModal}
+      />
       {/* <BasicUserInfo user={props.user} />
       <div className='visited-country' style={{ backgroundColor: 'white', padding: '10px', borderRadius: '5px' }}>
         <span style={{ borderBottom: '1px solid black' }}>

@@ -12,6 +12,7 @@ import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import UserInfoLanguage from './UserInfoLanguage';
 import UserInfoPersonal from './UserInfoPersonal';
 import UserInfoVisited from './UserInfoVisited';
+import UserInfoVideos from './UserInfoVideos';
 
 import '../styles/tabs.css';
 
@@ -49,7 +50,7 @@ const UserInfoTabs = (props) => {
     return (
       <>
         <VideoLibraryIcon />
-        Public Videos
+        Videos
       </>
     );
   };
@@ -63,10 +64,16 @@ const UserInfoTabs = (props) => {
         <Tab eventKey='language' title={renderLanguageTitle()}>
           <UserInfoLanguage user={props.user} />
         </Tab>
-        <Tab eventKey='been' title={renderBeenTitle()}>
-          <UserInfoVisited user={props.user} />
-          {/* <div>here</div> */}
+        <Tab eventKey='videos' title={renderPublicVideos()}>
+          <UserInfoVideos
+            user={props.user}
+            showVideoModal={props.showVideoModal}
+            setShowVideoModal={props.setShowVideoModal}
+          />
         </Tab>
+        {/* <Tab eventKey='been' title={renderBeenTitle()}>
+          <UserInfoVisited user={props.user} />
+        </Tab> */}
         {/* <Tab eventKey='publicVideos' title={renderPublicVideos()}>
           <div>Under construction 🚜🛠 Please wait for bit.</div>
         </Tab> */}

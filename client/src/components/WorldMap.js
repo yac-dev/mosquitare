@@ -17,6 +17,7 @@ import { Stack } from '@mui/material';
 import SnackBar from './Snackbar';
 import UsersMarker from './UsersMarker';
 import MeetingsList from './Meeting/MeetingsList';
+import SelectedVideoModal from './SelectedVideoModal';
 
 import RightPositionedUserDetail from './RightPositionedUserDetail';
 import UserDetail from './UserDetail';
@@ -98,6 +99,7 @@ const WorldMap = (props) => {
   const [fullscreen1on1Modal, setFullscreen1on1Modal] = useState(true);
   // const [showAfterFinishingModal, setShowAfterFinishingModal] = useState(false);
   const [showRatingModal, setShowRatingModal] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
   // meeting modal用
   // const [showMeeting, setShowMeeting] = useState(false);
   // const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
@@ -293,6 +295,17 @@ const WorldMap = (props) => {
     }
   };
 
+  const renderSelectedVideo = () => {
+    // まあ、要はvideoがあったらっていうconditional rendering
+    if (props.selectedVideoState.video) {
+      return (
+        <>
+          <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
+        </>
+      );
+    }
+  };
+
   // meeting用のfull screen modalのtrigger
   // const onJoinClick = (meeting) => {
   //   setFullScreenMeetingModal(true);
@@ -349,13 +362,13 @@ const WorldMap = (props) => {
       return (
         <>
           <Default>
-            <div style={{ height: '100vh', width: '100%' }}>
+            <div>
               <ReactMapGL
                 {...viewport}
                 // {...worldMapSettings}
                 mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
                 width='100%'
-                height='100vh'
+                height='90vh'
                 mapStyle='mapbox://styles/yabbee/ckvjrmck2h1pb14mv91m5cuk7'
                 onViewportChange={(viewport) => setViewport(viewport)}
               >
@@ -373,6 +386,8 @@ const WorldMap = (props) => {
                   setShowCallingModal={setShowCallingModal}
                   worldMapSettings={worldMapSettings}
                   setWorldMapSetting={setWorldMapSetting}
+                  showVideoModal={showVideoModal}
+                  setShowVideoModal={setShowVideoModal}
                 />
                 {/* <UserDetail
                   socket={socket}
@@ -397,6 +412,8 @@ const WorldMap = (props) => {
                 // setShowAfterFinishingModal={setShowAfterFinishingModal}
                 setShowRatingModal={setShowRatingModal}
               />
+              <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
+              {/* {renderSelectedVideo()} */}
               {renderRatingModal()}
               {/* <AfterFinishingModal
                 showAfterFinishingModal={showAfterFinishingModal}
@@ -509,6 +526,7 @@ const mapStateToProps = (state) => {
     meetingState: state.meetingState,
     peerState: state.peerState,
     alertsState: state.alertsState,
+    selectedVideoState: state.selectedVideoState,
   };
 };
 

@@ -8,6 +8,7 @@ import {
   getConversation,
   getAllConversations,
   getMyConversations,
+  getUserConversations,
   // updateConversationIntegratedUserMedia,
   // updateConversationDurationAndGenre,
 } from '../controllers/conversation';
@@ -20,6 +21,7 @@ router.route('/').get(getAllConversations).post(createConversation);
 router.route('/:id').post(updateConversationUsers).get(getConversation);
 router.route('/:id/usermedia').patch(updateConversationUserMedia);
 router.route('/:id/userscript').patch(updateConversationUserScript);
+router.route('/:userId/userconversations').get(getUserConversations);
 // router.route('/:id/durationandgenre').patch(updateConversationDurationAndGenre);
 // router.route('/integratedusermedia/:id').patch(updateConversationIntegratedUserMedia);
 

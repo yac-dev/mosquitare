@@ -238,6 +238,33 @@ export const getMyConversationsActionCreator = (conversationIds) => async (dispa
   }
 };
 
+export const getUserConversationsActionCreator = (userId) => async (dispatch, getState) => {
+  try {
+    const result = await mosquitareAPI.get(`/conversations/${userId}/userconversations`);
+    const { userConversations } = result.data;
+    dispatch({
+      type: 'GET_USER_CONVERSATIONS',
+      payload: userConversations,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const selectVideoActionCreator = (conversation) => {
+  return {
+    type: 'SELECT_VIDEO',
+    payload: conversation,
+  };
+};
+
+export const closeVideoActionCreator = () => {
+  return {
+    type: 'CLOSE_VIDEO',
+    payload: '',
+  };
+};
+
 export const selectConversation = (conversation) => {
   return {
     type: SELECT_CONVERSATION,

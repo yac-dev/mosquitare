@@ -16,6 +16,7 @@ import alertsReducer from './alertsReducer';
 import allLikesStatReducer from './allLikesStatReducer';
 import allCommentsStatReducer from './allCommentsStatReducer';
 import likesReducer from './likesReducer';
+import selectedVideoReducer from './selectedVideoReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   allLikesStatState: allLikesStatReducer,
   allCommentsStatState: allCommentsStatReducer,
   likesState: likesReducer,
+  selectedVideoState: selectedVideoReducer,
 });
 
 export default rootReducer;
