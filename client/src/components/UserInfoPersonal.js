@@ -17,6 +17,7 @@ import WorkIcon from '@mui/icons-material/Work';
 
 // mui components
 import Tooltip from '@mui/material/Tooltip';
+import Zoom from '@mui/material/Zoom';
 
 // components
 import PersonalityChart from './PersonalityChart';
@@ -42,15 +43,17 @@ const UserInfoPersonal = (props) => {
     return <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}>{personalStatusList}</div>;
   };
 
-  const renderDating = () => {
-    if (props.user.ratingAverage['datingHunter'] >= 1) {
+  const renderRomance = () => {
+    if (props.user.ratingAverage['romanceHunter'] >= 1) {
       return (
-        <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
-          💕😍 Looking for Romance&nbsp;
-          <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
-            +{props.user.ratingAverage['datingHunter']}
+        <Tooltip TransitionComponent={Zoom} title={'This status is obtained by user rating.'} arrow>
+          <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
+            💕😍 Looking for Romance&nbsp;
+            <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
+              +{props.user.ratingAverage['romanceHunter']}
+            </span>
           </span>
-        </span>
+        </Tooltip>
       );
     }
   };
@@ -58,12 +61,29 @@ const UserInfoPersonal = (props) => {
   const renderMoney = () => {
     if (props.user.ratingAverage['moneyHunter'] >= 1) {
       return (
-        <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
-          💰🤑 Need some money&nbsp;
-          <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
-            +{props.user.ratingAverage['moneyHunter']}
+        <Tooltip TransitionComponent={Zoom} title={'This status is obtained by user rating.'} arrow>
+          <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
+            💰🤑 Need some money&nbsp;
+            <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
+              +{props.user.ratingAverage['moneyHunter']}
+            </span>
           </span>
-        </span>
+        </Tooltip>
+      );
+    }
+  };
+
+  const renderRacism = () => {
+    if (props.user.ratingAverage['racism'] >= 1) {
+      return (
+        <Tooltip TransitionComponent={Zoom} title={'This status is obtained by user rating.'} arrow>
+          <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
+            Racist&nbsp;
+            <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
+              +{props.user.ratingAverage['racism']}
+            </span>
+          </span>
+        </Tooltip>
       );
     }
   };
@@ -93,9 +113,10 @@ const UserInfoPersonal = (props) => {
         </h6>
         {/* {renderBadges(props.user)} */}
         <PersonalityChart user={props.user} />
-        <div style={{ display: 'flex', flexWrap: 'wrape', gap: '5px' }}>
-          {renderDating()}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+          {renderRomance()}
           {renderMoney()}
+          {renderRacism()}
         </div>
       </div>
 

@@ -261,6 +261,7 @@ const VideosWrapper = (props) => {
     }
   }, [props.show1on1]);
 
+  // callした側でもこれ実行されているね。。。
   // call受けた側で実行される。
   useEffect(() => {
     props

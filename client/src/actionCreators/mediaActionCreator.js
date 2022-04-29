@@ -253,9 +253,10 @@ export const answerCallActionCreator2 =
     // });
     const peerReciever = getState().peerState.peer;
     //fullscreenになった時に、これが実行されるのか。。。
+    const me = getState().authState.currentUser.socketId;
     peerReciever.on('signal', (signalData) => {
       console.log('reciever sending signal????');
-      socket.emit(I_ANSWER_THE_CALL, { signalData, to: getState().mediaState.callingWith.socketId });
+      socket.emit(I_ANSWER_THE_CALL, { signalData, to: getState().mediaState.callingWith.socketId, me });
     });
 
     peerReciever.on('stream', (stream) => {

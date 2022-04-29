@@ -117,31 +117,31 @@ const BasicUserInfo = (props) => {
       if (average >= 8.0) {
         return (
           <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
-            {average}
+            A
           </span>
         );
       } else if (average <= 7.9 && average >= 6.0) {
         return (
           <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
-            {average}
+            B
           </span>
         );
       } else if (average <= 5.9 && average >= 4.0) {
         return (
           <span style={{ color: 'white', backgroundColor: 'rgb(212, 198, 0)', padding: '5px', borderRadius: '5px' }}>
-            {average}
+            C
           </span>
         );
       } else if (average <= 3.9 && average >= 2.0) {
         return (
           <span style={{ color: 'white', backgroundColor: 'rgb(92, 0, 212)', padding: '5px', borderRadius: '5px' }}>
-            {average}
+            D
           </span>
         );
       } else if (average <= 1.9) {
         return (
           <span style={{ color: 'white', backgroundColor: 'rgb(212, 0, 49)', padding: '5px', borderRadius: '5px' }}>
-            {average}
+            F
           </span>
         );
       }
@@ -158,10 +158,10 @@ const BasicUserInfo = (props) => {
               <div style={{ margin: '10px', fontWeight: 'bolder' }}>
                 {user.name}&nbsp;{renderPersonalStatusAverage(user)}&nbsp;{renderUserState()}
               </div>
-              <ReadMoreReact text={user.selfIntroduction} readMoreText='read more' />
+              {/* <ReadMoreReact text={user.selfIntroduction} readMoreText='read more' /> */}
               {/* <ReadMoreReact></ReadMoreReact>
-              <p>{user.selfIntroduction}</p>
               {/* <p>{user.conversations.length} conversations</p> */}
+              <p>{user.selfIntroduction}</p>
             </div>
           </div>
           <div className='avatar-wrapper' style={{ flex: 5, display: 'flex', justifyContent: 'center' }}>

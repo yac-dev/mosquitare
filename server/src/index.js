@@ -6,6 +6,7 @@ const __dirname = path.resolve();
 import http from 'http';
 import app from './app';
 // const port = process.env.PORT;
+import { v4 as uuidv4 } from 'uuid';
 
 import { PORT } from '../config';
 const server = http.createServer(app);
@@ -89,22 +90,33 @@ const mapUserToMeetingId = {};
 
 const docDefaultValue = '';
 
+const mapSocketIdToRooms = {};
+
+const mapSocketIdToId = {}; // どのuserがどのrandomIdを持っているか。
+//電話中なhashTableって感じかな。
+// { 123: 456 , 456: 123}
+
 io.on('connection', (socket) => {
   socket.emit(I_GOT_SOCKET_ID, socket.id);
 
   socket.on(I_CALL_SOMEBODY, async (dataFromCaller) => {
-    const user = await User.find({ socketId: dataFromCaller.oppositeSocketId });
+    const user = await User.findOne({ socketId: dataFromCaller.oppositeSocketId });
     //  多分、最初２つのconditionはいらないかもな。。。
+    // console.log(user);
     if (user.isInConversation) {
+      console.log('in conversation');
       io.to(dataFromCaller.me).emit(MY_CALL_IS_REJECTED, {
         message: '',
       });
     } else if (!user.isAvailableNow) {
+      console.log('is available');
       io.to(dataFromCaller.me).emit(MY_CALL_IS_REJECTED, {
         message: '',
       });
     } else {
-      if (io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId).size === 2) {
+      // if (io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId).size === 2) {
+      if (mapSocketIdToId[dataFromCaller.oppositeSocketId]) {
+        console.log('room aize');
         io.to(dataFromCaller.me).emit(MY_CALL_IS_REJECTED, {
           message: '',
         });
@@ -115,10 +127,14 @@ io.on('connection', (socket) => {
           callerUserInfo: dataFromCaller.callerUserInfo,
           exchangingLanguages: dataFromCaller.exchangingLanguages,
         });
-        io.sockets.adapter.rooms.get(dataFromCaller.me).add(dataFromCaller.oppositeSocketId);
-        io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId).add(dataFromCaller.me);
-        console.log(io.sockets.adapter.rooms.get(dataFromCaller.me));
-        console.log(io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId));
+        // でも、結局call先の相手がまっているのではダメなのよね。。。だから、callerが電話をかけた時点でroomを作って二人とも入っているっていう状態にしないといけないのよね。。。
+        mapSocketIdToId[dataFromCaller.oppositeSocketId] = dataFromCaller.me;
+        mapSocketIdToId[dataFromCaller.me] = dataFromCaller.oppositeSocketId;
+        console.log(mapSocketIdToId);
+        // io.sockets.adapter.rooms.get(dataFromCaller.me).add(dataFromCaller.oppositeSocketId);
+        // io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId).add(dataFromCaller.me);
+        // console.log(io.sockets.adapter.rooms.get(dataFromCaller.me));
+        // console.log(io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId));
       }
     }
   });
@@ -144,6 +160,8 @@ io.on('connection', (socket) => {
       signalData: dataFromAnswerer.signalData,
       // recieverUserInfo: dataFromAnswerer.recieverUserInfo,
     });
+    delete mapSocketIdToId[dataFromAnswerer.to];
+    delete mapSocketIdToId[dataFromAnswerer.me];
     // }
   });
 

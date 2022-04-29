@@ -257,111 +257,99 @@ const RatingModal = (props) => {
                   className='rating-1'
                   style={{ display: 'flex', flexDirection: 'column', gap: '10px', color: 'black' }}
                 >
-                  <div>
-                    <Typography component='legend'>
-                      💪 Enthusiasm
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title={`How much was ${props.mediaState.callingWith.name} passionate about practicing language?`}
-                        arrow
-                      >
-                        <HelpIcon />
-                      </Tooltip>
-                    </Typography>
-                    <Rating
-                      name='customized-10'
-                      defaultValue={0}
-                      max={10}
-                      value={enthusiasmValue}
-                      onChange={(event, newValue) => {
-                        setEnthusiasmValue(newValue);
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <Typography component='legend'>
-                      😁 Friendliness
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title={`How much was ${props.mediaState.callingWith.name} friendly to you?`}
-                        arrow
-                      >
-                        <HelpIcon />
-                      </Tooltip>
-                    </Typography>
-                    <Rating
-                      name='customized-10'
-                      defaultValue={0}
-                      max={10}
-                      value={friendlinessValue}
-                      onChange={(event, newValue) => {
-                        setFriendlinessValue(newValue);
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <Typography component='legend'>
-                      🦻 Patience
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title={`How much did ${props.mediaState.callingWith.name} try to listen to you?`}
-                        arrow
-                      >
-                        <HelpIcon />
-                      </Tooltip>
-                    </Typography>
-                    <Rating
-                      name='customized-10'
-                      defaultValue={0}
-                      max={10}
-                      value={cooperationValue}
-                      onChange={(event, newValue) => {
-                        setCooperationValue(newValue);
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <Typography component='legend'>
-                      ✍️ Cooperation
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title={`How much did ${props.mediaState.callingWith.name} teach language to you or take a note on Shared Doc?`}
-                        arrow
-                      >
-                        <HelpIcon />
-                      </Tooltip>
-                    </Typography>
-                    <Rating
-                      name='customized-10'
-                      defaultValue={0}
-                      max={10}
-                      value={patienceValue}
-                      onChange={(event, newValue) => {
-                        setPatienceValue(newValue);
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <Typography component='legend'>
-                      🤝 Diversity
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title={`How much did ${props.mediaState.callingWith.name} respect the cultural difference?`}
-                        arrow
-                      >
-                        <HelpIcon />
-                      </Tooltip>
-                    </Typography>
-                    <Rating
-                      name='customized-10'
-                      defaultValue={0}
-                      max={10}
-                      value={diversityValue}
-                      onChange={(event, newValue) => {
-                        setDiversityValue(newValue);
-                      }}
-                    />
-                  </div>
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`How much was ${props.mediaState.callingWith.name} passionate about practicing language?`}
+                    arrow
+                  >
+                    <div>
+                      <Typography component='legend'>💪 Enthusiasm</Typography>
+                      <Rating
+                        name='customized-10'
+                        defaultValue={0}
+                        max={10}
+                        value={enthusiasmValue}
+                        onChange={(event, newValue) => {
+                          setEnthusiasmValue(newValue);
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`How much was ${props.mediaState.callingWith.name} friendly to you?`}
+                    arrow
+                  >
+                    <div>
+                      <Typography component='legend'>😁 Friendliness</Typography>
+                      <Rating
+                        name='customized-10'
+                        defaultValue={0}
+                        max={10}
+                        value={friendlinessValue}
+                        onChange={(event, newValue) => {
+                          setFriendlinessValue(newValue);
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
+
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`How much did ${props.mediaState.callingWith.name} try to listen to you?`}
+                    arrow
+                  >
+                    <div>
+                      <Typography component='legend'>🦻 Patience</Typography>
+                      <Rating
+                        name='customized-10'
+                        defaultValue={0}
+                        max={10}
+                        value={cooperationValue}
+                        onChange={(event, newValue) => {
+                          setCooperationValue(newValue);
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
+
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`How much did ${props.mediaState.callingWith.name} teach language to you or take a note on Shared Doc?`}
+                    arrow
+                  >
+                    <div>
+                      <Typography component='legend'>✍️ Cooperation</Typography>
+                      <Rating
+                        name='customized-10'
+                        defaultValue={0}
+                        max={10}
+                        value={patienceValue}
+                        onChange={(event, newValue) => {
+                          setPatienceValue(newValue);
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
+
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`How much did ${props.mediaState.callingWith.name} respect the cultural difference?`}
+                    arrow
+                  >
+                    <div>
+                      <Typography component='legend'>🤝 Diversity</Typography>
+                      <Rating
+                        name='customized-10'
+                        defaultValue={0}
+                        max={10}
+                        value={diversityValue}
+                        onChange={(event, newValue) => {
+                          setDiversityValue(newValue);
+                        }}
+                      />
+                    </div>
+                  </Tooltip>
                 </div>
               </AccordionDetails>
             </Accordion>
@@ -375,60 +363,53 @@ const RatingModal = (props) => {
                   className='rating-2'
                   style={{ display: 'flex', flexDirection: 'column', gap: '10px', color: 'black' }}
                 >
-                  <div>
-                    <Typography component='legend'>
-                      💕 Romance Hunter 💕
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title={`Did ${props.mediaState.callingWith.name} ask you about your relationship status or phone number for dating? e.g. Do you have a boyfriend? Are you single? Can I get your number?`}
-                        arrow
-                      >
-                        <HelpIcon />
-                      </Tooltip>
-                    </Typography>
-                    <Checkbox
-                      checked={romanceChecked}
-                      onChange={handleRomanceChange}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                    {renderRomanceLabel()}
-                  </div>
-                  <div>
-                    <Typography component='legend'>
-                      💰 Money Hunter 💰
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title={`Did ${props.mediaState.callingWith.name} ask you for your money or money transaction? e.g Can I borrow $100? Do you want to try Bitcoin investment?`}
-                        arrow
-                      >
-                        <HelpIcon />
-                      </Tooltip>
-                    </Typography>
-                    <Checkbox
-                      checked={moneyChecked}
-                      onChange={handleMoneyChange}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                    {renderMoneyLabel()}
-                  </div>
-                  <div>
-                    <Typography component='legend'>
-                      Racism
-                      <Tooltip
-                        TransitionComponent={Zoom}
-                        title={`Did ${props.mediaState.callingWith.name} give you any racist comments or behavior?`}
-                        arrow
-                      >
-                        <HelpIcon />
-                      </Tooltip>
-                    </Typography>
-                    <Checkbox
-                      checked={racismChecked}
-                      onChange={handleRacismChange}
-                      inputProps={{ 'aria-label': 'controlled' }}
-                    />
-                    {renderRacismLabel()}
-                  </div>
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`Did ${props.mediaState.callingWith.name} ask you about your relationship status or phone number for dating? e.g. Do you have a boyfriend? Are you single? Can I get your number?`}
+                    arrow
+                  >
+                    <div>
+                      <Typography component='legend'>💕 Romance Hunter 💕</Typography>
+                      <Checkbox
+                        checked={romanceChecked}
+                        onChange={handleRomanceChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                      {renderRomanceLabel()}
+                    </div>
+                  </Tooltip>
+
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`Did ${props.mediaState.callingWith.name} ask you for your money or money transaction? e.g Can I borrow $100? Do you want to try Bitcoin investment?`}
+                    arrow
+                  >
+                    <div>
+                      <Typography component='legend'>💰 Money Hunter 💰</Typography>
+                      <Checkbox
+                        checked={moneyChecked}
+                        onChange={handleMoneyChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                      {renderMoneyLabel()}
+                    </div>
+                  </Tooltip>
+
+                  <Tooltip
+                    TransitionComponent={Zoom}
+                    title={`Did ${props.mediaState.callingWith.name} give you any racist comments or behavior?`}
+                    arrow
+                  >
+                    <div>
+                      <Typography component='legend'>Racism</Typography>
+                      <Checkbox
+                        checked={racismChecked}
+                        onChange={handleRacismChange}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                      {renderRacismLabel()}
+                    </div>
+                  </Tooltip>
                 </div>
               </AccordionDetails>
             </Accordion>
