@@ -40,7 +40,7 @@ const TranslateTranscript = (props) => {
         }
         // { cancelToken: cancelToken.token }
       );
-      props.setGoogleTranslated(data.data.translations[0].translatedText);
+      props.setTranslated(data.data.translations[0].translatedText);
       // return data.data.translations[0].translatedText;
     } catch (err) {
       return '';

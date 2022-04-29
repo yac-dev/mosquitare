@@ -9,6 +9,7 @@ import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 // component
 import TranslateTranscript from '../TranslateTranscript';
 import TranslatedText from './TranslatedText';
+import EachTranscript from './EachTranscript';
 
 // mui
 import Tooltip from '@mui/material/Tooltip';
@@ -327,7 +328,7 @@ const SubtitleWrapper = (props) => {
   useEffect(() => {
     props.socket.on(MY_PARTNER_WANNA_SWITCH_CURRENT_LANGUAGE, (dataFromServer) => {
       props.recieveSwitchingLanguageRequestActionCreator1(dataFromServer.switchingLanguage);
-      props.alertActionCreator('Your partner changed language.', 'info')
+      props.alertActionCreator('Your partner changed language.', 'info');
     });
   }, []);
 
@@ -383,7 +384,7 @@ const SubtitleWrapper = (props) => {
     const transcriptList = conversationTranscript.map((conversationTranscript) => {
       return (
         <>
-          <ListItem
+          {/* <ListItem
             alignItems='flex-start'
             secondaryAction={
               <Tooltip title='translate'>
@@ -413,17 +414,13 @@ const SubtitleWrapper = (props) => {
                   <Typography component='div' variant='body2' sx={{ color: 'black' }}>
                     {conversationTranscript.transcript}
                     <TranslatedText googleTranslated={googleTranslated} />
-                    {/* <Tooltip title='translate'>
-                      <IconButton edge='end'>
-                        <TranslateTranscript translateInput={conversationTranscript.transcript} />
-                      </IconButton>
-                    </Tooltip> */}
                   </Typography>
                 </>
               }
             />
           </ListItem>
-          <Divider variant='inset' component='li' />
+          <Divider variant='inset' component='li' /> */}
+          <EachTranscript conversationTranscript={conversationTranscript} />
         </>
       );
     });
@@ -721,5 +718,5 @@ export default connect(mapStateToProps, {
   updateUserMyLangsStatusActionCreator,
   switchCurrentLanguageActionCreator1,
   recieveSwitchingLanguageRequestActionCreator1,
-  alertActionCreator
+  alertActionCreator,
 })(SubtitleWrapper);
