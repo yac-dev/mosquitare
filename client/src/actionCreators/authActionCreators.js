@@ -198,3 +198,10 @@ export const updateUserMyLangsStatusActionCreator =
       console.log(error);
     }
   };
+
+export const clickUserActionCreator = (user) => {
+  return {
+    type: 'CLICK_USER',
+    payload: user,
+  };
+};

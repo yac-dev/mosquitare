@@ -9,6 +9,9 @@ import UserInfoCardNew from './UserInfoCardNew';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 
+// ac
+import { clickUserActionCreator } from '../actionCreators/authActionCreators';
+
 // propsでは、"user"だけがくると思っていい。
 const EachUserInfo = (props) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -46,6 +49,7 @@ const EachUserInfo = (props) => {
           props.setOpenSwipeableDrawer(true);
         }
         props.setUserInfo({ ...props.userInfo, info: props.user });
+        props.clickUserActionCreator(props.user);
       }}
     >
       <Popover
@@ -102,7 +106,7 @@ const EachUserInfo = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState };
+  return { authState: state.authState, clickedUserState: state.clickedUserState };
 };
 
-export default connect(mapStateToProps)(EachUserInfo);
+export default connect(mapStateToProps, { clickUserActionCreator })(EachUserInfo);

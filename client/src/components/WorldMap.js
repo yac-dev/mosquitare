@@ -20,6 +20,7 @@ import MeetingsList from './Meeting/MeetingsList';
 import SelectedVideoModal from './SelectedVideoModal';
 
 import RightPositionedUserDetail from './RightPositionedUserDetail';
+import SendMessageModal from './SendMessageModal';
 import UserDetail from './UserDetail';
 import SwipeableUserDetail from './SwipeableUserDetail';
 // css
@@ -101,6 +102,7 @@ const WorldMap = (props) => {
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showSendMessageModal, setShowSendMessageModal] = useState(false);
+  const [message, setMessage] = useState('');
 
   // meeting modal用
   // const [showMeeting, setShowMeeting] = useState(false);
@@ -417,6 +419,12 @@ const WorldMap = (props) => {
                 setShowRatingModal={setShowRatingModal}
               />
               <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
+              <SendMessageModal
+                message={message}
+                setMessage={setMessage}
+                showSendMessageModal={showSendMessageModal}
+                setShowSendMessageModal={setShowSendMessageModal}
+              />
               {/* {renderSelectedVideo()} */}
               {renderRatingModal()}
               {/* <AfterFinishingModal

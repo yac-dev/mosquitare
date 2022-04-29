@@ -157,6 +157,8 @@ const CallButton = (props) => {
     }
   };
 
+  // showSendMessageModal={props.showSendMessageModal}
+  // setShowSendMessageModal={props.setShowSendMessageModal}
   const handleSendMessage = (recipientId) => {
     if (content && props.authState.currentUser) {
       // props.createCommentActionCreator(content);
@@ -226,7 +228,7 @@ const CallButton = (props) => {
           <Button
             variant='contained'
             startIcon={<SendIcon />}
-            onClick={handleSendClick}
+            onClick={() => props.setShowSendMessageModal(true)}
             sx={{
               backgroundColor: 'rgb(0, 186, 68)',
               '&:hover': {
@@ -236,7 +238,7 @@ const CallButton = (props) => {
           >
             Send a message
           </Button>
-          <Popover
+          {/* <Popover
             id={idSend}
             open={openSend}
             anchorEl={sendAnchorEl}
@@ -246,7 +248,6 @@ const CallButton = (props) => {
               horizontal: 'left',
             }}
           >
-            {/* dummyのdivを作っておく。*/}
             <div style={{ width: '300px', height: '100%', padding: '5px' }}>
               <TextField
                 id='input-with-icon-textfield'
@@ -270,7 +271,7 @@ const CallButton = (props) => {
                 variant='standard'
               />
             </div>
-          </Popover>
+          </Popover> */}
         </div>
       );
     } else {

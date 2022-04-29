@@ -62,6 +62,8 @@ const BasicUserInfo = (props) => {
             user={props.user}
             setShowCallingModal={props.setShowCallingModal}
             setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
+            showSendMessageModal={props.showSendMessageModal}
+            setShowSendMessageModal={props.setShowSendMessageModal}
           />
         </div>
       );
@@ -94,7 +96,7 @@ const BasicUserInfo = (props) => {
     const ratingAverageArray = Object.values(user.ratingAverage).slice(2, 7);
     if (ratingAverageArray.every((element) => element === 0)) {
       return (
-        <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
+        <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
           New!
         </span>
       );
@@ -107,27 +109,43 @@ const BasicUserInfo = (props) => {
       );
 
       const average = Math.round((sumWithInitial / ratingAverageArray.length) * 10) / 10;
-      return (
-        <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
-          {average}
-        </span>
-      );
+      // return (
+      //   <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
+      //     {average}
+      //   </span>
+      // );
+      if (average >= 8.0) {
+        return (
+          <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
+            {average}
+          </span>
+        );
+      } else if (average <= 7.9 && average >= 6.0) {
+        return (
+          <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
+            {average}
+          </span>
+        );
+      } else if (average <= 5.9 && average >= 4.0) {
+        return (
+          <span style={{ color: 'white', backgroundColor: 'rgb(212, 198, 0)', padding: '5px', borderRadius: '5px' }}>
+            {average}
+          </span>
+        );
+      } else if (average <= 3.9 && average >= 2.0) {
+        return (
+          <span style={{ color: 'white', backgroundColor: 'rgb(92, 0, 212)', padding: '5px', borderRadius: '5px' }}>
+            {average}
+          </span>
+        );
+      } else if (average <= 1.9) {
+        return (
+          <span style={{ color: 'white', backgroundColor: 'rgb(212, 0, 49)', padding: '5px', borderRadius: '5px' }}>
+            {average}
+          </span>
+        );
+      }
     }
-    // if (average >= 7.5) {
-    //   return (
-    //     <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
-    //       {average}
-    //     </span>
-    //   );
-    // } else if (average > 5.0 || average <= 7.4) {
-    //   <span style={{ color: 'white', backgroundColor: 'rgb(206, 209, 52)', padding: '5px', borderRadius: '5px' }}>
-    //     {average}
-    //   </span>;
-    // } else if (average <= 4.9) {
-    //   <span style={{ color: 'white', backgroundColor: 'rgb(186, 7, 43)', padding: '5px', borderRadius: '5px' }}>
-    //     {average}
-    //   </span>;
-    // }
   };
 
   // このcomponent名自体を後で変えた方がいい。このfunction名はこれでいい。
