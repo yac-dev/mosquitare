@@ -93,22 +93,33 @@ io.on('connection', (socket) => {
   socket.emit(I_GOT_SOCKET_ID, socket.id);
 
   socket.on(I_CALL_SOMEBODY, async (dataFromCaller) => {
-    // console.log(dataFromCaller);
-    // console.log('server?????');
-    // console.log(dataFromCaller.oppositeSocketId);
-    // console.log(dataFromCaller);
-    const user = await User.find({ socketId: dataFromCaller.to });
+    const user = await User.find({ socketId: dataFromCaller.oppositeSocketId });
+    //  多分、最初２つのconditionはいらないかもな。。。
     if (user.isInConversation) {
-      io.to(dataFromReject.to).emit(MY_CALL_IS_REJECTED, {
-        message: dataFromReject.message,
+      io.to(dataFromCaller.me).emit(MY_CALL_IS_REJECTED, {
+        message: '',
+      });
+    } else if (!user.isAvailableNow) {
+      io.to(dataFromCaller.me).emit(MY_CALL_IS_REJECTED, {
+        message: '',
       });
     } else {
-      io.to(dataFromCaller.oppositeSocketId).emit(SOMEBODY_CALLS_ME, {
-        signalData: dataFromCaller.signalData,
-        whoIsCalling: dataFromCaller.mySocketId,
-        callerUserInfo: dataFromCaller.callerUserInfo,
-        exchangingLanguages: dataFromCaller.exchangingLanguages,
-      });
+      if (io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId).size === 2) {
+        io.to(dataFromCaller.me).emit(MY_CALL_IS_REJECTED, {
+          message: '',
+        });
+      } else {
+        io.to(dataFromCaller.oppositeSocketId).emit(SOMEBODY_CALLS_ME, {
+          signalData: dataFromCaller.signalData,
+          whoIsCalling: dataFromCaller.mySocketId,
+          callerUserInfo: dataFromCaller.callerUserInfo,
+          exchangingLanguages: dataFromCaller.exchangingLanguages,
+        });
+        io.sockets.adapter.rooms.get(dataFromCaller.me).add(dataFromCaller.oppositeSocketId);
+        io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId).add(dataFromCaller.me);
+        console.log(io.sockets.adapter.rooms.get(dataFromCaller.me));
+        console.log(io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId));
+      }
     }
   });
 
@@ -275,7 +286,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', async () => {
     const user = await User.findOne({ socketId: socket.id });
-    console.log(user);
+    // console.log(user);
     user.isAvailableNow = false;
     await user.save({ validateBeforeSave: false });
     console.log('disconnected ... ', socket.id);

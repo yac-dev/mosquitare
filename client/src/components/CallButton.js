@@ -148,12 +148,12 @@ const CallButton = (props) => {
         7000
       );
     } else {
-      const mySocketId = props.authState.currentUser.socketId;
+      // const mySocketId = props.authState.currentUser.socketId;
       if (props.setOpenSwipeableDrawer) {
         props.setOpenSwipeableDrawer(false);
       }
       props.setShowCallingModal(true);
-      props.callActionCreator(props.socket, mySocketId, oppositeSocketId, exchangingLanguages);
+      props.callActionCreator(props.socket, oppositeSocketId, exchangingLanguages);
     }
   };
 

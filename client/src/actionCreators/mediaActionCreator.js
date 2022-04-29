@@ -121,25 +121,24 @@ export const getMediaActionCreator =
 //   ],
 // },
 // callする側、worldmapで実行されるやつら。
-export const callActionCreator =
-  (socket, mySocketId, oppositeSocketId, exchangingLanguages) => (dispatch, getState) => {
-    const { myVideoStreamObject } = getState().mediaState;
-    console.log('Im calling...');
-    const callerUserInfo = getState().authState.currentUser;
-
-    const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
+export const callActionCreator = (socket, oppositeSocketId, exchangingLanguages) => (dispatch, getState) => {
+  const { myVideoStreamObject } = getState().mediaState;
+  console.log('Im calling...');
+  const callerUserInfo = getState().authState.currentUser;
+  const me = getState().authState.currentUser.socketId;
+  const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
+  dispatch({
+    type: HOLD_MY_INITIATED_PEER,
+    payload: peerInitiator,
+  });
+  peerInitiator.on('signal', (signalData) => {
+    socket.emit(I_CALL_SOMEBODY, { signalData, me, oppositeSocketId, callerUserInfo, exchangingLanguages });
     dispatch({
-      type: HOLD_MY_INITIATED_PEER,
-      payload: peerInitiator,
+      type: CALL,
+      payload: exchangingLanguages,
     });
-    peerInitiator.on('signal', (signalData) => {
-      socket.emit(I_CALL_SOMEBODY, { signalData, mySocketId, oppositeSocketId, callerUserInfo, exchangingLanguages });
-      dispatch({
-        type: CALL,
-        payload: exchangingLanguages,
-      });
-    });
-  };
+  });
+};
 
 // call受ける側、worldmapで実行されるやつら。
 export const listenCallActionCreator = (socket, setShowCallingModal, setShowVideoModal) => (dispatch, getState) => {
