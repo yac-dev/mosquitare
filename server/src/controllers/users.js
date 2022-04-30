@@ -403,7 +403,7 @@ export const updateLangsStatus = async (request, response) => {
   }
   for (let i = 0; i < user.nativeLangs.length; i++) {
     if (countDatas[1].id === user.learningLangs[i].language._id.toString()) {
-      user.learningLangs[i].words += countDatas[1].words;
+      user.nativeLangs[i].words += countDatas[1].words;
     }
   }
   await user.save({ validateBeforeSave: false });

@@ -39,8 +39,9 @@ const UserInfoVideos = (props) => {
   };
 
   return (
-    <div class='user-videos-wrapper' style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', overflow: 'auto' }}>
-      {renderUserVideos()}
+    <div class='user-videos-wrapper' style={{ padding: '10px' }}>
+      <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>Public videos</h6>
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', overflow: 'auto' }}>{renderUserVideos()}</div>
     </div>
   );
 };

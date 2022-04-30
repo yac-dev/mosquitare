@@ -89,7 +89,7 @@ const EachTranscript = (props) => {
             <>
               <Typography component='div' variant='body2' sx={{ color: 'black' }}>
                 {props.conversationTranscript.transcript}
-                {translated}
+                Translated <p>{translated}</p>
                 {/* <TranslatedText googleTranslated={googleTranslated} /> */}
                 {/* <Tooltip title='translate'>
                       <IconButton edge='end'>

@@ -231,7 +231,10 @@ const execFFMPEG = (firstVideoFile, secondVideoFile, conversationId) => {
   const screenShotFilePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer');
   // ffmpeg -i sample.mp4 -i man.mp4 -i blackBack.png -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='© lampost.tech':x=200:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" fin2.mp4
 
-  let ffmpegCommand = `ffmpeg -i ${calledVideoFilePath} -i ${recievedVideoFilePath} -i ${blackBackImagePath} -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='https://lampost.tech':x=220:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" ${outoutVideoFilePath}`;
+  // let ffmpegCommand = `ffmpeg -i ${calledVideoFilePath} -i ${recievedVideoFilePath} -i ${blackBackImagePath} -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='https://lampost.tech':x=220:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" ${outoutVideoFilePath}`; // 開発環境では動くけど、productionで動いてくれないやつ。drawtextの部分かね。。。
+
+  let ffmpegCommand = `ffmpeg -i ${calledVideoFilePath} -i ${recievedVideoFilePath} -i ${blackBackImagePath} -filter_complex "[0:a][1:a]amerge[mixedAudio];[0:v]scale=width=-1:height=180[scaled1];[2:v][scaled1]overlay=x=(W-w)/2:y=(H-h)/2[scaled1Overlaid];[1:v]scale=width=-1:height=180[scaled2];[2:v][scaled2]overlay=x=(W-w)/2:y=(H-h)/2,drawtext=text='lampost.tech':x=220:y=160:fontsize=10:fontcolor=white[scaled2Overlaid];[scaled1Overlaid]pad=iw*2:ih[int];[int][scaled2Overlaid]overlay=W/2:0:shortest=1:[mixedVideo]" -map "[mixedVideo]" -map "[mixedAudio]" ${outoutVideoFilePath}`;
+  // 「:」がffmpegのseparatorなんだよね。これが邪魔していた。。。
 
   return new Promise((resolve, reject) => {
     exec(ffmpegCommand, (err, stdout, stderr) => {
@@ -334,6 +337,8 @@ export const createUserMedia = async (request, response) => {
         user: userId,
         videoFileName: file.filename,
       });
+      conversation.userMedias.push(userMedia);
+      await conversation.save();
 
       const partnerUserMedia = await UserMedia.findById(conversation.userMedias[0]._id);
 
@@ -346,7 +351,7 @@ export const createUserMedia = async (request, response) => {
       execFFMPEG(partnerUserMedia.videoFileName, file.filename, request.params.conversationId).then(
         async (outputFileName) => {
           conversation.videoFilename = outputFileName;
-          conversation.userMedias.push(userMedia);
+          // conversation.userMedias.push(userMedia);
           await conversation.save();
           const filesToAWS = [
             // files.outputVideoFilename,
