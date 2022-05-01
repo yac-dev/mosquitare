@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 
 // ac
 import { clickUserActionCreator } from '../actionCreators/authActionCreators';
+import { clickMapUserActionCreator } from '../actionCreators/clickActionCreator';
 
 // propsでは、"user"だけがくると思っていい。
 const EachUserInfo = (props) => {
@@ -49,6 +50,7 @@ const EachUserInfo = (props) => {
           props.setOpenSwipeableDrawer(true);
         }
         props.setUserInfo({ ...props.userInfo, info: props.user });
+        props.clickMapUserActionCreator(props.user);
         props.clickUserActionCreator(props.user);
       }}
     >
@@ -109,4 +111,4 @@ const mapStateToProps = (state) => {
   return { authState: state.authState, clickedUserState: state.clickedUserState };
 };
 
-export default connect(mapStateToProps, { clickUserActionCreator })(EachUserInfo);
+export default connect(mapStateToProps, { clickUserActionCreator, clickMapUserActionCreator })(EachUserInfo);
