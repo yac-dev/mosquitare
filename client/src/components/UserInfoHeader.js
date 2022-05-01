@@ -54,6 +54,8 @@ const BasicUserInfo = (props) => {
       return null;
     } else if (props.mediaState.callAccepted) {
       return null;
+    } else if (props.clickedUserState.clickedMessageUser) {
+      return null;
     } else {
       return (
         <div className='action-button-wrapper' style={{ display: ' flex', justifyContent: 'center' }}>
@@ -116,31 +118,33 @@ const BasicUserInfo = (props) => {
       // );
       if (average >= 8.0) {
         return (
-          <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
+          <span
+            style={{ color: 'white', backgroundColor: 'rgba(37, 95, 184,0.7)', padding: '5px', borderRadius: '5px' }}
+          >
             A
           </span>
         );
       } else if (average <= 7.9 && average >= 6.0) {
         return (
-          <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
+          <span style={{ color: 'white', backgroundColor: 'rgb(37, 95, 184)', padding: '5px', borderRadius: '5px' }}>
             B
           </span>
         );
       } else if (average <= 5.9 && average >= 4.0) {
         return (
-          <span style={{ color: 'white', backgroundColor: 'rgb(212, 198, 0)', padding: '5px', borderRadius: '5px' }}>
+          <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
             C
           </span>
         );
       } else if (average <= 3.9 && average >= 2.0) {
         return (
-          <span style={{ color: 'white', backgroundColor: 'rgb(92, 0, 212)', padding: '5px', borderRadius: '5px' }}>
+          <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
             D
           </span>
         );
       } else if (average <= 1.9) {
         return (
-          <span style={{ color: 'white', backgroundColor: 'rgb(212, 0, 49)', padding: '5px', borderRadius: '5px' }}>
+          <span style={{ color: 'white', backgroundColor: 'rgb(44, 184, 63)', padding: '5px', borderRadius: '5px' }}>
             F
           </span>
         );
@@ -240,7 +244,7 @@ const BasicUserInfo = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState, mediaState: state.mediaState };
+  return { authState: state.authState, mediaState: state.mediaState, clickedUserState: state.clickedUserState };
 };
 
 export default connect(mapStateToProps)(BasicUserInfo);

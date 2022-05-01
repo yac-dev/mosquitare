@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import Message from '../models/message';
 import User from '../models/user';
+import mongoose from 'mongoose';
 
 const transporter = nodemailer.createTransport({
   service: process.env.NODEMAILER_SERVICE,
@@ -46,4 +47,17 @@ export const createMessage = async (request, response) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getMyMessages = async (request, response) => {
+  try {
+    console.log(request.body);
+    const messages = await Message.find({ recipient: mongoose.Types.ObjectId(request.body.userId) }).populate({
+      path: 'sender',
+    });
+    console.log(messages);
+    response.status(200).json({
+      messages,
+    });
+  } catch (error) {}
 };

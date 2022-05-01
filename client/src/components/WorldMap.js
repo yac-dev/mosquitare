@@ -21,6 +21,7 @@ import SelectedVideoModal from './SelectedVideoModal';
 
 import RightPositionedUserDetail from './RightPositionedUserDetail';
 import SendMessageModal from './SendMessageModal';
+import Inbox from './Inbox';
 import UserDetail from './UserDetail';
 import SwipeableUserDetail from './SwipeableUserDetail';
 // css
@@ -103,7 +104,6 @@ const WorldMap = (props) => {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showSendMessageModal, setShowSendMessageModal] = useState(false);
   const [message, setMessage] = useState('');
-
   // meeting modal用
   // const [showMeeting, setShowMeeting] = useState(false);
   // const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
@@ -425,6 +425,7 @@ const WorldMap = (props) => {
                 showSendMessageModal={showSendMessageModal}
                 setShowSendMessageModal={setShowSendMessageModal}
               />
+              <Inbox />
               {/* {renderSelectedVideo()} */}
               {renderRatingModal()}
               {/* <AfterFinishingModal

@@ -83,6 +83,21 @@ const LanguageChart = (props) => {
       const ratio = Math.floor((langStatus / statusSum) * 100);
       data.push(ratio);
     });
+
+    // const languageBgColors = [];
+    //     for (let i = 0; i < myLangsStatus.length; i++) {
+    //       if (myLangsStatus[i] >= 50) {
+    //         languageBgColors.push('rgba(255, 140, 0)');
+    //       } else if (myLangsStatus[i] <= 7.9 && myLangsStatus[i] >= 6.0) {
+    //         languageBgColors.push('rgb(255, 0, 187)');
+    //       } else if (myLangsStatus[i] <= 5.9 && myLangsStatus[i] >= 4.0) {
+    //         languageBgColors.push('rgb(255, 0, 0)');
+    //       } else if (myLangsStatus[i] <= 3.9 && myLangsStatus[i] >= 2.0) {
+    //         languageBgColors.push('rgb(255, 213, 0)');
+    //       } else if (myLangsStatus[i] <= 1.9) {
+    //         languageBgColors.push('rgb(0, 255, 255)');
+    //       }
+    //     }
     const d = {
       labels: mappedLangLabels,
       datasets: [

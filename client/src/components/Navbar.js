@@ -70,6 +70,8 @@ import Login from './Signup/Login';
 
 // components
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
+import { showInboxModalActionCreator } from '../actionCreators/modalActionCreator';
+//ac
 
 const theme = createTheme({
   breakpoints: {
@@ -150,10 +152,10 @@ const Navbar = (props) => {
         <LocalLibraryIcon />
         &nbsp;My Library
       </MenuItem>
-      <MenuItem disabled={true}>
+      {/* <MenuItem onClick={() => props.showInboxModalActionCreator(true)}>
         <EmailIcon />
         &nbsp;Messages
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem disabled={true}>
         <PeopleIcon />
         &nbsp;Friends
@@ -337,6 +339,23 @@ const Navbar = (props) => {
                 {/* </Badge> */}
               </IconButton>
             </Tooltip>
+
+            <Tooltip title='Messages'>
+              <IconButton
+                size='large'
+                edge='end'
+                aria-label='show 4 new mails'
+                aria-controls={groupMenuId}
+                aria-haspopup='true'
+                onClick={() => props.showInboxModalActionCreator(true)}
+                color='inherit'
+              >
+                {/* <Badge badgeContent={4} color='error'> */}
+                <EmailIcon />
+                {/* </Badge> */}
+              </IconButton>
+            </Tooltip>
+
             <Tooltip title='My Account'>
               <IconButton
                 size='large'
@@ -379,7 +398,7 @@ const Navbar = (props) => {
               <ExploreIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title='Search People ( Under construction 🚜🛠 Please wait for a bit.)'>
+          {/* <Tooltip title='Search People ( Under construction 🚜🛠 Please wait for a bit.)'>
             <IconButton
               size='large'
               aria-label='show 17 new notifications'
@@ -388,7 +407,7 @@ const Navbar = (props) => {
             >
               <TravelExploreIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip title="Developers's Info">
             <IconButton
               size='large'
@@ -602,4 +621,4 @@ const mapStateToProps = (state) => {
   return { authState: state.authState, mediaState: state.mediaState };
 };
 
-export default connect(mapStateToProps, { logoutActionCreator })(Navbar);
+export default connect(mapStateToProps, { logoutActionCreator, showInboxModalActionCreator })(Navbar);

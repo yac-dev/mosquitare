@@ -18,6 +18,8 @@ import allCommentsStatReducer from './allCommentsStatReducer';
 import likesReducer from './likesReducer';
 import selectedVideoReducer from './selectedVideoReducer';
 import clickedUserReducer from './clickedUserReducer';
+import modalReducer from './modalReducer';
+import messagesReducer from './messagesReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -39,6 +41,8 @@ const rootReducer = combineReducers({
   likesState: likesReducer,
   selectedVideoState: selectedVideoReducer,
   clickedUserState: clickedUserReducer,
+  modalState: modalReducer,
+  messagesState: messagesReducer,
 });
 
 export default rootReducer;

@@ -17,3 +17,17 @@ export const createMessageActionCreator = (content, recipientId) => async (dispa
     console.log(error);
   }
 };
+
+export const getMyMessagesActionCreator = () => async (dispatch, getState) => {
+  try {
+    const userId = getState().authState.currentUser._id;
+    const result = await mosquitareAPI.post('/messages/mine', { userId });
+    const { messages } = result.data;
+    dispatch({
+      type: 'GET_MY_MESSAGES',
+      payload: messages,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
