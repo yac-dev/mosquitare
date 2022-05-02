@@ -21,7 +21,9 @@ import SelectedVideoModal from './SelectedVideoModal';
 
 import RightPositionedUserDetail from './RightPositionedUserDetail';
 import SendMessageModal from './SendMessageModal';
+import ReplyMessageModal from './ReplyMessageModal';
 import Inbox from './Inbox';
+import MessageWindow from './MessageWindow';
 import UserDetail from './UserDetail';
 import SwipeableUserDetail from './SwipeableUserDetail';
 // css
@@ -104,13 +106,18 @@ const WorldMap = (props) => {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showSendMessageModal, setShowSendMessageModal] = useState(false);
   const [message, setMessage] = useState('');
+  const [showReplyMessageModal, setShowReplyMessageModal] = useState(false);
+  const [replyMessage, setReplyMessage] = useState('');
   // meeting modal用
   // const [showMeeting, setShowMeeting] = useState(false);
   // const [fullScreenMeetingModal, setFullScreenMeetingModal] = useState(true);
   // vertically centered modal用
   // const [verticallyCenteredModal, setVerticallyCenteredModal] = useState(false);
-  const [isUserIconClicked, setIsUserIconClicked] = useState(false);
-  const [userInfo, setUserInfo] = useState({ info: null });
+
+  // 一旦コメントアウトしよう。
+  // const [isUserIconClicked, setIsUserIconClicked] = useState(false);
+  // const [userInfo, setUserInfo] = useState({ info: null });
+
   // for mobile and tablet
   const [showSwipeable, setShowSwipeable] = useState(true);
   const [openSwipeableDrawer, setOpenSwipeableDrawer] = useState(false);
@@ -361,6 +368,14 @@ const WorldMap = (props) => {
     }
   };
 
+  const renderMessageWindow = () => {
+    if (props.clickedState.messageButton.clicked) {
+      return <MessageWindow />;
+    } else {
+      return null;
+    }
+  };
+
   const renderWorldMap = () => {
     if (socket && props.usersState.length) {
       return (
@@ -379,14 +394,14 @@ const WorldMap = (props) => {
                 <UsersMarker
                   socket={socket}
                   setShowCallingModal={setShowCallingModal}
-                  setIsUserIconClicked={setIsUserIconClicked}
-                  userInfo={userInfo}
-                  setUserInfo={setUserInfo}
+                  // setIsUserIconClicked={setIsUserIconClicked}
+                  // userInfo={userInfo}
+                  // setUserInfo={setUserInfo}
                 />
                 <RightPositionedUserDetail
                   socket={socket}
-                  isUserIconClicked={isUserIconClicked}
-                  userInfo={userInfo}
+                  // isUserIconClicked={isUserIconClicked}
+                  // userInfo={userInfo}
                   setShowCallingModal={setShowCallingModal}
                   worldMapSettings={worldMapSettings}
                   setWorldMapSetting={setWorldMapSetting}
@@ -425,7 +440,14 @@ const WorldMap = (props) => {
                 showSendMessageModal={showSendMessageModal}
                 setShowSendMessageModal={setShowSendMessageModal}
               />
+              {/* <ReplyMessageModal
+                showReplyMessageModal={showReplyMessageModal}
+                setShowReplyMessageModal={setShowReplyMessageModal}
+                replyMessage={replyMessage}
+                setReplyMessage={setReplyMessage}
+              /> */}
               <Inbox />
+              {renderMessageWindow()}
               {/* {renderSelectedVideo()} */}
               {renderRatingModal()}
               {/* <AfterFinishingModal
@@ -540,6 +562,7 @@ const mapStateToProps = (state) => {
     peerState: state.peerState,
     alertsState: state.alertsState,
     selectedVideoState: state.selectedVideoState,
+    clickedState: state.clickedUserState,
   };
 };
 

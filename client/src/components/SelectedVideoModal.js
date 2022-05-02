@@ -19,7 +19,7 @@ const SelectedVideoModal = (props) => {
   };
 
   const renderModal = () => {
-    if (props.selectedVideoState.video) {
+    if (props.clickedState.userVideo.clicked) {
       return (
         <Modal
           show={props.showVideoModal}
@@ -31,8 +31,36 @@ const SelectedVideoModal = (props) => {
           <Modal.Body bsPrefix='select-video'>
             <button onClick={() => onClose()}>Close</button>
             <video playsInline controls width='300'>
-              <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.selectedVideoState.video.videoFilename}`} />
+              <source
+                src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.clickedState.userVideo.userVideo.videoFilename}`}
+              />
             </video>
+          </Modal.Body>
+        </Modal>
+      );
+    }
+  };
+
+  const renderClickedVideo = () => {
+    if (props.clickedState.userVideo.clicked) {
+      return (
+        <Modal
+          show={props.showVideoModal}
+          onHide={() => props.setShowVideoModal(false)}
+          backdrop='static'
+          keyboard={false}
+          dialogClassName={'video-displaying-modal'}
+          centered
+        >
+          <Modal.Header closeButton style={{ backgroundColor: 'rgb(0, 55, 110' }}></Modal.Header>
+          <Modal.Body>
+            <div className='modal-inner-wrapper'>
+              <video playsInline controls style={{ width: '100%' }}>
+                <source
+                  src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.clickedState.userVideo.video.videoFilename}`}
+                />
+              </video>
+            </div>
           </Modal.Body>
         </Modal>
       );
@@ -56,7 +84,7 @@ const SelectedVideoModal = (props) => {
           </Modal.Body>
         </Modal> */}
 
-      <Modal
+      {/* <Modal
         show={props.showVideoModal}
         onHide={() => props.setShowVideoModal(false)}
         backdrop='static'
@@ -72,7 +100,8 @@ const SelectedVideoModal = (props) => {
             </video>
           </div>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
+      {renderClickedVideo()}
       {/* <Modal
         show={props.showVideoModal}
         onHide={() => props.setShowVideoModal(false)}
@@ -92,7 +121,7 @@ const SelectedVideoModal = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { selectedVideoState: state.selectedVideoState };
+  return { selectedVideoState: state.selectedVideoState, clickedState: state.clickedUserState };
 };
 
 export default connect(mapStateToProps, { closeVideoActionCreator })(SelectedVideoModal);

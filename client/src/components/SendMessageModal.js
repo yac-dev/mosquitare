@@ -20,7 +20,7 @@ const SendMessageModal = (props) => {
   const handleSendMessage = () => {
     if (props.message && props.authState.currentUser) {
       // props.createCommentActionCreator(content);
-      props.createMessageActionCreator(props.message, props.clickedUserState.user._id);
+      props.createMessageActionCreator(props.message, props.clickedState.mapUser.user._id);
       props.setMessage('');
     } else if (!props.authState.currentUser) {
       props.alertActionCreator('You need to signup or login to comment.', 'error');
@@ -41,7 +41,7 @@ const SendMessageModal = (props) => {
 
   return (
     <Dialog open={props.showSendMessageModal} onClose={() => props.setShowSendMessageModal(false)}>
-      <DialogTitle>Write a message</DialogTitle>
+      <DialogTitle>Write a message to </DialogTitle>
       <DialogContent>
         <DialogContentText>
           e.g. Hello I'm John! I saw your profile. Do you wnat to talk and practice with me?
@@ -69,7 +69,7 @@ const SendMessageModal = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState, clickedUserState: state.clickedUserState };
+  return { authState: state.authState, clickedState: state.clickedUserState };
 };
 
 export default connect(mapStateToProps, { createMessageActionCreator })(SendMessageModal);

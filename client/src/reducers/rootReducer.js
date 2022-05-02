@@ -20,6 +20,7 @@ import selectedVideoReducer from './selectedVideoReducer';
 import clickedUserReducer from './clickedUserReducer';
 import modalReducer from './modalReducer';
 import messagesReducer from './messagesReducer';
+import messagesWithUserReducer from './messagesWthUserReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   clickedUserState: clickedUserReducer,
   modalState: modalReducer,
   messagesState: messagesReducer,
+  messagesWithUserState: messagesWithUserReducer,
 });
 
 export default rootReducer;

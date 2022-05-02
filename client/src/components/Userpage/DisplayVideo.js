@@ -217,6 +217,33 @@ const DisplayVideo = (props) => {
   //   }
   // };
 
+  const timeSince = (date) => {
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+      return interval + ' years';
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+      return interval + ' months';
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+      return interval + ' days';
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+      return interval + ' hours';
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+      return interval + ' minutes';
+    }
+    return Math.floor(seconds) + ' seconds';
+  };
+
   const setToPrivate = () => {
     if (props.conversation.isPublic) {
       if (
@@ -337,12 +364,15 @@ const DisplayVideo = (props) => {
               </Badge>
             </div>
           </div>
-          <div className='status-info' style={{ display: 'flex', gap: '20px', flex: 3, justifyContent: 'center' }}>
+          <div
+            className='status-info'
+            style={{ display: 'flex', gap: '20px', flex: 3, justifyContent: 'center', alignItems: 'center' }}
+          >
             <div>
-              <IconButton>
+              {/* <IconButton>
                 <CalendarTodayIcon sx={{ color: 'white' }} />
-              </IconButton>
-              {props.conversation.createdAt}
+              </IconButton> */}
+              {timeSince(new Date(props.conversation.createdAt))} ago
             </div>
             {renderPublicOrPrivate()}
           </div>

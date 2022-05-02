@@ -71,6 +71,7 @@ import Login from './Signup/Login';
 // components
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
 import { showInboxModalActionCreator } from '../actionCreators/modalActionCreator';
+import { clickNavMessageIconActionCreator } from '../actionCreators/clickActionCreator';
 //ac
 
 const theme = createTheme({
@@ -347,7 +348,7 @@ const Navbar = (props) => {
                 aria-label='show 4 new mails'
                 aria-controls={groupMenuId}
                 aria-haspopup='true'
-                onClick={() => props.showInboxModalActionCreator(true)}
+                onClick={() => props.clickNavMessageIconActionCreator(true)}
                 color='inherit'
               >
                 {/* <Badge badgeContent={4} color='error'> */}
@@ -621,4 +622,8 @@ const mapStateToProps = (state) => {
   return { authState: state.authState, mediaState: state.mediaState };
 };
 
-export default connect(mapStateToProps, { logoutActionCreator, showInboxModalActionCreator })(Navbar);
+export default connect(mapStateToProps, {
+  logoutActionCreator,
+  showInboxModalActionCreator,
+  clickNavMessageIconActionCreator,
+})(Navbar);

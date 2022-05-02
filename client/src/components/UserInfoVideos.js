@@ -3,17 +3,19 @@ import { connect } from 'react-redux';
 import { Modal, Button } from 'react-bootstrap';
 import { getUserConversationsActionCreator } from '../actionCreators/conversationActionCreators';
 import { selectVideoActionCreator } from '../actionCreators/conversationActionCreators';
+import { clickVideoActionCreator } from '../actionCreators/clickActionCreator';
 
 import UserInfoVideo from './UserInfoVideo';
 
 const UserInfoVideos = (props) => {
   useEffect(() => {
-    props.getUserConversationsActionCreator(props.user._id);
-  }, []);
+    props.getUserConversationsActionCreator(props.clickedState.mapUser.user._id);
+  }, [props.clickedState.mapUser.user]);
 
   const onVideoClick = (conversation) => {
     // ここで、reduxのacをdispatchする。conversation
-    props.selectVideoActionCreator(conversation);
+    // props.selectVideoActionCreator(conversation);
+    props.clickVideoActionCreator(conversation);
     props.setShowVideoModal(true);
   };
 
@@ -47,9 +49,14 @@ const UserInfoVideos = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { conversationsState: Object.values(state.conversationsState) };
+  return {
+    conversationsState: Object.values(state.conversationsState.conversations),
+    clickedState: state.clickedUserState,
+  };
 };
 
-export default connect(mapStateToProps, { getUserConversationsActionCreator, selectVideoActionCreator })(
-  UserInfoVideos
-);
+export default connect(mapStateToProps, {
+  getUserConversationsActionCreator,
+  selectVideoActionCreator,
+  clickVideoActionCreator,
+})(UserInfoVideos);

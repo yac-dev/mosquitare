@@ -19,7 +19,9 @@ import Typography from '@mui/material/Typography';
 
 // ac
 import { getMyMessagesActionCreator } from '../actionCreators/messagesActionCreator';
-import { clickMessageUserActionCreator } from '../actionCreators/clickActionCreator';
+import { clickMessageActionCreator } from '../actionCreators/clickActionCreator';
+import { showInboxModalActionCreator } from '../actionCreators/modalActionCreator';
+import { clickNavMessageIconActionCreator } from '../actionCreators/clickActionCreator';
 
 const InboxModal = (props) => {
   const [clickedMail, setClickedMail] = useState();
@@ -28,9 +30,37 @@ const InboxModal = (props) => {
     props.getMyMessagesActionCreator();
   }, []);
 
-  const handleClickOpen = (user) => {
-    props.clickMessageUserActionCreator(user);
-    props.setShowMessageModal(true);
+  const timeSince = (date) => {
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+      return interval + ' years';
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+      return interval + ' months';
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+      return interval + ' days';
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+      return interval + ' hours';
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+      return interval + ' minutes';
+    }
+    return Math.floor(seconds) + ' seconds';
+  };
+
+  const handleClickOpen = (message) => {
+    props.clickMessageActionCreator(message);
+    // props.clickNavMessageIconActionCreator(false);
+    // props.setShowMessageModal(true);
   };
 
   const handleClose = () => {
@@ -42,7 +72,7 @@ const InboxModal = (props) => {
       const messages = props.messagesState.map((message) => {
         return (
           <>
-            <div style={{ cursor: 'pointer' }} onClick={() => handleClickOpen(message.sender)}>
+            <div style={{ cursor: 'pointer' }} onClick={() => handleClickOpen(message)}>
               <ListItem alignItems='flex-start'>
                 <ListItemAvatar>
                   <Avatar alt={message.sender.name} />
@@ -60,7 +90,7 @@ const InboxModal = (props) => {
                       <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
                         {message.content}
                       </Typography>
-                      <div>{message.createdAt}</div>
+                      <div>{timeSince(new Date(message.createdAt))} ago</div>
                     </React.Fragment>
                   }
                 />
@@ -76,7 +106,7 @@ const InboxModal = (props) => {
   };
 
   const renderInboxModal = () => {
-    if (props.modalState.showInbox) {
+    if (props.clickedState.navMessageIcon.clicked) {
       return (
         <>
           <div style={{ backgroundColor: 'red', position: 'absolute', top: '50px', right: '30px' }}>
@@ -93,7 +123,16 @@ const InboxModal = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { modalState: state.modalState, messagesState: Object.values(state.messagesState) };
+  return {
+    modalState: state.modalState,
+    messagesState: Object.values(state.messagesState),
+    clickedState: state.clickedUserState,
+  };
 };
 
-export default connect(mapStateToProps, { getMyMessagesActionCreator, clickMessageUserActionCreator })(InboxModal);
+export default connect(mapStateToProps, {
+  getMyMessagesActionCreator,
+  clickMessageActionCreator,
+  showInboxModalActionCreator,
+  clickNavMessageIconActionCreator,
+})(InboxModal);

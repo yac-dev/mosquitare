@@ -22,10 +22,10 @@ const UsersMarker = (props) => {
               socket={props.socket}
               user={user}
               setShowCallingModal={props.setShowCallingModal}
-              setIsUserIconClicked={props.setIsUserIconClicked}
+              // setIsUserIconClicked={props.setIsUserIconClicked}
               setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
-              userInfo={props.userInfo}
-              setUserInfo={props.setUserInfo}
+              // userInfo={props.userInfo}
+              // setUserInfo={props.setUserInfo}
             />
           </>
         );

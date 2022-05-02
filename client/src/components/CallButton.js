@@ -6,26 +6,33 @@ import TranslateIcon from '@mui/icons-material/Translate';
 import DuoIcon from '@mui/icons-material/Duo';
 
 // mui for option
+import Badge from '@mui/material/Badge';
 import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import SendIcon from '@mui/icons-material/Send';
+import EmailIcon from '@mui/icons-material/Email';
+import ReplyIcon from '@mui/icons-material/Reply';
 import Popover from '@mui/material/Popover';
 import { TextField, InputAdornment } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
+import PhoneEnabledIcon from '@mui/icons-material/PhoneEnabled';
 // mui components
 import Tooltip from '@mui/material/Tooltip';
 import { Stack } from '@mui/material';
 
 // components
 import Snackbar from './Snackbar';
+import ReplyMessageModal from './ReplyMessageModal';
 
 // action creators
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 import { createMessageActionCreator } from '../actionCreators/messagesActionCreator';
 import { alertActionCreator } from '../actionCreators/alertsActionCreator';
+
+import { clickMessageButtonActionCreator } from '../actionCreators/clickActionCreator';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -72,6 +79,10 @@ const CallButton = (props) => {
   const [content, setContent] = useState('');
 
   const [sendAnchorEl, setSendAnchorEl] = React.useState(null);
+  const [badgeCount, setBadgeCount] = useState(0);
+  const [unreadMessages, setUnreadMessages] = useState([]);
+  const [showReplyMessageModal, setShowReplyMessageModal] = useState(false);
+  const [replyMessage, setReplyMessage] = useState('');
 
   const renderAlerts = () => {
     if (props.alertsState.length) {
@@ -131,6 +142,19 @@ const CallButton = (props) => {
     setExchangeableNativeLangs(buffer2);
   }, [props.user]);
 
+  useEffect(() => {
+    let messagesBuffer = [];
+    for (let i = 0; i < props.messagesState.length; i++) {
+      if (props.messagesState[i].sender._id === props.user._id) {
+        // if (!props.messagesState[i].read) {
+        messagesBuffer.push(props.messagesState[i]);
+        // }
+      }
+    }
+    // setUnreadMessages(unreadMessagesBuffer);
+    setBadgeCount(messagesBuffer.length);
+  }, [props.user]);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -172,6 +196,60 @@ const CallButton = (props) => {
     }
   };
 
+  const renderSendOrReply = () => {
+    if (badgeCount >= 1) {
+      return (
+        <Tooltip title='You got the message from this user.'>
+          <Badge
+            badgeContent={badgeCount}
+            color='success'
+            sx={{
+              '& .MuiBadge-badge': {
+                color: 'white',
+                backgroundColor: 'rgb(0, 186, 68)',
+                '&:hover': {
+                  backgroundColor: 'rgb(0, 158, 58)',
+                },
+              },
+            }}
+          >
+            <Button
+              variant='contained'
+              // startIcon={<SendIcon />}
+              onClick={() => props.clickMessageButtonActionCreator(true)}
+              sx={{
+                backgroundColor: 'rgb(0, 186, 68)',
+                '&:hover': {
+                  backgroundColor: 'rgb(0, 158, 58)',
+                },
+              }}
+            >
+              {/* Message */}
+              <EmailIcon />
+            </Button>
+          </Badge>
+        </Tooltip>
+      );
+    } else {
+      return (
+        <Button
+          variant='contained'
+          // startIcon={<SendIcon />}
+          onClick={() => props.clickMessageButtonActionCreator(true)}
+          sx={{
+            backgroundColor: 'rgb(0, 186, 68)',
+            '&:hover': {
+              backgroundColor: 'rgb(0, 158, 58)',
+            },
+          }}
+        >
+          {/* Message */}
+          <EmailIcon />
+        </Button>
+      );
+    }
+  };
+
   const renderExchangeableLangs = () => {
     const menuItemDOMs = [];
     if (exchangeableLearningLangs.length && exchangeableNativeLangs.length) {
@@ -187,7 +265,8 @@ const CallButton = (props) => {
                 }}
                 disableRipple
               >
-                {exchangeableLearningLangs[i].name} &amp; {exchangeableNativeLangs[j].name}
+                <PhoneEnabledIcon />
+                &nbsp;Exchange {exchangeableLearningLangs[i].name} &amp; {exchangeableNativeLangs[j].name}
                 {/* 必ず、callerにとってのlearning langがindex 0に入る。上で送るからね。*/}
               </MenuItem>
             </>
@@ -198,21 +277,24 @@ const CallButton = (props) => {
       return (
         <div className='action-button-flexbox' style={{ display: 'flex', gap: '10px' }}>
           <div className='call-button'>
-            <Button
-              id='demo-customized-button'
-              aria-controls={open ? 'demo-customized-menu' : undefined}
-              aria-haspopup='true'
-              aria-expanded={open ? 'true' : undefined}
-              variant='contained'
-              disableElevation
-              disabled={props.user.isAvailableNow ? false : true}
-              onClick={handleClick}
-              endIcon={<KeyboardArrowDownIcon />}
-              // sx={{ backgroundColor: 'white', color: 'black' }}
-            >
-              <VideocamIcon size='large' />
-              &nbsp; Exchange now
-            </Button>
+            <Tooltip title='Click to see practice menu.'>
+              <Button
+                id='demo-customized-button'
+                aria-controls={open ? 'demo-customized-menu' : undefined}
+                aria-haspopup='true'
+                aria-expanded={open ? 'true' : undefined}
+                variant='contained'
+                disableElevation
+                disabled={props.user.isAvailableNow ? false : true}
+                onClick={handleClick}
+                // endIcon={<KeyboardArrowDownIcon />}
+                // sx={{ backgroundColor: 'white', color: 'black' }}
+              >
+                <PhoneEnabledIcon size='large' />
+                <KeyboardArrowDownIcon />
+                {/* &nbsp; Exchange */}
+              </Button>
+            </Tooltip>
             <StyledMenu
               id='demo-customized-menu'
               MenuListProps={{
@@ -225,7 +307,7 @@ const CallButton = (props) => {
               {menuItemDOMs}
             </StyledMenu>
           </div>
-          <Button
+          {/* <Button
             variant='contained'
             startIcon={<SendIcon />}
             onClick={() => props.setShowSendMessageModal(true)}
@@ -237,7 +319,8 @@ const CallButton = (props) => {
             }}
           >
             Send a message
-          </Button>
+          </Button> */}
+          {renderSendOrReply()}
           {/* <Popover
             id={idSend}
             open={openSend}
@@ -279,13 +362,33 @@ const CallButton = (props) => {
     }
   };
 
-  return <>{renderExchangeableLangs()}</>;
+  return (
+    <>
+      {renderExchangeableLangs()}
+      {/* <ReplyMessageModal
+        user={props.user}
+        unreadMessages={unreadMessages}
+        showReplyMessageModal={showReplyMessageModal}
+        setShowReplyMessageModal={setShowReplyMessageModal}
+        replyMessage={replyMessage}
+        setReplyMessage={setReplyMessage}
+      /> */}
+    </>
+  );
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState, mediaState: state.mediaState };
+  return {
+    authState: state.authState,
+    mediaState: state.mediaState,
+    clickedState: state.clickedUserState,
+    messagesState: Object.values(state.messagesState),
+  };
 };
 
-export default connect(mapStateToProps, { callActionCreator, createMessageActionCreator, alertActionCreator })(
-  CallButton
-);
+export default connect(mapStateToProps, {
+  callActionCreator,
+  createMessageActionCreator,
+  alertActionCreator,
+  clickMessageButtonActionCreator,
+})(CallButton);

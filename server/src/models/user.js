@@ -167,6 +167,12 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'RatingAverage',
   },
+  messageSpaces: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'messageSpace',
+    },
+  ],
   // visitedPhoto: [[{ type: String }]],いずれ、ここにも足していくことになる。
   // pendingPenalty: [
   //   {

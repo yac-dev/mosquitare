@@ -45,11 +45,11 @@ const EachUserInfo = (props) => {
       offsetTop={-7 * props.viewport.zoom}
       // ここonClickは、今自分がどのcomponent内にいるかで実行するものが変わるようにしたいんだよな。
       onClick={() => {
-        props.setIsUserIconClicked(true);
+        // props.setIsUserIconClicked(true);
         if (props.setOpenSwipeableDrawer) {
           props.setOpenSwipeableDrawer(true);
         }
-        props.setUserInfo({ ...props.userInfo, info: props.user });
+        // props.setUserInfo({ ...props.userInfo, info: props.user });
         props.clickMapUserActionCreator(props.user);
         props.clickUserActionCreator(props.user);
       }}

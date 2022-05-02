@@ -1,38 +1,71 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
 import UserDetail from './UserDetail';
 import UserInfoWrapper from './UserInfoWrapper';
 
 const RightPositionedUserDetail = (props) => {
+  // const renderRightPositionedUserInfo = () => {
+  //   if (props.isUserIconClicked) {
+  //     if (props.userInfo.info) {
+  //       return (
+  //         <div
+  //           className='user-detail-wrapper'
+  //           style={{
+  //             cursor: 'default',
+  //             width: '35vw',
+  //             maxHeight: '85vh',
+  //             position: 'absolute',
+  //             right: '50px',
+  //             top: '30px',
+  //             backgroundColor: 'rgb(37, 95, 184)',
+  //             padding: '10px',
+  //             color: 'black',
+  //           }}
+  //         >
+  //           <UserInfoWrapper
+  //             user={props.userInfo.info}
+  //             socket={props.socket}
+  //             setShowCallingModal={props.setShowCallingModal}
+  //             showVideoModal={props.showVideoModal}
+  //             setShowVideoModal={props.setShowVideoModal}
+  //             showSendMessageModal={props.showSendMessageModal}
+  //             setShowSendMessageModal={props.setShowSendMessageModal}
+  //           />
+  //         </div>
+  //       );
+  //     }
+  //   }
+  // };
+
   const renderRightPositionedUserInfo = () => {
-    if (props.isUserIconClicked) {
-      if (props.userInfo.info) {
-        return (
-          <div
-            className='user-detail-wrapper'
-            style={{
-              cursor: 'default',
-              width: '35vw',
-              maxHeight: '85vh',
-              position: 'absolute',
-              right: '50px',
-              top: '30px',
-              backgroundColor: 'rgb(37, 95, 184)',
-              padding: '10px',
-              color: 'black',
-            }}
-          >
-            <UserInfoWrapper
-              user={props.userInfo.info}
-              socket={props.socket}
-              setShowCallingModal={props.setShowCallingModal}
-              showVideoModal={props.showVideoModal}
-              setShowVideoModal={props.setShowVideoModal}
-              showSendMessageModal={props.showSendMessageModal}
-              setShowSendMessageModal={props.setShowSendMessageModal}
-            />
-          </div>
-        );
-      }
+    if (props.clickedState.mapUser.clicked) {
+      return (
+        <div
+          className='user-detail-wrapper'
+          style={{
+            cursor: 'default',
+            width: '35vw',
+            maxHeight: '85vh',
+            position: 'absolute',
+            right: '50px',
+            top: '30px',
+            backgroundColor: 'rgb(37, 95, 184)',
+            padding: '10px',
+            color: 'black',
+          }}
+        >
+          <UserInfoWrapper
+            user={props.clickedState.mapUser.user}
+            socket={props.socket}
+            setShowCallingModal={props.setShowCallingModal}
+            showVideoModal={props.showVideoModal}
+            setShowVideoModal={props.setShowVideoModal}
+            showSendMessageModal={props.showSendMessageModal}
+            setShowSendMessageModal={props.setShowSendMessageModal}
+          />
+        </div>
+      );
     }
   };
 
@@ -67,4 +100,8 @@ const RightPositionedUserDetail = (props) => {
   );
 };
 
-export default RightPositionedUserDetail;
+const mapStateToProps = (state) => {
+  return { clickedState: state.clickedUserState };
+};
+
+export default connect(mapStateToProps, {})(RightPositionedUserDetail);
