@@ -369,8 +369,12 @@ const WorldMap = (props) => {
   };
 
   const renderMessageWindow = () => {
-    if (props.clickedState.messageButton.clicked) {
-      return <MessageWindow />;
+    if (props.clickedState.mapUser.user) {
+      if (props.clickedState.messageButton.clicked) {
+        return <MessageWindow />;
+      } else {
+        return null;
+      }
     } else {
       return null;
     }

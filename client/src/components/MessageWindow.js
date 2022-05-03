@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import { getMessagesWithUserActionCreator } from '../actionCreators/messagesActionCreator';
 import { clickMessageButtonActionCreator } from '../actionCreators/clickActionCreator';
-import { updateUnreadToReadActionCreator } from '../actionCreators/messagesActionCreator';
+import { createMessageActionCreator } from '../actionCreators/messagesActionCreator';
+import { alertActionCreator } from '../actionCreators/alertsActionCreator';
+// import { updateUnreadToReadActionCreator } from '../actionCreators/messagesActionCreator';
 
 // mui component
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -17,6 +19,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 
 const MessageWindow = (props) => {
+  const [content, setContent] = useState('');
   useEffect(() => {
     props.getMessagesWithUserActionCreator(props.clickedState.mapUser.user._id);
     // .then(() =>
@@ -30,6 +33,19 @@ const MessageWindow = (props) => {
   //   }
 
   // }, [props.clickedState.mapUser.user]);
+
+  const handleSendMessage = (recipientId) => {
+    if (content && props.authState.currentUser) {
+      // props.createCommentActionCreator(content);
+      props.createMessageActionCreator(content, recipientId);
+      setContent('');
+    } else if (!props.authState.currentUser) {
+      props.alertActionCreator('You need to signup or login to comment.', 'error');
+    } else if (!content) {
+      // alertかな。
+      props.alertActionCreator('Please write a message.', 'error');
+    }
+  };
 
   const timeSince = (date) => {
     var seconds = Math.floor((new Date() - date) / 1000);
@@ -90,61 +106,67 @@ const MessageWindow = (props) => {
     }
   };
 
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        bottom: '100px',
-        right: '555px',
-        height: '400px',
-        width: '300px',
-        color: 'black',
-        padding: '10px',
-        // backgroundColor: 'blue',
-        backgroundColor: 'rgb(37, 95, 184)',
-      }}
-    >
-      <div style={{ height: '100%', backgroundColor: 'rgb(232, 232, 232)', padding: '5px' }}>
+  const render = () => {
+    if (props.clickedState.mapUser) {
+      return (
         <div
-          className='message-window-header'
-          style={{ display: 'flex', height: '15%', justifyContent: 'space-between' }}
+          style={{
+            position: 'absolute',
+            bottom: '100px',
+            right: '555px',
+            height: '400px',
+            width: '300px',
+            color: 'black',
+            padding: '10px',
+            // backgroundColor: 'blue',
+            backgroundColor: 'rgb(37, 95, 184)',
+          }}
         >
-          <Avatar alt={props.clickedState.mapUser.user.name} src='/static/images/avatar/1.jpg' />
-          <p>{props.clickedState.mapUser.user.name}</p>
-          <i
-            className='fa fa-close'
-            style={{ color: 'red', cursor: 'pointer' }}
-            onClick={() => props.clickMessageButtonActionCreator(false)}
-          ></i>
+          <div style={{ height: '100%', backgroundColor: 'rgb(232, 232, 232)', padding: '5px' }}>
+            <div
+              className='message-window-header'
+              style={{ display: 'flex', height: '15%', justifyContent: 'space-between' }}
+            >
+              <Avatar alt={props.clickedState.mapUser.user.name} src='/static/images/avatar/1.jpg' />
+              <p>{props.clickedState.mapUser.user.name}</p>
+              <i
+                className='fa fa-close'
+                style={{ color: 'red', cursor: 'pointer' }}
+                onClick={() => props.clickMessageButtonActionCreator(false)}
+              ></i>
+            </div>
+            <div style={{ width: '100%', height: '15%' }}>
+              <TextField
+                id='input-with-icon-textfield'
+                label='Write a message'
+                placeholder='Practice with me on January 1st?'
+                fullWidth
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <Tooltip title='Send'>
+                        <IconButton>
+                          <SendIcon onClick={() => handleSendMessage(props.clickedState.mapUser.user._id)} />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+                variant='standard'
+              />
+            </div>
+            <div style={{ height: '70%', overflow: 'auto' }}>{renderMessages()}</div>
+          </div>
         </div>
-        <div style={{ width: '100%', height: '15%' }}>
-          <TextField
-            id='input-with-icon-textfield'
-            label='Write a message'
-            placeholder='Practice with me on January 1st?'
-            fullWidth
-            // value={content}
-            // onChange={(event) => setContent(event.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position='start'>
-                  <Tooltip title='Send'>
-                    <IconButton>
-                      <SendIcon
-                      // onClick={() => handleSendMessage(props.user._id)}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                </InputAdornment>
-              ),
-            }}
-            variant='standard'
-          />
-        </div>
-        <div style={{ height: '70%', overflow: 'auto' }}>{renderMessages()}</div>
-      </div>
-    </div>
-  );
+      );
+    } else {
+      return null;
+    }
+  };
+
+  return <>{render()}</>;
 };
 
 const mapStateToProps = (state) => {
@@ -158,5 +180,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
   getMessagesWithUserActionCreator,
   clickMessageButtonActionCreator,
-  updateUnreadToReadActionCreator,
+  createMessageActionCreator,
+  alertActionCreator,
 })(MessageWindow);

@@ -76,19 +76,19 @@ const BasicUserInfo = (props) => {
     if (!props.user.isAvailableNow) {
       return (
         <Tooltip title='Not available now'>
-          <span>💤🛌</span>
+          <span style={{ fontSize: '20px' }}>💤🛌</span>
         </Tooltip>
       );
     } else if (props.user.isAvailableNow && props.user.isInConversation) {
       return (
         <Tooltip title='Having conversation now'>
-          <span>🤔☎️</span>
+          <span style={{ fontSize: '20px' }}>🤔☎️</span>
         </Tooltip>
       );
     } else if (props.user.isAvailableNow) {
       return (
         <Tooltip title='Available now'>
-          <span>😃🤚</span>
+          <span style={{ fontSize: '20px' }}>😃🤚</span>
         </Tooltip>
       );
     }

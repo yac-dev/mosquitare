@@ -67,11 +67,11 @@ const LanguageChart = (props) => {
     for (let i = 0; i < props.user.nativeLangs.length; i++) {
       for (let j = 0; j < myLangs.length; j++) {
         if (props.user.nativeLangs[i].language.name === myLangs[j].language.name) {
-          mappedLangLabels.push(`${myLangs[j].language.name} (native)`);
-          // mappedLangLabels.push(`${myLangs[j].language.name}`);
+          // mappedLangLabels.push(`${myLangs[j].language.name} (native)`);
+          mappedLangLabels.push(`${myLangs[j].language.name}`);
         } else {
-          mappedLangLabels.push(`${myLangs[j].language.name} (learning)`);
-          // mappedLangLabels.push(`${myLangs[j].language.name}`);
+          // mappedLangLabels.push(`${myLangs[j].language.name} (learning)`);
+          mappedLangLabels.push(`${myLangs[j].language.name}`);
         }
       }
     }
@@ -80,8 +80,12 @@ const LanguageChart = (props) => {
     const myLangsStatus = myLangs.map((lang) => lang.words);
     const statusSum = myLangsStatus.reduce((partialSum, a) => partialSum + a, 0);
     myLangsStatus.forEach((langStatus) => {
-      const ratio = Math.floor((langStatus / statusSum) * 100);
-      data.push(ratio);
+      if (langStatus === 0) {
+        data.push(0);
+      } else {
+        const ratio = Math.floor((langStatus / statusSum) * 100);
+        data.push(ratio);
+      }
     });
 
     // const languageBgColors = [];
@@ -116,6 +120,49 @@ const LanguageChart = (props) => {
   }, [props.user]);
   // ここのdependencyが足りなかったのよ。これだから怖い。programmingは。。。
 
+  const renderDefaultDoughnut = () => {
+    const data = {
+      labels: '',
+      datasets: [
+        {
+          label: 'Language Status',
+          data: [1],
+          // backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
+          backgroundColor: ['rgb(181, 181, 181)'],
+          // borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
+          borderWidth: 1,
+          hoverOffset: 30,
+        },
+      ],
+    };
+
+    const options = {
+      hover: { mode: null },
+      plugins: {
+        legend: {
+          display: false,
+          // position: 'left',
+        },
+        // tooltip: {
+        //   enabled: false,
+        // },
+        // responsive: true,
+
+        datalabels: {
+          display: true,
+          formatter: (val, ctx) => {
+            return 'No data 🤔';
+          },
+          color: '#fff',
+          backgroundColor: '#404040',
+        },
+      },
+      maintainAspectRatio: false, // これだ。resizeな。pluginの外に出すとできたよ。
+    };
+
+    return <Doughnut data={data} options={options} width={200} height={200} />;
+  };
+
   const renderDoughnut = () => {
     return <Doughnut data={data} options={options} width={200} height={200} />;
   };
@@ -135,8 +182,9 @@ const LanguageChart = (props) => {
     // } else if (data) {
     //   return <div style={{ width: '99%' }}>{renderDoughnut()}</div>;
     // }
+
     if (myLangsStatus.every((element) => element === 0)) {
-      return <>{renderInitialData()}</>;
+      return <>{renderDefaultDoughnut()}</>;
     } else if (data) {
       return (
         <div

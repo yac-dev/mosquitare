@@ -106,6 +106,42 @@ const PersonalityChart = (props) => {
     setData(d);
   }, [props.user]);
 
+  const renderDefaultBar = () => {
+    const d = {
+      labels,
+      datasets: [
+        {
+          data: [],
+          // backgroundColor: bgColors,
+          // [
+          //   'rgba(37, 95, 184)',
+          //   'rgb(44, 184, 63)',
+          //   'rgba(37, 95, 184)',
+          //   'rgb(44, 184, 63)',
+          //   'rgba(37, 95, 184)',
+          //   // 'rgba(64, 173, 173, 0.2)',
+          // ],
+          // borderColor: [
+          //   'rgba(255, 99, 132, 1)',
+          //   'rgba(54, 162, 235, 1)',
+          //   'rgba(255, 206, 86, 1)',
+          //   'rgba(63, 209, 82, 1)',
+          //   'rgba(94, 53, 161,1)',
+          // ],
+          borderWidth: 1,
+          hoverOffset: 30,
+        },
+      ],
+    };
+
+    return (
+      <>
+        <span>No Data 🤔</span>
+        <Bar data={data} options={options} width={400} height={150} />
+      </>
+    );
+  };
+
   const renderBar = () => {
     return <Bar data={data} options={options} width={400} height={150} />;
   };
@@ -117,7 +153,7 @@ const PersonalityChart = (props) => {
   const render = () => {
     const ratingAverageData = Object.values(props.user.ratingAverage).slice(2, 7);
     if (ratingAverageData.every((element) => element === 0)) {
-      return <>{renderInitialData()}</>;
+      return <>{renderDefaultBar()}</>;
     } else if (data) {
       return (
         <div
