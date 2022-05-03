@@ -1,6 +1,7 @@
 import { mosquitareAPI } from '../apis/mosquitare';
 import history from '../history';
 import { SIGNUP, LOAD_ME, LOGIN, LOGOUT, UPDATE_CONVERSATION_STATE, UPDATE_CONVERSATION_TO_FALSE } from './type';
+import { alertActionCreator } from './alertsActionCreator';
 
 import store from '../store';
 import { getUsersActionCreator } from './usersActionCreator';
@@ -22,6 +23,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
     window.location = '/worldmap';
   } catch (error) {
     console.log(error);
+    dispatch(alertActionCreator('You got an error. Please write your info again.'));
   }
 };
 
