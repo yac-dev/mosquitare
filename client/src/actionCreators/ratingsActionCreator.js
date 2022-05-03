@@ -1,4 +1,5 @@
 import { mosquitareAPI } from '../apis/mosquitare';
+import { alertActionCreator } from './alertsActionCreator';
 
 export const createRatingActionCreator = (ratingData) => async (dispatch, getState) => {
   try {
@@ -10,7 +11,10 @@ export const createRatingActionCreator = (ratingData) => async (dispatch, getSta
       type: 'CREATE_RATING',
       payload: '',
     });
+
+    dispatch(alertActionCreator('Thank you for your rating! Please wait until the process finish', 'success', 1500));
   } catch (error) {
     console.log(error);
+    dispatch(alertActionCreator('You have already rated.', 'info'));
   }
 };

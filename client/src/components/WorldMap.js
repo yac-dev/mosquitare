@@ -184,16 +184,16 @@ const WorldMap = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (localStorage.getItem('after video finish')) {
-      props.alertActionCreator(
-        'Did you enjoy the conversation? You can review your conversation on your personal page.',
-        'success',
-        10000
-      );
-      localStorage.removeItem('after signup');
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (localStorage.getItem('after video finish')) {
+  //     props.alertActionCreator(
+  //       'Did you enjoy the conversation? You can review your conversation on your personal page.',
+  //       'success',
+  //       10000
+  //     );
+  //     localStorage.removeItem('after signup');
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (localStorage.getItem('after signup')) {
@@ -260,7 +260,7 @@ const WorldMap = (props) => {
 
   useEffect(() => {
     if (props.mediaState.apiCallResult === 3) {
-      localStorage.setItem('after video finish', true);
+      // localStorage.setItem('after video finish', true);
       window.location = '/worldmap';
     }
   }, [props.mediaState.apiCallResult]);

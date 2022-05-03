@@ -7,6 +7,10 @@ export const createRating = async (request, response) => {
   try {
     const { conversationId, userFrom, userTo, ratingData } = request.body;
     console.log(ratingData);
+    const doesRatingExist = await Rating.findOne({ conversation: conversationId, userFrom });
+    if (doesRatingExist) {
+      return new Error('You have already rated.');
+    }
     const newRating = await Rating.create({
       conversation: conversationId,
       userFrom,
@@ -39,7 +43,6 @@ export const createRating = async (request, response) => {
       if (status === 'romanceHunter') {
         if (ratingData['romanceHunter']['checked']) {
           ratingAverage.romanceHunter += 1;
-          console.log('ummmm...');
         }
       } else if (status === 'moneyHunter') {
         if (ratingData['moneyHunter']['checked']) {
@@ -92,6 +95,9 @@ export const createRating = async (request, response) => {
       user,
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
+    response.status(400).json({
+      error,
+    });
   }
 };
