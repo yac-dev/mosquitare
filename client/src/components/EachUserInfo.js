@@ -36,45 +36,48 @@ const EachUserInfo = (props) => {
   // const handleClose = () => {
   //   setIsPopupOpen(false);
   // };
-  return (
-    <Marker
-      // position={{ lat: props.user.location.coordinates[1], lng: props.user.location.coordinates[0] }}
-      longitude={props.user.location.coordinates[0]}
-      latitude={props.user.location.coordinates[1]}
-      offsetLeft={-3.5 * props.viewport.zoom}
-      offsetTop={-7 * props.viewport.zoom}
-      // ここonClickは、今自分がどのcomponent内にいるかで実行するものが変わるようにしたいんだよな。
-      onClick={() => {
-        // props.setIsUserIconClicked(true);
-        if (props.setOpenSwipeableDrawer) {
-          props.setOpenSwipeableDrawer(true);
-        }
-        // props.setUserInfo({ ...props.userInfo, info: props.user });
-        props.clickMapUserActionCreator(props.user);
-        props.clickUserActionCreator(props.user);
-      }}
-    >
-      <Popover
-        id='mouse-over-popover'
-        sx={{
-          pointerEvents: 'none',
-        }}
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus
-      >
-        <UserInfoCardNew user={props.user} />
-      </Popover>
-      {/* <Popup
+
+  const renderEachUser = () => {
+    if (!props.authState.currentUser) {
+      return (
+        <Marker
+          // position={{ lat: props.user.location.coordinates[1], lng: props.user.location.coordinates[0] }}
+          longitude={props.user.location.coordinates[0]}
+          latitude={props.user.location.coordinates[1]}
+          offsetLeft={-3.5 * props.viewport.zoom}
+          offsetTop={-7 * props.viewport.zoom}
+          // ここonClickは、今自分がどのcomponent内にいるかで実行するものが変わるようにしたいんだよな。
+          onClick={() => {
+            // props.setIsUserIconClicked(true);
+            if (props.setOpenSwipeableDrawer) {
+              props.setOpenSwipeableDrawer(true);
+            }
+            // props.setUserInfo({ ...props.userInfo, info: props.user });
+            props.clickMapUserActionCreator(props.user);
+            props.clickUserActionCreator(props.user);
+          }}
+        >
+          <Popover
+            id='mouse-over-popover'
+            sx={{
+              pointerEvents: 'none',
+            }}
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            <UserInfoCardNew user={props.user} />
+          </Popover>
+          {/* <Popup
         trigger={
           <Icon
             className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
@@ -96,14 +99,157 @@ const EachUserInfo = (props) => {
         basic
         hoverable
       ></Popup> */}
-      <Icon
-        className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
-        size='large'
-        style={{ cursor: 'pointer' }}
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-      />
-    </Marker>
+          <Icon
+            className='green user icon'
+            size='large'
+            style={{ cursor: 'pointer' }}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          />
+        </Marker>
+      );
+    } else {
+      return (
+        <Marker
+          // position={{ lat: props.user.location.coordinates[1], lng: props.user.location.coordinates[0] }}
+          longitude={props.user.location.coordinates[0]}
+          latitude={props.user.location.coordinates[1]}
+          offsetLeft={-3.5 * props.viewport.zoom}
+          offsetTop={-7 * props.viewport.zoom}
+          // ここonClickは、今自分がどのcomponent内にいるかで実行するものが変わるようにしたいんだよな。
+          onClick={() => {
+            // props.setIsUserIconClicked(true);
+            if (props.setOpenSwipeableDrawer) {
+              props.setOpenSwipeableDrawer(true);
+            }
+            // props.setUserInfo({ ...props.userInfo, info: props.user });
+            props.clickMapUserActionCreator(props.user);
+            props.clickUserActionCreator(props.user);
+          }}
+        >
+          <Popover
+            id='mouse-over-popover'
+            sx={{
+              pointerEvents: 'none',
+            }}
+            open={open}
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'left',
+            }}
+            onClose={handlePopoverClose}
+            disableRestoreFocus
+          >
+            <UserInfoCardNew user={props.user} />
+          </Popover>
+          {/* <Popup
+        trigger={
+          <Icon
+            className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
+            size='large'
+            style={{ cursor: 'pointer' }}
+          />
+        }
+        content={
+          <UserInfoCardNew
+            user={props.user}
+            socket={props.socket}
+            setShowCallingModal={props.setShowCallingModal}
+            setIsPopupOpen={setIsPopupOpen}
+          />
+        }
+        open={isPopupOpen}
+        onOpen={() => setIsPopupOpen(true)} //意味は、hoverした時にisPopupOpen stateをopenにします。ってこと。
+        onClose={() => setIsPopupOpen(false)} // 意味は、hoverが外れた時にisPopupOpen stateをfalseにします、ってこと。
+        basic
+        hoverable
+      ></Popup> */}
+          <Icon
+            className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
+            size='large'
+            style={{ cursor: 'pointer' }}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          />
+        </Marker>
+      );
+    }
+  };
+
+  return (
+    <>{renderEachUser()}</>
+    // <Marker
+    //   // position={{ lat: props.user.location.coordinates[1], lng: props.user.location.coordinates[0] }}
+    //   longitude={props.user.location.coordinates[0]}
+    //   latitude={props.user.location.coordinates[1]}
+    //   offsetLeft={-3.5 * props.viewport.zoom}
+    //   offsetTop={-7 * props.viewport.zoom}
+    //   // ここonClickは、今自分がどのcomponent内にいるかで実行するものが変わるようにしたいんだよな。
+    //   onClick={() => {
+    //     // props.setIsUserIconClicked(true);
+    //     if (props.setOpenSwipeableDrawer) {
+    //       props.setOpenSwipeableDrawer(true);
+    //     }
+    //     // props.setUserInfo({ ...props.userInfo, info: props.user });
+    //     props.clickMapUserActionCreator(props.user);
+    //     props.clickUserActionCreator(props.user);
+    //   }}
+    // >
+    //   <Popover
+    //     id='mouse-over-popover'
+    //     sx={{
+    //       pointerEvents: 'none',
+    //     }}
+    //     open={open}
+    //     anchorEl={anchorEl}
+    //     anchorOrigin={{
+    //       vertical: 'bottom',
+    //       horizontal: 'left',
+    //     }}
+    //     transformOrigin={{
+    //       vertical: 'top',
+    //       horizontal: 'left',
+    //     }}
+    //     onClose={handlePopoverClose}
+    //     disableRestoreFocus
+    //   >
+    //     <UserInfoCardNew user={props.user} />
+    //   </Popover>
+    //   {/* <Popup
+    //     trigger={
+    //       <Icon
+    //         className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
+    //         size='large'
+    //         style={{ cursor: 'pointer' }}
+    //       />
+    //     }
+    //     content={
+    //       <UserInfoCardNew
+    //         user={props.user}
+    //         socket={props.socket}
+    //         setShowCallingModal={props.setShowCallingModal}
+    //         setIsPopupOpen={setIsPopupOpen}
+    //       />
+    //     }
+    //     open={isPopupOpen}
+    //     onOpen={() => setIsPopupOpen(true)} //意味は、hoverした時にisPopupOpen stateをopenにします。ってこと。
+    //     onClose={() => setIsPopupOpen(false)} // 意味は、hoverが外れた時にisPopupOpen stateをfalseにします、ってこと。
+    //     basic
+    //     hoverable
+    //   ></Popup> */}
+    //   <Icon
+    //     className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
+    //     size='large'
+    //     style={{ cursor: 'pointer' }}
+    //     onMouseEnter={handlePopoverOpen}
+    //     onMouseLeave={handlePopoverClose}
+    //   />
+    // </Marker>
   );
 };
 

@@ -218,7 +218,7 @@ const WorldMap = (props) => {
       socket.on(I_GOT_SOCKET_ID, (socketIdFromServer) => {
         props.loadMeAndUpdateActionCreator(localStorage.getItem('mosquitare token'), socketIdFromServer).then(() => {
           props.getMediaActionCreator();
-          props.getUsersActionCreator();
+          // props.getUsersActionCreator();
         });
         // props.getMediaActionCreator();
 
@@ -227,7 +227,9 @@ const WorldMap = (props) => {
     }
   }, [socket]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    props.getUsersActionCreator();
+  }, []);
 
   // useEffect(() => {
   //   if (props.authState.currentUser._id) {
@@ -380,10 +382,12 @@ const WorldMap = (props) => {
     }
   };
 
+  const renderMapPublicly = () => {};
+
   const renderWorldMap = () => {
-    if (socket && props.usersState.length) {
-      return (
-        <>
+    if (!props.authState.currentUser) {
+      if (props.usersState.length) {
+        return (
           <Default>
             <div>
               <ReactMapGL
@@ -415,142 +419,189 @@ const WorldMap = (props) => {
                   setShowSendMessageModal={setShowSendMessageModal}
                 />
                 {/* <UserDetail
-                  socket={socket}
-                  isUserIconClicked={isUserIconClicked}
-                  userInfo={userInfo}
-                  setShowCallingModal={setShowCallingModal}
-                /> */}
+                    socket={socket}
+                    isUserIconClicked={isUserIconClicked}
+                    userInfo={userInfo}
+                    setShowCallingModal={setShowCallingModal}
+                  /> */}
               </ReactMapGL>
-              {/* {renderMap()} */}
-              <CallingModal
-                socket={socket}
-                show={showCallingModal}
-                setShowCallingModal={setShowCallingModal}
-                show1on1={show1on1}
-                setShow1on1={setShow1on1}
-              />
-              <FullScreen1on1Modal
-                socket={socket}
-                show1on1={show1on1}
-                setShow1on1={setShow1on1}
-                fullscreen1on1Modal={fullscreen1on1Modal}
-                // setShowAfterFinishingModal={setShowAfterFinishingModal}
-                setShowRatingModal={setShowRatingModal}
-              />
-              <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
-              <SendMessageModal
-                message={message}
-                setMessage={setMessage}
-                showSendMessageModal={showSendMessageModal}
-                setShowSendMessageModal={setShowSendMessageModal}
-              />
-              {/* <ReplyMessageModal
-                showReplyMessageModal={showReplyMessageModal}
-                setShowReplyMessageModal={setShowReplyMessageModal}
-                replyMessage={replyMessage}
-                setReplyMessage={setReplyMessage}
-              /> */}
-              <Inbox />
-              {renderMessageWindow()}
-              {/* {renderSelectedVideo()} */}
-              {renderRatingModal()}
-              {/* <AfterFinishingModal
-                showAfterFinishingModal={showAfterFinishingModal}
-                setShowAfterFinishingModal={setShowAfterFinishingModal}
-              /> */}
-              {renderAlerts()}
             </div>
+            <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
           </Default>
-
-          {/* <Tablet>
-            <div style={{ height: '100vh', width: '100%' }}>
-              <ReactMapGL
-                {...viewport}
-                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-                width='100%'
-                height='100vh'
-                mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
-                onViewportChange={(viewport) => setViewport(viewport)}
-              >
-                <UsersMarker
-                  socket={socket}
-                  setShowCallingModal={setShowCallingModal}
-                  setIsUserIconClicked={setIsUserIconClicked}
-                  setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-                  userInfo={userInfo}
-                  setUserInfo={setUserInfo}
-                  setShowSwipeable={setShowSwipeable}
-                />
-                {showSwipeable && !props.mediaState.callAccepted ? (
-                  <SwipeableUserDetail
-                    socket={socket}
-                    userInfo={userInfo}
-                    isUserIconClicked={isUserIconClicked}
-                    openSwipeableDrawer={openSwipeableDrawer}
-                    setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-                    setShowCallingModal={setShowCallingModal}
-                  />
-                ) : null}
-              </ReactMapGL>
-              <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
-              <FullScreen1on1Modal
-                socket={socket}
-                show1on1={show1on1}
-                setShow1on1={setShow1on1}
-                fullscreen1on1Modal={fullscreen1on1Modal}
-              />
-            </div>
-          </Tablet> */}
-
-          <Mobile>
-            {/* <div style={{ height: '100vh', width: '100%' }}>
-              <ReactMapGL
-                {...viewport}
-                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
-                width='100%'
-                height='100vh'
-                mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
-                onViewportChange={(viewport) => setViewport(viewport)}
-              >
-                <UsersMarker
-                  socket={socket}
-                  setShowCallingModal={setShowCallingModal}
-                  setIsUserIconClicked={setIsUserIconClicked}
-                  setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-                  userInfo={userInfo}
-                  setUserInfo={setUserInfo}
-                  setShowSwipeable={setShowSwipeable}
-                />
-                {showSwipeable && !props.mediaState.callAccepted ? (
-                  <SwipeableUserDetail
-                    socket={socket}
-                    userInfo={userInfo}
-                    isUserIconClicked={isUserIconClicked}
-                    openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
-                    setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
-                    setShowCallingModal={setShowCallingModal}
-                  />
-                ) : null}
-              </ReactMapGL>
-              <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
-              <FullScreen1on1Modal
-                socket={socket}
-                show1on1={show1on1}
-                setShow1on1={setShow1on1}
-                fullscreen1on1Modal={fullscreen1on1Modal}
-              />
-            </div> */}
-            <div>
-              Sorry for the inconvinience. Conversation on mobile device is not available now. Please access by laptop
-              or desktop device.
-            </div>
-          </Mobile>
-
-          {/* </div> */}
-        </>
-      );
+        );
+      }
     } else {
-      return null;
+      if (socket && props.usersState.length) {
+        return (
+          <>
+            <Default>
+              <div>
+                <ReactMapGL
+                  {...viewport}
+                  // {...worldMapSettings}
+                  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                  width='100%'
+                  height='90vh'
+                  mapStyle='mapbox://styles/yabbee/ckvjrmck2h1pb14mv91m5cuk7'
+                  onViewportChange={(viewport) => setViewport(viewport)}
+                >
+                  <UsersMarker
+                    socket={socket}
+                    setShowCallingModal={setShowCallingModal}
+                    // setIsUserIconClicked={setIsUserIconClicked}
+                    // userInfo={userInfo}
+                    // setUserInfo={setUserInfo}
+                  />
+                  <RightPositionedUserDetail
+                    socket={socket}
+                    // isUserIconClicked={isUserIconClicked}
+                    // userInfo={userInfo}
+                    setShowCallingModal={setShowCallingModal}
+                    worldMapSettings={worldMapSettings}
+                    setWorldMapSetting={setWorldMapSetting}
+                    showVideoModal={showVideoModal}
+                    setShowVideoModal={setShowVideoModal}
+                    showSendMessageModal={showSendMessageModal}
+                    setShowSendMessageModal={setShowSendMessageModal}
+                  />
+                  {/* <UserDetail
+                    socket={socket}
+                    isUserIconClicked={isUserIconClicked}
+                    userInfo={userInfo}
+                    setShowCallingModal={setShowCallingModal}
+                  /> */}
+                </ReactMapGL>
+                {/* {renderMap()} */}
+                <CallingModal
+                  socket={socket}
+                  show={showCallingModal}
+                  setShowCallingModal={setShowCallingModal}
+                  show1on1={show1on1}
+                  setShow1on1={setShow1on1}
+                />
+                <FullScreen1on1Modal
+                  socket={socket}
+                  show1on1={show1on1}
+                  setShow1on1={setShow1on1}
+                  fullscreen1on1Modal={fullscreen1on1Modal}
+                  // setShowAfterFinishingModal={setShowAfterFinishingModal}
+                  setShowRatingModal={setShowRatingModal}
+                />
+                <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
+                <SendMessageModal
+                  message={message}
+                  setMessage={setMessage}
+                  showSendMessageModal={showSendMessageModal}
+                  setShowSendMessageModal={setShowSendMessageModal}
+                />
+                {/* <ReplyMessageModal
+                  showReplyMessageModal={showReplyMessageModal}
+                  setShowReplyMessageModal={setShowReplyMessageModal}
+                  replyMessage={replyMessage}
+                  setReplyMessage={setReplyMessage}
+                /> */}
+                <Inbox />
+                {renderMessageWindow()}
+                {/* {renderSelectedVideo()} */}
+                {renderRatingModal()}
+                {/* <AfterFinishingModal
+                  showAfterFinishingModal={showAfterFinishingModal}
+                  setShowAfterFinishingModal={setShowAfterFinishingModal}
+                /> */}
+                {renderAlerts()}
+              </div>
+            </Default>
+
+            {/* <Tablet>
+              <div style={{ height: '100vh', width: '100%' }}>
+                <ReactMapGL
+                  {...viewport}
+                  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                  width='100%'
+                  height='100vh'
+                  mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+                  onViewportChange={(viewport) => setViewport(viewport)}
+                >
+                  <UsersMarker
+                    socket={socket}
+                    setShowCallingModal={setShowCallingModal}
+                    setIsUserIconClicked={setIsUserIconClicked}
+                    setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+                    userInfo={userInfo}
+                    setUserInfo={setUserInfo}
+                    setShowSwipeable={setShowSwipeable}
+                  />
+                  {showSwipeable && !props.mediaState.callAccepted ? (
+                    <SwipeableUserDetail
+                      socket={socket}
+                      userInfo={userInfo}
+                      isUserIconClicked={isUserIconClicked}
+                      openSwipeableDrawer={openSwipeableDrawer}
+                      setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+                      setShowCallingModal={setShowCallingModal}
+                    />
+                  ) : null}
+                </ReactMapGL>
+                <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+                <FullScreen1on1Modal
+                  socket={socket}
+                  show1on1={show1on1}
+                  setShow1on1={setShow1on1}
+                  fullscreen1on1Modal={fullscreen1on1Modal}
+                />
+              </div>
+            </Tablet> */}
+
+            <Mobile>
+              {/* <div style={{ height: '100vh', width: '100%' }}>
+                <ReactMapGL
+                  {...viewport}
+                  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                  width='100%'
+                  height='100vh'
+                  mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+                  onViewportChange={(viewport) => setViewport(viewport)}
+                >
+                  <UsersMarker
+                    socket={socket}
+                    setShowCallingModal={setShowCallingModal}
+                    setIsUserIconClicked={setIsUserIconClicked}
+                    setOpenSwipeableDrawer={setOpenSwipeableDrawer}
+                    userInfo={userInfo}
+                    setUserInfo={setUserInfo}
+                    setShowSwipeable={setShowSwipeable}
+                  />
+                  {showSwipeable && !props.mediaState.callAccepted ? (
+                    <SwipeableUserDetail
+                      socket={socket}
+                      userInfo={userInfo}
+                      isUserIconClicked={isUserIconClicked}
+                      openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
+                      setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
+                      setShowCallingModal={setShowCallingModal}
+                    />
+                  ) : null}
+                </ReactMapGL>
+                <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+                <FullScreen1on1Modal
+                  socket={socket}
+                  show1on1={show1on1}
+                  setShow1on1={setShow1on1}
+                  fullscreen1on1Modal={fullscreen1on1Modal}
+                />
+              </div> */}
+              <div>
+                Sorry for the inconvinience. Conversation on mobile device is not available now. Please access by laptop
+                or desktop device.
+              </div>
+            </Mobile>
+
+            {/* </div> */}
+          </>
+        );
+      } else {
+        return null;
+      }
     }
   };
 

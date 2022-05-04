@@ -251,114 +251,118 @@ const CallButton = (props) => {
   };
 
   const renderExchangeableLangs = () => {
-    const menuItemDOMs = [];
-    if (exchangeableLearningLangs.length && exchangeableNativeLangs.length) {
-      console.log(exchangeableLearningLangs, exchangeableNativeLangs);
-      for (let i = 0; i < exchangeableLearningLangs.length; i++) {
-        for (let j = 0; j < exchangeableNativeLangs.length; j++) {
-          menuItemDOMs.push(
-            <>
-              <MenuItem
-                onClick={(event) => {
-                  onCallClick(event, props.user.socketId, [exchangeableLearningLangs[i], exchangeableNativeLangs[j]]);
-                  handleClose();
-                }}
-                disableRipple
-              >
-                <PhoneEnabledIcon />
-                &nbsp;Exchange {exchangeableLearningLangs[i].name} &amp; {exchangeableNativeLangs[j].name}
-                {/* 必ず、callerにとってのlearning langがindex 0に入る。上で送るからね。*/}
-              </MenuItem>
-            </>
-          );
-        }
-      }
-
-      return (
-        <div className='action-button-flexbox' style={{ display: 'flex', gap: '10px' }}>
-          <div className='call-button'>
-            <Tooltip title='Click to see practice menu.'>
-              <Button
-                id='demo-customized-button'
-                aria-controls={open ? 'demo-customized-menu' : undefined}
-                aria-haspopup='true'
-                aria-expanded={open ? 'true' : undefined}
-                variant='contained'
-                disableElevation
-                disabled={props.user.isAvailableNow ? false : true}
-                onClick={handleClick}
-                // endIcon={<KeyboardArrowDownIcon />}
-                // sx={{ backgroundColor: 'white', color: 'black' }}
-              >
-                <PhoneEnabledIcon size='large' />
-                <KeyboardArrowDownIcon />
-                {/* &nbsp; Exchange */}
-              </Button>
-            </Tooltip>
-            <StyledMenu
-              id='demo-customized-menu'
-              MenuListProps={{
-                'aria-labelledby': 'demo-customized-button',
-              }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-            >
-              {menuItemDOMs}
-            </StyledMenu>
-          </div>
-          {/* <Button
-            variant='contained'
-            startIcon={<SendIcon />}
-            onClick={() => props.setShowSendMessageModal(true)}
-            sx={{
-              backgroundColor: 'rgb(0, 186, 68)',
-              '&:hover': {
-                backgroundColor: 'rgb(0, 158, 58)',
-              },
-            }}
-          >
-            Send a message
-          </Button> */}
-          {renderSendOrReply()}
-          {/* <Popover
-            id={idSend}
-            open={openSend}
-            anchorEl={sendAnchorEl}
-            onClose={handleSendClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left',
-            }}
-          >
-            <div style={{ width: '300px', height: '100%', padding: '5px' }}>
-              <TextField
-                id='input-with-icon-textfield'
-                label='Write a short message'
-                placeholder='e.g. Do you want to talk with me on January 1st?'
-                multiline
-                fullWidth
-                value={content}
-                onChange={(event) => setContent(event.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <Tooltip title='Send'>
-                        <IconButton>
-                          <SendIcon onClick={() => handleSendMessage(props.user._id)} />
-                        </IconButton>
-                      </Tooltip>
-                    </InputAdornment>
-                  ),
-                }}
-                variant='standard'
-              />
-            </div>
-          </Popover> */}
-        </div>
-      );
+    if (!props.authState.currentUser) {
+      return <div>You need to signup or login to call</div>;
     } else {
-      return <div>You cannot have a conversation with this user</div>;
+      const menuItemDOMs = [];
+      if (exchangeableLearningLangs.length && exchangeableNativeLangs.length) {
+        console.log(exchangeableLearningLangs, exchangeableNativeLangs);
+        for (let i = 0; i < exchangeableLearningLangs.length; i++) {
+          for (let j = 0; j < exchangeableNativeLangs.length; j++) {
+            menuItemDOMs.push(
+              <>
+                <MenuItem
+                  onClick={(event) => {
+                    onCallClick(event, props.user.socketId, [exchangeableLearningLangs[i], exchangeableNativeLangs[j]]);
+                    handleClose();
+                  }}
+                  disableRipple
+                >
+                  <PhoneEnabledIcon />
+                  &nbsp;Exchange {exchangeableLearningLangs[i].name} &amp; {exchangeableNativeLangs[j].name}
+                  {/* 必ず、callerにとってのlearning langがindex 0に入る。上で送るからね。*/}
+                </MenuItem>
+              </>
+            );
+          }
+        }
+
+        return (
+          <div className='action-button-flexbox' style={{ display: 'flex', gap: '10px' }}>
+            <div className='call-button'>
+              <Tooltip title='Click to see practice menu.'>
+                <Button
+                  id='demo-customized-button'
+                  aria-controls={open ? 'demo-customized-menu' : undefined}
+                  aria-haspopup='true'
+                  aria-expanded={open ? 'true' : undefined}
+                  variant='contained'
+                  disableElevation
+                  disabled={props.user.isAvailableNow ? false : true}
+                  onClick={handleClick}
+                  // endIcon={<KeyboardArrowDownIcon />}
+                  // sx={{ backgroundColor: 'white', color: 'black' }}
+                >
+                  <PhoneEnabledIcon size='large' />
+                  <KeyboardArrowDownIcon />
+                  {/* &nbsp; Exchange */}
+                </Button>
+              </Tooltip>
+              <StyledMenu
+                id='demo-customized-menu'
+                MenuListProps={{
+                  'aria-labelledby': 'demo-customized-button',
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+              >
+                {menuItemDOMs}
+              </StyledMenu>
+            </div>
+            {/* <Button
+              variant='contained'
+              startIcon={<SendIcon />}
+              onClick={() => props.setShowSendMessageModal(true)}
+              sx={{
+                backgroundColor: 'rgb(0, 186, 68)',
+                '&:hover': {
+                  backgroundColor: 'rgb(0, 158, 58)',
+                },
+              }}
+            >
+              Send a message
+            </Button> */}
+            {renderSendOrReply()}
+            {/* <Popover
+              id={idSend}
+              open={openSend}
+              anchorEl={sendAnchorEl}
+              onClose={handleSendClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+            >
+              <div style={{ width: '300px', height: '100%', padding: '5px' }}>
+                <TextField
+                  id='input-with-icon-textfield'
+                  label='Write a short message'
+                  placeholder='e.g. Do you want to talk with me on January 1st?'
+                  multiline
+                  fullWidth
+                  value={content}
+                  onChange={(event) => setContent(event.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <Tooltip title='Send'>
+                          <IconButton>
+                            <SendIcon onClick={() => handleSendMessage(props.user._id)} />
+                          </IconButton>
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant='standard'
+                />
+              </div>
+            </Popover> */}
+          </div>
+        );
+      } else {
+        return <div>You cannot have a conversation with this user</div>;
+      }
     }
   };
 

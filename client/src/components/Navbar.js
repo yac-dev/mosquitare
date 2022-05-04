@@ -267,6 +267,17 @@ const Navbar = (props) => {
       return (
         <>
           <Stack direction='row' spacing={2}>
+            <Tooltip title='Public Library'>
+              <IconButton size='large' color='inherit'>
+                {/* <Badge badgeContent={17} color='error'> */}
+                <VideoLibraryIcon
+                  onClick={() => {
+                    window.location = '/allvideos';
+                  }}
+                />
+                {/* </Badge> */}
+              </IconButton>
+            </Tooltip>
             <Button
               variant='text'
               startIcon={<BorderColorIcon />}
@@ -386,20 +397,20 @@ const Navbar = (props) => {
   };
 
   const renderExploreAndSearchIcon = () => {
-    if (props.authState.currentUser) {
-      return (
-        <>
-          <Tooltip title='World Map'>
-            <IconButton
-              size='large'
-              aria-label='show 17 new notifications'
-              color='inherit'
-              onClick={() => (window.location = '/worldmap')}
-            >
-              <ExploreIcon />
-            </IconButton>
-          </Tooltip>
-          {/* <Tooltip title='Search People ( Under construction 🚜🛠 Please wait for a bit.)'>
+    // if (props.authState.currentUser) {
+    return (
+      <>
+        <Tooltip title='World Map'>
+          <IconButton
+            size='large'
+            aria-label='show 17 new notifications'
+            color='inherit'
+            onClick={() => (window.location = '/worldmap')}
+          >
+            <ExploreIcon />
+          </IconButton>
+        </Tooltip>
+        {/* <Tooltip title='Search People ( Under construction 🚜🛠 Please wait for a bit.)'>
             <IconButton
               size='large'
               aria-label='show 17 new notifications'
@@ -409,21 +420,22 @@ const Navbar = (props) => {
               <TravelExploreIcon />
             </IconButton>
           </Tooltip> */}
-          <Tooltip title="Developers's Info">
-            <IconButton
-              size='large'
-              aria-label='show 17 new notifications'
-              color='inherit'
-              onClick={() => (window.location = '/developersinfo')}
-            >
-              <InfoIcon />
-            </IconButton>
-          </Tooltip>
-        </>
-      );
-    } else {
-      return null;
-    }
+        <Tooltip title="Developers's Info">
+          <IconButton
+            size='large'
+            aria-label='show 17 new notifications'
+            color='inherit'
+            onClick={() => (window.location = '/developersinfo')}
+          >
+            <InfoIcon />
+          </IconButton>
+        </Tooltip>
+      </>
+    );
+    // }
+    // else {
+    //   return null;
+    // }
   };
 
   const renderNavbar = () => {

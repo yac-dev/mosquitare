@@ -48,27 +48,35 @@ const BasicUserInfo = (props) => {
   };
 
   const renderActionButtons = () => {
-    if (props.user._id === props.authState.currentUser._id) {
-      return null;
-    } else if (props.mediaState.amIRecieving) {
-      return null;
-    } else if (props.mediaState.callAccepted) {
-      return null;
-    } else if (props.clickedUserState.clickedMessageUser) {
-      return null;
-    } else {
+    if (!props.authState.currentUser) {
       return (
-        <div className='action-button-wrapper' style={{ display: ' flex', justifyContent: 'center' }}>
-          <CallButton
-            socket={props.socket}
-            user={props.user}
-            setShowCallingModal={props.setShowCallingModal}
-            setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
-            showSendMessageModal={props.showSendMessageModal}
-            setShowSendMessageModal={props.setShowSendMessageModal}
-          />
+        <div style={{ display: ' flex', justifyContent: 'center' }}>
+          <p style={{ fontWeight: 'bold' }}>⚠️ Please signup or login to call</p>
         </div>
       );
+    } else {
+      if (props.user._id === props.authState.currentUser._id) {
+        return null;
+      } else if (props.mediaState.amIRecieving) {
+        return null;
+      } else if (props.mediaState.callAccepted) {
+        return null;
+      } else if (props.clickedUserState.clickedMessageUser) {
+        return null;
+      } else {
+        return (
+          <div className='action-button-wrapper' style={{ display: ' flex', justifyContent: 'center' }}>
+            <CallButton
+              socket={props.socket}
+              user={props.user}
+              setShowCallingModal={props.setShowCallingModal}
+              setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
+              showSendMessageModal={props.showSendMessageModal}
+              setShowSendMessageModal={props.setShowSendMessageModal}
+            />
+          </div>
+        );
+      }
     }
   };
 

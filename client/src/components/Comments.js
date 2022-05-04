@@ -176,14 +176,18 @@ const Comments = (props) => {
   };
 
   const handleSendComment = (content) => {
-    if (content && props.authState.currentUser) {
-      props.createCommentActionCreator(content);
-      setContent('');
-    } else if (!props.authState.currentUser) {
-      props.alertActionCreator('You need to signup or login to comment.', 'error');
-    } else if (!content) {
-      // alertかな。
-      props.alertActionCreator('Please write a comment.', 'error');
+    if (!props.authState.currentUser) {
+      props.alertActionCreator('Please signup or login to use!', 'info', 7000);
+    } else {
+      if (content && props.authState.currentUser) {
+        props.createCommentActionCreator(content);
+        setContent('');
+      } else if (!props.authState.currentUser) {
+        props.alertActionCreator('You need to signup or login to comment.', 'error');
+      } else if (!content) {
+        // alertかな。
+        props.alertActionCreator('Please write a comment.', 'error');
+      }
     }
   };
 

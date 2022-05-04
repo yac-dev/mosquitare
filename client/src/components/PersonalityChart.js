@@ -107,7 +107,7 @@ const PersonalityChart = (props) => {
   }, [props.user]);
 
   const renderDefaultBar = () => {
-    const d = {
+    const data = {
       labels,
       datasets: [
         {

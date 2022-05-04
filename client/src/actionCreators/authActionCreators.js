@@ -23,7 +23,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
     window.location = '/worldmap';
   } catch (error) {
     console.log(error);
-    dispatch(alertActionCreator('You got an error. Please write your info again.'));
+    // dispatch(alertActionCreator('You got an error. Please write your info again.'));
   }
 };
 
@@ -42,6 +42,7 @@ export const loginActionCreator = (formData) => async (dispatch) => {
     console.log(error);
     const errorMessage = error.response.data.message;
     console.log(errorMessage);
+    dispatch(alertActionCreator('Somthing wrong with your email or password. Please type again.', 'error', 7000));
   }
 };
 

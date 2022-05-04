@@ -303,10 +303,14 @@ const DisplayVideo = (props) => {
   };
 
   const onLikeClick = (conversationId) => {
-    if (props.likesState[props.authState.currentUser._id]) {
-      props.alertActionCreator('You have already liked this conversation.', 'info');
+    if (!props.authState.currentUser) {
+      props.alertActionCreator('Please signup or login to use!', 'info', 7000);
     } else {
-      props.createLikeActionCreator(conversationId);
+      if (props.likesState[props.authState.currentUser._id]) {
+        props.alertActionCreator('You have already liked this conversation.', 'info');
+      } else {
+        props.createLikeActionCreator(conversationId);
+      }
     }
   };
 
