@@ -20,7 +20,7 @@ export const signupActionCreator = (formData) => async (dispatch, getState) => {
     // const jwtToken = localStorage.getItem('mosquitare token');
     // store.dispatch(loadMeAndUpdateActionCreator(jwtToken, ''));
     // history.push('/worldmap'); //この流れダメ。結局、ページリロードしないからsocketが働かないんだわ。
-    window.location = '/worldmap';
+    window.location = '/';
   } catch (error) {
     console.log(error);
     // dispatch(alertActionCreator('You got an error. Please write your info again.'));
@@ -37,7 +37,7 @@ export const loginActionCreator = (formData) => async (dispatch) => {
       payload: result.data,
     });
     localStorage.setItem('after login', true);
-    window.location = '/worldmap';
+    window.location = '/';
   } catch (error) {
     console.log(error);
     const errorMessage = error.response.data.message;
@@ -101,7 +101,8 @@ export const logoutActionCreator = () => async (dispatch, getState) => {
       type: LOGOUT,
       payload: '',
     });
-    history.push('/');
+    // history.push('/');
+    window.location = '/';
   } catch (error) {
     console.log(error);
   }
