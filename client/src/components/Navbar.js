@@ -405,7 +405,7 @@ const Navbar = (props) => {
             size='large'
             aria-label='show 17 new notifications'
             color='inherit'
-            onClick={() => (window.location = '/worldmap')}
+            onClick={() => (window.location = '/')}
           >
             <ExploreIcon />
           </IconButton>

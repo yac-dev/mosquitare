@@ -67,12 +67,12 @@ const App = () => {
     <div>
       <Router history={history}>
         <Navbar />
-        <Route path='/' exact component={LandingPage} />
+        <Route path='/' exact component={WorldMap} />
         <Route path='/signup/basic' exact component={SignupBasic} />
         <Route path='/signup/details' exact component={SignupDetails} />
         <Route path='/login' exact component={Login} />
         {/* <Route path='/socket' exact component={Socket} /> */}
-        <Route path='/worldmap' exact component={WorldMap} />
+        {/* <Route path='/worldmap' exact component={WorldMap} /> */}
         {/* <Route path='/chatscreen' exact component={ChatScreen} /> */}
         <Route path='/about' exact component={About} />
         <Route path='/userpage/:id' exact component={UserPageWrapper} />

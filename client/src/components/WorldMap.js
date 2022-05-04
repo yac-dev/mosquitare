@@ -263,7 +263,7 @@ const WorldMap = (props) => {
   useEffect(() => {
     if (props.mediaState.apiCallResult === 3) {
       // localStorage.setItem('after video finish', true);
-      window.location = '/worldmap';
+      window.location = '/';
     }
   }, [props.mediaState.apiCallResult]);
 
