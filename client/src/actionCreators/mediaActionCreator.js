@@ -192,6 +192,15 @@ export const answerCallActionCreator1 = (socket, setShowCallingModal, setShow1on
   });
 };
 
+export const recieveCanceledCallActionCreator = (socket) => (dispatch, getState) => {
+  socket.on('CALLER_CANCEL_THE_CALL', () => {
+    dispatch({
+      type: 'CANCELED_CALL',
+      payload: '',
+    });
+  });
+};
+
 // まあ、本当はcaller。
 export const openMyModalActionCreatorReciever = (socket, setShowCallingModal, setShow1on1) => (dispatch, getState) => {
   socket.on('I_OPEN_MY_MODAL', (dataFromServer) => {

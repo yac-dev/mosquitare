@@ -86,9 +86,10 @@ const mediaReducer = (state = INITIAL_STATE, action) => {
       return { ...state, callAccepted: true, callingWith: action.payload };
     case GET_PARTNER_MEDIA:
       return { ...state, partnerVideoStreamObject: action.payload };
-    // こんな具合でいんじゃないか。。
-    case 'CALL_CANCELED':
-      return { ...state, callCanceled: true };
+    // case 'CALL_CANCELED':
+    //   return { ...state, callCanceled: true };
+    case 'CANCELED_CALL':
+      return { ...state, callCanceled: true, amIRecieving: false };
     case HANG_UP_CALL:
       return { ...state, hangUp: true };
     case SWITCH_CURRENT_LANGUAGE:

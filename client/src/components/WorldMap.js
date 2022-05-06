@@ -39,6 +39,7 @@ import { loadMeAndUpdateActionCreator } from '../actionCreators/authActionCreato
 import { getUsersActionCreator } from '../actionCreators/usersActionCreator';
 import { getMediaActionCreator } from '../actionCreators/mediaActionCreator';
 import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
+import { recieveCanceledCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreator';
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 
@@ -106,6 +107,7 @@ const WorldMap = (props) => {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showSendMessageModal, setShowSendMessageModal] = useState(false);
   const [message, setMessage] = useState('');
+  const [showCanceledCallModal, setShowCanceledCallModal] = useState(false);
   const [showReplyMessageModal, setShowReplyMessageModal] = useState(false);
   const [replyMessage, setReplyMessage] = useState('');
   // meeting modal用
@@ -626,6 +628,7 @@ export default connect(mapStateToProps, {
   getUsersActionCreator,
   getMediaActionCreator,
   listenCallActionCreator,
+  recieveCanceledCallActionCreator,
   getMeetingsActionCreator,
   callActionCreator,
   alertActionCreator,

@@ -30,6 +30,7 @@ import { answerCallActionCreator1 } from '../actionCreators/mediaActionCreator';
 import { myCallIsAcceptedActionCreator } from '../actionCreators/mediaActionCreator';
 import { rejectCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { gotRejectedMyCallActionCreator } from '../actionCreators/mediaActionCreator';
+import { recieveCanceledCallActionCreator } from '../actionCreators/mediaActionCreator';
 // import { openMyModalActionCreator } from '../actionCreators/mediaActionCreator';
 import { openMyModalActionCreatorReciever } from '../actionCreators/mediaActionCreator';
 import history from '../history';
@@ -56,6 +57,10 @@ const CallingModal = (props) => {
   useEffect(() => {
     props.gotRejectedMyCallActionCreator(props.socket);
   }, []);
+
+  useEffect(() => {
+    props.recieveCanceledCallActionCreator(props.socket);
+  });
 
   const handleRejectCall = () => {
     props.rejectCallActionCreator(props.socket);
@@ -168,7 +173,13 @@ const CallingModal = (props) => {
       return (
         <>
           <NoAccountsIcon />
-          <div style={{ color: 'black' }}>OOPS... Your partner is not available now...</div>
+          <div style={{ color: 'black' }}>Your partner is not available now...</div>
+        </>
+      );
+    } else if (props.mediaState.callCanceled) {
+      return (
+        <>
+          <div style={{ color: 'black' }}>The caller accidentally canceled the call...</div>
         </>
       );
     }
@@ -184,13 +195,27 @@ const CallingModal = (props) => {
               variant='contained'
               onClick={() => {
                 props.setShowCallingModal(false);
-                window.location = '/worldmap'; // まあこれでいいのかね。
+                window.location = '/'; // まあこれでいいのかね。
               }}
             >
               Got it
             </Button>
           </Stack>
         </>
+      );
+    } else if (props.mediaState.callCanceled) {
+      return (
+        <Stack direction='row' spacing={2}>
+          <Button
+            variant='contained'
+            onClick={() => {
+              props.setShowCallingModal(false);
+              window.location = '/'; // まあこれでいいのかね。
+            }}
+          >
+            Got it
+          </Button>
+        </Stack>
       );
     } else if (props.mediaState.amIRecieving) {
       return (
@@ -230,6 +255,7 @@ export default connect(mapStateToProps, {
   // myCallIsAcceptedActionCreator,
   rejectCallActionCreator,
   gotRejectedMyCallActionCreator,
+  recieveCanceledCallActionCreator,
   // openMyModalActionCreator,
   openMyModalActionCreatorReciever,
 })(CallingModal);

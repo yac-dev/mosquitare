@@ -149,19 +149,29 @@ io.on('connection', (socket) => {
   });
 
   socket.on(I_ANSWER_THE_CALL, async (dataFromAnswerer) => {
-    console.log('signal data from reciever??');
-    // console.log(dataFromAnswerer);
-    // const user = await User.find({ socketId: dataFromAnswerer.whoIsCalling });
-    // if (!io.sockets[dataFromAnswerer.whoIsCalling]) {
-    //   console.log('ooooooooooosp cancellll');
-    //   io.to(dataFromAnswerer.me).emit('OOPS_CALLER_CANCELED_THE_CALL', {});
-    // } else { // 一回ここははすぞう。
-    io.to(dataFromAnswerer.to).emit(MY_CALL_IS_ACCEPTED, {
-      signalData: dataFromAnswerer.signalData,
-      // recieverUserInfo: dataFromAnswerer.recieverUserInfo,
-    });
-    delete mapSocketIdToId[dataFromAnswerer.to];
-    delete mapSocketIdToId[dataFromAnswerer.me];
+    if (!mapSocketIdToId[dataFromAnswerer.to]) {
+      // 要は、callした側のsocketidがhash tableになかったら（相手がpage refreshもしくはcancel callした場合）
+      console.log('OOPS, caller cancel the call.');
+      delete mapSocketIdToId[dataFromAnswerer.me];
+      // modal出して、answereの方のpageもrefreshする。
+      io.to(dataFromAnswerer.me).emit('CALLER_CANCEL_THE_CALL', {
+        message: '',
+      });
+    } else {
+      console.log('signal data from reciever??');
+      // console.log(dataFromAnswerer);
+      // const user = await User.find({ socketId: dataFromAnswerer.whoIsCalling });
+      // if (!io.sockets[dataFromAnswerer.whoIsCalling]) {
+      //   console.log('ooooooooooosp cancellll');
+      //   io.to(dataFromAnswerer.me).emit('OOPS_CALLER_CANCELED_THE_CALL', {});
+      // } else { // 一回ここははすぞう。
+      io.to(dataFromAnswerer.to).emit(MY_CALL_IS_ACCEPTED, {
+        signalData: dataFromAnswerer.signalData,
+        // recieverUserInfo: dataFromAnswerer.recieverUserInfo,
+      });
+      delete mapSocketIdToId[dataFromAnswerer.to];
+      delete mapSocketIdToId[dataFromAnswerer.me];
+    }
     // }
   });
 
@@ -303,11 +313,18 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', async () => {
-    const user = await User.findOne({ socketId: socket.id });
-    // console.log(user);
-    user.isAvailableNow = false;
-    await user.save({ validateBeforeSave: false });
-    console.log('disconnected ... ', socket.id);
+    if (mapSocketIdToId[socket.id]) {
+      // 要は、電話かけたやつがpage refresh、もしくは電話キャンセルした場合に動くやつ。電話かければ、hash tableにデータ入るからね。
+      console.log('canceling...');
+      io.to(mapSocketIdToId[socket.id]).emit('CALLER_CANCEL_THE_CALL');
+      delete mapSocketIdToId[socket.id];
+    } else {
+      const user = await User.findOne({ socketId: socket.id });
+      // console.log(user);
+      user.isAvailableNow = false;
+      await user.save({ validateBeforeSave: false });
+      console.log('disconnected ... ', socket.id);
+    }
   });
 });
 
