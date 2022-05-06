@@ -535,7 +535,7 @@ export const answerCallActionCreator =
 //   connectionRef.current = peerInitiator;
 // };
 
-export const hangUpCallActionCreator = () => {
+export const hangUpCallActionCreator = (socket) => (dispatch, getState) => {
   // dispatch(updateUserConversationToFalseActionCreator()); // ここpromisifyね。これだめ。
   // connectionRef.current.destroy();
   // dispatch({
@@ -545,10 +545,12 @@ export const hangUpCallActionCreator = () => {
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
   // その前にrecordingだ。
   // window.location = '/worldmap'; // まあこれでいいのかね。
-  return {
+  const me = getState().currentUser._id;
+  socket.emit('I_FINISH_CALL', { me });
+  dispatch({
     type: HANG_UP_CALL,
     payload: '',
-  };
+  });
 };
 
 export const disconnectCallActionCreator = (connectionRef) => (dispatch) => {

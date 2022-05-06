@@ -13,25 +13,25 @@ const UsersMarker = (props) => {
 
   if (props.usersState) {
     const usersRender = props.usersState.map((user) => {
-      if (!user.isInConversation) {
-        return (
-          <>
-            <EachUserInfo
-              viewport={viewport}
-              setViewport={setViewport}
-              socket={props.socket}
-              user={user}
-              setShowCallingModal={props.setShowCallingModal}
-              // setIsUserIconClicked={props.setIsUserIconClicked}
-              setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
-              // userInfo={props.userInfo}
-              // setUserInfo={props.setUserInfo}
-            />
-          </>
-        );
-      } else {
-        return null;
-      }
+      // if (!user.isInConversation) {
+      return (
+        <>
+          <EachUserInfo
+            viewport={viewport}
+            setViewport={setViewport}
+            socket={props.socket}
+            user={user}
+            setShowCallingModal={props.setShowCallingModal}
+            // setIsUserIconClicked={props.setIsUserIconClicked}
+            setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
+            // userInfo={props.userInfo}
+            // setUserInfo={props.setUserInfo}
+          />
+        </>
+      );
+      // } else {
+      //   return null;
+      // }
     });
     return <>{usersRender}</>;
   } else {

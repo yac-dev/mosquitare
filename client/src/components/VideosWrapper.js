@@ -318,7 +318,7 @@ const VideosWrapper = (props) => {
     // そうか、そもそもcallAcceptedをfalseにした時点で、もうmodalが表示されないようになっているんだ。
     // props.setShow1on1(false);
     // props.updateUserConversationToFalseActionCreator();
-    props.hangUpCallActionCreator();
+    props.hangUpCallActionCreator(props.socket);
     setShow(false);
     connectionRef.current.destroy();
     props.setShow1on1(false);

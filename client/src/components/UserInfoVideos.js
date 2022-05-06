@@ -24,15 +24,19 @@ const UserInfoVideos = (props) => {
   const renderUserVideos = () => {
     if (props.conversationsState.length) {
       const userVideos = props.conversationsState.map((conversation, index) => {
-        return (
-          <>
-            <div onClick={() => onVideoClick(conversation)} key={index} style={{ cursor: 'pointer' }}>
-              <video width='200'>
-                <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${conversation.videoFilename}`} />
-              </video>
-            </div>
-          </>
-        );
+        if (!conversation.videoFilename || conversation.users.length !== 2 || !conversation.isPublic) {
+          return null;
+        } else {
+          return (
+            <>
+              <div onClick={() => onVideoClick(conversation)} key={index} style={{ cursor: 'pointer' }}>
+                <video width='200'>
+                  <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${conversation.videoFilename}`} />
+                </video>
+              </div>
+            </>
+          );
+        }
       });
 
       return <>{userVideos}</>;

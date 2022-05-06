@@ -30,6 +30,7 @@ import '../../styles/1on1.css';
 
 //ac
 import { callWasCanceldActionCreator } from '../../actionCreators/mediaActionCreator';
+import { recieveCanceledCallActionCreator } from '../../actionCreators/mediaActionCreator';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />;
@@ -73,6 +74,10 @@ const FullScreen1on1Modal = (props) => {
   //   props.myCallIsAcceptedActionCreator(props.socket, props.setShowCallingModal);
   // }, []);
 
+  useEffect(() => {
+    props.recieveCanceledCallActionCreator(props.socket);
+  }, []);
+
   const renderAlerts = () => {
     if (props.alertsState.length) {
       const alertsSnackBars = props.alertsState.map((alert) => {
@@ -108,13 +113,27 @@ const FullScreen1on1Modal = (props) => {
     };
   }, []);
 
-  useEffect(() => {
-    props.socket.on('OOPS_CALLER_CANCELED_THE_CALL', () => {
-      props.callWasCanceldActionCreator();
-      props.setShow1on1(false);
-      setShowCanceledModal(true);
-    });
-  }, []);
+  // useEffect(() => {
+  //   props.socket.on('OOPS_CALLER_CANCELED_THE_CALL', () => {
+  //     props.callWasCanceldActionCreator();
+  //     props.setShow1on1(false);
+  //     setShowCanceledModal(true);
+  //   });
+  // }, []);
+
+  const renderCanceled = () => {
+    if (props.mediaState.callCanceled) {
+      const reloadPage = setTimeout(() => {
+        window.location = '/';
+      }, 3000);
+      reloadPage();
+      return (
+        <div style={{ backgroundColor: 'red' }}>
+          OOPS! Your partner disconnected accidently... Reloading this page immidiatelly.
+        </div>
+      );
+    }
+  };
 
   const renderModalBody = () => {
     if (props.mediaState.callAccepted) {
@@ -144,6 +163,7 @@ const FullScreen1on1Modal = (props) => {
           />
           <DocEditor socket={props.socket} openDoc={openDoc} setOpenDoc={setOpenDoc} /> */}
           <PartnerUserInfo openPartnerUserInfo={openPartnerUserInfo} setOpenPartnerUserInfo={setOpenPartnerUserInfo} />
+          {renderCanceled()}
         </>
       );
     }
@@ -339,4 +359,6 @@ const mapStateToProps = (state) => {
   return { mediaState: state.mediaState, authState: state.authState, alertsState: state.alertsState };
 };
 
-export default connect(mapStateToProps, { callWasCanceldActionCreator })(FullScreen1on1Modal);
+export default connect(mapStateToProps, { callWasCanceldActionCreator, recieveCanceledCallActionCreator })(
+  FullScreen1on1Modal
+);

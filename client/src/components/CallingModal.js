@@ -204,6 +204,7 @@ const CallingModal = (props) => {
         </>
       );
     } else if (props.mediaState.callCanceled) {
+      console.log('logging from calling modal');
       return (
         <Stack direction='row' spacing={2}>
           <Button

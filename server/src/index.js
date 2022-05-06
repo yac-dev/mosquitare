@@ -169,10 +169,16 @@ io.on('connection', (socket) => {
         signalData: dataFromAnswerer.signalData,
         // recieverUserInfo: dataFromAnswerer.recieverUserInfo,
       });
-      delete mapSocketIdToId[dataFromAnswerer.to];
-      delete mapSocketIdToId[dataFromAnswerer.me];
+      // delete mapSocketIdToId[dataFromAnswerer.to];
+      // delete mapSocketIdToId[dataFromAnswerer.me];
     }
     // }
+  });
+
+  socket.on('I_FINISH_CALL', (dataFromClient) => {
+    // ここで、hash tableからuserを消すようにする。
+    delete mapSocketIdToId[dataFromClient.me];
+    // delete mapSocketIdToId[dataFromClient.me];
   });
 
   socket.on(SORRY_I_DONT_WANNA_CHAT_WITH_YOU, (dataFromReject) => {
@@ -313,18 +319,28 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', async () => {
+    const user = await User.findOne({ socketId: socket.id });
+    // console.log(user);
+    user.isAvailableNow = false;
+    await user.save({ validateBeforeSave: false });
+    console.log('disconnected ... ', socket.id);
+    // どっちにしろ、page refreshの場合は、再度login apiが動くからこれでいい。
+    // もし会話中であったのなら↓が動くということ。
     if (mapSocketIdToId[socket.id]) {
       // 要は、電話かけたやつがpage refresh、もしくは電話キャンセルした場合に動くやつ。電話かければ、hash tableにデータ入るからね。
-      console.log('canceling...');
+      console.log('canceld call or aborted conversation...');
       io.to(mapSocketIdToId[socket.id]).emit('CALLER_CANCEL_THE_CALL');
       delete mapSocketIdToId[socket.id];
-    } else {
-      const user = await User.findOne({ socketId: socket.id });
-      // console.log(user);
-      user.isAvailableNow = false;
-      await user.save({ validateBeforeSave: false });
-      console.log('disconnected ... ', socket.id);
+      // calling modalで、そしてfull screen両方で、このsocket eventをlistenして、両方に共通のcomponentをrenderしてあげればいい。
     }
+    // else {
+    //   //単純に、userがtab閉じたり、window閉じたりしてcloseすればこれが動く。
+    //   const user = await User.findOne({ socketId: socket.id });
+    //   // console.log(user);
+    //   user.isAvailableNow = false;
+    //   await user.save({ validateBeforeSave: false });
+    //   console.log('disconnected ... ', socket.id);
+    // }
   });
 });
 
