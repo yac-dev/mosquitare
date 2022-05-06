@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
 
@@ -23,7 +24,8 @@ const UserInfoTabs = (props) => {
     return (
       <>
         <TranslateIcon />
-        Language
+        <br></br>
+        <span>Language</span>
       </>
     );
   };
@@ -32,7 +34,8 @@ const UserInfoTabs = (props) => {
     return (
       <>
         <AccountCircleIcon />
-        Personal
+        <br></br>
+        <span>Personal</span>
       </>
     );
   };
@@ -41,7 +44,8 @@ const UserInfoTabs = (props) => {
     return (
       <>
         <MapIcon />
-        Been
+        <br></br>
+        <span>Been</span>
       </>
     );
   };
@@ -50,9 +54,26 @@ const UserInfoTabs = (props) => {
     return (
       <>
         <VideoLibraryIcon />
+        <br></br>
         Videos
       </>
     );
+  };
+
+  const renderVideosTab = () => {
+    if (props.mediaState.amIRecieving || props.mediaState.amICalling) {
+      return null;
+    } else {
+      return (
+        <Tab eventKey='videos' title={renderPublicVideos()}>
+          <UserInfoVideos
+            user={props.user}
+            showVideoModal={props.showVideoModal}
+            setShowVideoModal={props.setShowVideoModal}
+          />
+        </Tab>
+      );
+    }
   };
 
   return (
@@ -64,25 +85,24 @@ const UserInfoTabs = (props) => {
         <Tab eventKey='language' title={renderLanguageTitle()}>
           <UserInfoLanguage user={props.user} />
         </Tab>
-        <Tab eventKey='videos' title={renderPublicVideos()}>
-          <UserInfoVideos
+        {renderVideosTab()}
+        {/* <Tab eventKey='videos' title={renderPublicVideos()}> */}
+        {/* <UserInfoVideos
             user={props.user}
             showVideoModal={props.showVideoModal}
             setShowVideoModal={props.setShowVideoModal}
-          />
-        </Tab>
+          /> */}
+        {/* </Tab> */}
         {/* <Tab eventKey='been' title={renderBeenTitle()}>
           <UserInfoVisited user={props.user} />
-        </Tab> */}
-        {/* <Tab eventKey='publicVideos' title={renderPublicVideos()}>
-          <div>Under construction 🚜🛠 Please wait for bit.</div>
-        </Tab> */}
-        {/* <Tab eventKey='videos' title='Videos'>
-          <div>Hola</div>
         </Tab> */}
       </Tabs>
     </div>
   );
 };
 
-export default UserInfoTabs;
+const mapStateToProps = (state) => {
+  return { mediaState: state.mediaState };
+};
+
+export default connect(mapStateToProps)(UserInfoTabs);

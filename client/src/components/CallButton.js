@@ -199,7 +199,7 @@ const CallButton = (props) => {
   const renderSendOrReply = () => {
     if (badgeCount >= 1) {
       return (
-        <Tooltip title='You got the message from this user.'>
+        <Tooltip title='You have the message from this user.'>
           <Badge
             badgeContent={badgeCount}
             color='success'
@@ -232,20 +232,22 @@ const CallButton = (props) => {
       );
     } else {
       return (
-        <Button
-          variant='contained'
-          // startIcon={<SendIcon />}
-          onClick={() => props.clickMessageButtonActionCreator(true)}
-          sx={{
-            backgroundColor: 'rgb(0, 186, 68)',
-            '&:hover': {
-              backgroundColor: 'rgb(0, 158, 58)',
-            },
-          }}
-        >
-          {/* Message */}
-          <EmailIcon />
-        </Button>
+        <Tooltip title='You can send any messages to this user.'>
+          <Button
+            variant='contained'
+            // startIcon={<SendIcon />}
+            onClick={() => props.clickMessageButtonActionCreator(true)}
+            sx={{
+              backgroundColor: 'rgb(0, 186, 68)',
+              '&:hover': {
+                backgroundColor: 'rgb(0, 158, 58)',
+              },
+            }}
+          >
+            {/* Message */}
+            <EmailIcon />
+          </Button>
+        </Tooltip>
       );
     }
   };
@@ -280,7 +282,7 @@ const CallButton = (props) => {
         return (
           <div className='action-button-flexbox' style={{ display: 'flex', gap: '10px' }}>
             <div className='call-button'>
-              <Tooltip title='Click to see practice menu.'>
+              <Tooltip title='Click to see exchange options.'>
                 <Button
                   id='demo-customized-button'
                   aria-controls={open ? 'demo-customized-menu' : undefined}

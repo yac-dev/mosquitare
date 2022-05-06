@@ -88,6 +88,8 @@ const LanguageChart = (props) => {
       }
     });
 
+    // const renderBgColor = () => {}
+
     // const languageBgColors = [];
     //     for (let i = 0; i < myLangsStatus.length; i++) {
     //       if (myLangsStatus[i] >= 50) {
@@ -109,7 +111,7 @@ const LanguageChart = (props) => {
           label: 'Language Status',
           data: data,
           // backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)'],
-          backgroundColor: ['rgba(37, 95, 184)', 'rgb(44, 184, 63)'],
+          backgroundColor: ['rgba(37, 95, 184)', 'rgb(0, 186, 68)', 'rgb(214, 198, 49)', 'rgb(181, 32, 230)', ''],
           // borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)'],
           borderWidth: 1,
           hoverOffset: 30,

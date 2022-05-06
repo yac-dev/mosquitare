@@ -4,6 +4,7 @@ import { Modal, Button } from 'react-bootstrap';
 import { getUserConversationsActionCreator } from '../actionCreators/conversationActionCreators';
 import { selectVideoActionCreator } from '../actionCreators/conversationActionCreators';
 import { clickVideoActionCreator } from '../actionCreators/clickActionCreator';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 
 import UserInfoVideo from './UserInfoVideo';
 
@@ -42,8 +43,13 @@ const UserInfoVideos = (props) => {
 
   return (
     <div class='user-videos-wrapper' style={{ padding: '10px' }}>
-      <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>Public videos</h6>
-      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', overflow: 'auto' }}>{renderUserVideos()}</div>
+      <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>
+        <VideoLibraryIcon />
+        &nbsp;Public videos
+      </h6>
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', overflow: 'auto', maxHeight: '200px' }}>
+        {renderUserVideos()}
+      </div>
     </div>
   );
 };

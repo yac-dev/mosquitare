@@ -66,15 +66,15 @@ const PersonalityChart = (props) => {
     const bgColors = [];
     for (let i = 0; i < ratingAverageData.length; i++) {
       if (ratingAverageData[i] >= 8.0) {
-        bgColors.push('rgba(37, 95, 184, 0.8)');
-      } else if (ratingAverageData[i] <= 7.9 && ratingAverageData[i] >= 6.0) {
         bgColors.push('rgb(37, 95, 184)');
+      } else if (ratingAverageData[i] <= 7.9 && ratingAverageData[i] >= 6.0) {
+        bgColors.push('rgb(0, 186, 68)');
       } else if (ratingAverageData[i] <= 5.9 && ratingAverageData[i] >= 4.0) {
-        bgColors.push('rgb(44, 184, 63)');
+        bgColors.push('rgb(214, 198, 49)');
       } else if (ratingAverageData[i] <= 3.9 && ratingAverageData[i] >= 2.0) {
-        bgColors.push('rgb(44, 184, 63)');
+        bgColors.push('rgb(181, 32, 230)');
       } else if (ratingAverageData[i] <= 1.9) {
-        bgColors.push('rgb(44, 184, 63)');
+        bgColors.push('rgb(199, 32, 32)');
       }
     }
     const d = {
