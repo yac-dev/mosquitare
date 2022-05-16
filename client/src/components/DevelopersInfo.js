@@ -21,8 +21,8 @@ const DevelopersInfo = (props) => {
         <div>YK 🇯🇵</div>
         <img className='profile-photo' src={MyProfilePicture} alt={'YK'} width='150px' />
         <div>
-          Hello guys. I'm YK, developer of this app. Thank you for joining here. Please let me know if you find any
-          bugs, issues or have any questions. Enjoy 👍
+          Hello! I'm YK from Japan. I'm a software developer, founded this app. Thank you for joining here. Please let
+          me know if you find any bugs, issues or have any questions. Enjoy 👍
         </div>
         <div className='my-socials'>
           <div>
