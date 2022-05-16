@@ -65,6 +65,7 @@ const CallingModal = (props) => {
   const handleRejectCall = () => {
     props.rejectCallActionCreator(props.socket);
     props.setShowCallingModal(false);
+    window.location = '/';
   };
 
   // useEffect(() => {

@@ -73,8 +73,8 @@ const Transcripts = (props) => {
                   <>
                     <Typography component='div' variant='body2' sx={{ color: 'black' }}>
                       {/* &#64; 3:00&nbsp;&nbsp; */}
-                      {renderSecondsToTimes(transcript.seconds)}
-                      {transcript.user.name}&nbsp;
+                      {renderSecondsToTimes(transcript.seconds)}&nbsp;
+                      {transcript.user.name}
                     </Typography>
                   </>
                 }

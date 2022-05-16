@@ -31,12 +31,12 @@ export const createComment = async (request, response) => {
 
     // conversationの二人にmailを送る。
     const sendEmail = async (recipientUserId) => {
-      const message = await Message.create({
-        sender: userId,
-        recipient: recipientUserId,
-        content: content, // commentの内容をそのまま書けばいい。
-        read: false,
-      });
+      // const message = await Message.create({
+      //   sender: userId,
+      //   recipient: recipientUserId,
+      //   content: content, // commentの内容をそのまま書けばいい。
+      //   read: false,
+      // });
 
       const sender = await User.findById(userId);
       const recipient = await User.findById(recipientUserId);
