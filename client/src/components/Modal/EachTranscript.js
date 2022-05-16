@@ -57,6 +57,25 @@ const EachTranscript = (props) => {
     }
   };
 
+  const renderTranslated = () => {
+    if (translated) {
+      return (
+        <>
+          <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+            {props.conversationTranscript.transcript}
+            Translated <p>{translated}</p>
+          </Typography>
+          {/* <TranslatedText googleTranslated={googleTranslated} /> */}
+          {/* <Tooltip title='translate'>
+                      <IconButton edge='end'>
+                        <TranslateTranscript translateInput={conversationTranscript.transcript} />
+                      </IconButton>
+                    </Tooltip> */}
+        </>
+      );
+    }
+  };
+
   return (
     <>
       <ListItem
@@ -85,20 +104,7 @@ const EachTranscript = (props) => {
               </Typography>
             </>
           }
-          secondary={
-            <>
-              <Typography component='div' variant='body2' sx={{ color: 'black' }}>
-                {props.conversationTranscript.transcript}
-                Translated <p>{translated}</p>
-                {/* <TranslatedText googleTranslated={googleTranslated} /> */}
-                {/* <Tooltip title='translate'>
-                      <IconButton edge='end'>
-                        <TranslateTranscript translateInput={conversationTranscript.transcript} />
-                      </IconButton>
-                    </Tooltip> */}
-              </Typography>
-            </>
-          }
+          secondary={renderTranslated()}
         />
       </ListItem>
       <Divider variant='inset' component='li' />
