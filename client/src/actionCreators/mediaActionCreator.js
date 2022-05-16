@@ -545,7 +545,7 @@ export const hangUpCallActionCreator = (socket) => (dispatch, getState) => {
   // history.push('/worldmap'); こうではなくて、modalを閉じることが必要だ。
   // その前にrecordingだ。
   // window.location = '/worldmap'; // まあこれでいいのかね。
-  const me = getState().currentUser._id;
+  const me = getState().authState.currentUser._id;
   socket.emit('I_FINISH_CALL', { me });
   dispatch({
     type: HANG_UP_CALL,

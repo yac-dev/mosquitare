@@ -402,7 +402,7 @@ export const updateLangsStatus = async (request, response) => {
     }
   }
   for (let i = 0; i < user.nativeLangs.length; i++) {
-    if (countDatas[1].id === user.learningLangs[i].language._id.toString()) {
+    if (countDatas[1].id === user.nativeLangs[i].language._id.toString()) {
       user.nativeLangs[i].words += countDatas[1].words;
     }
   }

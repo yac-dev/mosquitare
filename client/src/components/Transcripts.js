@@ -40,11 +40,11 @@ const Transcripts = (props) => {
       s: seconds,
     };
 
-    if (obj.hours === 0) {
+    if (obj.h === 0) {
       return (
         <>
           <span style={{ color: 'rgb(37, 95, 184)', cursor: 'pointer' }}>
-            @{obj.minutes}:{obj.seconds}
+            @{obj.m}:{obj.s}
           </span>
         </>
       );
@@ -52,7 +52,7 @@ const Transcripts = (props) => {
       return (
         <>
           <span style={{ color: 'rgb(37, 95, 184)', cursor: 'pointer' }}>
-            @{obj.hours}:{obj.minutes}:{obj.seconds}
+            @{obj.h}:{obj.m}:{obj.s}
           </span>
         </>
       );
@@ -74,7 +74,7 @@ const Transcripts = (props) => {
                     <Typography component='div' variant='body2' sx={{ color: 'black' }}>
                       {/* &#64; 3:00&nbsp;&nbsp; */}
                       {renderSecondsToTimes(transcript.seconds)}
-                      {transcript.user.name}&nbsp;said
+                      {transcript.user.name}&nbsp;
                     </Typography>
                   </>
                 }
