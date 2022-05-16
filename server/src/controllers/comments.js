@@ -43,6 +43,7 @@ export const createComment = async (request, response) => {
 
       const mailOptions = {
         to: recipient.email,
+        from: 'lamposttech@gmail.com',
         subject: 'You got a comment!',
         html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><br><h3>${content}</h3><br><p>Please follow the link below to check it out!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
       };

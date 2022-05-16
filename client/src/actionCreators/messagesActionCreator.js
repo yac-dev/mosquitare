@@ -4,8 +4,8 @@ import { alertActionCreator } from './alertsActionCreator';
 export const createMessageActionCreator = (content, recipientId) => async (dispatch, getState) => {
   try {
     const senderId = getState().authState.currentUser._id;
-    const messageSpaceId = getState().messageSpace._id;
-    const result = await mosquitareAPI.post(`/messages/${senderId}/${recipientId}`, { content, messageSpaceId });
+    // const messageSpaceId = getState().messageSpace._id;
+    const result = await mosquitareAPI.post(`/messages/${senderId}/${recipientId}`, { content });
     const { message } = result.data;
     // alertを出すようにするか。
     dispatch({
