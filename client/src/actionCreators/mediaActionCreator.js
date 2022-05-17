@@ -181,15 +181,17 @@ export const answerCallActionCreator1 = (socket, setShowCallingModal, setShow1on
   // });
   socket.emit('LETS_OPEN_OUR_FULLSCREEN_MODAL', {
     to: getState().mediaState.callingWith.socketId,
+    me: getState().authState.currentUser.socketId,
     recieverUserInfo: getState().authState.currentUser,
   }); //ここでrecieveruserinfoを渡していい。下のmyCallAcceptedではなくて。
   // socket.emit('HEY_OPEN_YOUR_FULLSCREEN_MODAL_LETS_START', { to: getState().mediaState.callingWith.socketId });
-  setShowCallingModal(false);
-  setShow1on1(true);
-  dispatch({
-    type: ANSWER_CALL,
-    payload: '',
-  });
+
+  // setShowCallingModal(false);
+  // setShow1on1(true);
+  // dispatch({
+  //   type: ANSWER_CALL,
+  //   payload: '',
+  // });
 };
 
 export const recieveCanceledCallActionCreator = (socket) => (dispatch, getState) => {
@@ -774,4 +776,24 @@ export const gotRejectedMyCallActionCreator = (socket) => (dispatch, getState) =
   } catch (error) {
     console.log(error);
   }
+};
+
+export const openMyModalActionCreator2 = (socket, setShowCallingModal, setShow1on1) => (dispatch, getState) => {
+  socket.on('OPEN_MY_FULLSCREEN_1ON1_MODAL', (dataFromServer) => {
+    if (getState().mediaState.amICalling) {
+      dispatch({
+        type: 'GET_RECIEVER_USER_INFO',
+        payload: dataFromServer.recieverUserInfo,
+      });
+      setShowCallingModal(false);
+      setShow1on1(true);
+    } else if (getState().mediaState.amIRecieving) {
+      dispatch({
+        type: ANSWER_CALL,
+        payload: '',
+      });
+      setShowCallingModal(false);
+      setShow1on1(true);
+    }
+  });
 };

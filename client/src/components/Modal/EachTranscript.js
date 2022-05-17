@@ -57,22 +57,30 @@ const EachTranscript = (props) => {
     }
   };
 
+  // const renderTranslated = () => {
+  //   if (translated) {
+  //     return (
+  //       <>
+  //         <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+  //           {props.conversationTranscript.transcript}
+  //           Translated <p>{translated}</p>
+  //         </Typography>
+  //         {/* <TranslatedText googleTranslated={googleTranslated} /> */}
+  //         {/* <Tooltip title='translate'>
+  //                     <IconButton edge='end'>
+  //                       <TranslateTranscript translateInput={conversationTranscript.transcript} />
+  //                     </IconButton>
+  //                   </Tooltip> */}
+  //       </>
+  //     );
+  //   }
+  // };
+
   const renderTranslated = () => {
     if (translated) {
-      return (
-        <>
-          <Typography component='div' variant='body2' sx={{ color: 'black' }}>
-            {props.conversationTranscript.transcript}
-            Translated <p>{translated}</p>
-          </Typography>
-          {/* <TranslatedText googleTranslated={googleTranslated} /> */}
-          {/* <Tooltip title='translate'>
-                      <IconButton edge='end'>
-                        <TranslateTranscript translateInput={conversationTranscript.transcript} />
-                      </IconButton>
-                    </Tooltip> */}
-        </>
-      );
+      return <p>Translated {translated}</p>;
+    } else {
+      return null;
     }
   };
 
@@ -104,7 +112,15 @@ const EachTranscript = (props) => {
               </Typography>
             </>
           }
-          secondary={renderTranslated()}
+          secondary={
+            <>
+              <Typography component='div' variant='body2' sx={{ color: 'black' }}>
+                {props.conversationTranscript.transcript}
+                <br />
+                {translated ? <p>{translated}</p> : null}
+              </Typography>
+            </>
+          }
         />
       </ListItem>
       <Divider variant='inset' component='li' />

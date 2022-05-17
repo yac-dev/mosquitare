@@ -42,7 +42,7 @@ export const loginActionCreator = (formData) => async (dispatch) => {
     console.log(error);
     const errorMessage = error.response.data.message;
     console.log(errorMessage);
-    dispatch(alertActionCreator('Somthing wrong with your email or password. Please type again.', 'error', 7000));
+    dispatch(alertActionCreator('Something wrong with your email or password. Please try again.', 'error', 7000));
   }
 };
 

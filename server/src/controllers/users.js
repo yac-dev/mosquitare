@@ -190,7 +190,7 @@ export const login = async (request, response) => {
 
     const isEnteredPasswordCorrect = await user.isPasswordCorrect(password, user.password);
     if (!isEnteredPasswordCorrect) {
-      return new Error(isEnteredPasswordCorrect);
+      throw new Error('password not match...');
     }
 
     const jwtToken = jwt.sign({ id: user._id }, JWT_PRIVATE_KEY, { expiresIn: '10d' });

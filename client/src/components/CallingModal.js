@@ -33,6 +33,7 @@ import { gotRejectedMyCallActionCreator } from '../actionCreators/mediaActionCre
 import { recieveCanceledCallActionCreator } from '../actionCreators/mediaActionCreator';
 // import { openMyModalActionCreator } from '../actionCreators/mediaActionCreator';
 import { openMyModalActionCreatorReciever } from '../actionCreators/mediaActionCreator';
+import { openMyModalActionCreator2 } from '../actionCreators/mediaActionCreator';
 import history from '../history';
 
 const CancelButton = styled(Button)(({ theme }) => ({
@@ -76,7 +77,8 @@ const CallingModal = (props) => {
   // なんで、これを消してcaller側映った？？？
 
   useEffect(() => {
-    props.openMyModalActionCreatorReciever(props.socket, props.setShowCallingModal, props.setShow1on1);
+    // props.openMyModalActionCreatorReciever(props.socket, props.setShowCallingModal, props.setShow1on1);
+    props.openMyModalActionCreator2(props.socket, props.setShowCallingModal, props.setShow1on1);
   }, []);
 
   const handleAnswerCall = () => {
@@ -260,4 +262,5 @@ export default connect(mapStateToProps, {
   recieveCanceledCallActionCreator,
   // openMyModalActionCreator,
   openMyModalActionCreatorReciever,
+  openMyModalActionCreator2,
 })(CallingModal);

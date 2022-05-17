@@ -51,7 +51,7 @@ const BasicUserInfo = (props) => {
     if (!props.authState.currentUser) {
       return (
         <div style={{ display: ' flex', justifyContent: 'center' }}>
-          <p style={{ fontWeight: 'bold' }}>⚠️ Please signup or login to call</p>
+          <p style={{ fontWeight: 'bold' }}>You need to signup or login to have a conversation.</p>
         </div>
       );
     } else {

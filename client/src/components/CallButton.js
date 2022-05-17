@@ -254,7 +254,7 @@ const CallButton = (props) => {
 
   const renderExchangeableLangs = () => {
     if (!props.authState.currentUser) {
-      return <div>You need to signup or login to call</div>;
+      return <div>You need to signup or login to have a conversation.</div>;
     } else {
       const menuItemDOMs = [];
       if (exchangeableLearningLangs.length && exchangeableNativeLangs.length) {

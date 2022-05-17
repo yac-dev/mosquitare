@@ -144,8 +144,13 @@ io.on('connection', (socket) => {
     io.to(dataFromReciever.to).emit('I_GOT_OPEN_YOUR_MODAL_FROM_RECIEVER', {});
   });
 
+  // socket.on('LETS_OPEN_OUR_FULLSCREEN_MODAL', (dataFromCaller) => {
+  //   io.to(dataFromCaller.to).emit('I_OPEN_MY_MODAL', { recieverUserInfo: dataFromCaller.recieverUserInfo });
+  // });
   socket.on('LETS_OPEN_OUR_FULLSCREEN_MODAL', (dataFromCaller) => {
-    io.to(dataFromCaller.to).emit('I_OPEN_MY_MODAL', { recieverUserInfo: dataFromCaller.recieverUserInfo });
+    io.to(dataFromCaller.to).to(dataFromCaller.me).emit('OPEN_MY_FULLSCREEN_1ON1_MODAL', {
+      recieverUserInfo: dataFromCaller.recieverUserInfo,
+    });
   });
 
   socket.on(I_ANSWER_THE_CALL, async (dataFromAnswerer) => {
