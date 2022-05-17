@@ -12,6 +12,7 @@ import Zoom from '@mui/material/Zoom';
 import EditIcon from '@mui/icons-material/Edit';
 import { Stack } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import { TextField, InputAdornment } from '@mui/material';
 
 // accordion
@@ -40,6 +41,7 @@ const RatingModal = (props) => {
   const [racismChecked, setRacismChecked] = useState(false);
   const [racismDetail, setRacismDetail] = useState('');
   const [expanded, setExpanded] = useState('panel1');
+  const [submitButtonClicked, setSubmitButtonClicked] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -155,10 +157,27 @@ const RatingModal = (props) => {
     }
   };
 
+  const renderButton = () => {
+    if (!submitButtonClicked) {
+      return (
+        <Button variant='contained' startIcon={<SendIcon />} onClick={() => onSubmitClick()}>
+          Submit
+        </Button>
+      );
+    } else {
+      return (
+        <Button variant='contained' disabled startIcon={<HourglassTopIcon />}>
+          Wait one sec...
+        </Button>
+      );
+    }
+  };
+
   const onSubmitClick = () => {
     // ここでapi requestを送ることになる。
     // rating {"enthusiastic": 10, "friendly": 8, "patient": 6, "helpful": 5, "respectCulture": 8," datingHunter": false, "moneyHunter": false}
     // diversity
+    setSubmitButtonClicked(true);
     const ratingData = {
       enthusiasm: enthusiasmValue,
       friendliness: friendlinessValue,
@@ -416,9 +435,10 @@ const RatingModal = (props) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant='contained' startIcon={<SendIcon />} onClick={() => onSubmitClick()}>
+          {/* <Button variant='contained' startIcon={<SendIcon />} onClick={() => onSubmitClick()}>
             Submit
-          </Button>
+          </Button> */}
+          {renderButton()}
         </Modal.Footer>
       </Modal.Body>
     </Modal>

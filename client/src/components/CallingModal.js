@@ -13,6 +13,7 @@ import MoodBadIcon from '@mui/icons-material/MoodBad';
 import { styled } from '@mui/system';
 import HailIcon from '@mui/icons-material/Hail';
 import NoAccountsIcon from '@mui/icons-material/NoAccounts';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -53,6 +54,7 @@ const YesButton = styled(Button)(({ theme }) => ({
 }));
 
 const CallingModal = (props) => {
+  const [yesButtonClicked, setYesButtonClicked] = useState(false);
   // modal bodyがcallをかけたか受けたかで変わるようにする。
 
   useEffect(() => {
@@ -82,6 +84,7 @@ const CallingModal = (props) => {
   }, []);
 
   const handleAnswerCall = () => {
+    setYesButtonClicked(true);
     props.answerCallActionCreator1(props.socket, props.setShowCallingModal, props.setShow1on1);
   };
 
@@ -222,18 +225,26 @@ const CallingModal = (props) => {
         </Stack>
       );
     } else if (props.mediaState.amIRecieving) {
-      return (
-        <>
-          <Stack direction='row' spacing={2}>
-            <YesButton variant='contained' startIcon={<MoodIcon />} onClick={() => handleAnswerCall()}>
-              Yes, lets talk!
-            </YesButton>
-            <CancelButton variant='contained' startIcon={<MoodBadIcon />} onClick={() => handleRejectCall()}>
-              Sorry
-            </CancelButton>
-          </Stack>
-        </>
-      );
+      if (!yesButtonClicked) {
+        return (
+          <>
+            <Stack direction='row' spacing={2}>
+              <YesButton variant='contained' startIcon={<MoodIcon />} onClick={() => handleAnswerCall()}>
+                Yes, let's talk!
+              </YesButton>
+              <CancelButton variant='contained' startIcon={<MoodBadIcon />} onClick={() => handleRejectCall()}>
+                Sorry
+              </CancelButton>
+            </Stack>
+          </>
+        );
+      } else {
+        return (
+          <YesButton variant='contained' disabled startIcon={<HourglassTopIcon />}>
+            Wait one sec...
+          </YesButton>
+        );
+      }
     }
   };
 
