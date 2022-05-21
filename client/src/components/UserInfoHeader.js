@@ -21,6 +21,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
 import Badge from '@mui/material/Badge';
+import EditIcon from '@mui/icons-material/Edit';
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
   width: 27,
@@ -56,7 +57,26 @@ const BasicUserInfo = (props) => {
       );
     } else {
       if (props.user._id === props.authState.currentUser._id) {
-        return <p style={{ textAlign: 'center' }}>It's me!</p>;
+        return (
+          <div style={{ textAlign: 'center' }}>
+            <Tooltip title='Edit my Profile (Under construction 🛠🚜 Please wait a bit.)'>
+              <Button
+                variant='contained'
+                // startIcon={<SendIcon />}
+                // onClick={() => props.clickMessageButtonActionCreator(true)}
+                // sx={{
+                //   backgroundColor: 'rgb(0, 186, 68)',
+                //   '&:hover': {
+                //     backgroundColor: 'rgb(0, 158, 58)',
+                //   },
+                // }}
+              >
+                {/* Message */}
+                <EditIcon />
+              </Button>
+            </Tooltip>
+          </div>
+        );
       } else if (props.mediaState.amIRecieving) {
         return null;
       } else if (props.mediaState.callAccepted) {

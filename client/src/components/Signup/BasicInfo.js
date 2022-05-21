@@ -7,6 +7,17 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
 const BasicInfo = (props) => {
+  const selfIntroductionLength = () => {
+    if (props.selfIntroduction.length >= 301) {
+      return <span style={{ color: 'red' }}>{props.selfIntroduction.length}/300 (limited up to 300 characters)</span>;
+    } else {
+      return (
+        <>
+          <span>{props.selfIntroduction.length}/300</span>
+        </>
+      );
+    }
+  };
   return (
     <Form>
       <Form.Field style={{ marginBottom: '20px' }}>
@@ -65,7 +76,8 @@ const BasicInfo = (props) => {
         <input type='file' onChange={() => props.setPhoto()} /> */}
         <label>
           <EmojiPeopleIcon />
-          &nbsp; Self-Introduction (limited 150 characters)
+          &nbsp; Self-Introduction&nbsp;
+          {selfIntroductionLength()}
         </label>
         <TextArea
           placeholder='Please write about yourself such as your job, interests, why you are learning, how log have you been learning etc'

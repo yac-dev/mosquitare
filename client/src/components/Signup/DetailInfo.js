@@ -327,6 +327,7 @@ const DetailInfo = (props) => {
           options={languageOptions}
           getOptionLabel={(option) => option.text}
           // defaultValue={[top100Films[13]]}
+          value={props.learningLanguages}
           onChange={(event, value) => props.setLearningLanguages(value)}
           filterSelectedOptions
           renderInput={(params) => {
@@ -368,6 +369,7 @@ const DetailInfo = (props) => {
           options={languageOptions}
           getOptionLabel={(option) => option.text}
           // defaultValue={[top100Films[13]]}
+          value={props.nativeLanguages}
           onChange={(event, value) => props.setNativeLanguages(value)}
           filterSelectedOptions
           renderInput={(params) => {
@@ -411,6 +413,7 @@ const DetailInfo = (props) => {
           getOptionLabel={(option) => option.text}
           // defaultValue={[top100Films[13]]}
           filterSelectedOptions
+          value={props.nationalities}
           onChange={(event, value) => props.setNationalities(value)}
           renderOption={(props, option) => (
             <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>

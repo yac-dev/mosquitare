@@ -119,6 +119,7 @@ const SignupWrapper = (props) => {
       !password ||
       !passwordConfirmation ||
       !selfIntroduction ||
+      selfIntroduction.length >= 301 ||
       !learningLanguages.length ||
       !nativeLanguages.length ||
       !nationalities.length ||
@@ -139,6 +140,9 @@ const SignupWrapper = (props) => {
       }
       if (selfIntroduction === '') {
         props.alertActionCreator('Please write your self-introduction.', 'error');
+      }
+      if (selfIntroduction.length >= 301) {
+        props.alertActionCreator('Self-Introduction is limited at most 300 characters.', 'error');
       }
       if (learningLanguages.length === 0) {
         props.alertActionCreator('Please select at least one learning language.', 'error');
