@@ -46,7 +46,11 @@ const UserInfoPersonal = (props) => {
   const renderRomance = () => {
     if (props.user.ratingAverage['romanceHunter'] >= 1) {
       return (
-        <Tooltip TransitionComponent={Zoom} title={'This status is obtained by user rating.'} arrow>
+        <Tooltip
+          TransitionComponent={Zoom}
+          title={"According to other user's rating, this user seems to be looking for romance 💕😍"}
+          arrow
+        >
           <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
             💕😍 Looking for Romance&nbsp;
             <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
@@ -61,7 +65,11 @@ const UserInfoPersonal = (props) => {
   const renderMoney = () => {
     if (props.user.ratingAverage['moneyHunter'] >= 1) {
       return (
-        <Tooltip TransitionComponent={Zoom} title={'This status is obtained by user rating.'} arrow>
+        <Tooltip
+          TransitionComponent={Zoom}
+          title={"According to other user's rating, this user seems be asking for money 💰🤑"}
+          arrow
+        >
           <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
             💰🤑 Need some money&nbsp;
             <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
@@ -76,7 +84,11 @@ const UserInfoPersonal = (props) => {
   const renderRacism = () => {
     if (props.user.ratingAverage['racism'] >= 1) {
       return (
-        <Tooltip TransitionComponent={Zoom} title={'This status is obtained by user rating.'} arrow>
+        <Tooltip
+          TransitionComponent={Zoom}
+          title={"According to other user's rating, this user sometimes seems to do a racist behavior."}
+          arrow
+        >
           <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
             Racist&nbsp;
             <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
@@ -117,6 +129,15 @@ const UserInfoPersonal = (props) => {
           {renderRomance()}
           {renderMoney()}
           {renderRacism()}
+        </div>
+      </div>
+      <div className='self-intro'>
+        <h6 style={{ borderBottom: '1px solid rgb(217,217,217)' }}>
+          <HailIcon />
+          Self-Intro
+        </h6>
+        <div style={{ width: '100%', wordBreak: 'break-word' }}>
+          <p style={{ display: 'inline-block', lineHeight: 1.5 }}>{props.user.selfIntroduction}</p>
         </div>
       </div>
 

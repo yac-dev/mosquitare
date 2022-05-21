@@ -56,7 +56,7 @@ const BasicUserInfo = (props) => {
       );
     } else {
       if (props.user._id === props.authState.currentUser._id) {
-        return null;
+        return <p style={{ textAlign: 'center' }}>It's me!</p>;
       } else if (props.mediaState.amIRecieving) {
         return null;
       } else if (props.mediaState.callAccepted) {
@@ -90,7 +90,7 @@ const BasicUserInfo = (props) => {
     } else if (props.user.isAvailableNow && props.user.isInConversation) {
       return (
         <Tooltip title='Having conversation now'>
-          <span style={{ fontSize: '20px' }}>🤔☎️</span>
+          <span style={{ fontSize: '20px' }}>📞☎️</span>
         </Tooltip>
       );
     } else if (props.user.isAvailableNow) {
@@ -163,32 +163,41 @@ const BasicUserInfo = (props) => {
     return (
       <div className='user-info-header' style={{ marginBottom: '20px' }}>
         <div className='user-info-header-flexbox' style={{ display: 'flex', marginBottom: '20px' }}>
-          <div className='info-list' style={{ flex: 5, textAlign: 'center' }}>
-            <div>
-              <div style={{ margin: '10px', fontWeight: 'bolder' }}>
-                {user.name}&nbsp;{renderPersonalStatusAverage(user)}&nbsp;{renderUserState()}
-              </div>
-              {/* <ReadMoreReact text={user.selfIntroduction} readMoreText='read more' /> */}
-              {/* <ReadMoreReact></ReadMoreReact>
+          <div className='info-list' style={{ flex: 7 }}>
+            {/* <div style={{ display: 'flex', flexDirection: 'column' }}> */}
+            <div style={{ margin: '10px', fontWeight: 'bolder', textAlign: 'center' }}>
+              {user.name}&nbsp;&nbsp;{renderPersonalStatusAverage(user)}&nbsp;&nbsp;{renderUserState()}
+            </div>
+            {/* <div style={{ width: '100%' }}>
+                <p style={{ display: 'inline-block' }}>{user.selfIntroduction}</p>
+              </div> */}
+            {/* <ReadMoreReact text={user.selfIntroduction} readMoreText='read more' /> */}
+            {/* <ReadMoreReact></ReadMoreReact>
               {/* <p>{user.conversations.length} conversations</p> */}
-              <p>{user.selfIntroduction}</p>
+            {/* </div> */}
+            {/* <div style={{ width: '100%', wordBreak: 'break-all' }}>
+              <p style={{ display: 'inline-block' }}>{user.selfIntroduction}</p>
+            </div> */}
+            {renderActionButtons()}
+          </div>
+
+          <div className='avatar-wrapper' style={{ flex: 3, display: 'flex', justifyContent: 'center' }}>
+            <div>
+              <Badge
+                overlap='circular'
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
+              >
+                {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+                <Avatar sx={{ width: 85, height: 85 }} alt={user.name}>
+                  {user.name}
+                </Avatar>
+                {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
+              </Badge>
             </div>
           </div>
-          <div className='avatar-wrapper' style={{ flex: 5, display: 'flex', justifyContent: 'center' }}>
-            <Badge
-              overlap='circular'
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
-            >
-              {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
-              <Avatar sx={{ width: 85, height: 85 }} alt={user.name}>
-                {user.name}
-              </Avatar>
-              {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
-            </Badge>
-          </div>
         </div>
-        {renderActionButtons()}
+        {/* {renderActionButtons()} */}
       </div>
     );
   };
