@@ -312,19 +312,18 @@ const Navbar = (props) => {
       return (
         <>
           <Stack direction='row' spacing={2}>
-            <Tooltip title='World Stats ( Under construction 🚜🛠  Please wait for a bit.)'>
+            {/* <Tooltip title='World Stats ( Under construction 🚜🛠  Please wait for a bit.)'>
               <IconButton
                 size='large'
                 edge='end'
                 aria-label='show 4 new mails'
                 aria-controls={userMenuId}
-                // onClick={handleProfileMenuOpen}
                 color='inherit'
               >
                 <BarChartIcon />
               </IconButton>
-            </Tooltip>
-            <Tooltip title='Meet Up ( Under construction 🚜🛠  Please wait for a bit.)'>
+            </Tooltip> */}
+            {/* <Tooltip title='Meet Up ( Under construction 🚜🛠  Please wait for a bit.)'>
               <IconButton
                 size='large'
                 edge='end'
@@ -334,11 +333,9 @@ const Navbar = (props) => {
                 onClick={handleGroupMenuOpen}
                 color='inherit'
               >
-                {/* <Badge badgeContent={4} color='error'> */}
                 <GroupsIcon />
-                {/* </Badge> */}
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <Tooltip title='Public Library'>
               <IconButton size='large' color='inherit'>

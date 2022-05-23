@@ -107,6 +107,7 @@ const WorldMap = (props) => {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [showSendMessageModal, setShowSendMessageModal] = useState(false);
   const [message, setMessage] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showCanceledCallModal, setShowCanceledCallModal] = useState(false);
   const [showReplyMessageModal, setShowReplyMessageModal] = useState(false);
   const [replyMessage, setReplyMessage] = useState('');

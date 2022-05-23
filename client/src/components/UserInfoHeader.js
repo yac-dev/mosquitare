@@ -59,10 +59,10 @@ const BasicUserInfo = (props) => {
       if (props.user._id === props.authState.currentUser._id) {
         return (
           <div style={{ textAlign: 'center' }}>
-            <Tooltip title='Edit my Profile (Under construction 🛠🚜 Please wait a bit.)'>
+            <Tooltip title='Under construction 🛠🚜 Please wait a bit.'>
               <Button
                 variant='contained'
-                // startIcon={<SendIcon />}
+                startIcon={<EditIcon />}
                 // onClick={() => props.clickMessageButtonActionCreator(true)}
                 // sx={{
                 //   backgroundColor: 'rgb(0, 186, 68)',
@@ -71,8 +71,9 @@ const BasicUserInfo = (props) => {
                 //   },
                 // }}
               >
+                Edit my profile
                 {/* Message */}
-                <EditIcon />
+                {/* <EditIcon /> */}
               </Button>
             </Tooltip>
           </div>
