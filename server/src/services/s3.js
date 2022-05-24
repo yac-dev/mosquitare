@@ -36,6 +36,19 @@ export const uploadFile = async (filename) => {
   // }
 };
 
+export const uploadImageFile = async (filename) => {
+  const filePath = path.join(__dirname, '..', '..', 'uploadedFilesBuffer', filename);
+  const fileStream = fs.createReadStream(filePath); // ここでbinary dataを全て読み込んでs3に保存する。
+
+  const uploadParams = {
+    Bucket: process.env.AWS_S3BUCKET_FOR_IMAGES_NAME,
+    Body: fileStream,
+    Key: filename,
+  };
+
+  await s3.upload(uploadParams).promise();
+};
+
 export const uploadScriptFile = async (file) => {
   const fileStream = fs.createReadStream(file.path);
   const uploadParams = {

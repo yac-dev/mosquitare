@@ -226,7 +226,8 @@ const BasicUserInfo = (props) => {
                   sx={{ width: 85, height: 85, cursor: 'pointer' }}
                   alt={user.name}
                   onClick={() => console.log('Hey')}
-                  src={props.imageState.image.url ? props.imageState.image.url : ''}
+                  // src={props.imageState.image.url ? props.imageState.image.url : ''}
+                  src={user.photo ? user.photo : ''}
                 >
                   {user.name}
                 </Avatar>
@@ -245,7 +246,12 @@ const BasicUserInfo = (props) => {
             badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
           >
             {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
-            <Avatar sx={{ width: 85, height: 85 }} alt={user.name} onClick={() => console.log('Hey')}>
+            <Avatar
+              sx={{ width: 85, height: 85 }}
+              alt={user.name}
+              src={user.photo ? user.photo : ''}
+              onClick={() => console.log('Hey')}
+            >
               {user.name}
             </Avatar>
             {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}

@@ -9,6 +9,7 @@ import bcrypt from 'bcrypt';
 import { JWT_PRIVATE_KEY } from '../../config';
 import nodemailer from 'nodemailer';
 import sendgridTransport from 'nodemailer-sendgrid-transport';
+import { uploadImageFile } from '../services/s3';
 
 // const transporter = nodemailer.createTransport(
 //   sendgridTransport({
@@ -453,6 +454,21 @@ export const updateIsAvailableToFalseById = async (request, response) => {
   try {
     const user = await User.findById(request.params.id);
     user.isAvailableNow = false;
+    await user.save({ validateBeforeSave: false });
+    response.status(200).json({
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateUserPhoto = async (request, response) => {
+  try {
+    const file = request.file;
+    uploadImageFile(file.filename);
+    const user = await User.findById(request.params.id);
+    user.photo = file.filename;
     await user.save({ validateBeforeSave: false });
     response.status(200).json({
       user,
