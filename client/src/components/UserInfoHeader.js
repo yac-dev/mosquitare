@@ -23,6 +23,9 @@ import NavbarCollapse from 'react-bootstrap/esm/NavbarCollapse';
 import Badge from '@mui/material/Badge';
 import EditIcon from '@mui/icons-material/Edit';
 
+import { setOpenEditModalActionCreator } from '../actionCreators/modalActionCreator';
+import { setImageActionCreator } from '../actionCreators/imageActionCreator';
+
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
   width: 27,
   height: 27,
@@ -64,6 +67,7 @@ const BasicUserInfo = (props) => {
                 variant='contained'
                 startIcon={<EditIcon />}
                 // onClick={() => props.clickMessageButtonActionCreator(true)}
+                // onClick={() => props.setOpenEditModalActionCreator(true)}
                 // sx={{
                 //   backgroundColor: 'rgb(0, 186, 68)',
                 //   '&:hover': {
@@ -179,6 +183,78 @@ const BasicUserInfo = (props) => {
     }
   };
 
+  const handleChange = (event) => {
+    // if (event.target.files && event.target.files.length > 0) {
+    //   const reader = new FileReader();
+    //   reader.readAsDataURL(event.target.files[0]);
+    //   reader.addEventListener('load', () => {
+    //     // setImage(reader.result);
+    //     props.setImageActionCreator(reader.result);
+    //     // reduxでaction creatorのセッティングする。
+    //   });
+    //   props.setOpenEditModalActionCreator(true);
+    // }
+    const file = event.target.files[0];
+    if (file) {
+      props.setOpenEditModalActionCreator(true);
+      props.setImageActionCreator({ data: file, url: URL.createObjectURL(file) });
+      // setFile(file);
+      // setPhotoURL(URL.createObjectURL(file));
+      // setOpenCrop(true);
+    }
+  };
+
+  const renderAvatar = (user) => {
+    if (props.authState.currentUser._id === user._id) {
+      return (
+        <div>
+          <Badge
+            overlap='circular'
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
+          >
+            {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+            <Tooltip title='Edit my profile picture ✍️'>
+              <label>
+                <input
+                  // accept='image/*'
+                  type='file'
+                  style={{ display: 'none' }}
+                  onChange={(event) => handleChange(event)}
+                />
+                <Avatar
+                  sx={{ width: 85, height: 85, cursor: 'pointer' }}
+                  alt={user.name}
+                  onClick={() => console.log('Hey')}
+                  src={props.imageState.image.url ? props.imageState.image.url : ''}
+                >
+                  {user.name}
+                </Avatar>
+              </label>
+            </Tooltip>
+            {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
+          </Badge>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Badge
+            overlap='circular'
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
+          >
+            {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+            <Avatar sx={{ width: 85, height: 85 }} alt={user.name} onClick={() => console.log('Hey')}>
+              {user.name}
+            </Avatar>
+            {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
+          </Badge>
+        </div>
+      );
+    }
+  };
+
   // このcomponent名自体を後で変えた方がいい。このfunction名はこれでいい。
   const renderUserInfoHeader = (user) => {
     return (
@@ -203,19 +279,7 @@ const BasicUserInfo = (props) => {
           </div>
 
           <div className='avatar-wrapper' style={{ flex: 3, display: 'flex', justifyContent: 'center' }}>
-            <div>
-              <Badge
-                overlap='circular'
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
-              >
-                {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
-                <Avatar sx={{ width: 85, height: 85 }} alt={user.name}>
-                  {user.name}
-                </Avatar>
-                {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
-              </Badge>
-            </div>
+            {renderAvatar(user)}
           </div>
         </div>
         {/* {renderActionButtons()} */}
@@ -280,7 +344,12 @@ const BasicUserInfo = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState, mediaState: state.mediaState, clickedUserState: state.clickedUserState };
+  return {
+    authState: state.authState,
+    mediaState: state.mediaState,
+    clickedUserState: state.clickedUserState,
+    imageState: state.imageState,
+  };
 };
 
-export default connect(mapStateToProps)(BasicUserInfo);
+export default connect(mapStateToProps, { setOpenEditModalActionCreator, setImageActionCreator })(BasicUserInfo);

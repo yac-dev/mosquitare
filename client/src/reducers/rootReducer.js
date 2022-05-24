@@ -21,6 +21,7 @@ import clickedUserReducer from './clickedUserReducer';
 import modalReducer from './modalReducer';
 import messagesReducer from './messagesReducer';
 import messagesWithUserReducer from './messagesWthUserReducer';
+import imageReducer from './imageReducer';
 
 const rootReducer = combineReducers({
   authState: authReducer,
@@ -45,6 +46,7 @@ const rootReducer = combineReducers({
   modalState: modalReducer,
   messagesState: messagesReducer,
   messagesWithUserState: messagesWithUserReducer,
+  imageState: imageReducer,
 });
 
 export default rootReducer;

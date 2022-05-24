@@ -22,6 +22,7 @@ import SelectedVideoModal from './SelectedVideoModal';
 import RightPositionedUserDetail from './RightPositionedUserDetail';
 import SendMessageModal from './SendMessageModal';
 import ReplyMessageModal from './ReplyMessageModal';
+import EditUserInfo from './EditUserInfo';
 import Inbox from './Inbox';
 import MessageWindow from './MessageWindow';
 import UserDetail from './UserDetail';
@@ -497,6 +498,7 @@ const WorldMap = (props) => {
                   showSendMessageModal={showSendMessageModal}
                   setShowSendMessageModal={setShowSendMessageModal}
                 />
+                <EditUserInfo />
                 {/* <ReplyMessageModal
                   showReplyMessageModal={showReplyMessageModal}
                   setShowReplyMessageModal={setShowReplyMessageModal}
