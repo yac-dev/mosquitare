@@ -227,7 +227,8 @@ const BasicUserInfo = (props) => {
                   alt={user.name}
                   onClick={() => console.log('Hey')}
                   // src={props.imageState.image.url ? props.imageState.image.url : ''}
-                  src={user.photo ? user.photo : ''}
+                  // src={user.photo ? user.photo : ''}
+                  src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${user.photo}`}
                 >
                   {user.name}
                 </Avatar>
@@ -249,8 +250,8 @@ const BasicUserInfo = (props) => {
             <Avatar
               sx={{ width: 85, height: 85 }}
               alt={user.name}
-              src={user.photo ? user.photo : ''}
-              onClick={() => console.log('Hey')}
+              // src={user.photo ? user.photo : ''}
+              src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${user.photo}`}
             >
               {user.name}
             </Avatar>

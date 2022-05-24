@@ -25,6 +25,8 @@ const authReducer = (state = INITIAL_STATE, action) => {
     //   return state // これいらないや。
     case 'UPDATE_ISAVAILABLENOW_TO_FALSE':
       return { ...state, currentUser: action.payload };
+    case 'UPDATE_USER_IMAGE':
+      return { ...state, currentUser: action.payload };
     default:
       return state;
   }

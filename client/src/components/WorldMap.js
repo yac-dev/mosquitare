@@ -182,6 +182,13 @@ const WorldMap = (props) => {
   // };
 
   useEffect(() => {
+    if (localStorage.getItem('updated user image')) {
+      props.alertActionCreator('Updated profile image!', 'success');
+      localStorage.removeItem('updated user image');
+    }
+  }, []);
+
+  useEffect(() => {
     if (localStorage.getItem('after login')) {
       props.alertActionCreator('Logged in successfully!', 'success');
       localStorage.removeItem('after login');

@@ -209,3 +209,22 @@ export const clickUserActionCreator = (user) => {
     payload: user,
   };
 };
+
+export const updateUserImageActionCreator = (fileBlob) => async (dispatch, getState) => {
+  try {
+    const userId = getState().authState.currentUser._id;
+    const formData = new FormData();
+    formData.append('image', fileBlob);
+    const result = await mosquitareAPI.patch(`/users/${userId}/image`, formData, {
+      headers: { 'Content-type': 'multipart/form-data' },
+    });
+    const { user } = result.data;
+    dispatch({
+      type: 'UPDATE_USER_IMAGE',
+      paylaod: user,
+    });
+    window.location = '/';
+  } catch (error) {
+    console.log(error);
+  }
+};

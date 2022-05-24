@@ -12,6 +12,7 @@ import { getCroppedImg } from '../utils/cropImage';
 
 import { setOpenEditModalActionCreator } from '../actionCreators/modalActionCreator';
 import { setImageActionCreator } from '../actionCreators/imageActionCreator';
+import { updateUserImageActionCreator } from '../actionCreators/authActionCreators';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction='up' ref={ref} {...props} />;
@@ -31,8 +32,11 @@ const EditUserInfo = (props) => {
     // setLoading(true);
     try {
       const { file, url } = await getCroppedImg(props.imageState.image.url, croppedArea);
-      props.setImageActionCreator({ data: file, url });
-      props.setOpenEditModalActionCreator(false);
+      // props.setImageActionCreator({ data: file, url });
+      // ここで、api callをするのかね。。。
+      localStorage.setItem('updated user image', true);
+      props.updateUserImageActionCreator(file);
+      // props.setOpenEditModalActionCreator(false);
       // setPhotoURL(url);
       // setFile(file);
       // setOpenCrop(false);
@@ -120,4 +124,8 @@ const mapStateToProps = (state) => {
   return { modalState: state.modalState, imageState: state.imageState };
 };
 
-export default connect(mapStateToProps, { setOpenEditModalActionCreator, setImageActionCreator })(EditUserInfo);
+export default connect(mapStateToProps, {
+  setOpenEditModalActionCreator,
+  setImageActionCreator,
+  updateUserImageActionCreator,
+})(EditUserInfo);
