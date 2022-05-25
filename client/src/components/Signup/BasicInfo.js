@@ -69,14 +69,9 @@ const BasicInfo = (props) => {
         />
       </Form.Field>
       <Form.Field style={{ marginBottom: '20px' }}>
-        {/* <label>
-          <CloudUploadIcon />
-          &nbsp; Profile Image (Not required)
-        </label>
-        <input type='file' onChange={() => props.setPhoto()} /> */}
         <label>
           <EmojiPeopleIcon />
-          &nbsp; Self-Introduction&nbsp;
+          &nbsp; Self-Introduction&nbsp;(Not required)&nbsp;
           {selfIntroductionLength()}
         </label>
         <TextArea
@@ -84,7 +79,6 @@ const BasicInfo = (props) => {
           onChange={(event) => props.setSelfIntroduction(event.target.value)}
           value={props.selfIntroduction}
         />
-        {/* <input type='' placeholder='Please enter some messages.' onChange={() => props.setPhoto()} /> */}
       </Form.Field>
       {/* <Button type='submit'>Submit</Button> */}
     </Form>

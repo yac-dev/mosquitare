@@ -97,7 +97,7 @@ const userSchema = new mongoose.Schema({
   ],
   selfIntroduction: {
     type: String,
-    default: 'I just started!',
+    default: 'Just started lampost.',
   },
   gender: {
     type: String,
