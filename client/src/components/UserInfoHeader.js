@@ -205,40 +205,8 @@ const BasicUserInfo = (props) => {
   };
 
   const renderAvatar = (user) => {
-    if (props.authState.currentUser._id === user._id) {
-      return (
-        <div>
-          <Badge
-            overlap='circular'
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
-          >
-            {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
-            <Tooltip title='Edit my profile picture ✍️'>
-              <label>
-                <input
-                  // accept='image/*'
-                  type='file'
-                  style={{ display: 'none' }}
-                  onChange={(event) => handleChange(event)}
-                />
-                <Avatar
-                  sx={{ width: 85, height: 85, cursor: 'pointer' }}
-                  alt={user.name}
-                  onClick={() => console.log('Hey')}
-                  // src={props.imageState.image.url ? props.imageState.image.url : ''}
-                  // src={user.photo ? user.photo : ''}
-                  src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${user.photo}`}
-                >
-                  {user.name}
-                </Avatar>
-              </label>
-            </Tooltip>
-            {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
-          </Badge>
-        </div>
-      );
-    } else {
+    // なるほど。loginしてない場合でこれ見るとだめなんだ。ok got it!!
+    if (!props.authState.currentUser) {
       return (
         <div>
           <Badge
@@ -259,6 +227,62 @@ const BasicUserInfo = (props) => {
           </Badge>
         </div>
       );
+    } else {
+      if (props.authState.currentUser._id === user._id) {
+        return (
+          <div>
+            <Badge
+              overlap='circular'
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
+            >
+              {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+              <Tooltip title='Edit my profile picture ✍️'>
+                <label>
+                  <input
+                    // accept='image/*'
+                    type='file'
+                    style={{ display: 'none' }}
+                    onChange={(event) => handleChange(event)}
+                  />
+                  <Avatar
+                    sx={{ width: 85, height: 85, cursor: 'pointer' }}
+                    alt={user.name}
+                    onClick={() => console.log('Hey')}
+                    // src={props.imageState.image.url ? props.imageState.image.url : ''}
+                    // src={user.photo ? user.photo : ''}
+                    src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${user.photo}`}
+                  >
+                    {user.name}
+                  </Avatar>
+                </label>
+              </Tooltip>
+              {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
+            </Badge>
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            <Badge
+              overlap='circular'
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              badgeContent={<SmallAvatar src={user.nationalities[0].flagPics[0]} />}
+            >
+              {/* <Avatar alt="Travis Howard" src="/static/images/avatar/2.jpg" /> */}
+              <Avatar
+                sx={{ width: 85, height: 85 }}
+                alt={user.name}
+                // src={user.photo ? user.photo : ''}
+                src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${user.photo}`}
+              >
+                {user.name}
+              </Avatar>
+              {/* <Avatar sx={{ cursor: 'pointer' }} alt={`${comment.user.name}`} /> */}
+            </Badge>
+          </div>
+        );
+      }
     }
   };
 

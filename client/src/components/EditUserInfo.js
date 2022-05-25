@@ -9,6 +9,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import Cropper from 'react-easy-crop';
 import { getCroppedImg } from '../utils/cropImage';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
 
 import { setOpenEditModalActionCreator } from '../actionCreators/modalActionCreator';
 import { setImageActionCreator } from '../actionCreators/imageActionCreator';
@@ -22,6 +24,7 @@ const EditUserInfo = (props) => {
   const [croppedArea, setCroppedArea] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const [isClickedUpload, setIsClickedUpload] = useState(false);
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     // console.log(croppedArea, croppedAreaPixels);
@@ -70,6 +73,27 @@ const EditUserInfo = (props) => {
     }
   };
 
+  const onUploadClick = () => {
+    cropImage();
+    setIsClickedUpload(true);
+  };
+
+  const renderUploadButton = () => {
+    if (!isClickedUpload) {
+      return (
+        <Button variant='contained' startIcon={<AddAPhotoIcon />} onClick={() => onUploadClick()}>
+          Upload
+        </Button>
+      );
+    } else {
+      return (
+        <Button disabled startIcon={<HourglassTopIcon />}>
+          Please wait a bit
+        </Button>
+      );
+    }
+  };
+
   return (
     <div>
       <Dialog
@@ -113,7 +137,7 @@ const EditUserInfo = (props) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => props.setOpenEditModalActionCreator(false)}>Cancel</Button>
-          <Button onClick={() => cropImage()}>Update</Button>
+          {renderUploadButton()}
         </DialogActions>
       </Dialog>
     </div>

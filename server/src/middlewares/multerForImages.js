@@ -10,7 +10,6 @@ const storage = multer.diskStorage({
   },
   // './uploadedFilesBuffer/'
   filename: function (request, file, callback) {
-    const { calledOrRecieved } = request.body;
     const extension = file.mimetype.split('/')[1];
     const finalFileName = 'user-images-' + Date.now() + '-' + uuidv4() + '.' + extension;
     callback(null, finalFileName);

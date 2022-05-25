@@ -210,6 +210,7 @@ export const clickUserActionCreator = (user) => {
   };
 };
 
+// なんかエラーある。
 export const updateUserImageActionCreator = (fileBlob) => async (dispatch, getState) => {
   try {
     const userId = getState().authState.currentUser._id;
