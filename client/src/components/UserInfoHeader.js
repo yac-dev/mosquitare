@@ -240,7 +240,8 @@ const BasicUserInfo = (props) => {
               <Tooltip title='Edit my profile picture ✍️'>
                 <label>
                   <input
-                    // accept='image/*'
+                    accept='image/*'
+                    // accept='image/png, image/gif, image/jpeg'
                     type='file'
                     style={{ display: 'none' }}
                     onChange={(event) => handleChange(event)}
