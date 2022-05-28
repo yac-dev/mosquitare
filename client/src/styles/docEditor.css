@@ -1,7 +1,7 @@
 @media only screen and (min-width: 320px) and (max-width: 767px) {
   .doc-editor-component {
-    max-height: 70vh;
-    width: 40vw;
+    max-height: 50vh;
+    width: 65vw;
     color: white;
     background-color: rgb(37, 95, 184);
     position: absolute;

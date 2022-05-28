@@ -18,10 +18,10 @@ const TOOLBAR_OPTIONS = [
   [{ list: 'ordered' }, { list: 'bullet' }],
   ['bold', 'italic', 'underline'],
   [{ color: [] }, { background: [] }],
-  [{ script: 'sub' }, { script: 'super' }],
+  // [{ script: 'sub' }, { script: 'super' }],
   [{ align: [] }],
-  ['image', 'blockquote', 'code-block'],
-  ['clean'],
+  ['image', 'blockquote'],
+  // ['clean'],
 ];
 
 const DocEditor = (props) => {
@@ -146,7 +146,7 @@ const DocEditor = (props) => {
             <i className='fa fa-close' style={{ fontSize: '12px', color: 'white', cursor: 'pointer' }}></i>
           </div>
         </div>
-        <div className='doc-editor' ref={wrapperRef}></div>
+        <div className='doc-editor' ref={wrapperRef} style={{ overflow: 'auto' }}></div>
       </div>
     </Draggable>
   );

@@ -219,22 +219,51 @@ const Navbar = (props) => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-          <Badge badgeContent={4} color='error'>
-            <MailIcon />
+        <IconButton
+          size='large'
+          aria-label='show 4 new mails'
+          color='inherit'
+          onClick={() => {
+            window.location = '/allvideos';
+          }}
+        >
+          <Badge badgeContent={1} color='error'>
+            <VideoLibraryIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Public library</p>
+        {/* <Tooltip title='Public Library'>
+          <IconButton size='large' color='inherit'>
+            <VideoLibraryIcon
+              onClick={() => {
+                window.location = '/allvideos';
+              }}
+            />
+          </IconButton>
+        </Tooltip> */}
       </MenuItem>
       <MenuItem>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-          <Badge badgeContent={17} color='error'>
-            <NotificationsIcon />
+          <Badge badgeContent={1} color='error'>
+            <EmailIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        {/* <Tooltip title='Messages'>
+          <IconButton
+            size='large'
+            edge='end'
+            aria-label='show 4 new mails'
+            aria-controls={groupMenuId}
+            aria-haspopup='true'
+            onClick={() => props.clickNavMessageIconActionCreator(true)}
+            color='inherit'
+          >
+            <EmailIcon />
+          </IconButton>
+        </Tooltip> */}
+        <p>Messages</p>
       </MenuItem>
-      <MenuItem>
+      {/* <MenuItem>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
           <Badge badgeContent={17} color='error'>
             <Button variant='contained' endIcon={<PowerSettingsNewIcon />}>
@@ -243,7 +272,7 @@ const Navbar = (props) => {
           </Badge>
         </IconButton>
         <p>Notifications</p>
-      </MenuItem>
+      </MenuItem> */}
 
       <MenuItem onClick={handleUserMenuOpen}>
         <IconButton
@@ -255,7 +284,7 @@ const Navbar = (props) => {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>My account</p>
       </MenuItem>
     </Menu>
   );
@@ -435,6 +464,49 @@ const Navbar = (props) => {
     // }
   };
 
+  const renderSignupAndLoginOnMobile = () => {
+    if (!props.authState.currentUser) {
+      return (
+        <>
+          <Button
+            variant='text'
+            startIcon={<BorderColorIcon />}
+            sx={{ color: 'white' }}
+            onClick={() => {
+              setShowSignupModal(true);
+              setShowLoginModal(false);
+            }}
+          ></Button>
+          <Button
+            variant='text'
+            startIcon={<LoginIcon />}
+            sx={{ color: 'white' }}
+            onClick={() => {
+              setShowLoginModal(true);
+              setShowSignupModal(false);
+            }}
+          ></Button>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <IconButton
+            size='large'
+            aria-label='show more'
+            aria-controls={mobileMenuId}
+            aria-haspopup='true'
+            onClick={handleMobileMenuOpen}
+            color='inherit'
+            sx={{ color: 'white' }}
+          >
+            <MenuIcon />
+          </IconButton>
+        </>
+      );
+    }
+  };
+
   const renderNavbar = () => {
     if (props.mediaState.callAccepted) {
       return null;
@@ -450,7 +522,15 @@ const Navbar = (props) => {
                 style={{ background: 'rgb(0, 30, 60)', boxShadow: 'none' }}
               >
                 <Toolbar>
-                  <Typography variant='h6' noWrap component='div' sx={{ display: 'block', color: 'white' }}>
+                  <Typography
+                    variant='h6'
+                    noWrap
+                    component='div'
+                    sx={{ display: 'block', color: 'white' }}
+                    onClick={() => {
+                      window.location = '/';
+                    }}
+                  >
                     Lampost&nbsp;
                   </Typography>
                   <Box
@@ -466,19 +546,7 @@ const Navbar = (props) => {
                     {renderToolIconButtons()}
                   </Box>
                   {/* ここのBoxってなんだろな。。。 */}
-                  <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
-                    <IconButton
-                      size='large'
-                      aria-label='show more'
-                      aria-controls={mobileMenuId}
-                      aria-haspopup='true'
-                      onClick={handleMobileMenuOpen}
-                      color='inherit'
-                      sx={{ color: 'white' }}
-                    >
-                      <MenuIcon />
-                    </IconButton>
-                  </Box>
+                  <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>{renderSignupAndLoginOnMobile()}</Box>
                 </Toolbar>
               </AppBar>
               {renderMobileMenu}

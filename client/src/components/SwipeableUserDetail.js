@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Global } from '@emotion/react';
 import { styled } from '@mui/material/styles';
@@ -10,6 +11,7 @@ import Skeleton from '@mui/material/Skeleton';
 import Typography from '@mui/material/Typography';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import TouchAppIcon from '@mui/icons-material/TouchApp';
+import UserInfoWrapper from './UserInfoWrapper';
 
 // components
 // cardの中身でひとつのcomponentをもっておくべきだ。そうすれば、reusableになる。
@@ -47,6 +49,24 @@ const SwipeableUserDetail = (props) => {
 
   // This is used only for the example
   const container = window !== undefined ? () => window().document.body : undefined;
+
+  const renderDetail = () => {
+    if (props.clickedState.mapUser.clicked) {
+      return (
+        <UserInfoWrapper
+          user={props.clickedState.mapUser.user}
+          socket={props.socket}
+          setShowCallingModal={props.setShowCallingModal}
+          showVideoModal={props.showVideoModal}
+          setShowVideoModal={props.setShowVideoModal}
+          showSendMessageModal={props.showSendMessageModal}
+          setShowSendMessageModal={props.setShowSendMessageModal}
+        />
+      );
+    } else {
+      return null;
+    }
+  };
 
   return (
     <Root>
@@ -88,7 +108,7 @@ const SwipeableUserDetail = (props) => {
           <Puller />
           <Typography sx={{ p: 2, color: 'text.secondary' }}>
             <TouchAppIcon />
-            Tap icons to see user's information!
+            Tap user icon to see the user detail...
           </Typography>
         </StyledBox>
         <StyledBox
@@ -99,17 +119,22 @@ const SwipeableUserDetail = (props) => {
             overflow: 'auto',
           }}
         >
-          <UserDetail
+          {/* <UserDetail
             socket={props.socket}
-            userInfo={props.userInfo}
-            isUserIconClicked={props.isUserIconClicked}
+            // userInfo={props.userInfo}
+            // isUserIconClicked={props.isUserIconClicked}
             setOpenSwipeableDrawer={props.setOpenSwipeableDrawer}
             setShowCallingModal={props.setShowCallingModal}
-          />
+          /> */}
+          {renderDetail()}
         </StyledBox>
       </SwipeableDrawer>
     </Root>
   );
 };
 
-export default SwipeableUserDetail;
+const mapStateToProps = (state) => {
+  return { clickedState: state.clickedUserState };
+};
+
+export default connect(mapStateToProps)(SwipeableUserDetail);

@@ -565,47 +565,100 @@ const WorldMap = (props) => {
             </Tablet> */}
 
             <Mobile>
-              {/* <div style={{ height: '100vh', width: '100%' }}>
+              <div>
                 <ReactMapGL
                   {...viewport}
-                  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
+                  // {...worldMapSettings}
+                  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
                   width='100%'
-                  height='100vh'
-                  mapStyle={process.env.REACT_APP_MAPBOX_STYLE}
+                  height='90vh'
+                  mapStyle='mapbox://styles/yabbee/ckvjrmck2h1pb14mv91m5cuk7'
                   onViewportChange={(viewport) => setViewport(viewport)}
                 >
                   <UsersMarker
                     socket={socket}
                     setShowCallingModal={setShowCallingModal}
-                    setIsUserIconClicked={setIsUserIconClicked}
-                    setOpenSwipeableDrawer={setOpenSwipeableDrawer}
-                    userInfo={userInfo}
-                    setUserInfo={setUserInfo}
-                    setShowSwipeable={setShowSwipeable}
+                    // setIsUserIconClicked={setIsUserIconClicked}
+                    // userInfo={userInfo}
+                    // setUserInfo={setUserInfo}
                   />
-                  {showSwipeable && !props.mediaState.callAccepted ? (
-                    <SwipeableUserDetail
-                      socket={socket}
-                      userInfo={userInfo}
-                      isUserIconClicked={isUserIconClicked}
-                      openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
-                      setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
-                      setShowCallingModal={setShowCallingModal}
-                    />
-                  ) : null}
+                  {/* <RightPositionedUserDetail
+                    socket={socket}
+                    // isUserIconClicked={isUserIconClicked}
+                    // userInfo={userInfo}
+                    setShowCallingModal={setShowCallingModal}
+                    worldMapSettings={worldMapSettings}
+                    setWorldMapSetting={setWorldMapSetting}
+                    showVideoModal={showVideoModal}
+                    setShowVideoModal={setShowVideoModal}
+                    showSendMessageModal={showSendMessageModal}
+                    setShowSendMessageModal={setShowSendMessageModal}
+                  /> */}
+                  {/* <UserDetail
+                    socket={socket}
+                    isUserIconClicked={isUserIconClicked}
+                    userInfo={userInfo}
+                    setShowCallingModal={setShowCallingModal}
+                  /> */}
                 </ReactMapGL>
-                <CallingModal socket={socket} show={showCallingModal} setShowCallingModal={setShowCallingModal} />
+                {/* {renderMap()} */}
+                <CallingModal
+                  socket={socket}
+                  show={showCallingModal}
+                  setShowCallingModal={setShowCallingModal}
+                  show1on1={show1on1}
+                  setShow1on1={setShow1on1}
+                />
                 <FullScreen1on1Modal
                   socket={socket}
                   show1on1={show1on1}
                   setShow1on1={setShow1on1}
                   fullscreen1on1Modal={fullscreen1on1Modal}
+                  // setShowAfterFinishingModal={setShowAfterFinishingModal}
+                  setShowRatingModal={setShowRatingModal}
                 />
-              </div> */}
-              <div>
+                <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
+                <SendMessageModal
+                  message={message}
+                  setMessage={setMessage}
+                  showSendMessageModal={showSendMessageModal}
+                  setShowSendMessageModal={setShowSendMessageModal}
+                />
+                <EditUserInfo />
+                {/* <ReplyMessageModal
+                  showReplyMessageModal={showReplyMessageModal}
+                  setShowReplyMessageModal={setShowReplyMessageModal}
+                  replyMessage={replyMessage}
+                  setReplyMessage={setReplyMessage}
+                /> */}
+                <Inbox />
+                {renderMessageWindow()}
+                {/* {renderSelectedVideo()} */}
+                {renderRatingModal()}
+                {/* <AfterFinishingModal
+                  showAfterFinishingModal={showAfterFinishingModal}
+                  setShowAfterFinishingModal={setShowAfterFinishingModal}
+                /> */}
+                {renderAlerts()}
+                {showSwipeable && !props.mediaState.callAccepted ? (
+                  <SwipeableUserDetail
+                    socket={socket}
+                    // userInfo={userInfo}
+                    // isUserIconClicked={isUserIconClicked}
+                    openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
+                    setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
+                    setShowCallingModal={setShowCallingModal}
+                    showVideoModal={showVideoModal}
+                    setShowVideoModal={setShowVideoModal}
+                    showSendMessageModal={showSendMessageModal}
+                    setShowSendMessageModal={setShowSendMessageModal}
+                  />
+                ) : null}
+              </div>
+              {/* <div>
                 Sorry for the inconvinience. Conversation on mobile device is not available now. Please access by laptop
                 or desktop device.
-              </div>
+              </div> */}
             </Mobile>
 
             {/* </div> */}
