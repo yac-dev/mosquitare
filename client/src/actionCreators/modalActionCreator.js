@@ -11,3 +11,10 @@ export const setOpenEditModalActionCreator = (bool) => {
     payload: bool,
   };
 };
+
+export const setSignupModalActionCreator = (bool) => {
+  return {
+    type: 'SET_SIGNUP_MODAL',
+    payload: bool,
+  };
+};

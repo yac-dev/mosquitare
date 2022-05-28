@@ -68,10 +68,11 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import SignupWrapper from './Signup/SignupWrapper';
 import Login from './Signup/Login';
 
-// components
+// ac
 import { logoutActionCreator } from '../actionCreators/authActionCreators';
 import { showInboxModalActionCreator } from '../actionCreators/modalActionCreator';
 import { clickNavMessageIconActionCreator } from '../actionCreators/clickActionCreator';
+import { setSignupModalActionCreator } from '../actionCreators/modalActionCreator';
 //ac
 
 const theme = createTheme({
@@ -473,6 +474,7 @@ const Navbar = (props) => {
             startIcon={<BorderColorIcon />}
             sx={{ color: 'white' }}
             onClick={() => {
+              props.setSignupModalActionCreator(true);
               setShowSignupModal(true);
               setShowLoginModal(false);
             }}
@@ -696,11 +698,12 @@ const Navbar = (props) => {
 // };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState, mediaState: state.mediaState };
+  return { authState: state.authState, mediaState: state.mediaState, modalState: state.modalState };
 };
 
 export default connect(mapStateToProps, {
   logoutActionCreator,
   showInboxModalActionCreator,
   clickNavMessageIconActionCreator,
+  setSignupModalActionCreator,
 })(Navbar);

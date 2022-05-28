@@ -13,6 +13,7 @@ import Stack from '@mui/material/Stack';
 // ac
 import { signupActionCreator } from '../../actionCreators/authActionCreators';
 import { alertActionCreator } from '../../actionCreators/alertsActionCreator';
+import { setSignupModalActionCreator } from '../../actionCreators/modalActionCreator';
 
 const SignupWrapper = (props) => {
   // basic info用
@@ -90,7 +91,13 @@ const SignupWrapper = (props) => {
     if (amIFillingBasic) {
       return (
         <>
-          <Button variant='secondary' onClick={() => props.setShowSignupModal(false)}>
+          <Button
+            variant='secondary'
+            onClick={() => {
+              props.setSignupModalActionCreator(false);
+              props.setShowSignupModal(false);
+            }}
+          >
             Close
           </Button>
           <Button variant='primary' onClick={() => setAmIFillingBasic(false)}>
@@ -118,7 +125,7 @@ const SignupWrapper = (props) => {
       !email ||
       !password ||
       !passwordConfirmation ||
-      !selfIntroduction ||
+      // !selfIntroduction ||
       selfIntroduction.length >= 301 ||
       !learningLanguages.length ||
       !nativeLanguages.length ||
@@ -138,9 +145,9 @@ const SignupWrapper = (props) => {
       if (passwordConfirmation === '') {
         props.alertActionCreator('Please enter your password again.', 'error');
       }
-      if (selfIntroduction === '') {
-        props.alertActionCreator('Please write your self-introduction.', 'error');
-      }
+      // if (selfIntroduction === '') {
+      //   props.alertActionCreator('Please write your self-introduction.', 'error');
+      // }
       if (selfIntroduction.length >= 301) {
         props.alertActionCreator('Self-Introduction is limited at most 300 characters.', 'error');
       }
@@ -211,4 +218,6 @@ const mapStateToProps = (state) => {
   return { alertsState: state.alertsState };
 };
 
-export default connect(mapStateToProps, { signupActionCreator, alertActionCreator })(SignupWrapper);
+export default connect(mapStateToProps, { signupActionCreator, alertActionCreator, setSignupModalActionCreator })(
+  SignupWrapper
+);

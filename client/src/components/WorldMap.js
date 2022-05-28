@@ -45,6 +45,7 @@ import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreato
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
 
 import { alertActionCreator } from '../actionCreators/alertsActionCreator';
+import { setSignupModalActionCreator } from '../actionCreators/modalActionCreator';
 // socket events
 import { I_GOT_SOCKET_ID } from '../actionCreators/socketEvents';
 import mapboxgl from 'mapbox-gl';
@@ -399,46 +400,86 @@ const WorldMap = (props) => {
     if (!props.authState.currentUser) {
       if (props.usersState.length) {
         return (
-          <Default>
-            <div>
-              <ReactMapGL
-                {...viewport}
-                // {...worldMapSettings}
-                mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-                width='100%'
-                height='90vh'
-                mapStyle='mapbox://styles/yabbee/ckvjrmck2h1pb14mv91m5cuk7'
-                onViewportChange={(viewport) => setViewport(viewport)}
-              >
-                <UsersMarker
-                  socket={socket}
-                  setShowCallingModal={setShowCallingModal}
-                  // setIsUserIconClicked={setIsUserIconClicked}
-                  // userInfo={userInfo}
-                  // setUserInfo={setUserInfo}
-                />
-                <RightPositionedUserDetail
-                  socket={socket}
-                  // isUserIconClicked={isUserIconClicked}
-                  // userInfo={userInfo}
-                  setShowCallingModal={setShowCallingModal}
-                  worldMapSettings={worldMapSettings}
-                  setWorldMapSetting={setWorldMapSetting}
-                  showVideoModal={showVideoModal}
-                  setShowVideoModal={setShowVideoModal}
-                  showSendMessageModal={showSendMessageModal}
-                  setShowSendMessageModal={setShowSendMessageModal}
-                />
-                {/* <UserDetail
+          <>
+            <Default>
+              <div>
+                <ReactMapGL
+                  {...viewport}
+                  // {...worldMapSettings}
+                  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                  width='100%'
+                  height='90vh'
+                  mapStyle='mapbox://styles/yabbee/ckvjrmck2h1pb14mv91m5cuk7'
+                  onViewportChange={(viewport) => setViewport(viewport)}
+                >
+                  <UsersMarker
+                    socket={socket}
+                    setShowCallingModal={setShowCallingModal}
+                    // setIsUserIconClicked={setIsUserIconClicked}
+                    // userInfo={userInfo}
+                    // setUserInfo={setUserInfo}
+                  />
+                  <RightPositionedUserDetail
+                    socket={socket}
+                    // isUserIconClicked={isUserIconClicked}
+                    // userInfo={userInfo}
+                    setShowCallingModal={setShowCallingModal}
+                    worldMapSettings={worldMapSettings}
+                    setWorldMapSetting={setWorldMapSetting}
+                    showVideoModal={showVideoModal}
+                    setShowVideoModal={setShowVideoModal}
+                    showSendMessageModal={showSendMessageModal}
+                    setShowSendMessageModal={setShowSendMessageModal}
+                  />
+                  {/* <UserDetail
                     socket={socket}
                     isUserIconClicked={isUserIconClicked}
                     userInfo={userInfo}
                     setShowCallingModal={setShowCallingModal}
                   /> */}
-              </ReactMapGL>
-            </div>
-            <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
-          </Default>
+                </ReactMapGL>
+              </div>
+              <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
+            </Default>
+
+            <Mobile>
+              <div>
+                <ReactMapGL
+                  {...viewport}
+                  // {...worldMapSettings}
+                  mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+                  width='100%'
+                  height='90vh'
+                  mapStyle='mapbox://styles/yabbee/ckvjrmck2h1pb14mv91m5cuk7'
+                  onViewportChange={(viewport) => setViewport(viewport)}
+                >
+                  <UsersMarker
+                    socket={socket}
+                    setShowCallingModal={setShowCallingModal}
+                    // setIsUserIconClicked={setIsUserIconClicked}
+                    // userInfo={userInfo}
+                    // setUserInfo={setUserInfo}
+                  />
+                </ReactMapGL>
+                {/* {renderMap()} */}
+                <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
+                {showSwipeable && !props.mediaState.callAccepted && !props.modalState.signupModal ? (
+                  <SwipeableUserDetail
+                    socket={socket}
+                    // userInfo={userInfo}
+                    // isUserIconClicked={isUserIconClicked}
+                    openSwipeableDrawer={openSwipeableDrawer} // 必要。状態はこのstateで管理している。
+                    setOpenSwipeableDrawer={setOpenSwipeableDrawer} // 必要。trueにするのはeach userでだが、outsideをclickして閉じるのにここで渡しておく必要がある。
+                    setShowCallingModal={setShowCallingModal}
+                    showVideoModal={showVideoModal}
+                    setShowVideoModal={setShowVideoModal}
+                    showSendMessageModal={showSendMessageModal}
+                    setShowSendMessageModal={setShowSendMessageModal}
+                  />
+                ) : null}
+              </div>
+            </Mobile>
+          </>
         );
       }
     } else {
@@ -683,6 +724,7 @@ const mapStateToProps = (state) => {
     alertsState: state.alertsState,
     selectedVideoState: state.selectedVideoState,
     clickedState: state.clickedUserState,
+    modalState: state.modalState,
   };
 };
 

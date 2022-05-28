@@ -126,7 +126,25 @@ export const callActionCreator = (socket, oppositeSocketId, exchangingLanguages)
   console.log('Im calling...');
   const callerUserInfo = getState().authState.currentUser;
   const me = getState().authState.currentUser.socketId;
-  const peerInitiator = new Peer({ initiator: true, stream: myVideoStreamObject, trickle: false });
+  const peerInitiator = new Peer({
+    initiator: true,
+    stream: myVideoStreamObject,
+    trickle: false,
+    config: {
+      iceServers: [
+        {
+          urls: 'stun:numb.viagenie.ca',
+          username: 'sultan1640@gmail.com',
+          credential: '98376683',
+        },
+        {
+          urls: 'turn:numb.viagenie.ca',
+          username: 'sultan1640@gmail.com',
+          credential: '98376683',
+        },
+      ],
+    },
+  });
   dispatch({
     type: HOLD_MY_INITIATED_PEER,
     payload: peerInitiator,
@@ -153,7 +171,25 @@ export const listenCallActionCreator = (socket, setShowCallingModal, setShowVide
       payload: { signalData, whoIsCalling, callerUserInfo, exchangingLanguages },
     });
     const { myVideoStreamObject } = getState().mediaState;
-    const peerReciever = new Peer({ initiator: false, stream: myVideoStreamObject, trickle: false });
+    const peerReciever = new Peer({
+      initiator: false,
+      stream: myVideoStreamObject,
+      trickle: false,
+      config: {
+        iceServers: [
+          {
+            urls: 'stun:numb.viagenie.ca',
+            username: 'sultan1640@gmail.com',
+            credential: '98376683',
+          },
+          {
+            urls: 'turn:numb.viagenie.ca',
+            username: 'sultan1640@gmail.com',
+            credential: '98376683',
+          },
+        ],
+      },
+    });
     const recieverUserInfo = getState().authState.currentUser;
     const me = getState().authState.currentUser.socketId;
     // peerReciever.on('signal', (signalData) => {

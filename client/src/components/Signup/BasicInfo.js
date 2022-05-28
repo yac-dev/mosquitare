@@ -1,10 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Button, Form, TextArea } from 'semantic-ui-react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import EmailIcon from '@mui/icons-material/Email';
 import PasswordIcon from '@mui/icons-material/Password';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+
+import { setSignupModalActionCreator } from '../../actionCreators/modalActionCreator';
 
 const BasicInfo = (props) => {
   const selfIntroductionLength = () => {
@@ -68,7 +71,7 @@ const BasicInfo = (props) => {
           value={props.passwordConfirmation}
         />
       </Form.Field>
-      <Form.Field style={{ marginBottom: '20px' }}>
+      {/* <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <EmojiPeopleIcon />
           &nbsp; Self-Introduction&nbsp;(Not required)&nbsp;
@@ -79,10 +82,11 @@ const BasicInfo = (props) => {
           onChange={(event) => props.setSelfIntroduction(event.target.value)}
           value={props.selfIntroduction}
         />
-      </Form.Field>
+      </Form.Field> */}
+
       {/* <Button type='submit'>Submit</Button> */}
     </Form>
   );
 };
 
-export default BasicInfo;
+export default connect(null, setSignupModalActionCreator)(BasicInfo);
