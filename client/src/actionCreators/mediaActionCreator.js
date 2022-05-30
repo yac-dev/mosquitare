@@ -105,6 +105,26 @@ export const getMediaActionCreator =
       });
   };
 
+export const isAvailableToFalseActionCreator = () => async (dispatch, getState) => {
+  const jwtToken = localStorage.getItem('mosquitare token');
+  console.log('here is jwt', jwtToken);
+  const result = await mosquitareAPI.patch(
+    `/users/isavailablenow`,
+    {},
+    {
+      headers: {
+        authorization: `Bearer ${jwtToken}`,
+      },
+    }
+  );
+  const { user } = result.data;
+  console.log(user, 'error part working??');
+  dispatch({
+    type: 'UPDATE_ISAVAILABLENOW_TO_FALSE',
+    payload: user,
+  });
+};
+
 // stun serverの設定
 // config: {
 //   iceServers: [
@@ -131,16 +151,26 @@ export const callActionCreator = (socket, oppositeSocketId, exchangingLanguages)
     stream: myVideoStreamObject,
     trickle: false,
     config: {
+      // iceServers: [
+      //   {
+      //     urls: 'stun:numb.viagenie.ca',
+      //     username: 'sultan1640@gmail.com',
+      //     credential: '98376683',
+      //   },
+      //   {
+      //     urls: 'turn:numb.viagenie.ca',
+      //     username: 'sultan1640@gmail.com',
+      //     credential: '98376683',
+      //   },
+      // ],
       iceServers: [
         {
-          urls: 'stun:numb.viagenie.ca',
-          username: 'sultan1640@gmail.com',
-          credential: '98376683',
+          urls: 'stun:stun.lampostice.space',
         },
         {
-          urls: 'turn:numb.viagenie.ca',
-          username: 'sultan1640@gmail.com',
-          credential: '98376683',
+          urls: 'turn:turn.lampostice.space',
+          username: process.env.REACT_APP_TURN_SERVER_USERNAME,
+          credential: process.env.REACT_APP_TURN_SERVER_CREDENTIAL,
         },
       ],
     },
@@ -176,16 +206,26 @@ export const listenCallActionCreator = (socket, setShowCallingModal, setShowVide
       stream: myVideoStreamObject,
       trickle: false,
       config: {
+        // iceServers: [
+        //   {
+        //     urls: 'stun:numb.viagenie.ca',
+        //     username: 'sultan1640@gmail.com',
+        //     credential: '98376683',
+        //   },
+        //   {
+        //     urls: 'turn:numb.viagenie.ca',
+        //     username: 'sultan1640@gmail.com',
+        //     credential: '98376683',
+        //   },
+        // ],
         iceServers: [
           {
-            urls: 'stun:numb.viagenie.ca',
-            username: 'sultan1640@gmail.com',
-            credential: '98376683',
+            urls: 'stun:stun.lampostice.space',
           },
           {
-            urls: 'turn:numb.viagenie.ca',
-            username: 'sultan1640@gmail.com',
-            credential: '98376683',
+            urls: 'turn:turn.lampostice.space',
+            username: 'guest',
+            credential: 'somepassword',
           },
         ],
       },

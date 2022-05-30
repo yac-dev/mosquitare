@@ -25,6 +25,7 @@ import SpeedDial from '@mui/material/SpeedDial';
 // import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
+// import HandshakeIcon from '@mui/icons-material/Handshake';
 import SendIcon from '@mui/icons-material/Send';
 import NoteIcon from '@mui/icons-material/Note';
 import RecordVoiceOverIcon from '@mui/icons-material/RecordVoiceOver';
@@ -33,6 +34,7 @@ import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
+import CircularProgress from '@mui/material/CircularProgress';
 import PortraitIcon from '@mui/icons-material/Portrait';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 
@@ -154,7 +156,7 @@ const actions = [
   {
     // color yellow
     icon: <PortraitIcon />,
-    name: 'Your Screen',
+    name: 'My Screen',
     operation: 'YourScreen',
     color: 'rgb(255, 217, 0)',
     hoverColor: 'rgb(255, 228, 77)',
@@ -282,7 +284,14 @@ const VideosWrapper = (props) => {
 
   useEffect(() => {
     if (props.show1on1) {
-      props.alertActionCreator(`Let's talk in ${props.mediaState.currentLanguage.name} at first!`, 'success');
+      props.alertActionCreator(
+        'Please wait for a few seconds. Establishing a connection with your partner.',
+        'info',
+        7000
+      );
+      setTimeout(() => {
+        props.alertActionCreator(`OK! Let's talk in ${props.mediaState.currentLanguage.name} at first!`, 'success');
+      }, 7000);
     }
   }, [props.show1on1]);
 
@@ -348,56 +357,51 @@ const VideosWrapper = (props) => {
             <video className='myvideo' playsInline muted ref={myVideoRef} autoPlay />
           </div>
         </Draggable>
-        <ThemeProvider theme={theme}>
-          <SpeedDial
-            ariaLabel='SpeedDial controlled open example'
-            sx={{
-              position: 'absolute',
-              top: { xxs: '0px', xs: '5px', sm: '10px', md: '20px', lg: '20px' },
-              left: { xxs: '0px', xs: '5px', sm: '10px', md: '20px', lg: '20px' },
-            }}
-            icon={<WidgetsIcon />}
-            onClose={handleClose}
-            onOpen={handleOpen}
-            open={open}
-            direction={direction}
-            FabProps={{
-              // sx: {
-              //   bgcolor: 'rgb(110, 209, 33)',
-              //   '&:hover': {
-              //     bgcolor: 'rgb(145, 237, 74)',
-              //   },
-              // },
-              size: 'small',
-            }}
-          >
-            {actions.map((action) => (
-              <SpeedDialAction
-                key={action.name}
-                icon={action.icon}
-                tooltipTitle={action.name}
-                // tooltipOpen
-                FabProps={{
-                  sx: {
-                    bgcolor: action.color,
-                    '&:hover': {
-                      bgcolor: action.hoverColor,
-                    },
-                  },
-                }}
-                onClick={(event) => onWidgetIconClick(event, action.operation)}
-              />
-            ))}
-          </SpeedDial>
-        </ThemeProvider>
 
         <div className='buttons-wrapper'>
           <Stack direction={'row'} spacing={3} alignItems='baseline'>
-            {/* <Tooltip title='Check Status!!'>
-              <SwitchLangIconButton onClick={() => props.setOpenLanguageStatus(true)}>
-                <TranslateOutlinedIcon style={{ color: 'white' }} />
-              </SwitchLangIconButton>
-            </Tooltip> */}
+            <ThemeProvider theme={theme}>
+              <SpeedDial
+                ariaLabel='SpeedDial controlled open example'
+                // sx={{
+                //   position: 'absolute',
+                //   top: { xxs: '0px', xs: '5px', sm: '10px', md: '20px', lg: '20px' },
+                //   left: { xxs: '0px', xs: '5px', sm: '10px', md: '20px', lg: '20px' },
+                // }}
+                icon={<WidgetsIcon />}
+                onClose={handleClose}
+                onOpen={handleOpen}
+                open={open}
+                direction={direction}
+                FabProps={{
+                  // sx: {
+                  //   bgcolor: 'rgb(110, 209, 33)',
+                  //   '&:hover': {
+                  //     bgcolor: 'rgb(145, 237, 74)',
+                  //   },
+                  // },
+                  size: 'small',
+                }}
+              >
+                {actions.map((action) => (
+                  <SpeedDialAction
+                    key={action.name}
+                    icon={action.icon}
+                    tooltipTitle={action.name}
+                    // tooltipOpen
+                    FabProps={{
+                      sx: {
+                        bgcolor: action.color,
+                        '&:hover': {
+                          bgcolor: action.hoverColor,
+                        },
+                      },
+                    }}
+                    onClick={(event) => onWidgetIconClick(event, action.operation)}
+                  />
+                ))}
+              </SpeedDial>
+            </ThemeProvider>
             <ThemeProvider theme={theme}>
               <Tooltip title='Finish Call'>
                 <LogoutIconButton onClick={() => setShow(true)}>
@@ -407,13 +411,22 @@ const VideosWrapper = (props) => {
                 </LogoutIconButton>
               </Tooltip>
             </ThemeProvider>
-            {/* <Tooltip title='Volume'>
-              <MicIconButton>
-                <MicIcon size='large' />
-              </MicIconButton>
-            </Tooltip> */}
           </Stack>
         </div>
+        {/*
+        <div className='buttons-wrapper'>
+          <Stack direction={'row'} spacing={3} alignItems='baseline'>
+            <ThemeProvider theme={theme}>
+              <Tooltip title='Finish Call'>
+                <LogoutIconButton onClick={() => setShow(true)}>
+                  <LogoutIcon
+                    sx={{ color: 'white', fontSize: { xxs: '15px', xs: '15px', sm: '20px', md: '20px', lg: '20px' } }}
+                  />
+                </LogoutIconButton>
+              </Tooltip>
+            </ThemeProvider>
+          </Stack>
+        </div> */}
         {/* <SwitchLangIconButton>
               <TranslateOutlinedIcon style={{ color: 'white', fontSize: '30px' }} />
             </SwitchLangIconButton> */}

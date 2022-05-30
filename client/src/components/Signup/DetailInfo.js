@@ -310,7 +310,7 @@ const DetailInfo = (props) => {
       <div className='signup-learning-lang' style={{ marginBottom: '20px', color: 'black' }}>
         <label>
           <TranslateIcon />
-          &nbsp;Learning Language
+          &nbsp;Learning Language (Up to 4 languages)
         </label>
         {/* <Dropdown
           placeholder='Which languages are you learning?'
@@ -352,7 +352,7 @@ const DetailInfo = (props) => {
       <div className='signup-native-lang' style={{ marginBottom: '20px', color: 'black' }}>
         <label>
           <TranslateIcon />
-          &nbsp;Native Language
+          &nbsp;Fluent Language (Up to 4 languages)
         </label>
         {/* <Dropdown
           placeholder='Which languages do you speak fluently?'

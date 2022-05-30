@@ -4,7 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 import ReactMapGL from 'react-map-gl';
 import store from '../store';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-
+import { mosquitareAPI } from '../apis/mosquitare';
 import { Button } from 'semantic-ui-react';
 // components
 import CallingModal from './CallingModal';
@@ -43,6 +43,7 @@ import { listenCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { recieveCanceledCallActionCreator } from '../actionCreators/mediaActionCreator';
 import { getMeetingsActionCreator } from '../actionCreators/meetingsActionCreator';
 import { callActionCreator } from '../actionCreators/mediaActionCreator';
+import { isAvailableToFalseActionCreator } from '../actionCreators/mediaActionCreator';
 
 import { alertActionCreator } from '../actionCreators/alertsActionCreator';
 import { setSignupModalActionCreator } from '../actionCreators/modalActionCreator';
@@ -181,6 +182,16 @@ const WorldMap = (props) => {
   //   e.preventDefault();
   //   e.returnValue = '';
   // };
+
+  // useEffect(() => {
+  //   if (window.outerWidth < 600) {
+  //     if (props.authState.currentUser) {
+  //       if (props.authState.currentUser.isAvailableNow) {
+  //         props.isAvailableToFalseActionCreator();
+  //       }
+  //     }
+  //   }
+  // }, [props.authState.currentUser]);
 
   useEffect(() => {
     if (localStorage.getItem('updated user image')) {
@@ -737,4 +748,5 @@ export default connect(mapStateToProps, {
   getMeetingsActionCreator,
   callActionCreator,
   alertActionCreator,
+  isAvailableToFalseActionCreator,
 })(WorldMap);

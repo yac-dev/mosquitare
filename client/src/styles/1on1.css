@@ -118,7 +118,7 @@
   .buttons-wrapper {
     position: absolute;
     top: 5px;
-    right: 5px;
+    left: 5px;
   }
 
   .switch-button {
@@ -185,10 +185,16 @@
     /* margin: 0 auto; */
   }
 
-  .buttons-wrapper {
+  /* .buttons-wrapper {
     position: absolute;
     top: 20px;
     right: 20px;
+  } */
+
+  .buttons-wrapper {
+    position: absolute;
+    top: 20px;
+    left: 20px;
   }
 
   .switch-button {

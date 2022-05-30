@@ -59,7 +59,15 @@ const BasicUserInfo = (props) => {
         </div>
       );
     } else {
-      if (props.user._id === props.authState.currentUser._id) {
+      if (!props.authState.currentUser.isAvailableNow) {
+        return (
+          <div style={{ display: ' flex', justifyContent: 'center' }}>
+            <p style={{ fontWeight: 'bold' }}>
+              Sorry for the inconvenience. Please use Laptop or Desktop PC to have a conversation.
+            </p>
+          </div>
+        );
+      } else if (props.user._id === props.authState.currentUser._id) {
         return (
           <div style={{ textAlign: 'center' }}>
             <Tooltip title='Under construction 🛠🚜 Please wait a bit.'>
