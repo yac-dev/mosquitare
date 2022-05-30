@@ -11,6 +11,8 @@ import CallingModal from './CallingModal';
 import FullScreen1on1Modal from './Modal/FullScreen1on1Modal';
 import AfterFinishingModal from './AfterFinishingModal';
 import RatingModal from './RatingModal';
+import Clocks from './Clock/Clocks';
+
 // import VerticallyCenteredModal from './Modal/VerticallyCenteredModal';
 // import FullScreenMeetingModal from './Modal/FullScreenMeetingModal';
 import { Stack } from '@mui/material';
@@ -430,6 +432,7 @@ const WorldMap = (props) => {
                     // userInfo={userInfo}
                     // setUserInfo={setUserInfo}
                   />
+                  <Clocks />
                   <RightPositionedUserDetail
                     socket={socket}
                     // isUserIconClicked={isUserIconClicked}
@@ -471,6 +474,7 @@ const WorldMap = (props) => {
                     // userInfo={userInfo}
                     // setUserInfo={setUserInfo}
                   />
+                  <Clocks />
                 </ReactMapGL>
                 {/* {renderMap()} */}
                 <SelectedVideoModal showVideoModal={showVideoModal} setShowVideoModal={setShowVideoModal} />
@@ -515,6 +519,7 @@ const WorldMap = (props) => {
                     // userInfo={userInfo}
                     // setUserInfo={setUserInfo}
                   />
+                  <Clocks />
                   <RightPositionedUserDetail
                     socket={socket}
                     // isUserIconClicked={isUserIconClicked}
@@ -634,6 +639,7 @@ const WorldMap = (props) => {
                     // userInfo={userInfo}
                     // setUserInfo={setUserInfo}
                   />
+                  <Clocks />
                   {/* <RightPositionedUserDetail
                     socket={socket}
                     // isUserIconClicked={isUserIconClicked}
