@@ -91,7 +91,7 @@ const Clock = (props) => {
           </div>
         </Popover>
         <AccessTimeIcon
-          sx={{ fontSize: '30px', color: 'rgb(170, 170, 170)' }}
+          sx={{ fontSize: '20px', color: 'rgb(170, 170, 170)' }}
           style={{ cursor: 'pointer' }}
           onMouseEnter={handlePopoverOpen}
           onMouseLeave={handlePopoverClose}
