@@ -52,6 +52,28 @@ import { setToPrivateActionCreator } from '../../actionCreators/conversationPriv
 import '../../styles/userpage.css';
 import { alertActionCreator } from '../../actionCreators/alertsActionCreator';
 
+import { useMediaQuery } from 'react-responsive';
+
+const Desktop = ({ children }) => {
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  return isDesktop ? children : null;
+};
+
+const Tablet = ({ children }) => {
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+  return isTablet ? children : null;
+};
+
+const Mobile = ({ children }) => {
+  const isMobile = useMediaQuery({ maxWidth: 599 });
+  return isMobile ? children : null;
+};
+
+const Default = ({ children }) => {
+  const isNotMobile = useMediaQuery({ minWidth: 768 });
+  return isNotMobile ? children : null;
+};
+
 const TranscriptIconButton = styled(IconButton)(({ theme }) => ({
   // color: theme.palette.getContrastText(purple[500]),
   backgroundColor: 'rgb(110, 209, 33)',
@@ -331,69 +353,70 @@ const DisplayVideo = (props) => {
   return (
     // <>{renderVideoSrc()}</>
     <>
-      <div
-        className='displaying-video-wrapper'
-        style={{ width: '80vw', margin: '0 auto', backgroundColor: 'rgb(0, 55, 110)' }}
-      >
-        <div style={{ display: 'flex', padding: '20px' }}>
-          <div className='users-information' style={{ display: 'flex', gap: '20px', flex: 7 }}>
-            <div
-              className='user-info-at-video'
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              <Badge
-                overlap='circular'
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                badgeContent={<SmallAvatar src={props.conversation.users[0].nationalities[0].flagPics[0]} />}
+      <Default>
+        <div
+          className='displaying-video-wrapper'
+          style={{ width: '80vw', margin: '0 auto', backgroundColor: 'rgb(0, 55, 110)' }}
+        >
+          <div style={{ display: 'flex', padding: '20px' }}>
+            <div className='users-information' style={{ display: 'flex', gap: '20px', flex: 7 }}>
+              <div
+                className='user-info-at-video'
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
               >
-                <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[0].name}</Avatar>
-              </Badge>
+                <Badge
+                  overlap='circular'
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  badgeContent={<SmallAvatar src={props.conversation.users[0].nationalities[0].flagPics[0]} />}
+                >
+                  <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[0].name}</Avatar>
+                </Badge>
+              </div>
+              <div
+                className='user-info-at-video'
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Badge
+                  overlap='circular'
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  badgeContent={<SmallAvatar src={props.conversation.users[1].nationalities[0].flagPics[0]} />}
+                >
+                  <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[1].name}</Avatar>
+                </Badge>
+              </div>
             </div>
             <div
-              className='user-info-at-video'
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-              }}
+              className='status-info'
+              style={{ display: 'flex', gap: '20px', flex: 3, justifyContent: 'center', alignItems: 'center' }}
             >
-              <Badge
-                overlap='circular'
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                badgeContent={<SmallAvatar src={props.conversation.users[1].nationalities[0].flagPics[0]} />}
-              >
-                <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[1].name}</Avatar>
-              </Badge>
-            </div>
-          </div>
-          <div
-            className='status-info'
-            style={{ display: 'flex', gap: '20px', flex: 3, justifyContent: 'center', alignItems: 'center' }}
-          >
-            <div>
-              {/* <IconButton>
+              <div>
+                {/* <IconButton>
                 <CalendarTodayIcon sx={{ color: 'white' }} />
               </IconButton> */}
-              {timeSince(new Date(props.conversation.createdAt))} ago
+                {timeSince(new Date(props.conversation.createdAt))} ago
+              </div>
+              {renderPublicOrPrivate()}
             </div>
-            {renderPublicOrPrivate()}
           </div>
-        </div>
-        <video
-          className='displaying-video-1'
-          playsInline
-          controls
-          disablePictureInPicture
-          controlslist='nodownload noplaybackrate'
-          // width='640px'
-          // height='320px'
-          // style={{ marginBottom: '20px' }}
-        >
-          <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
-        </video>
-        {/* <div className='users-information'>
+          <video
+            className='displaying-video-1'
+            playsInline
+            controls
+            disablePictureInPicture
+            controlslist='nodownload noplaybackrate'
+            // width='640px'
+            // height='320px'
+            // style={{ marginBottom: '20px' }}
+          >
+            <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
+          </video>
+          {/* <div className='users-information'>
           <div
             className='user-info-at-video'
             style={{
@@ -441,46 +464,49 @@ const DisplayVideo = (props) => {
             />
           </div>
         </div> */}
-        <div className='video-apps' style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px' }}>
-          <div>
-            <Tooltip title='Like' arrow>
-              <IconButton onClick={() => onLikeClick(props.conversation._id)}>
-                <ThumbUpAltIcon sx={{ color: 'white' }} />
+          <div
+            className='video-apps'
+            style={{ display: 'flex', justifyContent: 'center', gap: '20px', padding: '10px' }}
+          >
+            <div>
+              <Tooltip title='Like' arrow>
+                <IconButton onClick={() => onLikeClick(props.conversation._id)}>
+                  <ThumbUpAltIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+              {Object.values(props.likesState).length}&nbsp;likes
+            </div>
+            <div>
+              <Tooltip title='Write a comment' arrow>
+                <IconButton onClick={() => setOpenComments(true)}>
+                  <CommentIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+              {props.commentsState.length}&nbsp;Comments
+            </div>
+            <div>
+              <Tooltip title='Conversation transcript' arrow>
+                <IconButton onClick={() => setOpenTranscripts(true)}>
+                  <RecordVoiceOverIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+              Transcript
+            </div>
+            <div>
+              <IconButton onClick={() => setOpenFetchedDocEditor(true)}>
+                <InsertDriveFileIcon sx={{ color: 'white' }} />
               </IconButton>
-            </Tooltip>
-            {Object.values(props.likesState).length}&nbsp;likes
-          </div>
-          <div>
-            <Tooltip title='Write a comment' arrow>
-              <IconButton onClick={() => setOpenComments(true)}>
-                <CommentIcon sx={{ color: 'white' }} />
-              </IconButton>
-            </Tooltip>
-            {props.commentsState.length}&nbsp;Comments
-          </div>
-          <div>
-            <Tooltip title='Conversation transcript' arrow>
-              <IconButton onClick={() => setOpenTranscripts(true)}>
-                <RecordVoiceOverIcon sx={{ color: 'white' }} />
-              </IconButton>
-            </Tooltip>
-            Transcript
-          </div>
-          <div>
-            <IconButton onClick={() => setOpenFetchedDocEditor(true)}>
-              <InsertDriveFileIcon sx={{ color: 'white' }} />
-            </IconButton>
-            Doc
-          </div>
-          <div>
-            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
-              <IconButton>
-                <GroupsIcon sx={{ color: 'white' }} />
-              </IconButton>
-            </Tooltip>
-            Contributors
-          </div>
-          {/* <div>
+              Doc
+            </div>
+            <div>
+              <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+                <IconButton>
+                  <GroupsIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+              Contributors
+            </div>
+            {/* <div>
             <Tooltip title='Google Translate (Under construction 🚜🛠 Please wait a bit.)' arrow>
               <IconButton>
                 <GTranslateIcon sx={{ color: 'white' }} />
@@ -489,39 +515,153 @@ const DisplayVideo = (props) => {
             Translate
           </div> */}
 
-          <div>
-            <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+            <div>
+              <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+                <IconButton>
+                  <ShareIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+              Share
+            </div>
+          </div>
+
+          <Transcripts openTranscripts={openTranscripts} setOpenTranscripts={setOpenTranscripts} />
+
+          <Comments openComments={openComments} setOpenComments={setOpenComments} />
+
+          <FetchedDocEditor
+            openFetchedDocEditor={openFetchedDocEditor}
+            setOpenFetchedDocEditor={setOpenFetchedDocEditor}
+          />
+          {renderAlerts()}
+          <Modal show={show} onHide={() => setShow(false)} backdrop='static' keyboard={false}>
+            <Modal.Body>
+              <div style={{ color: 'black' }}>
+                <h3 style={{ textAlign: 'center' }}>⚠️ Are you sure you want to set this conversation to private?</h3>
+                <br />
+                You can't get any comments, feedbacks or transcription updates if you hide this conversation.
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={() => setShow(false)}>No</Button>
+              <Button onClick={() => setToPrivate()}>Yes</Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+      </Default>
+      <Mobile>
+        <div>
+          <div className='users-information' style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
+            <div
+              className='user-info-at-video'
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Badge
+                overlap='circular'
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                badgeContent={<SmallAvatar src={props.conversation.users[0].nationalities[0].flagPics[0]} />}
+              >
+                <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[0].name}</Avatar>
+              </Badge>
+            </div>
+            <div
+              className='user-info-at-video'
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <Badge
+                overlap='circular'
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                badgeContent={<SmallAvatar src={props.conversation.users[1].nationalities[0].flagPics[0]} />}
+              >
+                <Avatar sx={{ cursor: 'pointer' }}>{props.conversation.users[1].name}</Avatar>
+              </Badge>
+            </div>
+          </div>
+          <video
+            // className='displaying-video-1'
+            playsInline
+            controls
+            disablePictureInPicture
+            controlslist='nodownload noplaybackrate'
+            width='100%'
+            // width='640px'
+            // height='320px'
+            // style={{ marginBottom: '20px' }}
+          >
+            <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />
+          </video>
+          <div
+            className='video-apps'
+            style={{ display: 'flex', justifyContent: 'center', gap: '10px', padding: '10px' }}
+          >
+            <div>
+              <Tooltip title='Like' arrow>
+                <IconButton onClick={() => onLikeClick(props.conversation._id)}>
+                  <ThumbUpAltIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+              {Object.values(props.likesState).length}&nbsp;
+            </div>
+            <div>
+              <Tooltip title='Write a comment' arrow>
+                <IconButton onClick={() => setOpenComments(true)}>
+                  <CommentIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+              {props.commentsState.length}
+            </div>
+            <div>
+              <Tooltip title='Conversation transcript' arrow>
+                <IconButton onClick={() => setOpenTranscripts(true)}>
+                  <RecordVoiceOverIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+            </div>
+            <div>
+              <IconButton onClick={() => setOpenFetchedDocEditor(true)}>
+                <InsertDriveFileIcon sx={{ color: 'white' }} />
+              </IconButton>
+            </div>
+            <div>
+              <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+                <IconButton>
+                  <GroupsIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
+            </div>
+            {/* <div>
+            <Tooltip title='Google Translate (Under construction 🚜🛠 Please wait a bit.)' arrow>
               <IconButton>
-                <ShareIcon sx={{ color: 'white' }} />
+                <GTranslateIcon sx={{ color: 'white' }} />
               </IconButton>
             </Tooltip>
-            Share
-          </div>
-        </div>
+            Translate
+          </div> */}
 
-        <Transcripts openTranscripts={openTranscripts} setOpenTranscripts={setOpenTranscripts} />
-
-        <Comments openComments={openComments} setOpenComments={setOpenComments} />
-
-        <FetchedDocEditor
-          openFetchedDocEditor={openFetchedDocEditor}
-          setOpenFetchedDocEditor={setOpenFetchedDocEditor}
-        />
-        {renderAlerts()}
-        <Modal show={show} onHide={() => setShow(false)} backdrop='static' keyboard={false}>
-          <Modal.Body>
-            <div style={{ color: 'black' }}>
-              <h3 style={{ textAlign: 'center' }}>⚠️ Are you sure you want to set this conversation to private?</h3>
-              <br />
-              You can't get any comments, feedbacks or transcription updates if you hide this conversation.
+            <div>
+              <Tooltip title='Under construction 🚜🛠 Please wait a bit.' arrow>
+                <IconButton>
+                  <ShareIcon sx={{ color: 'white' }} />
+                </IconButton>
+              </Tooltip>
             </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={() => setShow(false)}>No</Button>
-            <Button onClick={() => setToPrivate()}>Yes</Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+          </div>
+          <Transcripts openTranscripts={openTranscripts} setOpenTranscripts={setOpenTranscripts} />
+
+          <Comments openComments={openComments} setOpenComments={setOpenComments} />
+
+          <FetchedDocEditor
+            openFetchedDocEditor={openFetchedDocEditor}
+            setOpenFetchedDocEditor={setOpenFetchedDocEditor}
+          />
+        </div>
+      </Mobile>
     </>
   );
 };
