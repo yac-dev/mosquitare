@@ -25,7 +25,8 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 const StyledBox = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'light' ? '#fff' : grey[800],
+  // backgroundColor: theme.palette.mode === 'light' ? '#fff' : grey[800],
+  backgroundColor: 'rgb(37, 95, 184)',
   // backgroundColor: 'grey',
 }));
 
@@ -106,7 +107,7 @@ const SwipeableUserDetail = (props) => {
           }}
         >
           <Puller />
-          <Typography sx={{ p: 2, color: 'text.secondary' }}>
+          <Typography sx={{ p: 2, color: 'white' }}>
             <TouchAppIcon />
             Tap user icon to see the user detail...
           </Typography>

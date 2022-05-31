@@ -16,6 +16,27 @@ import ImageIcon from '@mui/icons-material/Image';
 import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 
+import { useMediaQuery } from 'react-responsive';
+const Desktop = ({ children }) => {
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  return isDesktop ? children : null;
+};
+
+const Tablet = ({ children }) => {
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+  return isTablet ? children : null;
+};
+
+const Mobile = ({ children }) => {
+  const isMobile = useMediaQuery({ maxWidth: 599 });
+  return isMobile ? children : null;
+};
+
+const Default = ({ children }) => {
+  const isNotMobile = useMediaQuery({ minWidth: 768 });
+  return isNotMobile ? children : null;
+};
+
 const UserInfoLanguage = (props) => {
   const renderNativeLanguages = (user) => {
     const wordsSum = [...props.user.learningLangs, ...props.user.nativeLangs]
@@ -185,40 +206,61 @@ const UserInfoLanguage = (props) => {
   };
 
   return (
-    <div
-      className='user-info-language'
-      style={{ padding: '10px' }}
-      // style={{ padding: '10px', backgroundColor: 'white', borderRadius: '5px', marginBottom: '10px' }}
-    >
-      <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>
-        <BarChartIcon />
-        Language Status&nbsp;
-        <Tooltip title='This chart represents what language and how much the user speaks'>
-          <HelpIcon />
-        </Tooltip>
-      </h6>
-
-      <div className='language-status-flexbox' style={{ display: 'flex' }}>
-        <div
-          className='language-list-wrapper'
-          style={{
-            height: '100%',
-            flex: 5,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <div className='language-list'>
-            {renderNativeLanguages(props.user)}
-            {renderLearningLanguages(props.user)}
+    <>
+      <div
+        className='user-info-language'
+        style={{ padding: '10px' }}
+        // style={{ padding: '10px', backgroundColor: 'white', borderRadius: '5px', marginBottom: '10px' }}
+      >
+        <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>
+          <BarChartIcon />
+          Language Status&nbsp;
+          <Tooltip title='This chart represents what language and how much the user speaks'>
+            <HelpIcon />
+          </Tooltip>
+        </h6>
+        <Default>
+          <div className='language-status-flexbox' style={{ display: 'flex' }}>
+            <div
+              className='language-list-wrapper'
+              style={{
+                height: '100%',
+                flex: 5,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <div className='language-list'>
+                {renderNativeLanguages(props.user)}
+                {renderLearningLanguages(props.user)}
+              </div>
+            </div>
+            <div className='language-chart' style={{ flex: 5, width: '100%', height: '100%' }}>
+              <LanguageChart user={props.user} />
+            </div>
           </div>
-        </div>
-        <div className='language-chart' style={{ flex: 5, width: '100%', height: '100%' }}>
-          <LanguageChart user={props.user} />
-        </div>
+        </Default>
+        <Mobile>
+          <div className='language-status-flexbox'>
+            <div
+              className='language-list-wrapper'
+              style={{
+                height: '100%',
+              }}
+            >
+              <div className='language-list'>
+                {renderNativeLanguages(props.user)}
+                {renderLearningLanguages(props.user)}
+              </div>
+            </div>
+            <div className='language-chart' style={{ width: '100%', height: '100%' }}>
+              <LanguageChart user={props.user} />
+            </div>
+          </div>
+        </Mobile>
       </div>
-    </div>
+    </>
   );
 };
 

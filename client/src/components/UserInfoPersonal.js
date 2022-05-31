@@ -22,9 +22,31 @@ import Zoom from '@mui/material/Zoom';
 
 // components
 import PersonalityChart from './PersonalityChart';
+import PersonalityChartMobile from './PersonalityChartMobile';
 
 // css
 import '../styles/userInfoPersonal.css';
+import { useMediaQuery } from 'react-responsive';
+
+const Desktop = ({ children }) => {
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  return isDesktop ? children : null;
+};
+
+const Tablet = ({ children }) => {
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+  return isTablet ? children : null;
+};
+
+const Mobile = ({ children }) => {
+  const isMobile = useMediaQuery({ maxWidth: 599 });
+  return isMobile ? children : null;
+};
+
+const Default = ({ children }) => {
+  const isNotMobile = useMediaQuery({ minWidth: 768 });
+  return isNotMobile ? children : null;
+};
 
 const UserInfoPersonal = (props) => {
   // const renderBadges = (user) => {
@@ -125,7 +147,12 @@ const UserInfoPersonal = (props) => {
           </Tooltip>
         </h6>
         {/* {renderBadges(props.user)} */}
-        <PersonalityChart user={props.user} />
+        <Default>
+          <PersonalityChart user={props.user} />
+        </Default>
+        <Mobile>
+          <PersonalityChartMobile user={props.user} />
+        </Mobile>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
           {renderRomance()}
           {renderMoney()}

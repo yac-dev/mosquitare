@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
+import { useMediaQuery } from 'react-responsive';
 
 // mui icons
 import TranslateIcon from '@mui/icons-material/Translate';
@@ -18,6 +19,26 @@ import UserInfoMessage from './UserInfoMessage';
 import Badge from '@mui/material/Badge';
 
 import '../styles/tabs.css';
+
+const Desktop = ({ children }) => {
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  return isDesktop ? children : null;
+};
+
+const Tablet = ({ children }) => {
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 });
+  return isTablet ? children : null;
+};
+
+const Mobile = ({ children }) => {
+  const isMobile = useMediaQuery({ maxWidth: 599 });
+  return isMobile ? children : null;
+};
+
+const Default = ({ children }) => {
+  const isNotMobile = useMediaQuery({ minWidth: 768 });
+  return isNotMobile ? children : null;
+};
 
 const UserInfoTabs = (props) => {
   const [key, setKey] = useState('personal');
@@ -129,28 +150,79 @@ const UserInfoTabs = (props) => {
   };
 
   return (
-    <div className='user-info-tabs'>
-      <Tabs id='controlled-tab-example' activeKey={key} onSelect={(k) => setKey(k)} className='mb-3'>
-        <Tab eventKey='personal' title={renderPersonalTitle()}>
-          <UserInfoPersonal user={props.user} />
-        </Tab>
-        <Tab eventKey='language' title={renderLanguageTitle()}>
-          <UserInfoLanguage user={props.user} />
-        </Tab>
-        {renderVideosTab()}
-        {renderMessagesTab()}
-        {/* <Tab eventKey='videos' title={renderPublicVideos()}> */}
-        {/* <UserInfoVideos
+    <>
+      <Default>
+        <div className='user-info-tabs'>
+          <Tabs
+            id='controlled-tab-example'
+            activeKey={key}
+            onSelect={(k) => setKey(k)}
+            className='mb-3'
+            onOverflow={'scroll'}
+          >
+            <Tab eventKey='personal' title={renderPersonalTitle()}>
+              <UserInfoPersonal user={props.user} />
+            </Tab>
+            <Tab eventKey='language' title={renderLanguageTitle()}>
+              <UserInfoLanguage user={props.user} />
+            </Tab>
+            {renderVideosTab()}
+            {renderMessagesTab()}
+            {/* <Tab eventKey='videos' title={renderPublicVideos()}> */}
+            {/* <UserInfoVideos
             user={props.user}
             showVideoModal={props.showVideoModal}
             setShowVideoModal={props.setShowVideoModal}
           /> */}
-        {/* </Tab> */}
-        {/* <Tab eventKey='been' title={renderBeenTitle()}>
+            {/* </Tab> */}
+            {/* <Tab eventKey='been' title={renderBeenTitle()}>
           <UserInfoVisited user={props.user} />
         </Tab> */}
-      </Tabs>
-    </div>
+          </Tabs>
+        </div>
+      </Default>
+      <Mobile>
+        <div className='user-info-tabs'>
+          <Tabs
+            id='controlled-tab-example'
+            activeKey={key}
+            onSelect={(k) => setKey(k)}
+            className='mb-3'
+            onOverflow={'scroll'}
+          >
+            <Tab eventKey='personal' title={<AccountCircleIcon />}>
+              <UserInfoPersonal user={props.user} />
+            </Tab>
+            <Tab eventKey='language' title={<TranslateIcon />}>
+              <UserInfoLanguage user={props.user} />
+            </Tab>
+            <Tab eventKey='videos' title={<VideoLibraryIcon />}>
+              <UserInfoVideos
+                user={props.user}
+                showVideoModal={props.showVideoModal}
+                setShowVideoModal={props.setShowVideoModal}
+              />
+            </Tab>
+            <Tab eventKey='messages' title={<MessageIcon />}>
+              <UserInfoMessage user={props.user} />
+              {/* <UserInfoLanguage user={props.user} /> */}
+            </Tab>
+            {/* {renderVideosTab()}
+            {renderMessagesTab()} */}
+            {/* <Tab eventKey='videos' title={renderPublicVideos()}> */}
+            {/* <UserInfoVideos
+            user={props.user}
+            showVideoModal={props.showVideoModal}
+            setShowVideoModal={props.setShowVideoModal}
+          /> */}
+            {/* </Tab> */}
+            {/* <Tab eventKey='been' title={renderBeenTitle()}>
+          <UserInfoVisited user={props.user} />
+        </Tab> */}
+          </Tabs>
+        </div>
+      </Mobile>
+    </>
   );
 };
 

@@ -185,15 +185,15 @@ const WorldMap = (props) => {
   //   e.returnValue = '';
   // };
 
-  // useEffect(() => {
-  //   if (window.outerWidth < 600) {
-  //     if (props.authState.currentUser) {
-  //       if (props.authState.currentUser.isAvailableNow) {
-  //         props.isAvailableToFalseActionCreator();
-  //       }
-  //     }
-  //   }
-  // }, [props.authState.currentUser]);
+  useEffect(() => {
+    if (window.outerWidth < 600) {
+      if (props.authState.currentUser) {
+        if (props.authState.currentUser.isAvailableNow) {
+          props.isAvailableToFalseActionCreator();
+        }
+      }
+    }
+  }, [props.authState.currentUser]);
 
   useEffect(() => {
     if (localStorage.getItem('updated user image')) {

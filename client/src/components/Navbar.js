@@ -219,20 +219,17 @@ const Navbar = (props) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton
-          size='large'
-          aria-label='show 4 new mails'
-          color='inherit'
-          onClick={() => {
-            window.location = '/allvideos';
-          }}
-        >
+      <MenuItem
+        onClick={() => {
+          window.location = '/allvideos';
+        }}
+      >
+        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
           {/* <Badge badgeContent={1} color='error'> */}
           <VideoLibraryIcon />
           {/* </Badge> */}
         </IconButton>
-        <p>Public library</p>
+        Public library
         {/* <Tooltip title='Public Library'>
           <IconButton size='large' color='inherit'>
             <VideoLibraryIcon
@@ -243,12 +240,13 @@ const Navbar = (props) => {
           </IconButton>
         </Tooltip> */}
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={() => props.clickNavMessageIconActionCreator(true)}>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
           {/* <Badge badgeContent={1} color='error'> */}
           <EmailIcon />
           {/* </Badge> */}
         </IconButton>
+        Messages
         {/* <Tooltip title='Messages'>
           <IconButton
             size='large'
@@ -262,7 +260,6 @@ const Navbar = (props) => {
             <EmailIcon />
           </IconButton>
         </Tooltip> */}
-        <p>Messages</p>
       </MenuItem>
       {/* <MenuItem>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
@@ -285,7 +282,7 @@ const Navbar = (props) => {
         >
           <AccountCircle />
         </IconButton>
-        <p>My account</p>
+        My account
       </MenuItem>
     </Menu>
   );
