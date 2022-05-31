@@ -19,7 +19,7 @@ const DevelopersInfo = (props) => {
       <div>
         <h3>Developer Info</h3>
         <div>YK 🇯🇵</div>
-        <img className='profile-photo' src={MyProfilePicture} alt={'YK'} width='150px' />
+        {/* <img className='profile-photo' src={MyProfilePicture} alt={'YK'} width='150px' /> */}
         <div>
           Hello! I'm YK from Japan. I'm a software developer, founded this app. Thank you for joining here. Please let
           me know if you find any bugs, issues or have any questions. Enjoy 👍

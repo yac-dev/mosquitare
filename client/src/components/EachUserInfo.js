@@ -109,19 +109,12 @@ const EachUserInfo = (props) => {
         basic
         hoverable
       ></Popup> */}
-          <Icon
-            className='green user icon'
-            size='large'
-            style={{ cursor: 'pointer' }}
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
-          />
           {/* <Badge
             overlap='circular'
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             badgeContent={<SmallAvatar src={props.user.nationalities[0].flagPics[0]} />}
           > */}
-          {/* <Avatar
+          <Avatar
             sx={{ width: 30, height: 30, cursor: 'pointer' }}
             alt={props.user.name}
             // src={user.photo ? user.photo : ''}
@@ -130,12 +123,8 @@ const EachUserInfo = (props) => {
             onMouseLeave={handlePopoverClose}
           >
             {props.user.name}
-          </Avatar> */}
-          {/* <SentimentSatisfiedAltIcon
-            sx={{ width: 50, height: 50, cursor: 'pointer', color: 'green' }}
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
-          /> */}
+          </Avatar>
+
           {/* </Badge> */}
         </Marker>
       );

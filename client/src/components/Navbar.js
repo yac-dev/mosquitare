@@ -228,9 +228,9 @@ const Navbar = (props) => {
             window.location = '/allvideos';
           }}
         >
-          <Badge badgeContent={1} color='error'>
-            <VideoLibraryIcon />
-          </Badge>
+          {/* <Badge badgeContent={1} color='error'> */}
+          <VideoLibraryIcon />
+          {/* </Badge> */}
         </IconButton>
         <p>Public library</p>
         {/* <Tooltip title='Public Library'>
@@ -245,9 +245,9 @@ const Navbar = (props) => {
       </MenuItem>
       <MenuItem>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-          <Badge badgeContent={1} color='error'>
-            <EmailIcon />
-          </Badge>
+          {/* <Badge badgeContent={1} color='error'> */}
+          <EmailIcon />
+          {/* </Badge> */}
         </IconButton>
         {/* <Tooltip title='Messages'>
           <IconButton

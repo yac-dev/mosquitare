@@ -90,7 +90,14 @@ const InboxModal = (props) => {
                       <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
                         {message.content}
                       </Typography>
-                      <div>{timeSince(new Date(message.createdAt))} ago</div>
+                      {/* <div>{timeSince(new Date(message.createdAt))} ago</div> */}
+                      <div>{`${new Date(message.createdAt).toLocaleString('en-GB', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}`}</div>
                     </React.Fragment>
                   }
                 />
@@ -109,7 +116,7 @@ const InboxModal = (props) => {
     if (props.clickedState.navMessageIcon.clicked) {
       return (
         <>
-          <div style={{ backgroundColor: 'red', position: 'absolute', top: '50px', right: '30px' }}>
+          <div style={{ backgroundColor: 'white', position: 'absolute', top: '50px', right: '30px' }}>
             {renderMessages()}
           </div>
         </>
