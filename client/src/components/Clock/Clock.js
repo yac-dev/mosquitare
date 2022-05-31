@@ -87,7 +87,7 @@ const Clock = (props) => {
             <h4>
               {date}&nbsp;&nbsp;{time}
             </h4>
-            <AnalogClock value={value} renderSecondHand={false} />
+            <AnalogClock value={value} />
           </div>
         </Popover>
         <AccessTimeIcon
