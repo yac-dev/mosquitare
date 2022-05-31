@@ -196,61 +196,61 @@ const CallButton = (props) => {
     }
   };
 
-  const renderSendOrReply = () => {
-    if (badgeCount >= 1) {
-      return (
-        <Tooltip title='You have the message from this user.'>
-          <Badge
-            badgeContent={badgeCount}
-            color='success'
-            sx={{
-              '& .MuiBadge-badge': {
-                color: 'white',
-                backgroundColor: 'rgb(0, 186, 68)',
-                '&:hover': {
-                  backgroundColor: 'rgb(0, 158, 58)',
-                },
-              },
-            }}
-          >
-            <Button
-              variant='contained'
-              // startIcon={<SendIcon />}
-              onClick={() => props.clickMessageButtonActionCreator(true)}
-              sx={{
-                backgroundColor: 'rgb(0, 186, 68)',
-                '&:hover': {
-                  backgroundColor: 'rgb(0, 158, 58)',
-                },
-              }}
-            >
-              {/* Message */}
-              <EmailIcon />
-            </Button>
-          </Badge>
-        </Tooltip>
-      );
-    } else {
-      return (
-        <Tooltip title='You can send any messages to this user.'>
-          <Button
-            variant='contained'
-            // startIcon={<SendIcon />}
-            onClick={() => props.clickMessageButtonActionCreator(true)}
-            sx={{
-              backgroundColor: 'rgb(0, 186, 68)',
-              '&:hover': {
-                backgroundColor: 'rgb(0, 158, 58)',
-              },
-            }}
-          >
-            {/* Message */}
-            <EmailIcon />
-          </Button>
-        </Tooltip>
-      );
-    }
-  };
+  // const renderSendOrReply = () => {
+  //   if (badgeCount >= 1) {
+  //     return (
+  //       <Tooltip title='You have the message from this user.'>
+  //         <Badge
+  //           badgeContent={badgeCount}
+  //           color='success'
+  //           sx={{
+  //             '& .MuiBadge-badge': {
+  //               color: 'white',
+  //               backgroundColor: 'rgb(0, 186, 68)',
+  //               '&:hover': {
+  //                 backgroundColor: 'rgb(0, 158, 58)',
+  //               },
+  //             },
+  //           }}
+  //         >
+  //           <Button
+  //             variant='contained'
+  //             // startIcon={<SendIcon />}
+  //             onClick={() => props.clickMessageButtonActionCreator(true)}
+  //             sx={{
+  //               backgroundColor: 'rgb(0, 186, 68)',
+  //               '&:hover': {
+  //                 backgroundColor: 'rgb(0, 158, 58)',
+  //               },
+  //             }}
+  //           >
+  //             {/* Message */}
+  //             <EmailIcon />
+  //           </Button>
+  //         </Badge>
+  //       </Tooltip>
+  //     );
+  //   } else {
+  //     return (
+  //       <Tooltip title='You can send any messages to this user.'>
+  //         <Button
+  //           variant='contained'
+  //           // startIcon={<SendIcon />}
+  //           onClick={() => props.clickMessageButtonActionCreator(true)}
+  //           sx={{
+  //             backgroundColor: 'rgb(0, 186, 68)',
+  //             '&:hover': {
+  //               backgroundColor: 'rgb(0, 158, 58)',
+  //             },
+  //           }}
+  //         >
+  //           {/* Message */}
+  //           <EmailIcon />
+  //         </Button>
+  //       </Tooltip>
+  //     );
+  //   }
+  // };
 
   const renderExchangeableLangs = () => {
     if (!props.authState.currentUser) {
@@ -325,7 +325,7 @@ const CallButton = (props) => {
             >
               Send a message
             </Button> */}
-            {renderSendOrReply()}
+            {/* {renderSendOrReply()} */}
             {/* <Popover
               id={idSend}
               open={openSend}

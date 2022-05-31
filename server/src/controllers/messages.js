@@ -14,12 +14,13 @@ const transporter = nodemailer.createTransport({
 export const createMessage = async (request, response) => {
   try {
     const { senderId, recipientId } = request.params;
-    const message = await Message.create({
+    let message = await Message.create({
       sender: senderId,
       recipient: recipientId,
       content: request.body.content,
       read: false,
     });
+    message = await message.populate({ path: 'sender', select: '_id name flagPics photo', model: 'User' });
 
     console.log(senderId, recipientId);
     console.log(request.body.content);

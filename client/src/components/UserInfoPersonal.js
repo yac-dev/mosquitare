@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { SocialIcon } from 'react-social-icons';
 
 // mui icons
@@ -159,4 +160,8 @@ const UserInfoPersonal = (props) => {
   );
 };
 
-export default UserInfoPersonal;
+const mapStateToProps = (state) => {
+  return { messagesState: Object.values(state.messagesState) };
+};
+
+export default connect(mapStateToProps)(UserInfoPersonal);

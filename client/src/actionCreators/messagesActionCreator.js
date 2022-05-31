@@ -8,9 +8,10 @@ export const createMessageActionCreator = (content, recipientId) => async (dispa
     const result = await mosquitareAPI.post(`/messages/${senderId}/${recipientId}`, { content });
     const { message } = result.data;
     // alertを出すようにするか。
+    console.log(message);
     dispatch({
       type: 'CREATE_MESSAGE',
-      payload: '',
+      payload: message,
     });
 
     dispatch(alertActionCreator(`Your message has been sent!`, 'success'));
