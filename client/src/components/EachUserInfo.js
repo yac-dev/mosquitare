@@ -4,6 +4,10 @@ import { Marker } from 'react-map-gl';
 // import { Marker } from '@react-google-maps/api';
 import { Icon, Popup, Button } from 'semantic-ui-react';
 import UserInfoCardNew from './UserInfoCardNew';
+import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
+import { styled } from '@mui/system';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
 // mui
 import Popover from '@mui/material/Popover';
@@ -12,6 +16,12 @@ import Typography from '@mui/material/Typography';
 // ac
 import { clickUserActionCreator } from '../actionCreators/authActionCreators';
 import { clickMapUserActionCreator } from '../actionCreators/clickActionCreator';
+
+const SmallAvatar = styled(Avatar)(({ theme }) => ({
+  width: 14,
+  height: 14,
+  // border: `2px solid ${theme.palette.background.paper}`,
+}));
 
 // propsでは、"user"だけがくると思っていい。
 const EachUserInfo = (props) => {
@@ -106,6 +116,27 @@ const EachUserInfo = (props) => {
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
           />
+          {/* <Badge
+            overlap='circular'
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={<SmallAvatar src={props.user.nationalities[0].flagPics[0]} />}
+          > */}
+          {/* <Avatar
+            sx={{ width: 30, height: 30, cursor: 'pointer' }}
+            alt={props.user.name}
+            // src={user.photo ? user.photo : ''}
+            src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${props.user.photo}`}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            {props.user.name}
+          </Avatar> */}
+          {/* <SentimentSatisfiedAltIcon
+            sx={{ width: 50, height: 50, cursor: 'pointer', color: 'green' }}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          /> */}
+          {/* </Badge> */}
         </Marker>
       );
     } else {
@@ -169,13 +200,40 @@ const EachUserInfo = (props) => {
         basic
         hoverable
       ></Popup> */}
-          <Icon
+          {/* <Icon
             className={`${props.user._id === props.authState.currentUser._id ? 'blue' : 'green'} user icon`}
             size='large'
             style={{ cursor: 'pointer' }}
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
-          />
+          /> */}
+          {/* <Badge
+            overlap='circular'
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={<SmallAvatar src={props.user.nationalities[0].flagPics[0]} />}
+          > */}
+          {props.user._id === props.authState.currentUser._id ? (
+            <Icon
+              className='green user icon'
+              size='large'
+              style={{ cursor: 'pointer' }}
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+            />
+          ) : (
+            <Avatar
+              sx={{ width: 30, height: 30, cursor: 'pointer' }}
+              alt={props.user.name}
+              // src={user.photo ? user.photo : ''}
+              src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${props.user.photo}`}
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+            >
+              {props.user.name}
+            </Avatar>
+          )}
+
+          {/* </Badge> */}
         </Marker>
       );
     }

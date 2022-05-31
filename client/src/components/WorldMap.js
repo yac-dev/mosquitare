@@ -222,7 +222,11 @@ const WorldMap = (props) => {
 
   useEffect(() => {
     if (localStorage.getItem('after signup')) {
-      props.alertActionCreator('Welcome to Lampost! Your location was placed randomly!', 'success', 10000);
+      props.alertActionCreator(
+        'Welcome to Lampost! Your location was generated randomly on the green icon.',
+        'success',
+        11000
+      );
       localStorage.removeItem('after signup');
     }
   }, []);
