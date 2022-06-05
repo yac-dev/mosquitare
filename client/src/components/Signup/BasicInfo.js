@@ -71,7 +71,7 @@ const BasicInfo = (props) => {
           value={props.passwordConfirmation}
         />
       </Form.Field>
-      {/* <Form.Field style={{ marginBottom: '20px' }}>
+      <Form.Field style={{ marginBottom: '20px' }}>
         <label>
           <EmojiPeopleIcon />
           &nbsp; Self-Introduction&nbsp;(Not required)&nbsp;
@@ -82,7 +82,7 @@ const BasicInfo = (props) => {
           onChange={(event) => props.setSelfIntroduction(event.target.value)}
           value={props.selfIntroduction}
         />
-      </Form.Field> */}
+      </Form.Field>
 
       {/* <Button type='submit'>Submit</Button> */}
     </Form>
