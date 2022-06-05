@@ -350,13 +350,22 @@ const DisplayVideo = (props) => {
     }
   };
 
+  const renderGenre = (genre) => {
+    return (
+      <>
+        {/* <LanguageIcon /> */}
+        Exchanged&nbsp;{genre[0].name} &amp; {genre[1].name}
+      </>
+    );
+  };
+
   return (
     // <>{renderVideoSrc()}</>
     <>
       <Default>
         <div
           className='displaying-video-wrapper'
-          style={{ width: '80vw', margin: '0 auto', backgroundColor: 'rgb(0, 55, 110)' }}
+          style={{ width: '100vw', margin: '0 auto', backgroundColor: 'rgb(0, 55, 110)' }}
         >
           <div style={{ display: 'flex', padding: '20px' }}>
             <div className='users-information' style={{ display: 'flex', gap: '20px', flex: 7 }}>
@@ -391,6 +400,8 @@ const DisplayVideo = (props) => {
                 </Badge>
               </div>
             </div>
+            {/* <div>{props.conversation.genre}</div> */}
+            {/* {renderGenre(props.conversation.genre)} */}
             <div
               className='status-info'
               style={{ display: 'flex', gap: '20px', flex: 3, justifyContent: 'center', alignItems: 'center' }}
@@ -411,7 +422,7 @@ const DisplayVideo = (props) => {
             disablePictureInPicture
             controlslist='nodownload noplaybackrate'
             // width='640px'
-            // height='320px'
+            height='500px'
             // style={{ marginBottom: '20px' }}
           >
             <source src={`${process.env.REACT_APP_S3_BUCKET_LINK}/${props.conversation.videoFilename}`} />

@@ -119,6 +119,17 @@ const SignupWrapper = (props) => {
     }
   };
 
+  const checkLanguagesMultiple = (learningLanguages, nativeLanguages) => {
+    for (let i = 0; i < learningLanguages.length; i++) {
+      for (let j = 0; j < nativeLanguages.length; j++) {
+        if (learningLanguages[i]._id === nativeLanguages[j]._id) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
   const onSubmitClick = () => {
     if (
       !name ||
@@ -130,6 +141,7 @@ const SignupWrapper = (props) => {
       !learningLanguages.length ||
       !nativeLanguages.length ||
       !nationalities.length ||
+      !checkLanguagesMultiple(learningLanguages, nativeLanguages) ||
       password !== passwordConfirmation ||
       password.length <= 7
     ) {
@@ -168,6 +180,9 @@ const SignupWrapper = (props) => {
       }
       if (password.length <= 7) {
         props.alertActionCreator('Password should be at least 8 characters.', 'error');
+      }
+      if (!checkLanguagesMultiple(learningLanguages, nativeLanguages)) {
+        props.alertActionCreator('You cannot have same language in learning language and fluent language.', 'error');
       }
     } else {
       const formData = {

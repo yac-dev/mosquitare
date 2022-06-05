@@ -119,7 +119,7 @@ const RatingModal = (props) => {
     if (racismChecked) {
       return (
         <>
-          My partner gave me racist comments or behavior<br></br>
+          My partner gave me racist comments or behaviors 👎<br></br>
           <TextField
             id='input-with-icon-textfield'
             label='Please write the problem you had briefly.'

@@ -113,7 +113,7 @@ const UserInfoPersonal = (props) => {
           arrow
         >
           <span style={{ backgroundColor: 'rgb(219, 217, 217)', padding: '2px', borderRadius: '5px' }}>
-            Racist&nbsp;
+            👎 👎 Racist&nbsp;
             <span style={{ backgroundColor: 'rgb(227, 19, 0)', color: 'white', padding: '4px', borderRadius: '5px' }}>
               +{props.user.ratingAverage['racism']}
             </span>
