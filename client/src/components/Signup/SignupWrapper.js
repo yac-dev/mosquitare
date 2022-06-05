@@ -32,6 +32,7 @@ const SignupWrapper = (props) => {
   const [visited, setVisited] = useState([]);
 
   const [amIFillingBasic, setAmIFillingBasic] = useState(true);
+  const [submitButtonClicked, setSubmitButtonClicked] = useState(false);
 
   const renderAlerts = () => {
     if (props.alertsState.length) {
@@ -111,18 +112,29 @@ const SignupWrapper = (props) => {
           <Button variant='secondary' onClick={() => setAmIFillingBasic(true)}>
             ←back
           </Button>
-          <Button variant='primary' onClick={() => onSubmitClick()}>
+          {submitButtonClicked ? (
+            <Button variant='primary' disabled={true}>
+              Done
+            </Button>
+          ) : (
+            <Button variant='primary' onClick={() => onSubmitClick()}>
+              Submit!!
+            </Button>
+          )}
+          {/* <Button variant='primary' onClick={() => onSubmitClick()}>
             Submit!!
-          </Button>
+          </Button> */}
         </>
       );
     }
   };
 
   const checkLanguagesMultiple = (learningLanguages, nativeLanguages) => {
+    console.log(learningLanguages);
+    console.log(nativeLanguages);
     for (let i = 0; i < learningLanguages.length; i++) {
       for (let j = 0; j < nativeLanguages.length; j++) {
-        if (learningLanguages[i]._id === nativeLanguages[j]._id) {
+        if (learningLanguages[i].value === nativeLanguages[j].value) {
           return false;
         }
       }
@@ -198,6 +210,7 @@ const SignupWrapper = (props) => {
         location: location,
         visited: visited,
       };
+      setSubmitButtonClicked(true);
       console.log(formData);
       props.signupActionCreator(formData);
     }

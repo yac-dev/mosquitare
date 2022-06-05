@@ -28,6 +28,7 @@ const Login = (props) => {
   };
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [submitButtonClicked, setSubmitButtonClicked] = useState(false);
 
   const onSubmitClick = (event) => {
     event.preventDefault();

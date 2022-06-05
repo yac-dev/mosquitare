@@ -177,7 +177,7 @@ const RatingModal = (props) => {
     // ここでapi requestを送ることになる。
     // rating {"enthusiastic": 10, "friendly": 8, "patient": 6, "helpful": 5, "respectCulture": 8," datingHunter": false, "moneyHunter": false}
     // diversity
-    setSubmitButtonClicked(true);
+
     const ratingData = {
       enthusiasm: enthusiasmValue,
       friendliness: friendlinessValue,
@@ -224,6 +224,7 @@ const RatingModal = (props) => {
     } else {
       setRacismDetail('');
     }
+    setSubmitButtonClicked(true);
     console.log(ratingData);
     props.createRatingActionCreator(ratingData);
   };

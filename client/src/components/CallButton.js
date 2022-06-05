@@ -75,6 +75,7 @@ const CallButton = (props) => {
   // const [exchangeableLanguageTable,setExchangeableLanguageTable ] = useState({langs: {'learning': null,'native': null}})
   const [exchangeableLearningLangs, setExchangeableLearningLangs] = useState([]);
   const [exchangeableNativeLangs, setExchangeableNativeLangs] = useState([]);
+  const [mutualLearningLangs, setMutualLearningLangs] = useState([]);
   // const [menuItemDDOMs, setMenuItemDOMs] = useState([]);
   const [content, setContent] = useState('');
 
@@ -140,6 +141,18 @@ const CallButton = (props) => {
       }
     } // O(^2)
     setExchangeableNativeLangs(buffer2);
+
+    // const ourLearningLangs = store.getState().authState.currentUser.learningLangs;
+    // const bufferForLearning = [];
+    // for (let i = 0; i < ourLearningLangs.length; i++) {
+    //   for (let j = 0; j < props.user.learningLangs.length; j++) {
+    //     // if (myLearningLangs[i]._id === props.user.nativeLangs[j]._id) {
+    //     if (ourLearningLangs[i].language._id === props.user.learningLangs[j].language._id) {
+    //       bufferForLearning.push(ourLearningLangs[i].language);
+    //     }
+    //   }
+    // } // O(^2)
+    // setMutualLearningLangs(bufferForLearning);
   }, [props.user]);
 
   useEffect(() => {
@@ -257,6 +270,7 @@ const CallButton = (props) => {
       return <div>You need to signup or login to have a conversation.</div>;
     } else {
       const menuItemDOMs = [];
+      // const mutualItemsDom = [];
       if (exchangeableLearningLangs.length && exchangeableNativeLangs.length) {
         console.log(exchangeableLearningLangs, exchangeableNativeLangs);
         for (let i = 0; i < exchangeableLearningLangs.length; i++) {
@@ -270,7 +284,7 @@ const CallButton = (props) => {
                   }}
                   disableRipple
                 >
-                  <PhoneEnabledIcon />
+                  <VideocamIcon />
                   &nbsp;Exchange {exchangeableLearningLangs[i].name} &amp; {exchangeableNativeLangs[j].name}
                   {/* 必ず、callerにとってのlearning langがindex 0に入る。上で送るからね。*/}
                 </MenuItem>
@@ -295,7 +309,7 @@ const CallButton = (props) => {
                   // endIcon={<KeyboardArrowDownIcon />}
                   // sx={{ backgroundColor: 'white', color: 'black' }}
                 >
-                  <PhoneEnabledIcon size='large' />
+                  <VideocamIcon size='large' />
                   <KeyboardArrowDownIcon />
                   {/* &nbsp; Exchange */}
                 </Button>
@@ -312,59 +326,67 @@ const CallButton = (props) => {
                 {menuItemDOMs}
               </StyledMenu>
             </div>
-            {/* <Button
-              variant='contained'
-              startIcon={<SendIcon />}
-              onClick={() => props.setShowSendMessageModal(true)}
-              sx={{
-                backgroundColor: 'rgb(0, 186, 68)',
-                '&:hover': {
-                  backgroundColor: 'rgb(0, 158, 58)',
-                },
-              }}
-            >
-              Send a message
-            </Button> */}
-            {/* {renderSendOrReply()} */}
-            {/* <Popover
-              id={idSend}
-              open={openSend}
-              anchorEl={sendAnchorEl}
-              onClose={handleSendClose}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-            >
-              <div style={{ width: '300px', height: '100%', padding: '5px' }}>
-                <TextField
-                  id='input-with-icon-textfield'
-                  label='Write a short message'
-                  placeholder='e.g. Do you want to talk with me on January 1st?'
-                  multiline
-                  fullWidth
-                  value={content}
-                  onChange={(event) => setContent(event.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <Tooltip title='Send'>
-                          <IconButton>
-                            <SendIcon onClick={() => handleSendMessage(props.user._id)} />
-                          </IconButton>
-                        </Tooltip>
-                      </InputAdornment>
-                    ),
-                  }}
-                  variant='standard'
-                />
-              </div>
-            </Popover> */}
           </div>
         );
-      } else {
+      }
+      // else if (mutualLearningLangs.length) {
+      //   for (let i = 0; i < mutualLearningLangs.length; i++) {
+      //     menuItemDOMs.push(
+      //       <>
+      //         <MenuItem
+      //           onClick={(event) => {
+      //             onCallClick(event, props.user.socketId);
+      //             handleClose();
+      //           }}
+      //           disableRipple
+      //         >
+      //           <PhoneEnabledIcon />
+      //           &nbsp;Learn {mutualLearningLangs[i].name} each other
+      //           {/* 必ず、callerにとってのlearning langがindex 0に入る。上で送るからね。*/}
+      //         </MenuItem>
+      //       </>
+      //     );
+      //   }
+      // }
+      else {
         return <div>You cannot have a conversation with this user</div>;
       }
+
+      // return (
+      //   <div className='action-button-flexbox' style={{ display: 'flex', gap: '10px' }}>
+      //     <div className='call-button'>
+      //       <Tooltip title='Click to see exchange options.'>
+      //         <Button
+      //           id='demo-customized-button'
+      //           aria-controls={open ? 'demo-customized-menu' : undefined}
+      //           aria-haspopup='true'
+      //           aria-expanded={open ? 'true' : undefined}
+      //           variant='contained'
+      //           disableElevation
+      //           disabled={props.user.isAvailableNow ? false : true}
+      //           onClick={handleClick}
+      //           // endIcon={<KeyboardArrowDownIcon />}
+      //           // sx={{ backgroundColor: 'white', color: 'black' }}
+      //         >
+      //           <PhoneEnabledIcon size='large' />
+      //           <KeyboardArrowDownIcon />
+      //           {/* &nbsp; Exchange */}
+      //         </Button>
+      //       </Tooltip>
+      //       <StyledMenu
+      //         id='demo-customized-menu'
+      //         MenuListProps={{
+      //           'aria-labelledby': 'demo-customized-button',
+      //         }}
+      //         anchorEl={anchorEl}
+      //         open={open}
+      //         onClose={handleClose}
+      //       >
+      //         {menuItemDOMs}
+      //       </StyledMenu>
+      //     </div>
+      //   </div>
+      // );
     }
   };
 
