@@ -70,6 +70,11 @@ const transporter = nodemailer.createTransport({
 //   }
 // };
 
+const getRandomFloat = () => {
+  const str = (Math.random() * 0.15).toFixed(4);
+  return parseFloat(str);
+};
+
 export const signup = async (request, response) => {
   try {
     console.log(request.body);
@@ -95,6 +100,15 @@ export const signup = async (request, response) => {
       },
       { $sample: { size: 1 } },
     ]);
+
+    const randomLng = getRandomFloat();
+    const randomLat = getRandomFloat();
+    console.log(randomLng, randomLat);
+    console.log(city[0].location.coordinates[0], city[0].location.coordinates[1]);
+    console.log(
+      (parseFloat(city[0].location.coordinates[0]) + randomLng).toFixed(4),
+      (parseFloat(city[0].location.coordinates[1]) + randomLat).toFixed(4)
+    );
 
     // 多分、valueっていうpropertyの中にlanguageのobjectidが入っているんだろう。
     // const myLangs = [];
@@ -133,7 +147,10 @@ export const signup = async (request, response) => {
       nationalities: nationalities.map((nationality) => nationality.value),
       location: {
         type: 'Point',
-        coordinates: [city[0].location.coordinates[0], city[0].location.coordinates[1]],
+        coordinates: [
+          (parseFloat(city[0].location.coordinates[0]) + randomLng).toFixed(4),
+          (parseFloat(city[0].location.coordinates[1]) + randomLat).toFixed(4),
+        ],
       },
       socketId: '11111',
       visited: visited.map((country) => {

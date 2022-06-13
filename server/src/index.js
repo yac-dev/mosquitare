@@ -96,6 +96,8 @@ const mapSocketIdToId = {}; // どのuserがどのrandomIdを持っているか�
 //電話中なhashTableって感じかな。
 // { 123: 456 , 456: 123}
 
+console.log(mapSocketIdToId);
+
 io.on('connection', (socket) => {
   socket.emit(I_GOT_SOCKET_ID, socket.id);
 
@@ -116,6 +118,7 @@ io.on('connection', (socket) => {
     } else {
       // if (io.sockets.adapter.rooms.get(dataFromCaller.oppositeSocketId).size === 2) {
       if (mapSocketIdToId[dataFromCaller.oppositeSocketId]) {
+        // ここのcode、そもそもどんなタイミングででるerrorだっけか。。。？どんなだっけ？
         console.log('room aize');
         io.to(dataFromCaller.me).emit(MY_CALL_IS_REJECTED, {
           message: '',
@@ -328,6 +331,7 @@ io.on('connection', (socket) => {
     // console.log(user);
     user.isAvailableNow = false;
     await user.save({ validateBeforeSave: false });
+    console.log(mapSocketIdToId);
     console.log('disconnected ... ', socket.id);
     // どっちにしろ、page refreshの場合は、再度login apiが動くからこれでいい。
     // もし会話中であったのなら↓が動くということ。

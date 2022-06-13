@@ -138,7 +138,7 @@ const UserInfoTabs = (props) => {
   };
 
   const renderMessagesTab = () => {
-    if (!props.authState.currentUser) {
+    if (!props.authState.currentUser || props.authState.currentUser._id === props.user._id) {
       return null;
     } else {
       return (
