@@ -7,6 +7,7 @@ export const createLike = async (request, response) => {
     const like = await Like.create({
       user: userId,
       conversation: conversationId,
+      createdAt: new Date(),
     });
     response.status(201).json({
       like,

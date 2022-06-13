@@ -16,6 +16,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
+import Badge from '@mui/material/Badge';
 
 // ac
 import { getMyMessagesActionCreator } from '../actionCreators/messagesActionCreator';
@@ -74,9 +75,29 @@ const InboxModal = (props) => {
           <>
             <div style={{ cursor: 'pointer' }} onClick={() => handleClickOpen(message)}>
               <ListItem alignItems='flex-start'>
-                <ListItemAvatar>
+                {message.read ? (
+                  <ListItemAvatar>
+                    <Avatar alt={message.sender.name} />
+                  </ListItemAvatar>
+                ) : (
+                  <ListItemAvatar>
+                    <Badge
+                      color='secondary'
+                      sx={{
+                        '& .MuiBadge-badge': {
+                          color: 'white',
+                          backgroundColor: 'red',
+                        },
+                      }}
+                      variant='dot'
+                    >
+                      <Avatar alt={message.sender.name} />
+                    </Badge>
+                  </ListItemAvatar>
+                )}
+                {/* <ListItemAvatar>
                   <Avatar alt={message.sender.name} />
-                </ListItemAvatar>
+                </ListItemAvatar> */}
                 <ListItemText
                   primary={
                     <React.Fragment>
@@ -116,7 +137,16 @@ const InboxModal = (props) => {
     if (props.clickedState.navMessageIcon.clicked) {
       return (
         <>
-          <div style={{ backgroundColor: 'white', position: 'absolute', top: '50px', right: '30px' }}>
+          <div
+            style={{
+              backgroundColor: 'white',
+              position: 'absolute',
+              top: '50px',
+              right: '30px',
+              overflow: 'auto',
+              maxHeight: '500px',
+            }}
+          >
             {renderMessages()}
           </div>
         </>

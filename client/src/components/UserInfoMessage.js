@@ -13,6 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import Badge from '@mui/material/Badge';
+import HelpIcon from '@mui/icons-material/Help';
 import { styled } from '@mui/system';
 
 import { getMessagesWithUserActionCreator } from '../actionCreators/messagesActionCreator';
@@ -27,6 +28,7 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 
 const UserInfoMessage = (props) => {
   const [content, setContent] = useState('');
+  const [sentMessage, setSentMessage] = useState(false);
 
   useEffect(() => {
     props.getMessagesWithUserActionCreator(props.user._id);
@@ -38,13 +40,14 @@ const UserInfoMessage = (props) => {
   const handleSendMessage = (recipientId) => {
     if (!content) {
       // props.createCommentActionCreator(content);
-      props.alertActionCreator('Please write a message.', 'error');
+      return props.alertActionCreator('Please write a message.', 'error');
       // props.createMessageActionCreator(content, recipientId);
     } else if (!props.authState.currentUser) {
-      props.alertActionCreator('You need to signup or login to comment.', 'error');
+      return props.alertActionCreator('You need to signup or login to comment.', 'error');
     } else if (content && props.authState.currentUser) {
       // alertかな。
-      props.createMessageActionCreator(content, recipientId);
+      setSentMessage(true);
+      props.createMessageActionCreator(content, recipientId, setSentMessage);
       setContent('');
     }
   };
@@ -84,7 +87,7 @@ const UserInfoMessage = (props) => {
       });
       return <>{messages}</>;
     } else {
-      return <div>No messages with this user.</div>;
+      return <div>You don't have any messages with this user.</div>;
     }
   };
 
@@ -158,7 +161,31 @@ const UserInfoMessage = (props) => {
         </>
       );
     } else {
-      return <div>No messages with this user.</div>;
+      return <div>You don't have any messages with this user.</div>;
+    }
+  };
+
+  const renderIconButton = () => {
+    if (sentMessage) {
+      return (
+        <IconButton
+          // onClick={() => handleSendComment(content)}
+          // handleSendMessage(props.clickedState.mapUser.user._id)
+          disabled
+        >
+          <SendIcon />
+        </IconButton>
+      );
+    } else {
+      return (
+        <IconButton
+          // onClick={() => handleSendComment(content)}
+          onClick={() => handleSendMessage(props.user._id)}
+          // handleSendMessage(props.clickedState.mapUser.user._id)
+        >
+          <SendIcon />
+        </IconButton>
+      );
     }
   };
 
@@ -170,7 +197,10 @@ const UserInfoMessage = (props) => {
     >
       <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>
         <MessageIcon />
-        &nbsp; Messages with {props.user.name}
+        &nbsp; Messages with me &nbsp;
+        <Tooltip title='All messages of you and this user will be displayed here.'>
+          <HelpIcon />
+        </Tooltip>
       </h6>
       <div style={{ width: '100%', padding: '5px' }}>
         <TextField
@@ -185,13 +215,13 @@ const UserInfoMessage = (props) => {
             startAdornment: (
               <InputAdornment position='start'>
                 <Tooltip title='Send'>
-                  <IconButton
-                    // onClick={() => handleSendComment(content)}
+                  {/* <IconButton
                     onClick={() => handleSendMessage(props.user._id)}
-                    // handleSendMessage(props.clickedState.mapUser.user._id)
+                    disabled={`${sentMessage ? true : false}`}
                   >
                     <SendIcon />
-                  </IconButton>
+                  </IconButton> */}
+                  {renderIconButton()}
                 </Tooltip>
               </InputAdornment>
             ),
@@ -207,7 +237,9 @@ const UserInfoMessage = (props) => {
 const mapStateToProps = (state) => {
   return {
     clickedState: state.clickedUserState,
-    messagesWithUserState: Object.values(state.messagesWithUserState.messagesWithUser),
+    messagesWithUserState: Object.values(state.messagesWithUserState.messagesWithUser).sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    ),
     authState: state.authState,
   };
 };

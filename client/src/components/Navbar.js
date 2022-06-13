@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 // import { Icon, Button } from 'semantic-ui-react';
@@ -99,6 +99,7 @@ const Navbar = (props) => {
 
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [unread, setUnread] = useState(false);
   const history = useHistory();
 
   const handleGroupMenuOpen = (event) => {
@@ -333,6 +334,55 @@ const Navbar = (props) => {
     }
   };
 
+  // const renderEmailNavIcon = () => {
+  //   for(let i = 0; i < props.messagesState.length; i++){
+  //     if(!props.messagesState[i].read){
+  //       setUnread(true);
+  //     }
+  //   }
+
+  //   return (
+
+  //   )
+
+  // };
+
+  // unreadなやつがあれば、setUnreadをtrueにする。
+  useEffect(() => {
+    if (props.messagesState.length) {
+      for (let i = 0; i < props.messagesState.length; i++) {
+        if (!props.messagesState[i].read) {
+          setUnread(true);
+        }
+      }
+    }
+  }, [props.messagesState]);
+
+  const renderEmailBadge = () => {
+    if (unread) {
+      return (
+        <Badge
+          color='secondary'
+          sx={{
+            '& .MuiBadge-badge': {
+              color: 'white',
+              backgroundColor: 'red',
+            },
+          }}
+          variant='dot'
+        >
+          <EmailIcon />
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge>
+          <EmailIcon />
+        </Badge>
+      );
+    }
+  };
+
   const renderToolIconButtons = () => {
     // logged inの時にのみこれを表示する。
     if (props.authState.currentUser) {
@@ -387,7 +437,19 @@ const Navbar = (props) => {
                 color='inherit'
               >
                 {/* <Badge badgeContent={4} color='error'> */}
-                <EmailIcon />
+                {/* <Badge
+                  color='secondary'
+                  sx={{
+                    '& .MuiBadge-badge': {
+                      color: 'white',
+                      backgroundColor: 'red',
+                    },
+                  }}
+                  variant='dot'
+                >
+                  <EmailIcon />
+                </Badge> */}
+                {renderEmailBadge()}
                 {/* </Badge> */}
               </IconButton>
             </Tooltip>
@@ -695,7 +757,12 @@ const Navbar = (props) => {
 // };
 
 const mapStateToProps = (state) => {
-  return { authState: state.authState, mediaState: state.mediaState, modalState: state.modalState };
+  return {
+    authState: state.authState,
+    mediaState: state.mediaState,
+    modalState: state.modalState,
+    messagesState: Object.values(state.messagesState),
+  };
 };
 
 export default connect(mapStateToProps, {

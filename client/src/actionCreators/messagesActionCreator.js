@@ -1,7 +1,7 @@
 import { mosquitareAPI } from '../apis/mosquitare';
 import { alertActionCreator } from './alertsActionCreator';
 
-export const createMessageActionCreator = (content, recipientId) => async (dispatch, getState) => {
+export const createMessageActionCreator = (content, recipientId, setSentMessage) => async (dispatch, getState) => {
   try {
     const senderId = getState().authState.currentUser._id;
     // const messageSpaceId = getState().messageSpace._id;
@@ -15,6 +15,7 @@ export const createMessageActionCreator = (content, recipientId) => async (dispa
     });
 
     dispatch(alertActionCreator(`Your message has been sent!`, 'success'));
+    setSentMessage(false);
   } catch (error) {
     console.log(error);
   }

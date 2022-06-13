@@ -136,6 +136,7 @@ export const signup = async (request, response) => {
       password: password,
       passwordConfirmation: passwordConfirmation,
       photo: randomPhotoURL,
+      createdAt: new Date(),
       nativeLangs: nativeLangs.map((lang) => {
         return { language: lang.value, status: 0 };
       }),

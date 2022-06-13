@@ -19,6 +19,7 @@ export const createMessage = async (request, response) => {
       recipient: recipientId,
       content: request.body.content,
       read: false,
+      createdAt: new Date(),
     });
     message = await message.populate({ path: 'sender', select: '_id name flagPics photo', model: 'User' });
 
@@ -32,7 +33,7 @@ export const createMessage = async (request, response) => {
       to: recipient.email,
       from: 'lamposttech@gmail.com',
       subject: 'You got a message!',
-      html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><p>Please follow the link below to check it out!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
+      html: `<h1>Lampost</h1><p>Hi ${recipient.name}. You got a message from ${sender.name}.</p><div style="font-weight:bold">${message.content}</div><p>Please follow the link below and check out the messages box at top right corner!</p><br><a href=${process.env.MAIL_LINK}>${process.env.MAIL_LINK}</a>`,
     };
 
     console.log(recipient.email);
@@ -61,6 +62,10 @@ export const getMyMessages = async (request, response) => {
     }).populate({
       path: 'sender',
     });
+    messages.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
     response.status(200).json({
       messages,
     });
@@ -101,6 +106,17 @@ export const getMessagesWithUser = async (request, response) => {
         path: 'recipient',
       });
     const allMessages = [...messagesBySender, ...messagesByMe];
+
+    allMessages.sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+
+    for (let i = 0; i < allMessages.length; i++) {
+      if (!allMessages[i].read) {
+        allMessages[i].read = true;
+        await allMessages[i].save();
+      }
+    }
     response.status(200).json({
       allMessages,
     });

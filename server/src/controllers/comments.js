@@ -22,6 +22,7 @@ export const createComment = async (request, response) => {
     comment.content = content;
     comment.conversation = conversationId;
     comment.user = userId;
+    comment.createdAt = new Date();
     await comment.save();
     comment = await comment.populate({ path: 'user', select: '_id name flagPics', model: 'User' }); // client側でcreateした後にもpopulateする方法。
 

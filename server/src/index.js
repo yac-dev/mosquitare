@@ -295,7 +295,11 @@ io.on('connection', (socket) => {
 
   // doc
   socket.on('LETS_START_OUR_DOC', async (dataFromCaller) => {
-    const doc = await Doc.create({ data: docDefaultValue, conversation: dataFromCaller.conversation });
+    const doc = await Doc.create({
+      data: docDefaultValue,
+      conversation: dataFromCaller.conversation,
+      createdAt: new Date(),
+    });
     io.to(dataFromCaller.me).emit('STARTED_YOUR_DOC', { docId: doc._id, docData: doc.data });
     io.to(dataFromCaller.to).emit('STARTED_YOUR_DOC', { docId: doc._id, docData: doc.data });
   });

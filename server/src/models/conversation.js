@@ -25,7 +25,6 @@ const conversationSchema = new mongoose.Schema({
   isPublic: Boolean,
   createdAt: {
     type: Date,
-    default: Date.now(),
   },
   ratings: [
     {

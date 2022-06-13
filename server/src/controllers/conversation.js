@@ -9,6 +9,7 @@ export const createConversation = async (request, response) => {
     const { userId } = request.body;
     const { genre } = request.body;
     const conversation = await new Conversation();
+    conversation.createdAt = new Date();
     conversation.users.push(userId);
     conversation.genre = genre;
     conversation.isPublic = true;
