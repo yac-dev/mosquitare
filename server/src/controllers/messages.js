@@ -75,13 +75,14 @@ export const getMyMessages = async (request, response) => {
 export const updateUnreadToRead = async (request, response) => {
   try {
     const { messageIds } = request.body;
+    console.log(messageIds);
     const messages = await Message.find({ _id: { $in: messageIds } });
     messages.forEach(async (message) => {
       message.read = true;
       await message.save();
     });
     response.status(200).json({
-      message: 'success',
+      messages,
     });
   } catch (error) {
     console.log(error);
@@ -111,12 +112,12 @@ export const getMessagesWithUser = async (request, response) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
 
-    for (let i = 0; i < allMessages.length; i++) {
-      if (!allMessages[i].read) {
-        allMessages[i].read = true;
-        await allMessages[i].save();
-      }
-    }
+    // for (let i = 0; i < allMessages.length; i++) {
+    //   if (!allMessages[i].read) {
+    //     allMessages[i].read = true;
+    //     await allMessages[i].save();
+    //   }
+    // }
     response.status(200).json({
       allMessages,
     });

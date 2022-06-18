@@ -10,6 +10,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MapIcon from '@mui/icons-material/Map';
 import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import MessageIcon from '@mui/icons-material/Message';
+import ForumIcon from '@mui/icons-material/Forum';
 // components
 import UserInfoLanguage from './UserInfoLanguage';
 import UserInfoPersonal from './UserInfoPersonal';
@@ -17,8 +18,9 @@ import UserInfoVisited from './UserInfoVisited';
 import UserInfoVideos from './UserInfoVideos';
 import UserInfoMessage from './UserInfoMessage';
 import Badge from '@mui/material/Badge';
-
 import '../styles/tabs.css';
+
+import { updateMessagesToReadActionCreator } from '../actionCreators/messagesActionCreator';
 
 const Desktop = ({ children }) => {
   const isDesktop = useMediaQuery({ minWidth: 992 });
@@ -43,19 +45,31 @@ const Default = ({ children }) => {
 const UserInfoTabs = (props) => {
   const [key, setKey] = useState('personal');
   const [badgeCount, setBadgeCount] = useState(0);
+  const [unreads, setUnreads] = useState([]);
 
   useEffect(() => {
-    let messagesBuffer = [];
-    for (let i = 0; i < props.messagesState.length; i++) {
-      if (props.messagesState[i].sender._id === props.user._id) {
-        // if (!props.messagesState[i].read) {
-        messagesBuffer.push(props.messagesState[i]);
-        // }
+    if (props.messagesWithUserState.length) {
+      let messagesBuffer = [];
+      // for (let i = 0; i < props.messagesWithUserState.length; i++) {
+      //   if (!props.messagesWithUserState[i].read) {
+      //     messagesBuffer.push(props.messagesWithUserState[i]);
+      //   }
+      // }
+      for (let i = 0; i < props.messagesWithUserState.length; i++) {
+        if (props.messagesWithUserState[i].sender._id === props.user._id && !props.messagesWithUserState[i].read) {
+          // if (!props.messagesState[i].read) {
+          messagesBuffer.push(props.messagesWithUserState[i]._id);
+          // messagesBuffer = true;
+          // }
+        }
       }
+      // if (props.messagesWithUserState.some((message) => message.read === false)) {
+      //   messagesBuffer = true;
+      // }
+      // setUnreadMessages(unreadMessagesBuffer);
+      setUnreads(messagesBuffer);
     }
-    // setUnreadMessages(unreadMessagesBuffer);
-    setBadgeCount(messagesBuffer.length);
-  }, [props.user]);
+  }, [props.user, props.messagesWithUserState]);
 
   const renderLanguageTitle = () => {
     return (
@@ -98,27 +112,75 @@ const UserInfoTabs = (props) => {
   };
 
   const renderMessagesTitle = () => {
-    return (
-      <>
-        <Badge
-          badgeContent={badgeCount}
-          color='success'
-          sx={{
-            '& .MuiBadge-badge': {
-              color: 'white',
-              backgroundColor: 'rgb(37, 95, 184)',
-              '&:hover': {
-                backgroundColor: 'rgb(37, 95, 194)',
+    if (unreads.length) {
+      return (
+        <>
+          <Badge
+            color='secondary'
+            sx={{
+              '& .MuiBadge-badge': {
+                color: 'white',
+                backgroundColor: 'red',
               },
-            },
-          }}
-        >
-          <MessageIcon />
-        </Badge>
-        <br></br>
-        Messages
-      </>
-    );
+            }}
+            // variant='dot'
+            badgeContent={unreads.length}
+          >
+            <ForumIcon
+              onClick={() => {
+                props.updateMessagesToReadActionCreator(unreads);
+                // setUnreads([]);
+              }}
+            />
+          </Badge>
+          <br></br>
+          Messages
+        </>
+      );
+    } else {
+      return (
+        <>
+          <ForumIcon />
+          <br></br>
+          Messages
+        </>
+      );
+    }
+  };
+
+  const renderMessagesTitleForPhone = () => {
+    if (unreads.length) {
+      return (
+        <>
+          <Badge
+            color='secondary'
+            sx={{
+              '& .MuiBadge-badge': {
+                color: 'white',
+                backgroundColor: 'red',
+              },
+            }}
+            // variant='dot'
+            badgeContent={unreads.length}
+          >
+            <ForumIcon
+              onClick={() => {
+                props.updateMessagesToReadActionCreator(unreads);
+                // setUnreads([]);
+              }}
+            />
+          </Badge>
+          <br></br>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <ForumIcon />
+          <br></br>
+        </>
+      );
+    }
   };
 
   const renderVideosTab = () => {
@@ -138,11 +200,23 @@ const UserInfoTabs = (props) => {
   };
 
   const renderMessagesTab = () => {
-    if (!props.authState.currentUser || props.authState.currentUser._id === props.user._id) {
+    if (
+      !props.authState.currentUser ||
+      props.authState.currentUser._id === props.user._id ||
+      props.mediaState.amIRecieving ||
+      props.mediaState.amICalling
+    ) {
       return null;
     } else {
       return (
-        <Tab eventKey='messages' title={renderMessagesTitle()}>
+        <Tab
+          eventKey='messages'
+          title={renderMessagesTitle()}
+          // onClick={() => {
+          //   props.updateMessagesToReadActionCreator(unreads);
+          //   setUnreads([]);
+          // }}
+        >
           <UserInfoMessage user={props.user} />
         </Tab>
       );
@@ -203,7 +277,7 @@ const UserInfoTabs = (props) => {
                 setShowVideoModal={props.setShowVideoModal}
               />
             </Tab>
-            <Tab eventKey='messages' title={<MessageIcon />}>
+            <Tab eventKey='messages' title={renderMessagesTitleForPhone()}>
               <UserInfoMessage user={props.user} />
               {/* <UserInfoLanguage user={props.user} /> */}
             </Tab>
@@ -230,8 +304,12 @@ const mapStateToProps = (state) => {
   return {
     mediaState: state.mediaState,
     authState: state.authState,
-    messagesState: Object.values(state.messagesState),
+    // messagesState: Object.values(state.messagesState),
+    messagesWithUserState: Object.values(state.messagesWithUserState.messagesWithUser),
+    // .sort(
+    //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    // ),
   };
 };
 
-export default connect(mapStateToProps)(UserInfoTabs);
+export default connect(mapStateToProps, { updateMessagesToReadActionCreator })(UserInfoTabs);

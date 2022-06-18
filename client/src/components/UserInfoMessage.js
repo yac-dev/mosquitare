@@ -99,6 +99,33 @@ const UserInfoMessage = (props) => {
     return `${date.getFullYear()}-${monthString}-${currentDate}`;
   }
 
+  const timeSince = (date) => {
+    var seconds = Math.floor((new Date() - date) / 1000);
+
+    var interval = Math.floor(seconds / 31536000);
+
+    if (interval > 1) {
+      return interval + ' years';
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+      return interval + ' months';
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+      return interval + ' days';
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+      return interval + ' hours';
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+      return interval + ' minutes';
+    }
+    return Math.floor(seconds) + ' seconds';
+  };
+
   const renderMessagesList = () => {
     if (props.messagesWithUserState.length) {
       const messages = props.messagesWithUserState.map((message) => {
@@ -131,18 +158,30 @@ const UserInfoMessage = (props) => {
                 </Badge>
               </ListItemAvatar>
               <ListItemText
-                primary={`${new Date(message.createdAt).toLocaleString('en-GB', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}`}
-                // primary={formatDate(new Date(message.createdAt))}
+                // primary={`${new Date(message.createdAt).toLocaleString('en-GB', {
+                //   weekday: 'long',
+                //   month: 'long',
+                //   day: 'numeric',
+                //   year: 'numeric',
+                // })}`}
+                // primary={message.content}
+                primary={
+                  <React.Fragment>
+                    <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
+                      {message.sender.name}
+                    </Typography>
+                    <div>{message.content}</div>
+                  </React.Fragment>
+                }
                 secondary={
                   <React.Fragment>
                     <Typography variant='body2' color='text.secondary'>
-                      {message.content}
+                      {`${new Date(message.createdAt).toLocaleString('en-US', {
+                        weekday: 'long',
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}`}
                     </Typography>
                     {/* <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='text.primary'>
                     </Typography> */}
@@ -197,7 +236,7 @@ const UserInfoMessage = (props) => {
     >
       <h6 style={{ borderBottom: '1px solid rgb(217, 217, 217)', marginBottom: '20px' }}>
         <MessageIcon />
-        &nbsp; Messages with me &nbsp;
+        &nbsp; Messages &nbsp;
         <Tooltip title='All messages of you and this user will be displayed here.'>
           <HelpIcon />
         </Tooltip>

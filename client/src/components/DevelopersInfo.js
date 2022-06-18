@@ -21,15 +21,15 @@ const DevelopersInfo = (props) => {
         <div>YK 🇯🇵</div>
         {/* <img className='profile-photo' src={MyProfilePicture} alt={'YK'} width='150px' /> */}
         <div>
-          Hello! I'm YK from Japan. I'm a software developer, founded this app. Thank you for joining here. Please let
-          me know if you find any bugs, issues or have any questions. Enjoy 👍
+          Hello! I'm YK from Japan. I'm a software developer, founded this app. Thank you for joining. Please let me
+          know if you find any bugs, issues or have any questions. Enjoy 👍
         </div>
         <div className='my-socials'>
           <div>
-            <span>
+            {/* <span>
               Lampost page:
               <a className='fa fa-facebook' href='https://www.facebook.com/Lampost-101405925890356' target='_blank'></a>
-            </span>
+            </span> */}
           </div>
           <div>
             <span>

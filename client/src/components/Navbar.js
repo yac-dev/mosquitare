@@ -203,90 +203,120 @@ const Navbar = (props) => {
     </Menu>
   );
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem
-        onClick={() => {
-          window.location = '/allvideos';
-        }}
-      >
-        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-          {/* <Badge badgeContent={1} color='error'> */}
-          <VideoLibraryIcon />
-          {/* </Badge> */}
-        </IconButton>
-        Public library
-        {/* <Tooltip title='Public Library'>
-          <IconButton size='large' color='inherit'>
-            <VideoLibraryIcon
-              onClick={() => {
-                window.location = '/allvideos';
-              }}
-            />
-          </IconButton>
-        </Tooltip> */}
-      </MenuItem>
-      <MenuItem onClick={() => props.clickNavMessageIconActionCreator(true)}>
-        <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-          {/* <Badge badgeContent={1} color='error'> */}
-          <EmailIcon />
-          {/* </Badge> */}
-        </IconButton>
-        Messages
-        {/* <Tooltip title='Messages'>
-          <IconButton
-            size='large'
-            edge='end'
-            aria-label='show 4 new mails'
-            aria-controls={groupMenuId}
-            aria-haspopup='true'
-            onClick={() => props.clickNavMessageIconActionCreator(true)}
-            color='inherit'
-          >
+  const renderEmailBadge = () => {
+    if (unread) {
+      return (
+        <Badge
+          color='secondary'
+          sx={{
+            '& .MuiBadge-badge': {
+              color: 'white',
+              backgroundColor: 'red',
+            },
+          }}
+          variant='dot'
+        >
+          <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
             <EmailIcon />
           </IconButton>
-        </Tooltip> */}
-      </MenuItem>
-      {/* <MenuItem>
-        <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-          <Badge badgeContent={17} color='error'>
-            <Button variant='contained' endIcon={<PowerSettingsNewIcon />}>
-              Logout
-            </Button>
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem> */}
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge>
+          <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+            <EmailIcon />
+          </IconButton>
+        </Badge>
+      );
+    }
+  };
 
-      <MenuItem onClick={handleUserMenuOpen}>
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = () => {
+    return (
+      <Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        id={mobileMenuId}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={isMobileMenuOpen}
+        onClose={handleMobileMenuClose}
+      >
+        <MenuItem
+          onClick={() => {
+            window.location = '/allvideos';
+          }}
+        >
+          <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+            {/* <Badge badgeContent={1} color='error'> */}
+            <VideoLibraryIcon />
+            {/* </Badge> */}
+          </IconButton>
+          Public library
+          {/* <Tooltip title='Public Library'>
+        <IconButton size='large' color='inherit'>
+          <VideoLibraryIcon
+            onClick={() => {
+              window.location = '/allvideos';
+            }}
+          />
+        </IconButton>
+      </Tooltip> */}
+        </MenuItem>
+        <MenuItem onClick={() => props.clickNavMessageIconActionCreator(true)}>
+          {/* <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+        <EmailIcon />
+      </IconButton> */}
+          {renderEmailBadge()}
+          Messages
+          {/* <Tooltip title='Messages'>
         <IconButton
           size='large'
-          aria-label='account of current user'
-          aria-controls='primary-search-account-menu'
+          edge='end'
+          aria-label='show 4 new mails'
+          aria-controls={groupMenuId}
           aria-haspopup='true'
+          onClick={() => props.clickNavMessageIconActionCreator(true)}
           color='inherit'
         >
-          <AccountCircle />
+          <EmailIcon />
         </IconButton>
-        My account
-      </MenuItem>
-    </Menu>
-  );
+      </Tooltip> */}
+        </MenuItem>
+        {/* <MenuItem>
+      <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+        <Badge badgeContent={17} color='error'>
+          <Button variant='contained' endIcon={<PowerSettingsNewIcon />}>
+            Logout
+          </Button>
+        </Badge>
+      </IconButton>
+      <p>Notifications</p>
+    </MenuItem> */}
+
+        <MenuItem onClick={handleUserMenuOpen}>
+          <IconButton
+            size='large'
+            aria-label='account of current user'
+            aria-controls='primary-search-account-menu'
+            aria-haspopup='true'
+            color='inherit'
+          >
+            <AccountCircle />
+          </IconButton>
+          My account
+        </MenuItem>
+      </Menu>
+    );
+  };
 
   const renderSignupAndLogin = () => {
     if (props.authState.currentUser) {
@@ -357,31 +387,6 @@ const Navbar = (props) => {
       }
     }
   }, [props.messagesState]);
-
-  const renderEmailBadge = () => {
-    if (unread) {
-      return (
-        <Badge
-          color='secondary'
-          sx={{
-            '& .MuiBadge-badge': {
-              color: 'white',
-              backgroundColor: 'red',
-            },
-          }}
-          variant='dot'
-        >
-          <EmailIcon />
-        </Badge>
-      );
-    } else {
-      return (
-        <Badge>
-          <EmailIcon />
-        </Badge>
-      );
-    }
-  };
 
   const renderToolIconButtons = () => {
     // logged inの時にのみこれを表示する。
@@ -506,7 +511,7 @@ const Navbar = (props) => {
               <TravelExploreIcon />
             </IconButton>
           </Tooltip> */}
-        <Tooltip title="Developers's Info">
+        <Tooltip title='Info'>
           <IconButton
             size='large'
             aria-label='show 17 new notifications'
@@ -610,7 +615,7 @@ const Navbar = (props) => {
                   <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>{renderSignupAndLoginOnMobile()}</Box>
                 </Toolbar>
               </AppBar>
-              {renderMobileMenu}
+              {renderMobileMenu()}
               {renderUserMenu}
               {renderGroupMenu}
             </Box>

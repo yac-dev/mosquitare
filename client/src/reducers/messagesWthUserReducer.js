@@ -11,6 +11,12 @@ const messagesWithUserReducer = (state = INITIAL_STATE, action) => {
         messagesWithUserList[message._id] = message;
       });
       return { ...state, messagesWithUser: messagesWithUserList };
+    case 'READ_MESSAGES':
+      const msgs = { ...state };
+      action.payload.forEach((msg) => {
+        msgs.messagesWithUser[msg._id] = msg;
+      });
+      return { ...state, messagesWithUser: msgs };
     case 'CLEANUP_MESSAGES_WITH_USER':
       return { ...INITIAL_STATE };
     case 'CREATE_MESSAGE':

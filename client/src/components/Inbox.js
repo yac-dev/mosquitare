@@ -77,7 +77,10 @@ const InboxModal = (props) => {
               <ListItem alignItems='flex-start'>
                 {message.read ? (
                   <ListItemAvatar>
-                    <Avatar alt={message.sender.name} />
+                    <Avatar
+                      alt={message.sender.name}
+                      src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${message.sender.photo}`}
+                    />
                   </ListItemAvatar>
                 ) : (
                   <ListItemAvatar>
@@ -91,7 +94,10 @@ const InboxModal = (props) => {
                       }}
                       variant='dot'
                     >
-                      <Avatar alt={message.sender.name} />
+                      <Avatar
+                        alt={message.sender.name}
+                        src={`${process.env.REACT_APP_S3_BUCKET_IMAGE_LINK}/${message.sender.photo}`}
+                      />
                     </Badge>
                   </ListItemAvatar>
                 )}
@@ -112,13 +118,26 @@ const InboxModal = (props) => {
                         {message.content}
                       </Typography>
                       {/* <div>{timeSince(new Date(message.createdAt))} ago</div> */}
-                      <div>{`${new Date(message.createdAt).toLocaleString('en-GB', {
-                        year: 'numeric',
+                      {/* <div>{`${new Date(message.createdAt).toLocaleString('en-GB', {
                         month: '2-digit',
                         day: '2-digit',
                         hour: '2-digit',
                         minute: '2-digit',
-                      })}`}</div>
+                      })}`}</div> */}
+                      <div>
+                        {`${new Date(message.createdAt).toLocaleString('en-US', {
+                          // month: 'long',
+                          // day: '2-digit',
+                          // hour: '2-digit',
+                          // minute: '2-digit',
+                          weekday: 'long',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          year: 'numeric',
+                        })}`}
+                      </div>
                     </React.Fragment>
                   }
                 />
@@ -145,6 +164,7 @@ const InboxModal = (props) => {
               right: '30px',
               overflow: 'auto',
               maxHeight: '500px',
+              maxWidth: '300px',
             }}
           >
             {renderMessages()}

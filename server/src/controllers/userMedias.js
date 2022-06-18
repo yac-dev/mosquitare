@@ -365,10 +365,10 @@ export const createUserMedia = async (request, response) => {
             // myTranscodedFiles.screenShotFilename,
           ];
 
-          // filesToAWS.forEach((filename) => {
-          //   // uploadFile(file);
-          //   uploadFile(filename);
-          // });
+          filesToAWS.forEach((filename) => {
+            // uploadFile(file);
+            uploadFile(filename);
+          });
         }
       );
 

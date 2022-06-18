@@ -35,27 +35,27 @@ export const getMyMessagesActionCreator = () => async (dispatch, getState) => {
   }
 };
 
-export const updateUnreadToReadActionCreator = (messages) => async (dispatch, getState) => {
-  try {
-    // const messageIds = messages.forEach((message) => message._id);
-    const unreadingMessageIds = [];
-    // const unreadUserMessages = getState().messagesWithUserState;
-    const unreadUserMessages = Object.values(getState().messagesWithUserState);
-    for (let i = 0; i < unreadUserMessages.length; i++) {
-      if (unreadUserMessages[i].recipient._id === getState().authState.currentUser._id && !unreadUserMessages[i].read) {
-        unreadingMessageIds.push(unreadUserMessages[i]._id);
-      }
-    }
-    // messages
-    const result = await mosquitareAPI.patch('/messages/unreadtoread', { unreadingMessageIds });
-    dispatch({
-      type: 'READ_MESSAGES',
-      payload: unreadingMessageIds,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
+// export const updateUnreadToReadActionCreator = (messages) => async (dispatch, getState) => {
+//   try {
+//     // const messageIds = messages.forEach((message) => message._id);
+//     const unreadingMessageIds = [];
+//     // const unreadUserMessages = getState().messagesWithUserState;
+//     const unreadUserMessages = Object.values(getState().messagesWithUserState);
+//     for (let i = 0; i < unreadUserMessages.length; i++) {
+//       if (unreadUserMessages[i].recipient._id === getState().authState.currentUser._id && !unreadUserMessages[i].read) {
+//         unreadingMessageIds.push(unreadUserMessages[i]._id);
+//       }
+//     }
+//     // messages
+//     const result = await mosquitareAPI.patch('/messages/unreadtoread', { unreadingMessageIds });
+//     dispatch({
+//       type: 'READ_MESSAGES',
+//       payload: unreadingMessageIds,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export const getMessagesWithUserActionCreator = (userId) => async (dispatch, getState) => {
   try {
@@ -69,6 +69,19 @@ export const getMessagesWithUserActionCreator = (userId) => async (dispatch, get
       });
       resolve();
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateMessagesToReadActionCreator = (messageIds) => async (dispatch, getState) => {
+  try {
+    const result = await mosquitareAPI.patch('/messages/unreadtoread', { messageIds });
+    const { messages } = result.data;
+    // dispatch({
+    //   type: 'READ_MESSAGES',
+    //   payload: messages,
+    // });
   } catch (error) {
     console.log(error);
   }
