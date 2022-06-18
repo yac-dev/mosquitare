@@ -216,9 +216,9 @@ const Navbar = (props) => {
           }}
           variant='dot'
         >
-          <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-            <EmailIcon />
-          </IconButton>
+          {/* <IconButton size='large' aria-label='show 4 new mails' color='inherit'> */}
+          <EmailIcon />
+          {/* </IconButton> */}
         </Badge>
       );
     } else {
@@ -233,35 +233,34 @@ const Navbar = (props) => {
   };
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = () => {
-    return (
-      <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem
+        onClick={() => {
+          window.location = '/allvideos';
         }}
-        id={mobileMenuId}
-        keepMounted
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={isMobileMenuOpen}
-        onClose={handleMobileMenuClose}
       >
-        <MenuItem
-          onClick={() => {
-            window.location = '/allvideos';
-          }}
-        >
-          <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-            {/* <Badge badgeContent={1} color='error'> */}
-            <VideoLibraryIcon />
-            {/* </Badge> */}
-          </IconButton>
-          Public library
-          {/* <Tooltip title='Public Library'>
+        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+          {/* <Badge badgeContent={1} color='error'> */}
+          <VideoLibraryIcon />
+          {/* </Badge> */}
+        </IconButton>
+        Public library
+        {/* <Tooltip title='Public Library'>
         <IconButton size='large' color='inherit'>
           <VideoLibraryIcon
             onClick={() => {
@@ -270,14 +269,14 @@ const Navbar = (props) => {
           />
         </IconButton>
       </Tooltip> */}
-        </MenuItem>
-        <MenuItem onClick={() => props.clickNavMessageIconActionCreator(true)}>
-          {/* <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+      </MenuItem>
+      <MenuItem onClick={() => props.clickNavMessageIconActionCreator(true)}>
+        {/* <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
         <EmailIcon />
       </IconButton> */}
-          {renderEmailBadge()}
-          Messages
-          {/* <Tooltip title='Messages'>
+        {renderEmailBadge()}
+        Messages
+        {/* <Tooltip title='Messages'>
         <IconButton
           size='large'
           edge='end'
@@ -290,8 +289,8 @@ const Navbar = (props) => {
           <EmailIcon />
         </IconButton>
       </Tooltip> */}
-        </MenuItem>
-        {/* <MenuItem>
+      </MenuItem>
+      {/* <MenuItem>
       <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
         <Badge badgeContent={17} color='error'>
           <Button variant='contained' endIcon={<PowerSettingsNewIcon />}>
@@ -302,21 +301,20 @@ const Navbar = (props) => {
       <p>Notifications</p>
     </MenuItem> */}
 
-        <MenuItem onClick={handleUserMenuOpen}>
-          <IconButton
-            size='large'
-            aria-label='account of current user'
-            aria-controls='primary-search-account-menu'
-            aria-haspopup='true'
-            color='inherit'
-          >
-            <AccountCircle />
-          </IconButton>
-          My account
-        </MenuItem>
-      </Menu>
-    );
-  };
+      <MenuItem onClick={handleUserMenuOpen}>
+        <IconButton
+          size='large'
+          aria-label='account of current user'
+          aria-controls='primary-search-account-menu'
+          aria-haspopup='true'
+          color='inherit'
+        >
+          <AccountCircle />
+        </IconButton>
+        My account
+      </MenuItem>
+    </Menu>
+  );
 
   const renderSignupAndLogin = () => {
     if (props.authState.currentUser) {
@@ -615,7 +613,7 @@ const Navbar = (props) => {
                   <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>{renderSignupAndLoginOnMobile()}</Box>
                 </Toolbar>
               </AppBar>
-              {renderMobileMenu()}
+              {renderMobileMenu}
               {renderUserMenu}
               {renderGroupMenu}
             </Box>
