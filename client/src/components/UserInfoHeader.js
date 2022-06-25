@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
@@ -33,6 +33,21 @@ const SmallAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 const BasicUserInfo = (props) => {
+  const [isAvailable, setIsAvailable] = useState();
+
+  // dynamicにlogin state, call buttonがactivatedされるようにしたい。
+  useEffect(() => {
+    // ここでstateの保持な。
+    if (props.clickedUserState.mapUser.user.isAvailableNow) {
+      // console.log('logged in');
+      setIsAvailable(true);
+    } else {
+      // console.log('logged out');
+      setIsAvailable(false);
+    }
+  }, [props.clickedUserState.mapUser.user.isAvailableNow]);
+  // props.clickedState.mapUser.user
+
   const renderCardHeaderTitle = (user) => {
     const renderNationalities = user.nationalities.map((nationality) => {
       return (
@@ -114,19 +129,22 @@ const BasicUserInfo = (props) => {
   };
 
   const renderUserState = () => {
-    if (!props.user.isAvailableNow) {
+    // if (!props.user.isAvailableNow) {
+    if (!isAvailable) {
       return (
         <Tooltip title='Not available now'>
           <span style={{ fontSize: '20px' }}>💤🛌</span>
         </Tooltip>
       );
+      // } else if (props.user.isAvailableNow && props.user.isInConversation) {
     } else if (props.user.isAvailableNow && props.user.isInConversation) {
       return (
         <Tooltip title='Having conversation now'>
           <span style={{ fontSize: '20px' }}>📞☎️</span>
         </Tooltip>
       );
-    } else if (props.user.isAvailableNow) {
+      // } else if (props.user.isAvailableNow) {
+    } else if (isAvailable) {
       return (
         <Tooltip title='Available now'>
           <span style={{ fontSize: '20px' }}>😃🤚</span>

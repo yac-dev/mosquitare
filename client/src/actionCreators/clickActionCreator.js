@@ -32,3 +32,10 @@ export const clickMessageButtonActionCreator = (boolean) => {
     payload: boolean,
   };
 };
+
+export const clickedUserChangedLoggedInStateActionCreator = (user) => {
+  return {
+    type: 'CLICKED_MAP_USER_CHANGED_STATE',
+    payload: user,
+  };
+};

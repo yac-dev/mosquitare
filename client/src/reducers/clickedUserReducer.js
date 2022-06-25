@@ -40,6 +40,12 @@ const clickedUserReducer = (state = INITIAL_STATE, action) => {
     // case 'CLICK_MESSAGE_USER':
     //   const clickedMessageUser = action.payload;
     //   return { ...state, clickedMessageUser };
+    case 'CLICKED_MAP_USER_CHANGED_STATE':
+      const changedUser = {
+        clicked: true,
+        user: action.payload,
+      };
+      return { ...state, mapUser: changedUser };
     case 'CLICK_MESSAGE':
       const inboxMessage = {
         clicked: true,

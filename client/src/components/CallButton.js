@@ -272,7 +272,7 @@ const CallButton = (props) => {
       const menuItemDOMs = [];
       // const mutualItemsDom = [];
       if (exchangeableLearningLangs.length && exchangeableNativeLangs.length) {
-        console.log(exchangeableLearningLangs, exchangeableNativeLangs);
+        console.log(exchangeableLearningLangs, exchangeableNativeLangs, 'logging changed');
         for (let i = 0; i < exchangeableLearningLangs.length; i++) {
           for (let j = 0; j < exchangeableNativeLangs.length; j++) {
             menuItemDOMs.push(

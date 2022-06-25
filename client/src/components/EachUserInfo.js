@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Marker } from 'react-map-gl';
 // import { Marker } from '@react-google-maps/api';
@@ -14,8 +14,9 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 
 // ac
-import { clickUserActionCreator } from '../actionCreators/authActionCreators';
+// import { clickUserActionCreator } from '../actionCreators/authActionCreators';
 import { clickMapUserActionCreator } from '../actionCreators/clickActionCreator';
+import { clickedUserChangedLoggedInStateActionCreator } from '../actionCreators/clickActionCreator';
 
 const SmallAvatar = styled(Avatar)(({ theme }) => ({
   width: 14,
@@ -28,6 +29,19 @@ const EachUserInfo = (props) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [isAvailable, setIsAvailable] = useState();
+
+  useEffect(() => {
+    if (props.clickedUserState.mapUser.clicked) {
+      if (props.user.isAvailableNow) {
+        console.log(props.user._id, 'user logged in');
+        props.clickedUserChangedLoggedInStateActionCreator(props.user);
+      } else {
+        console.log(props.user._id, 'user logged out');
+        props.clickedUserChangedLoggedInStateActionCreator(props.user);
+      }
+    }
+  }, [props.user.isAvailableNow]);
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -64,7 +78,7 @@ const EachUserInfo = (props) => {
             }
             // props.setUserInfo({ ...props.userInfo, info: props.user });
             props.clickMapUserActionCreator(props.user);
-            props.clickUserActionCreator(props.user);
+            // props.clickUserActionCreator(props.user);
           }}
         >
           <Popover
@@ -144,7 +158,7 @@ const EachUserInfo = (props) => {
             }
             // props.setUserInfo({ ...props.userInfo, info: props.user });
             props.clickMapUserActionCreator(props.user);
-            props.clickUserActionCreator(props.user);
+            // props.clickUserActionCreator(props.user);
           }}
         >
           <Popover
@@ -304,4 +318,8 @@ const mapStateToProps = (state) => {
   return { authState: state.authState, clickedUserState: state.clickedUserState };
 };
 
-export default connect(mapStateToProps, { clickUserActionCreator, clickMapUserActionCreator })(EachUserInfo);
+export default connect(mapStateToProps, {
+  // clickUserActionCreator
+  clickMapUserActionCreator,
+  clickedUserChangedLoggedInStateActionCreator,
+})(EachUserInfo);
